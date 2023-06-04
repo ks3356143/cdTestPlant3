@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "composite": false,
-        "outDir": "./build",
+        "outDir": "build",
         "declaration": true,
         "declarationMap": true,
         "esModuleInterop": true,
@@ -32,6 +32,9 @@
             "@cps/*": [
                 "src/components/*"
             ],
+            "vue-i18n": [
+                "vue-i18n/dist/vue-i18n.cjs.js"
+            ]
         },
         "lib": [
             "dom",
@@ -52,6 +55,6 @@
     ],
     "exclude": [
         "node_modules",
-        "build/**/*",
+        "build/**/*"
     ]
 }

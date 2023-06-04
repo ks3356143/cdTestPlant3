@@ -34,4 +34,30 @@ tool.capsule = (title, info, type = "primary") => {
     )
 }
 
+// local函数处理localStorage
+/**
+ * LocalStorage
+ */
+tool.local = {
+    set(table, settings) {
+        let _set = JSON.stringify(settings)
+        return localStorage.setItem(table, _set)
+    },
+    get(table) {
+        let data = localStorage.getItem(table)
+        try {
+            data = JSON.parse(data)
+        } catch (err) {
+            return null
+        }
+        return data
+    },
+    remove(table) {
+        return localStorage.removeItem(table)
+    },
+    clear() {
+        return localStorage.clear()
+    }
+}
+
 export default tool

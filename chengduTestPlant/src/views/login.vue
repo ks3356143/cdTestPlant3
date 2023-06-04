@@ -3,16 +3,6 @@ import { reactive, ref } from "vue"
 import verifyCode from "@cps/ma-verifyCode/index.vue"
 import { useUserStore } from "@/store"
 import { useRouter, useRoute } from "vue-router"
-import { request } from "@/utils/request"
-
-// 首页图片暂时不用
-// request({
-//     url: "system/getBingBackgroundImage",
-//     timeout: 10000,
-//     method: "get"
-// }).then((res) => {
-//     document.getElementById("background").style.backgroundImage = `url(${res.data.url})`
-// })
 
 const router = useRouter()
 const route = useRoute()
