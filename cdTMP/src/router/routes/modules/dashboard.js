@@ -5,10 +5,10 @@ const DASHBOARD = {
     name: "dashboard",
     component: DEFAULT_LAYOUT, // () => import("@/layout/default-layout.vue")
     meta: {
-        locale: "menu.dashboard",
         requiresAuth: true,
         icon: "icon-dashboard",
-        order: 0
+        order: 0,
+        locale:"图标展示"
     },
     children: [
         {
@@ -16,9 +16,9 @@ const DASHBOARD = {
             name: "Workplace",
             component: () => import("@/views/dashboard/workplace/index.vue"),
             meta: {
-                locale: "menu.dashboard.workplace",
                 requiresAuth: true,
-                roles: ["*"]
+                roles: ["*"],
+                locale:"工作台"
             }
         },
     ]

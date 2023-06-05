@@ -23,7 +23,7 @@ export const DEFAULT_ROUTE_NAME = "Workplace"
  * @type: object
  */
 export const DEFAULT_ROUTE = {
-    title: "menu.dashboard.workplace",
+    title: "工作台",
     name: DEFAULT_ROUTE_NAME,
     fullPath: "/dashboard/workplace"
 }

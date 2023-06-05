@@ -3,10 +3,19 @@ module.exports = {
         browser: true,
         es2015: true
     },
-    extends: ["eslint:recommended", "plugin:vue/vue3-essential", "plugin:prettier/recommended"],
+    extends: [
+        "eslint:recommended",
+        "plugin:vue/vue3-essential",
+        "plugin:prettier/recommended",
+        "@vue/typescript/recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
     parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module"
+        sourceType: "module",
+        ecmaVersion: 2020,
+        ecmaFeatures: {
+            jsx: true
+        }
     },
     plugins: ["vue"],
     rules: {

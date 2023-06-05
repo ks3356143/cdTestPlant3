@@ -76,9 +76,9 @@
 <script setup>
 import { reactive, onMounted, ref } from "vue"
 import verifyCode from "@cps/ma-verifyCode/index.vue"
-import { Message } from "@arco-design/web-vue"
 import { useUserStore } from "@/store"
 import { useRouter, useRoute } from "vue-router"
+import { Message } from "@arco-design/web-vue"
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
@@ -88,6 +88,7 @@ const form = reactive({ username: "superAdmin", password: "admin123", code: "" }
 const Verify = ref(null)
 const loading = ref(null)
 // 点击登录按钮
+const errorMessage = ref("")
 const handleSubmit = async ({ values, errors }) => {
     if (loading.value) {
         return
@@ -95,18 +96,18 @@ const handleSubmit = async ({ values, errors }) => {
     loading.value = true
     if (Verify.value.checkResult(form.code) && !errors) {
         // 登录逻辑需要用到userStore
-        const result = await useUserStore.login(form)
-        if (!result) {
+        try {
+            await userStore.login(form)
+            const { redirect, ...otherQuery } = router.currentRoute.value.query
+            router.push({
+                name: redirect || "Workplace"
+            })
+            Message.success("登录成功，等待跳转")
+        } catch (err) {
+            errorMessage.value = err.message
+        } finally {
             loading.value = false
-            return
         }
-        // 1.注意router.currentRoute.value要加value
-        // 2.query是router的东西，params是axios的东西
-        const { redirect, ...othersQuery } = router.currentRoute.value.query
-        router.push({
-            name: redirect || "WorkPlace",
-            query: { ...othersQuery }
-        })
     }
     loading.value = false
 }

@@ -12,6 +12,7 @@
     "dependencies": {
         "@arco-design/color": "^0.4.0",
         "@arco-design/web-vue": "^2.46.2",
+        "@vueuse/core": "^10.1.2",
         "axios": "^1.4.0",
         "crypto-js": "^4.1.1",
         "dayjs": "^1.11.7",
@@ -32,9 +33,12 @@
     },
     "devDependencies": {
         "@types/lodash": "^4.14.195",
+        "@types/node": "^20.2.5",
+        "@types/nprogress": "^0.2.0",
         "@types/qs": "^6.9.7",
         "@vitejs/plugin-vue": "^4.1.0",
         "@vitejs/plugin-vue-jsx": "^3.0.1",
+        "@vue/babel-plugin-jsx": "^1.1.1",
         "autoprefixer": "^10.4.14",
         "eslint": "^8.42.0",
         "eslint-plugin-vue": "^9.14.1",

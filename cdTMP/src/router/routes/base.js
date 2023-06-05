@@ -1,15 +1,15 @@
 import { REDIRECT_ROUTE_NAME } from "@/router/constants"
 
 /**
- * @description: 返回import("@/layout/default-layout.vue")
+ * @description: import('@/layout/default-layout.vue')
  * @type: Promise对象
  */
-export const DEFAULT_LAYOUT = () => import("@/layout/default-layout.vue")
+export const DEFAULT_LAYOUT = () => import('@/layout/default-layout.vue')
 
 export const REDIRECT_MAIN = {
     path: "/redirect",
     name: "redirectWrapper",
-    component: DEFAULT_LAYOUT, // () => import("@/layout/default-layout.vue")
+    component: DEFAULT_LAYOUT, // import('@/layout/default-layout.vue')
     meta: {
         requiresAuth: true,
         hideInMenu: true
@@ -30,5 +30,5 @@ export const REDIRECT_MAIN = {
 export const NOT_FOUND_ROUTE = {
     path: "/:pathMatch(.*)*",
     name: "notFound",
-    component: () => import("@/views/not-found/index.vue")
+    component: () => import("@/layout/404.vue")
 }

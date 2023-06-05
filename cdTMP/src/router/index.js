@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router"
 import { appRoutes } from "./routes"
 // 引入基本重定向路由和notFound路由
 import { REDIRECT_MAIN, NOT_FOUND_ROUTE } from "./routes/base"
+import createRouteGuard from "@/router/guard/index"
 
 const router = createRouter({
     history: createWebHistory(),
@@ -28,4 +29,5 @@ const router = createRouter({
         return { top: 0 }
     }
 })
+createRouteGuard(router)
 export default router
