@@ -1,7 +1,11 @@
 <template>
-    <div><h2>我是workplace</h2></div>
+    <a-layout-content class="flex flex-col">
+        <statistics />
+    </a-layout-content>
 </template>
 
-<script setup></script>
+<script setup>
+import Statistics from "./components/statistics.vue"
+</script>
 
-<style lang="scss" scoped></style>
+<style lang="less" scoped></style>

@@ -1,12 +1,3 @@
-<!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
--->
 <template>
     <div class="ma-content-block p-3 mt-3">
         <ma-chart height="300px" :option="loginChartOptions" />
@@ -32,16 +23,16 @@ function graphicFactory(side) {
 }
 
 const xAxis = ref([
-    "2022-07-06",
-    "2022-07-07",
-    "2022-07-08",
-    "2022-07-09",
-    "2022-07-10",
-    "2022-07-11",
-    "2022-07-12",
-    "2022-07-13",
-    "2022-07-14",
-    "2022-07-15"
+    "2023-07-06",
+    "2023-07-07",
+    "2023-07-08",
+    "2023-07-09",
+    "2023-07-10",
+    "2023-07-11",
+    "2023-07-12",
+    "2023-07-13",
+    "2023-07-14",
+    "2023-07-15"
 ])
 const chartsData = ref([32, 56, 61, 89, 12, 33, 56, 92, 180, 25])
 const graphicElements = ref([graphicFactory({ left: "2.6%" }), graphicFactory({ right: 0 })])

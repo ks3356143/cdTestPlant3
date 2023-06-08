@@ -1,7 +1,7 @@
 import { createApp } from "vue"
 import ArcoVue from "@arco-design/web-vue"
 import ArcoVueIcon from "@arco-design/web-vue/es/icon"
-// import globalComponents from "@/components"
+import globalComponents from "@/components"
 import App from "./App.vue"
 import router from "./router"
 import pinia from "@/store"
@@ -22,7 +22,7 @@ app.use(ArcoVue, {})
 app.use(ArcoVueIcon)
 app.use(router)
 app.use(pinia)
-// app.use(globalComponents)
+app.use(globalComponents)
 // app.use(directive)
 
 // 注册ma-icon图标

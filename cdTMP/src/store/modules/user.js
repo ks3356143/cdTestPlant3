@@ -6,6 +6,7 @@ import { useAppStore } from "@/store"
 
 const useUserStore = defineStore("user", {
     state: () => ({
+        username: undefined,
         name: undefined,
         avatar: undefined,
         job: undefined,
@@ -21,7 +22,7 @@ const useUserStore = defineStore("user", {
         registrationDate: undefined,
         accountId: undefined,
         certification: undefined,
-        role: '',
+        role: ""
     }),
 
     getters: {

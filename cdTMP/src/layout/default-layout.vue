@@ -3,8 +3,8 @@
         <div class="navbar layout-navbar">
             <NavBar />
         </div>
-        <a-layout>
-            <a-layout>
+        <a-layout class="layout">
+            <a-layout class="layout">
                 <a-layout-sider
                     v-if="renderMenu"
                     v-show="!hideMenu"
@@ -33,7 +33,11 @@
                     <Menu />
                 </a-drawer>
                 <a-layout class="layout-content" :style="paddingStyle">
-
+                    <TabBar v-if="appStore.tabBar" />
+                    <a-layout-content class="work-area">
+                        <PageLayout />
+                    </a-layout-content>
+                    <Footer v-if="footer" />
                 </a-layout>
             </a-layout>
         </a-layout>
@@ -45,12 +49,19 @@ import { ref, computed, watch, provide, onMounted } from "vue"
 import { useAppStore, useUserStore } from "@/store"
 import NavBar from "@/layout/components/navbar.vue"
 import Menu from "@/layout/components/menu.vue"
+import TabBar from "@/layout/components/tab-bar.vue"
+import PageLayout from "@/layout/page-layout.vue"
 import usePermission from "@/hooks/permission"
+import Footer from "@/layout/components/footer.vue"
+import useResponsive from "@/hooks/responsive"
 const appStore = useAppStore()
 const userStore = useUserStore()
 const permission = usePermission()
+// 响应式屏幕
+useResponsive(true)
 // 初始化数据
 const isInit = ref(false)
+const footer = computed(() => appStore.footer)
 // 是否渲染左侧菜单
 const renderMenu = computed(() => appStore.menu && !appStore.topMenu)
 const hideMenu = computed(() => appStore.hideMenu)
@@ -161,7 +172,7 @@ const paddingStyle = computed(() => {
 
 .layout-content {
     min-height: 100vh;
-    overflow-y: hidden;
+    overflow-y: auto;
     background-color: var(--color-fill-2);
     transition: padding 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
 }

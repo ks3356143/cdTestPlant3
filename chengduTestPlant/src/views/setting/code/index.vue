@@ -1,12 +1,3 @@
-<!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
--->
 <template>
     <div class="ma-content-block lg:flex justify-between p-4">
         <!-- CRUD 组件 -->
@@ -26,16 +17,12 @@
             </template>
             <!-- 操作前置扩展 -->
             <template #operationBeforeExtend="{ record }">
-                <a-link v-auth="['setting:code:preview']" @click="previewRef.open(record.id)"><icon-eye /> 预览</a-link>
+                <a-link @click="previewRef.open(record.id)"><icon-eye /> 预览</a-link>
                 <a-popconfirm content="同步会重置字段配置生成信息，确定同步吗?" position="bottom" @ok="sync(record.id)">
-                    <a-link v-auth="['setting:code:sync']"><icon-sync /> 同步</a-link>
+                    <a-link><icon-sync /> 同步</a-link>
                 </a-popconfirm>
-                <a-link v-auth="['setting:code:update']" @click="() => editRef.open(record.id)"
-                    ><icon-edit /> 编辑</a-link
-                >
-                <a-link v-auth="['setting:code:generate']" @click="generateCode(record.id)"
-                    ><icon-code /> 生成代码</a-link
-                >
+                <a-link @click="() => editRef.open(record.id)"><icon-edit /> 编辑</a-link>
+                <a-link @click="generateCode(record.id)"><icon-code /> 生成代码</a-link>
             </template>
         </ma-crud>
 

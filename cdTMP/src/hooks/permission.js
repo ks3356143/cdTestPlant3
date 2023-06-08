@@ -12,6 +12,7 @@ export default function usePermission() {
                 route.meta?.roles?.includes(userStore.role)
             )
         },
+        // 返回第一个可访问的路径
         findFirstPermissionRoute(_routers, role = "admin") {
             const cloneRouters = [..._routers]
             while (cloneRouters.length) {

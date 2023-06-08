@@ -30,4 +30,5 @@ const router = createRouter({
     }
 })
 createRouteGuard(router)
+
 export default router
