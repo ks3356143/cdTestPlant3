@@ -1,12 +1,3 @@
-<!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
--->
 <template>
     <div class="editor" ref="dom" :style="'width: 100%; height: ' + props.height + 'px'"></div>
 </template>
@@ -86,7 +77,7 @@ if (props.isBind) {
 <style scoped lang="less">
 .editor {
     border: 1px solid var(--color-border-2);
-    border-radius: 3px;
+    border-radius: 1px;
     background: var(--color-bg-2);
 }
 </style>

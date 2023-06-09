@@ -6,7 +6,7 @@
             :title="props.title"
             :layout="props.layout"
             :bordered="props.bordered"
-            table-layout="fixed"
+            table-layout="auto"
             :size="props.size"
             :label-style="props.labelStyle"
             :value-style="props.valueStyle"
@@ -22,6 +22,15 @@
                 </template>
                 <template v-else-if="item.infoSlot">
                     <slot :name="item.dataIndex" :row="item" :data="data"></slot>
+                </template>
+                <template
+                    v-else-if="(item.multiple === true && item.formType === 'select') || item.formType === 'checkbox'"
+                >
+                    <a-space size="mini"
+                        ><a-tag color="pinkpurple" v-for="subItem in item.value" :key="subItem">
+                            {{ item.dict.data.find((row) => row.value == subItem)?.label }}
+                        </a-tag>
+                    </a-space>
                 </template>
                 <template v-else-if="item.formType === 'radio' || item.formType === 'select'">
                     <a-tag color="blue">{{ item.dict.data.find((row) => row.value == item.value)?.label }}</a-tag>

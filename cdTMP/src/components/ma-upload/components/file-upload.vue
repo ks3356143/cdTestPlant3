@@ -147,7 +147,7 @@ watch(
 .file-list {
     position: relative;
     background-color: var(--color-primary-light-1);
-    border-radius: 4px;
+    border-radius: 2px;
     height: 36px;
     line-height: 36px;
     padding: 0 10px;

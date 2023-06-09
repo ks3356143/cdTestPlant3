@@ -1,22 +1,14 @@
 <template>
     <div class="ma-content-block p-3 lg:h-full block lg:border-0 lg:flex justify-between">
-        <ul class="w-full lg:w-2/12 msg-menu p-2 shadow" ref="msgMenuRef">
-            <li v-for="(item, index) in msgType" :key="item" @click="getProjectType(item.key, index)">
-                <Component :is="typeIcon[item.key] ? typeIcon[item.key] : 'icon-common'" />
-                <span class="pl-3">{{ item.title }}</span>
-            </li>
-        </ul>
         <div class="h-full w-full lg:ml-3 lg:mr-2 pt-2">
             <!-- ma-crud组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #operationBeforeExtend="{ record }">
-                    <!-- <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link> -->
-                    <a-link @click="infoModalRef.open()"><icon-eye />预览</a-link>
+                    <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link>
                 </template>
             </ma-crud>
         </div>
-        <!-- <preview ref="previewRef"></preview> -->
-        <ma-info-modal ref="infoModalRef"></ma-info-modal>
+        <preview ref="previewRef"></preview>
     </div>
 </template>
 
@@ -24,36 +16,8 @@
 import { ref } from "vue"
 import projectApi from "@/api/testmanage/project"
 import preview from "./cpns/preview.vue"
-import MaInfoModal from "@/components/ma-info-modal/index.vue"
 // 定义预览组件的Ref
-const infoModalRef = ref(null)
 const previewRef = ref(null)
-// 定义左侧标签切换-假数据
-const typeIcon = ref({
-    er_fpga: "icon-send",
-    san_fpga: "icon-email",
-    er_cpu: "icon-copy",
-    san_cpu: "icon-calendar",
-    system_test: "icon-mobile",
-    examination_test: "icon-notification"
-})
-const msgMenuRef = ref()
-const getProjectType = (key, index) => {
-    const children = msgMenuRef.value.children
-    // 如果有li元素的className找到active，则清空，再把点击的加上active样式
-    if (children && children[index].className.indexOf("active") === -1) {
-        for (let i = 0; i < children.length; i++) children[i].className = ""
-        children[index].className = "active"
-    }
-}
-const msgType = ref([
-    { key: "er_fpga", title: "二方FPGA测试" },
-    { key: "san_fpga", title: "三方FPGA测试" },
-    { key: "examination_test", title: "考试项目测试" },
-    { key: "er_cpu", title: "二方CPU测试" },
-    { key: "san_cpu", title: "三方CPU测试" },
-    { key: "system_test", title: "系统级测试" }
-])
 // CRUD-OPTIONS
 const crudRef = ref()
 const crudOptions = ref({
@@ -88,17 +52,15 @@ const crudOptions = ref({
                 ]
             },
             {
-                formType: "grid",
-                cols: [
-                    { span: 12, formList: [{ dataIndex: "beginTime" }] },
-                    { span: 12, formList: [{ dataIndex: "endTime" }] }
-                ]
+                formType: "divider"
             },
             {
                 formType: "grid",
                 cols: [
-                    { span: 12, formList: [{ dataIndex: "duty_person" }] },
-                    { span: 12, formList: [{ dataIndex: "member" }] }
+                    { span: 8, formList: [{ dataIndex: "beginTime" }] },
+                    { span: 8, formList: [{ dataIndex: "endTime" }] },
+                    { span: 8, formList: [{ dataIndex: "duty_person" }] },
+                    { span: 8, formList: [{ dataIndex: "member" }] }
                 ]
             },
             {
@@ -110,6 +72,73 @@ const crudOptions = ref({
                 cols: [
                     { span: 12, formList: [{ dataIndex: "test_level" }] },
                     { span: 12, formList: [{ dataIndex: "plant_type" }] }
+                ]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "report_type" }] }]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "language" }] }]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "standard" }] }]
+            },
+            {
+                formType: "grid-tailwind",
+                customClass: ["mt-0"],
+                colNumber: 3,
+                cols: [
+                    {
+                        formList: [
+                            {
+                                formType: "card",
+                                title: "委托方信息",
+                                customClass: ["mt-3", "mb-5", "mx-1"],
+                                formList: [
+                                    { dataIndex: "entrust_ident" },
+                                    { dataIndex: "entrust_legal" },
+                                    { dataIndex: "entrust_contact" },
+                                    { dataIndex: "entrust_contact_phone" },
+                                    { dataIndex: "entrust_email" }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        formList: [
+                            {
+                                formType: "card",
+                                title: "研制方信息",
+                                customClass: ["mt-3", "mb-5", "mx-1"],
+                                formList: [
+                                    { dataIndex: "dev_ident" },
+                                    { dataIndex: "dev_legal" },
+                                    { dataIndex: "dev_contact" },
+                                    { dataIndex: "dev_contact_phone" },
+                                    { dataIndex: "dev_email" }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        formList: [
+                            {
+                                formType: "card",
+                                title: "测评中心信息",
+                                customClass: ["mt-3", "mb-5", "mx-1"],
+                                formList: [
+                                    { dataIndex: "test_ident" },
+                                    { dataIndex: "test_legal" },
+                                    { dataIndex: "test_contact" },
+                                    { dataIndex: "test_contact_phone" },
+                                    { dataIndex: "test_email" }
+                                ]
+                            }
+                        ]
+                    }
                 ]
             }
         ]
@@ -155,6 +184,7 @@ const crudColumns = ref([
         search: true,
         addDisplay: false,
         editDisplay: false,
+        infoShow: false,
         formType: "range"
     },
     {
@@ -232,159 +262,103 @@ const crudColumns = ref([
         dict: { name: "standard", props: { label: "title", value: "key" } }
     },
     {
+        title: "标识",
+        dataIndex: "entrust_ident",
         hide: true,
-        formType: "grid-tailwind",
-        customClass: ["mt-0 mb-3"],
-        colNumber: 3,
-        cols: [
-            {
-                formList: [
-                    {
-                        title: "委托方信息",
-                        customClass: ["mt-0"],
-                        formType: "card",
-                        formList: [
-                            {
-                                formType: "grid-tailwind",
-                                colNumber: 1,
-                                cols: [
-                                    {
-                                        formList: [
-                                            {
-                                                title: "标识",
-                                                dataIndex: "entrust_ident",
-                                                rules: [{ required: true, message: "标识必填" }]
-                                            },
-                                            {
-                                                title: "法人",
-                                                dataIndex: "entrust_legal",
-                                                rules: [{ required: true, message: "法人必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "联系人",
-                                                dataIndex: "entrust_contact",
-                                                rules: [{ required: true, message: "联系人必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "联系电话",
-                                                dataIndex: "entrust_contact_phone",
-                                                rules: [{ required: true, message: "联系电话必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "电子邮箱",
-                                                dataIndex: "entrust_email",
-                                                rules: [{ required: true, message: "电子邮箱必填" }]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                formList: [
-                    {
-                        title: "研制单位信息",
-                        customClass: ["mt-0"],
-                        formType: "card",
-                        formList: [
-                            {
-                                formType: "grid-tailwind",
-                                colNumber: 1,
-                                cols: [
-                                    {
-                                        formList: [
-                                            {
-                                                title: "标识",
-                                                dataIndex: "dev_ident",
-                                                rules: [{ required: true, message: "标识必填" }]
-                                            },
-                                            {
-                                                title: "法人",
-                                                dataIndex: "dev_legal",
-                                                rules: [{ required: true, message: "法人必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "联系人",
-                                                dataIndex: "dev_contact",
-                                                rules: [{ required: true, message: "联系人必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "联系电话",
-                                                dataIndex: "dev_contact_phone",
-                                                rules: [{ required: true, message: "联系电话必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "电子邮箱",
-                                                dataIndex: "dev_email",
-                                                rules: [{ required: true, message: "电子邮箱必填" }]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                formList: [
-                    {
-                        title: "测评单位信息",
-                        customClass: ["mt-0"],
-                        formType: "card",
-                        formList: [
-                            {
-                                formType: "grid-tailwind",
-                                colNumber: 1,
-                                cols: [
-                                    {
-                                        formList: [
-                                            {
-                                                title: "标识",
-                                                dataIndex: "test_ident",
-                                                rules: [{ required: true, message: "标识必填" }]
-                                            },
-                                            {
-                                                title: "法人",
-                                                dataIndex: "test_legal",
-                                                rules: [{ required: true, message: "法人必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "联系人",
-                                                dataIndex: "test_contact",
-                                                rules: [{ required: true, message: "联系人必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "联系电话",
-                                                dataIndex: "test_contact_phone",
-                                                rules: [{ required: true, message: "联系电话必填" }]
-                                            },
-                                            {
-                                                formType: "input",
-                                                title: "电子邮箱",
-                                                dataIndex: "test_email",
-                                                rules: [{ required: true, message: "电子邮箱必填" }]
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+        rules: [{ required: true, message: "标识必填" }]
+    },
+    {
+        title: "法人",
+        dataIndex: "entrust_legal",
+        hide: true,
+        rules: [{ required: true, message: "法人必填" }]
+    },
+    {
+        formType: "input",
+        title: "联系人",
+        dataIndex: "entrust_contact",
+        hide: true,
+        rules: [{ required: true, message: "联系人必填" }]
+    },
+    {
+        formType: "input",
+        title: "联系电话",
+        dataIndex: "entrust_contact_phone",
+        hide: true,
+        rules: [{ required: true, message: "联系电话必填" }]
+    },
+    {
+        formType: "input",
+        title: "电子邮箱",
+        dataIndex: "entrust_email",
+        hide: true,
+        rules: [{ required: true, message: "电子邮箱必填" }]
+    },
+    {
+        title: "标识",
+        dataIndex: "dev_ident",
+        hide: true,
+        rules: [{ required: true, message: "标识必填" }]
+    },
+    {
+        title: "法人",
+        dataIndex: "dev_legal",
+        hide: true,
+        rules: [{ required: true, message: "法人必填" }]
+    },
+    {
+        formType: "input",
+        title: "联系人",
+        dataIndex: "dev_contact",
+        hide: true,
+        rules: [{ required: true, message: "联系人必填" }]
+    },
+    {
+        formType: "input",
+        title: "联系电话",
+        dataIndex: "dev_contact_phone",
+        hide: true,
+        rules: [{ required: true, message: "联系电话必填" }]
+    },
+    {
+        formType: "input",
+        title: "电子邮箱",
+        dataIndex: "dev_email",
+        hide: true,
+        rules: [{ required: true, message: "电子邮箱必填" }]
+    },
+    {
+        title: "标识",
+        dataIndex: "test_ident",
+        hide: true,
+        rules: [{ required: true, message: "标识必填" }]
+    },
+    {
+        title: "法人",
+        dataIndex: "test_legal",
+        hide: true,
+        rules: [{ required: true, message: "法人必填" }]
+    },
+    {
+        formType: "input",
+        title: "联系人",
+        dataIndex: "test_contact",
+        hide: true,
+        rules: [{ required: true, message: "联系人必填" }]
+    },
+    {
+        formType: "input",
+        title: "联系电话",
+        dataIndex: "test_contact_phone",
+        hide: true,
+        rules: [{ required: true, message: "联系电话必填" }]
+    },
+    {
+        formType: "input",
+        title: "电子邮箱",
+        dataIndex: "test_email",
+        hide: true,
+        rules: [{ required: true, message: "电子邮箱必填" }]
     },
     {
         title: "状态",

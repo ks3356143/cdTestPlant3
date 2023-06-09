@@ -160,7 +160,7 @@ const paddingStyle = computed(() => {
         ::-webkit-scrollbar-thumb {
             border: 4px solid transparent;
             background-clip: padding-box;
-            border-radius: 7px;
+            border-radius: 3px;
             background-color: var(--color-text-4);
         }
 

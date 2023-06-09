@@ -44,7 +44,7 @@ onMounted(() => {
     color: #fff;
     width: 160px;
     text-align: center;
-    border-radius: 3px;
+    border-radius: 2px;
     padding: 5px 10px;
 }
 .bg-color {

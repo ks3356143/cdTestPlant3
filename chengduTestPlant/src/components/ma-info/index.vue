@@ -78,19 +78,22 @@ watch(
 )
 
 const reset = (vl) => {
-    data.value = vl
-    descriptions.value = []
-    if (!columns.value) {
+    data.value = vl // 外传columns
+    descriptions.value = [] // 初始化表达数据
+    if (!columns.value) { // 如果不存在columns值则不处理
         return
     }
     columns.value.forEach(async (item) => {
         let value = null
+        // 如果item为空、dataIndex为"__operation"、infoShow属性为false则不处理
         if (isEmpty(item) || item.dataIndex === "__operation" || item.infoShow === false) {
             return
         }
+        // 处理公共列
         if (isBoolean(item.common) && item.common && globalColumn[item.dataIndex]) {
             item = globalColumn[item.dataIndex]
         }
+        // 处理字典字段
         if (item.dict) {
             await loadDict(dictList, item)
             item.dict.data = dictList[item.dataIndex] ?? []

@@ -145,7 +145,7 @@ const handleSubmit = async ({ values, errors }) => {
         position: relative;
         top: 50%;
         margin-top: -255px;
-        border-radius: 5px;
+        border-radius: 2px;
     }
 
     .left-panel {
