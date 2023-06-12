@@ -9,5 +9,12 @@ import useTagStore from "./modules/tag"
 
 const pinia = createPinia()
 
-export { useUserStore, useAppStore, useTabBarStore, useFormStore, useKeepAliveStore, useTagStore }
+export {
+    useUserStore,
+    useAppStore,
+    useTabBarStore,
+    useFormStore,
+    useKeepAliveStore,
+    useTagStore,
+}
 export default pinia

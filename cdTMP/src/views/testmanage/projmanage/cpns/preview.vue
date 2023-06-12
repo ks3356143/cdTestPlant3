@@ -2,7 +2,7 @@
     <!-- 描述列表组件 -->
     <a-modal width="1000px" v-model:visible="visible" :footer="false">
         <template #title>{{ previewRecord.name }}</template>
-        <ma-info :columns="columns" :data="previewRecord" column="3"></ma-info>
+        <ma-info :columns="columns" :data="previewRecord" :column="3"></ma-info>
     </a-modal>
 </template>
 

@@ -4,6 +4,7 @@
             <!-- ma-crud组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #operationBeforeExtend="{ record }">
+                    <a-link @click="$router.push({ name: 'project', query: record })">进入工作区</a-link>
                     <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link>
                 </template>
             </ma-crud>
@@ -11,7 +12,6 @@
         <preview ref="previewRef"></preview>
     </div>
 </template>
-
 <script lang="jsx" setup>
 import { ref } from "vue"
 import projectApi from "@/api/testmanage/project"
@@ -30,7 +30,7 @@ const crudOptions = ref({
     searchColNumber: 3,
     tablePagination: true,
     operationColumn: true,
-    operationWidth: 200,
+    operationWidth: 500,
     showIndex: false,
     formOption: {
         isFull: true,

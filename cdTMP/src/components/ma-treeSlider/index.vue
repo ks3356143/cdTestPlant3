@@ -1,7 +1,13 @@
 <template>
     <div class="flex flex-col w-full h-full">
         <a-input-group class="mb-2 w-full flex items-center" size="mini">
-            <a-input :placeholder="props?.searchPlaceholder" allow-clear @input="changeKeyword" @clear="resetData" />
+            <a-input
+                :placeholder="props?.searchPlaceholder"
+                allow-clear
+                @input="changeKeyword"
+                @clear="resetData"
+                style="height: 100%"
+            />
             <a-button
                 @click="
                     () => {

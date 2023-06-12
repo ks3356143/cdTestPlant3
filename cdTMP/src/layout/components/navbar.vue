@@ -13,7 +13,8 @@
                 />
             </a-space>
         </div>
-        <div class="center-side">
+        <div class="center-side flex items-center justify-center">
+            {{ title }}
             <Menu v-if="topMenu"></Menu>
         </div>
         <ul class="right-side">
@@ -110,6 +111,13 @@ import useUser from "@/hooks/logout"
 import { Message } from "@arco-design/web-vue"
 import Menu from "@/layout/components/menu.vue"
 const appStore = useAppStore()
+// title管理-默认在后台
+const props = defineProps({
+    title: {
+        type: String,
+        default: ""
+    }
+})
 // 是否menu在顶部-暂时不用
 const topMenu = computed(() => appStore.topMenu && appStore.menu)
 // 全屏设置,使用了@vueuse/core

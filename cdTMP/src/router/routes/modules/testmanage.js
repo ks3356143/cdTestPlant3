@@ -7,7 +7,7 @@ const TESTMANAGE = {
     meta: {
         requiresAuth: true,
         icon: "icon-apps",
-        order: 1,
+        order: 98,
         locale: "测试管理"
     },
     children: [

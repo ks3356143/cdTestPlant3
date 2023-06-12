@@ -7,7 +7,7 @@ const DASHBOARD = {
     meta: {
         requiresAuth: true,
         icon: "icon-home",
-        order: 0,
+        order: 99,
         locale: "首页"
     },
     children: [
