@@ -21,7 +21,6 @@ const previewRef = ref(null)
 // CRUD-OPTIONS
 const crudRef = ref()
 const crudOptions = ref({
-    showIndex: false,
     rowSelection: { showCheckedAll: true },
     api: projectApi.getPageList,
     add: { show: true },

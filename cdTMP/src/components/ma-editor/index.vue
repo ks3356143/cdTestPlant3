@@ -1,26 +1,11 @@
-<!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
--->
 <template>
     <div>
         <editor :key="editorKey" v-model="content" :init="initConfig" :id="props.id"></editor>
-
-        <a-modal v-model:visible="resourceVisible" :width="1080" :footer="false" draggable>
-            <template #title>资源选择器</template>
-            <ma-resource v-model="list" multiple ref="resource" />
-        </a-modal>
     </div>
 </template>
 
 <script setup>
 import { reactive, ref, watch, computed } from "vue"
-import MaResource from "@cps/ma-resource/index.vue"
 import { useAppStore } from "@/store"
 
 import Editor from "@tinymce/tinymce-vue"
@@ -38,15 +23,10 @@ import "tinymce/plugins/charmap" //特殊字符
 import "tinymce/plugins/code" //编辑源码
 import "tinymce/plugins/codesample" //代码示例
 import "tinymce/plugins/directionality" //文字方向
-import "tinymce/plugins/emoticons" //表情
-import "tinymce/plugins/fullscreen" //全屏
-import "tinymce/plugins/help" //帮助
 import "tinymce/plugins/image" //插入编辑图片
 import "tinymce/plugins/importcss" //引入css
 import "tinymce/plugins/insertdatetime" //插入日期时间
-import "tinymce/plugins/link" //超链接
 import "tinymce/plugins/lists" //列表插件
-import "tinymce/plugins/media" //插入编辑媒体
 import "tinymce/plugins/nonbreaking" //插入不间断空格
 import "tinymce/plugins/pagebreak" //插入分页符
 import "tinymce/plugins/preview" //预览
@@ -63,19 +43,18 @@ const appStore = useAppStore()
 
 const props = defineProps({
     modelValue: { type: String },
-    height: { type: Number, default: 400 },
+    height: { type: Number, default: 250 },
     id: { type: String, default: () => "tinymce" + new Date().getTime().toString() },
     plugins: {
         type: [String, Array],
         default:
-            "preview searchreplace autolink directionality visualblocks visualchars fullscreen link media template code codesample table charmap nonbreaking insertdatetime advlist lists wordcount autosave"
+            "preview searchreplace autolink directionality visualblocks visualchars template code codesample table charmap nonbreaking insertdatetime advlist lists wordcount autosave"
     },
     toolbar: {
         type: [String, Array],
         default:
-            "code undo redo restoredraft | paste pastetext | forecolor backcolor bold italic underline strikethrough link codesample | fullscreen preview | alignleft aligncenter alignright alignjustify outdent indent formatpainter | \
-    styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | table media \
-    charmap pagebreak insertdatetime | resource"
+            "code undo redo restoredraft | paste pastetext |bold italic underline strikethrough codesample | preview | alignleft alignjustify indent formatpainter | \
+    styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | charmap pagebreak insertdatetime"
     }
 })
 
@@ -91,14 +70,12 @@ let content = computed({
 })
 
 const list = ref([])
-const resource = ref()
-const resourceVisible = ref(false)
 
 const initConfig = reactive({
     menubar: false, // 菜单栏显隐
     language_url: "/tinymce/i18n/zh_CN.js",
     language: "zh_CN",
-    skin_url: appStore.mode === "light" ? "/tinymce/skins/ui/tinymce-5" : "/tinymce/skins/ui/tinymce-5-dark",
+    skin_url: "/tinymce/skins/ui/tinymce-5",
     height: props.height,
     toolbar_mode: "wrap",
     plugins: props.plugins,
@@ -108,10 +85,6 @@ const initConfig = reactive({
     setup: (editor) => {
         editor.on("init", () => {
             editor.getBody().style.fontSize = "14px"
-        })
-        editor.ui.registry.addButton("resource", {
-            text: "资源选择器",
-            onAction: () => (resourceVisible.value = true)
         })
     }
 })
@@ -135,8 +108,6 @@ watch(
             }
         })
         content.value = content.value ? content.value + tmp : tmp
-        resource.value.clearSelecteds()
-        resourceVisible.value = false
     }
 )
 watch(

@@ -242,7 +242,6 @@ import MaSetting from "./components/setting.vue"
 import MaImport from "./components/import.vue"
 import MaColumn from "./components/column.vue"
 import MaContextMenu from "./components/contextMenu.vue"
-import checkAuth from "@/directives/auth/auth"
 import { Message } from "@arco-design/web-vue"
 import { request } from "@/utils/request"
 import tool from "@/utils/tool"
@@ -457,6 +456,9 @@ const requestHandle = async () => {
     loading.value = true
     isFunction(options.value.beforeRequest) && options.value.beforeRequest(requestParams.value)
     if (isFunction(currentApi.value)) {
+        if (options.value.parameters) {
+            requestParams.value = { ...requestParams.value, ...options.value.parameters }
+        }
         const response = config.parseResponseData(await currentApi.value(requestParams.value))
         if (response.rows) {
             tableData.value = response.rows

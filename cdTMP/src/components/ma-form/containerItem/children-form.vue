@@ -55,6 +55,7 @@
                 </template>
                 <template v-for="(component, componentIndex) in viewFormList[itemIndex]" :key="componentIndex">
                     <component
+                        style="line-height:32px;"
                         v-if="!containerItems.includes(component.formType)"
                         :is="getComponentName(component?.formType ?? 'input')"
                         :component="component"
@@ -172,11 +173,13 @@ if (props.component.type == "table") {
     formList.map((item) => {
         item["hideLabel"] = true
     })
-} else {
-    formModel.value[props.component.dataIndex].map((item, index) => {
-        if (index > 0) defaultOpenKeys.push(index)
-    })
 }
+// 默认不展开所有的collapse
+// else {
+//     formModel.value[props.component.dataIndex].map((item, index) => {
+//         if (index > 0) defaultOpenKeys.push(index)
+//     })
+// }
 
 const addItem = async (data = {}) => {
     let index = formModel.value[props.component.dataIndex].length

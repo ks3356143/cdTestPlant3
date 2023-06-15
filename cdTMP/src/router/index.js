@@ -32,6 +32,52 @@ const router = createRouter({
                 locale: "项目工作区",
                 icon: "icon-home"
             },
+            children: [
+                {
+                    path: "round",
+                    name: "round",
+                    component: () => import("@/views/project/round/index.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        roles: ["*"],
+                        locale: "轮次信息",
+                        icon: "icon-arrow-right"
+                    }
+                },
+                {
+                    path: "designDemand",
+                    name: "designDemand",
+                    component: () => import("@/views/project/design-demand/index.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        roles: ["*"],
+                        locale: "设计需求",
+                        icon: "icon-arrow-right"
+                    }
+                },
+                {
+                    path: "testDemand",
+                    name: "testDemand",
+                    component: () => import("@/views/project/testDemand/index.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        roles: ["*"],
+                        locale: "测试需求",
+                        icon: "icon-arrow-right"
+                    }
+                },
+                {
+                    path: "case",
+                    name: "case",
+                    component: () => import("@/views/project/case/index.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        roles: ["*"],
+                        locale: "测试用例",
+                        icon: "icon-arrow-right"
+                    }
+                },
+            ]
         },
 
         // 后台管理的路由以及404和重定向路由
