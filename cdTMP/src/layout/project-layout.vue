@@ -24,6 +24,9 @@
                             :load-more="loadMore"
                             showLine
                             ref="treeRef"
+                            border
+                            :default-expand-selected="true"
+                            :default-selected-keys="[route.query.key]"
                         ></a-tree>
                     </div>
                 </a-layout-sider>
@@ -76,6 +79,9 @@ const pointNode = (value, data) => {
     if (data.node.level === "3") {
         router.push({ name: "case", query: { ...projectInfo.value, key: data.node.key } })
     }
+    if (data.node.level === "4") {
+        router.push({ name: "problem", query: { ...projectInfo.value, key: data.node.key } })
+    }
 }
 /// 动态加载函数-参数1:树node对象
 const loadMore = (nodeData) => {
@@ -87,21 +93,21 @@ const loadMore = (nodeData) => {
             resolve()
         })
     }
-    if (nodeData.level == '1') {
+    if (nodeData.level == "1") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getTestInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res
             resolve()
         })
     }
-    if (nodeData.level == '2') {
+    if (nodeData.level == "2") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getCaseInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res
             resolve()
         })
     }
-    if (nodeData.level == '3') {
+    if (nodeData.level == "3") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getProblemInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res

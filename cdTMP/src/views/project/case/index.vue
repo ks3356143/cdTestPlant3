@@ -34,9 +34,86 @@ const crudOptions = ref({
     searchColNumber: 3,
     tablePagination: true,
     operationColumn: true,
-    scroll:{ x: '100%', y: '100%' },
+    scroll: { x: "100%", y: "100%" },
     formOption: {
-        width: 1000
+        width: 1000,
+        layout: [
+            {
+                formType: "grid",
+                customClass: ["mt-0"],
+                cols: [
+                    { span: 12, formList: [{ dataIndex: "name" }] },
+                    { span: 12, formList: [{ dataIndex: "ident" }] }
+                ]
+            },
+            {
+                formType: "grid",
+                customClass: ["ml-4"],
+                cols: [
+                    { span: 12, formList: [{ dataIndex: "status" }] },
+                    { span: 12, formList: [{ dataIndex: "closeMethod" }] }
+                ]
+            },
+            {
+                formType: "grid",
+                customClass: ["ml-4"],
+                cols: [
+                    { span: 12, formList: [{ dataIndex: "grade" }] },
+                    { span: 12, formList: [{ dataIndex: "type" }] }
+                ]
+            },
+            {
+                formType: "divider",
+                title: "问题详情"
+            },
+            {
+                dataIndex:"operation"
+            },
+            {
+                dataIndex:"expect"
+            },
+            {
+                dataIndex:"result"
+            },
+            {
+                dataIndex:"rules"
+            },
+            {
+                dataIndex:"suggest"
+            },
+            {
+                formType: "divider",
+                title: "人员信息"
+            },
+            {
+                formType: "grid",
+                cols: [
+                    { span: 12, formList: [{ dataIndex: "postPerson" }] },
+                    { span: 12, formList: [{ dataIndex: "postDate" }] }
+                ]
+            },
+            {
+                formType: "grid",
+                cols: [
+                    { span: 12, formList: [{ dataIndex: "designerPerson" }] },
+                    { span: 12, formList: [{ dataIndex: "designDate" }] }
+                ]
+            },
+            {
+                formType: "grid",
+                cols: [
+                    { span: 12, formList: [{ dataIndex: "verifyPerson" }] },
+                    { span: 12, formList: [{ dataIndex: "verifyDate" }] }
+                ]
+            },
+            {
+                formType: "grid",
+                cols: [
+                    { span: 12, formList: [{ dataIndex: "revokePerson" }] },
+                    { span: 12, formList: [{ dataIndex: "revokeDate" }] }
+                ]
+            },
+        ]
     }
 })
 const crudColumns = ref([
@@ -54,6 +131,7 @@ const crudColumns = ref([
         width: 140,
         search: true,
         dataIndex: "ident",
+        addDefaultValue: `PT_${route.query.ident}_`,
         commonRules: [{ required: true, message: "标识是必填" }],
         validateTrigger: "blur"
     },
@@ -108,9 +186,9 @@ const crudColumns = ref([
         align: "center",
         width: 150,
         dataIndex: "closeMethod",
-        addDefaultValue: "2",
+        addDefaultValue: ["2"],
         search: true,
-        formType: "radio",
+        formType: "checkbox",
         dict: {
             name: "closeMethod",
             translation: true,
@@ -120,22 +198,34 @@ const crudColumns = ref([
             // 判断是否具有1：修改文档
             if (!record.closeMethod.hasOwnProperty("0")) {
                 if (!record.closeMethod.hasOwnProperty("1")) {
-                    return <a-tag size="small" bordered color="magenta">还未闭环</a-tag>
+                    return (
+                        <a-tag size="small" bordered color="magenta">
+                            还未闭环
+                        </a-tag>
+                    )
                 }
             }
             const tagObj = []
             for (let item in record.closeMethod) {
                 if (item === "0") {
-                    tagObj.push(<a-tag size="small" bordered color="blue">修改文档</a-tag>)
+                    tagObj.push(
+                        <a-tag size="small" bordered color="blue">
+                            修改文档
+                        </a-tag>
+                    )
                 } else if (item === "1") {
-                    tagObj.push(<a-tag size="small" bordered color="green">修改程序</a-tag>)
+                    tagObj.push(
+                        <a-tag size="small" bordered color="green">
+                            修改程序
+                        </a-tag>
+                    )
                 }
             }
-            return <a-space size='mini'>{tagObj}</a-space>
+            return <a-space size="mini">{tagObj}</a-space>
         }
     },
     {
-        title: "操作",
+        title: "问题操作",
         hide: true,
         search: true,
         dataIndex: "operation",
@@ -153,6 +243,11 @@ const crudColumns = ref([
         formType: "editor"
     },
     {
+        title: "违反规则",
+        hide: true,
+        dataIndex: "rules"
+    },
+    {
         title: "修改建议",
         hide: true,
         dataIndex: "suggest"
@@ -166,24 +261,22 @@ const crudColumns = ref([
         dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
     },
     {
-        title:'提单日期',
+        title: "提单日期",
         hide: true,
-        dataIndex:"postDate",
-        formType:'date'
+        dataIndex: "postDate",
+        formType: "date"
     },
     {
-        title: "设计师上级",
+        title: "设师上级",
         hide: true,
         dataIndex: "designerPerson",
-        formType: "select",
         commonRules: [{ required: true, message: "提单人必填" }],
-        dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
     },
     {
-        title:'提单日期',
+        title: "提单日期",
         hide: true,
-        dataIndex:"designDate",
-        formType:'date'
+        dataIndex: "designDate",
+        formType: "date"
     },
     {
         title: "验证人",
@@ -194,10 +287,10 @@ const crudColumns = ref([
         dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
     },
     {
-        title:'验证日期',
+        title: "验证日期",
         hide: true,
-        dataIndex:"verifyDate",
-        formType:'date'
+        dataIndex: "verifyDate",
+        formType: "date"
     },
     {
         title: "撤销人",
@@ -208,11 +301,11 @@ const crudColumns = ref([
         dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
     },
     {
-        title:'撤销日期',
+        title: "撤销日期",
         hide: true,
-        dataIndex:"revokeDate",
-        formType:'date'
-    },
+        dataIndex: "revokeDate",
+        formType: "date"
+    }
 ])
 </script>
 

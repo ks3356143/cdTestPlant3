@@ -2,7 +2,7 @@
     <div class="navbar">
         <div class="left-side">
             <a-space>
-                <img src="@/assets/img/wxwx-logo.svg" class="logo" alt="logo" />
+                <img src="@/assets/img/wxwx-logo.svg" class="logo" alt="logo" @click="handleClickLogo" />
                 <a-typography-title :style="{ margin: 0, fontSize: '18px' }" :heading="5">
                     成都测试管理平台
                 </a-typography-title>
@@ -110,6 +110,8 @@ import { useFullscreen } from "@vueuse/core"
 import useUser from "@/hooks/logout"
 import { Message } from "@arco-design/web-vue"
 import Menu from "@/layout/components/menu.vue"
+import { useRouter } from "vue-router"
+const router = useRouter()
 const appStore = useAppStore()
 // title管理-默认在后台
 const props = defineProps({
@@ -147,12 +149,18 @@ const handleLogout = () => {
 }
 // 注入事件
 const toggleDrawerMenu = inject("toggleDrawerMenu")
+// 点击图标返回首页
+const handleClickLogo = () => {
+    console.log("回到workplace")
+    router.push({ name: "Workplace" })
+}
 </script>
 
 <style scoped lang="less">
 .logo {
     width: 35px;
     height: 35px;
+    cursor: pointer;
 }
 
 .navbar {

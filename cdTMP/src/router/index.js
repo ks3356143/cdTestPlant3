@@ -77,6 +77,17 @@ const router = createRouter({
                         icon: "icon-arrow-right"
                     }
                 },
+                {
+                    path: "problem",
+                    name: "problem",
+                    component: () => import("@/views/project/problem/index.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        roles: ["*"],
+                        locale: "问题单详情",
+                        icon: "icon-arrow-right"
+                    }
+                },
             ]
         },
 
