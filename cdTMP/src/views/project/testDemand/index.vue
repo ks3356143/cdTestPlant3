@@ -14,14 +14,16 @@ import caseApi from "@/api/project/case"
 const route = useRoute()
 const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
-const designDemandNumber = route.query.key.split("-")[1]
-const testDemandNumber = route.query.key.split("-")[2]
+const dutNumber = route.query.key.split("-")[1]
+const designDemandNumber = route.query.key.split("-")[2]
+const testDemandNumber = route.query.key.split("-")[3]
 // crud设置
 const crudOptions = ref({
     api: caseApi.getCaseList,
     parameters: {
         projectId: route.query.id,
         round: roundNumber,
+        dut: dutNumber,
         designDemand: designDemandNumber,
         testDemand: testDemandNumber
     },

@@ -45,6 +45,17 @@ const router = createRouter({
                     }
                 },
                 {
+                    path: "dut",
+                    name: "dut",
+                    component: () => import("@/views/project/dut/index.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        roles: ["*"],
+                        locale: "被测件信息",
+                        icon: "icon-arrow-right"
+                    }
+                },
+                {
                     path: "designDemand",
                     name: "designDemand",
                     component: () => import("@/views/project/design-demand/index.vue"),

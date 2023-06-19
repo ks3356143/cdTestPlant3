@@ -12,6 +12,21 @@ export default {
         })
     },
     /**
+     * 根据项目名、树节点等级和key查找被测件
+     * @returns 被测件
+     */
+    getDutInfo(projectId, key, level) {
+        return request({
+            url: `project/getDutInfo`,
+            method: "get",
+            params: {
+                projectId: projectId,
+                key: key,
+                level: level
+            }
+        })
+    },
+    /**
      * 根据项目名、树节点等级和key查找设计需求
      * @returns 设计需求树状节点信息
      */

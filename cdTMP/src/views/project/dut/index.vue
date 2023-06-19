@@ -10,16 +10,18 @@
 <script setup>
 import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import dutApi from "@/api/project/dut"
+import designDemandApi from "@/api/project/designDemand"
 const route = useRoute()
 const router = useRouter()
-
+const roundNumber = route.query.key.split("-")[0]
+const dutNumber = route.query.key.split("-")[1]
 // crud组件
 const crudOptions = ref({
-    api: dutApi.getDutList,
+    api: designDemandApi.getDesignDemandList,
     parameters: {
         projectId: route.query.id,
-        round: route.query.key
+        round: roundNumber,
+        dut: dutNumber
     },
     showIndex: false,
     rowSelection: { showCheckedAll: true },
@@ -30,14 +32,13 @@ const crudOptions = ref({
     tablePagination: true,
     operationColumn: true,
     formOption: {
-        width: 500
+        width: 1200
     }
 })
 const crudColumns = ref([
     {
         title: "ID",
         width: 50,
-        align:'center',
         dataIndex: "id",
         search: true,
         commonRules: [{ required: true, message: "标识是必填" }],
@@ -45,61 +46,37 @@ const crudColumns = ref([
     },
     {
         title: "标识",
-        width: 150,
-        align:'center',
+        width: 120,
         dataIndex: "ident",
         search: true,
         commonRules: [{ required: true, message: "标识是必填" }],
         validateTrigger: "blur"
     },
     {
-        title: "被测件名",
-        width: 120,
+        title: "需求名称",
+        width: 150,
         dataIndex: "name",
         search: true,
         commonRules: [{ required: true, message: "需求名称是必填" }],
         validateTrigger: "blur"
     },
     {
-        title:"空行",
-        hide:true,
-        align:'center',
-        dataIndex:"black_line"
+        title: "需求类型",
+        width: 150,
+        dataIndex: "demandType",
+        formType: "radio",
+        search: true,
+        dict: { name: "demandType", props: { label: "title", value: "key" }, translation: true },
+        commonRules: [{ required: true, message: "需求类型是必填" }],
+        validateTrigger: "blur"
     },
     {
-        title:"纯注释",
-        hide:true,
-        align:'center',
-        dataIndex:"pure_code_line"
-    },
-    {
-        title:"混合行",
-        hide:true,
-        align:'center',
-        dataIndex:"mix_line"
-    },
-    {
-        title:"总注释",
-        hide:true,
-        align:'center',
-        dataIndex:"total_comment_line"
-    },
-    {
-        title:"总代码",
-        align:'center',
-        dataIndex:"total_code_line"
-    },
-    {
-        title:"总行数",
-        align:'center',
-        dataIndex:"total_line"
-    },
-    {
-        title:"注释率",
-        align:'center',
-        dataIndex:"comment_line",
-        commonRules: [{ required: true, message: "注释率必填" }],
-    },
+        title: "需求描述",
+        dataIndex: "description",
+        width: 300,
+        formType: "editor",
+        height: 300
+    }
 ])
 </script>
 

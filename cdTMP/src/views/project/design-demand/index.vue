@@ -15,13 +15,15 @@ const route = useRoute()
 const router = useRouter()
 // 根据传参获取key，分别为轮次、设计需求的key
 const roundNumber = route.query.key.split("-")[0]
-const designDemandNumber = route.query.key.split("-")[1]
+const dutNumber = route.query.key.split("-")[0]
+const designDemandNumber = route.query.key.split("-")[2]
 // crud组件
 const crudOptions = ref({
     api: testDemandApi.getTestDemandList,
     parameters: {
         projectId: route.query.id,
         round: roundNumber,
+        dut: dutNumber,
         designDemand: designDemandNumber
     },
     showIndex: false,
@@ -90,7 +92,7 @@ const crudColumns = ref([
     {
         title: "充分条件",
         hide: true,
-        addDefaultValue:"覆盖需求相关功能",
+        addDefaultValue: "覆盖需求相关功能",
         dataIndex: "adequacy",
         commonRules: [{ required: true, message: "充分性描述必填" }]
     },
@@ -108,7 +110,7 @@ const crudColumns = ref([
     {
         title: "前提条件",
         hide: true,
-        addDefaultValue:"软件正常运行，外部接口通信正常",
+        addDefaultValue: "软件正常运行，外部接口通信正常",
         dataIndex: "premise",
         commonRules: [{ required: true, message: "前提条件必填" }]
     },
@@ -121,7 +123,7 @@ const crudColumns = ref([
     {
         title: "测试内容",
         hide: true,
-        dataIndex:"testContent",
+        dataIndex: "testContent",
         commonRules: [{ required: true, message: "测试内容必填" }],
         formType: "children-form",
         type: "table",

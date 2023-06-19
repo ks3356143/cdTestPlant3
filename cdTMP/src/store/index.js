@@ -6,15 +6,9 @@ import useTabBarStore from "./modules/tab-bar"
 import useFormStore from "./modules/form"
 import useKeepAliveStore from "./modules/keepAlive"
 import useTagStore from "./modules/tag"
+import useTreeDataStore from "./project/treeData"
 
 const pinia = createPinia()
 
-export {
-    useUserStore,
-    useAppStore,
-    useTabBarStore,
-    useFormStore,
-    useKeepAliveStore,
-    useTagStore,
-}
+export { useUserStore, useAppStore, useTabBarStore, useFormStore, useKeepAliveStore, useTagStore,useTreeDataStore }
 export default pinia

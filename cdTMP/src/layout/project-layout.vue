@@ -8,8 +8,8 @@
                 <a-layout-sider class="layout-sider">
                     <div class="p-2">
                         <a-input-group class="mb-2 w-full flex items-center" size="mini">
-                            <a-input style="height: 32px"></a-input>
-                            <a-button>搜索</a-button>
+                            <a-input style="height: 32px" v-model="searchKey" allow-clear></a-input>
+                            <a-button @click="handleSearchTreeDataClick">搜索</a-button>
                         </a-input-group>
                         <a-input-group class="mb-2 w-full flex items-center justify-between" size="mini">
                             <a-button class="w-1/2" type="primary">增加轮次</a-button>
@@ -25,8 +25,7 @@
                             showLine
                             ref="treeRef"
                             border
-                            :default-expand-selected="true"
-                            :default-selected-keys="[route.query.key]"
+                            :default-selected-keys="[currentNode ? currentNode : route.query.key]"
                         ></a-tree>
                     </div>
                 </a-layout-sider>
@@ -47,67 +46,108 @@ import PageLayout from "@/layout/page-layout.vue"
 import projectApi from "@/api/project/project"
 import { useRoute } from "vue-router"
 import { useRouter } from "vue-router"
+import { useTreeDataStore } from "@/store"
+import { storeToRefs } from "pinia"
 // 缩小后的menu菜单
 const drawerVisible = ref(false)
 provide("toggleDrawerMenu", () => {
     drawerVisible.value = !drawerVisible.value
 })
+// 搜索绑定与搜索按钮点击
+const searchKey = ref("")
+const handleSearchTreeDataClick = () => {
+    const loop = (itemdata) => {
+        const result = []
+        itemdata.forEach((item) => {
+            if (item.title.indexOf(searchKey.value) > -1) {
+                result.push({ ...item })
+            } else if (item.children) {
+                const filterdata = loop(item.children)
+                if (filterdata.length) {
+                    result.push({
+                        ...item,
+                        children: filterdata
+                    })
+                }
+            }
+        })
+        return result
+    }
+    // 返回过滤后的treeData
+    // treeDataStore.originTreeData
+    if (searchKey.value) {
+        treeData.value = loop(treeDataStore.treeData)
+    } else {
+        treeData.value = treeDataStore.originTreeData
+    }
+}
 // 树状
 /// 初始化round轮次数据
+const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
 const treeRef = ref()
-const treeData = ref([])
+const { treeData, currentNode } = storeToRefs(treeDataStore)
 const projectInfo = ref({ ...route.query })
 const projectId = ref(route.query.projectId)
 onMounted(async () => {
-    const roundData = await projectApi.getRoundInfo(projectId)
-    treeData.value = roundData
+    treeDataStore.initTreeData(projectId)
 })
 /// 点击树状节点-参数1:节点数组，参数2:树node对象
 const pointNode = (value, data) => {
-    console.log(data.node)
+    console.log(data.node);
     if (data.node.level === "0") {
         router.push({ name: "round", query: { ...projectInfo.value, key: data.node.key } })
     }
     if (data.node.level === "1") {
-        router.push({ name: "designDemand", query: { ...projectInfo.value, key: data.node.key } })
+        router.push({ name: "dut", query: { ...projectInfo.value, key: data.node.key } })
     }
     if (data.node.level === "2") {
-        router.push({ name: "testDemand", query: { ...projectInfo.value, key: data.node.key } })
+        router.push({ name: "designDemand", query: { ...projectInfo.value, key: data.node.key } })
     }
     if (data.node.level === "3") {
-        router.push({ name: "case", query: { ...projectInfo.value, key: data.node.key } })
+        router.push({ name: "testDemand", query: { ...projectInfo.value, key: data.node.key } })
     }
     if (data.node.level === "4") {
+        router.push({ name: "case", query: { ...projectInfo.value, key: data.node.key } })
+    }
+    if (data.node.level === "5") {
         router.push({ name: "problem", query: { ...projectInfo.value, key: data.node.key } })
     }
+    treeDataStore.setCurrentNode(data.node.key)
 }
 /// 动态加载函数-参数1:树node对象
 const loadMore = (nodeData) => {
     console.log("动态加载的节点为：", nodeData) // 输出点击节点的key,以及添加上去的level属性
     if (nodeData.level == "0") {
         return new Promise(async (resolve) => {
-            const res = await projectApi.getDemandInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+            const res = await projectApi.getDutInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res
             resolve()
         })
     }
     if (nodeData.level == "1") {
         return new Promise(async (resolve) => {
-            const res = await projectApi.getTestInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+            const res = await projectApi.getDemandInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res
             resolve()
         })
     }
     if (nodeData.level == "2") {
         return new Promise(async (resolve) => {
-            const res = await projectApi.getCaseInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+            const res = await projectApi.getTestInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res
             resolve()
         })
     }
     if (nodeData.level == "3") {
+        return new Promise(async (resolve) => {
+            const res = await projectApi.getCaseInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+            nodeData.children = res
+            resolve()
+        })
+    }
+    if (nodeData.level == "4") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getProblemInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res

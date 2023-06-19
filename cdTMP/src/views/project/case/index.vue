@@ -14,14 +14,16 @@ import problemApi from "@/api/project/problem"
 const route = useRoute()
 const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
-const designDemandNumber = route.query.key.split("-")[1]
-const testDemandNumber = route.query.key.split("-")[2]
-const caseNumber = route.query.key.split("-")[3]
+const dutNumber = route.query.key.split("-")[1]
+const designDemandNumber = route.query.key.split("-")[2]
+const testDemandNumber = route.query.key.split("-")[3]
+const caseNumber = route.query.key.split("-")[4]
 const crudOptions = ref({
     api: problemApi.getProblemList,
     parameters: {
         projectId: route.query.id,
         round: roundNumber,
+        dut: dutNumber,
         designDemand: designDemandNumber,
         testDemand: testDemandNumber,
         case: caseNumber
@@ -67,19 +69,19 @@ const crudOptions = ref({
                 title: "问题详情"
             },
             {
-                dataIndex:"operation"
+                dataIndex: "operation"
             },
             {
-                dataIndex:"expect"
+                dataIndex: "expect"
             },
             {
-                dataIndex:"result"
+                dataIndex: "result"
             },
             {
-                dataIndex:"rules"
+                dataIndex: "rules"
             },
             {
-                dataIndex:"suggest"
+                dataIndex: "suggest"
             },
             {
                 formType: "divider",
@@ -112,7 +114,7 @@ const crudOptions = ref({
                     { span: 12, formList: [{ dataIndex: "revokePerson" }] },
                     { span: 12, formList: [{ dataIndex: "revokeDate" }] }
                 ]
-            },
+            }
         ]
     }
 })
@@ -270,7 +272,7 @@ const crudColumns = ref([
         title: "设师上级",
         hide: true,
         dataIndex: "designerPerson",
-        commonRules: [{ required: true, message: "提单人必填" }],
+        commonRules: [{ required: true, message: "提单人必填" }]
     },
     {
         title: "提单日期",
