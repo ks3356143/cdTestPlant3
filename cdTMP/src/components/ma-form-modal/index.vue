@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="modal.visible" :on-before-ok="modal.submit" unmount-on-close @cancel="modal.cancel">
+    <a-modal v-model:visible="modal.visible" :on-before-ok="modal.submit" unmount-on-close @cancel="modal.cancel" :width="width">
         <template #title>
             {{ prop.title }}
         </template>
@@ -24,7 +24,8 @@ const prop = defineProps({
     column: { type: Array, default: [] }, // ma-form字段
     default_visible: { type: Boolean, default: false }, // 默认隐藏
     options: { type: Object, default: {} }, // ma-form 属性
-    submit: { type: Function, default: () => {} }
+    submit: { type: Function, default: () => {} },
+    width :{ type:String, default:("1000"+'px')}
 })
 
 const maFormRef = ref()

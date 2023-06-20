@@ -11,10 +11,9 @@
                             <a-input style="height: 32px" v-model="searchKey" allow-clear></a-input>
                             <a-button @click="handleSearchTreeDataClick">搜索</a-button>
                         </a-input-group>
-                        <a-input-group class="mb-2 w-full flex items-center justify-between" size="mini">
-                            <a-button class="w-1/2" type="primary">增加轮次</a-button>
-                            <a-button class="w-1/2" type="primary" status="danger">删除轮次</a-button>
-                        </a-input-group>
+                        <a-alert title="提示" style="margin-bottom: 10px" class="mt-0 py-1"
+                            >空搜索需要点击搜索按钮</a-alert
+                        >
                         <a-tree
                             :data="treeData"
                             size="small"
@@ -26,7 +25,47 @@
                             ref="treeRef"
                             border
                             :default-selected-keys="[currentNode ? currentNode : route.query.key]"
-                        ></a-tree>
+                        >
+                            <!-- 在轮次节点可以新增、编辑、删除、复制 -->
+                            <template #extra="nodeData">
+                                <template v-if="nodeData.level === '0'">
+                                    <a-tooltip content="点击新增轮次">
+                                        <IconPlus
+                                            style="
+                                                position: absolute;
+                                                right: 8px;
+                                                font-size: 12px;
+                                                top: 8px;
+                                                color: #3370ff;
+                                            "
+                                            @click="() => handleRoundAddClick(nodeData)"
+                                        />
+                                    </a-tooltip>
+                                    <a-tooltip content="点击删除轮次"
+                                        ><IconMinus
+                                            style="
+                                                position: absolute;
+                                                right: 25px;
+                                                font-size: 12px;
+                                                top: 8px;
+                                                color: #3370ff;
+                                            "
+                                            @click="() => handleRoundDelClick(nodeData)"
+                                    /></a-tooltip>
+                                    <a-tooltip content="点击编辑当前轮次"
+                                        ><IconEdit
+                                            style="
+                                                position: absolute;
+                                                right: 42px;
+                                                font-size: 12px;
+                                                top: 8px;
+                                                color: #3370ff;
+                                            "
+                                            @click="() => handleRoundEditClick(nodeData)"
+                                    /></a-tooltip>
+                                </template>
+                            </template>
+                        </a-tree>
                     </div>
                 </a-layout-sider>
                 <a-layout class="layout-content">
@@ -37,23 +76,32 @@
             </a-layout>
         </a-layout>
     </a-layout>
+    <ma-form-modal
+        ref="maFormModalRef"
+        :title="title"
+        :column="roundColumn"
+        :options="roundOption"
+        width="800px"
+    ></ma-form-modal>
 </template>
 
 <script setup>
 import { provide, ref, onMounted } from "vue"
 import NavBar from "@/layout/components/navbar.vue"
 import PageLayout from "@/layout/page-layout.vue"
+import MaFormModal from "@/components/ma-form-modal/index.vue"
 import projectApi from "@/api/project/project"
+import roundApi from "@/api/project/round"
 import { useRoute } from "vue-router"
 import { useRouter } from "vue-router"
 import { useTreeDataStore } from "@/store"
 import { storeToRefs } from "pinia"
-// 缩小后的menu菜单
+//~~~~ 缩小后的menu菜单
 const drawerVisible = ref(false)
 provide("toggleDrawerMenu", () => {
     drawerVisible.value = !drawerVisible.value
 })
-// 搜索绑定与搜索按钮点击
+//~~~~ 搜索绑定与搜索按钮点击
 const searchKey = ref("")
 const handleSearchTreeDataClick = () => {
     const loop = (itemdata) => {
@@ -81,7 +129,7 @@ const handleSearchTreeDataClick = () => {
         treeData.value = treeDataStore.originTreeData
     }
 }
-// 树状
+//~~~~ 树状组件
 /// 初始化round轮次数据
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
@@ -89,13 +137,13 @@ const router = useRouter()
 const treeRef = ref()
 const { treeData, currentNode } = storeToRefs(treeDataStore)
 const projectInfo = ref({ ...route.query })
-const projectId = ref(route.query.projectId)
+const projectId = ref(route.query.id)
 onMounted(async () => {
     treeDataStore.initTreeData(projectId)
 })
 /// 点击树状节点-参数1:节点数组，参数2:树node对象
 const pointNode = (value, data) => {
-    console.log(data.node);
+    console.log(data.node)
     if (data.node.level === "0") {
         router.push({ name: "round", query: { ...projectInfo.value, key: data.node.key } })
     }
@@ -155,6 +203,168 @@ const loadMore = (nodeData) => {
         })
     }
 }
+
+//~~~~ 表单弹窗组件功能
+const maFormModalRef = ref()
+const title = ref("")
+/// 点击新增轮次按钮
+const handleRoundAddClick = (nodeData) => {
+    // 这里是文档写错了
+    console.log(maFormModalRef.value.form);
+    maFormModalRef.value.form = {}
+    maFormModalRef.value.open({})
+}
+/// 点击编辑轮次按钮
+const handleRoundEditClick = async (nodeData) => {
+    const data = await roundApi.getOneRoundInfo({
+        projectId: projectId.value,
+        round: nodeData.key
+    })
+    maFormModalRef.value.open(data.data)
+    title.value = `编辑轮次:${data.data.name}`
+}
+/// 点击删除轮次按钮
+const handleRoundDelClick = () => {
+    console.log("删除轮次")
+}
+/// 设置轮次弹窗的列信息
+const roundColumn = ref([
+    {
+        title: "基本信息",
+        customClass: ["mb-2", "pb-0"],
+        formType: "card",
+        bodyStyle: { paddingBottom: 0 },
+        formList: [
+            {
+                formType: "grid",
+                cols: [
+                    {
+                        span: 12,
+                        formList: [
+                            { title: "标识", dataIndex: "ident" },
+                            {
+                                title: "开始时间",
+                                dataIndex: "beginTime",
+                                formType: "date",
+                                placeholder: "请选择时间",
+                                rules: [{ required: true, message: "开始时间必填" }]
+                            },
+                            {
+                                title: "速度等级",
+                                dataIndex: "speedGrade",
+                                placeholder: "请填入速度等级",
+                                rules: [{ required: true, message: "速度等级必填" }]
+                            }
+                        ]
+                    },
+                    {
+                        span: 12,
+                        formList: [
+                            { title: "名称", dataIndex: "name" },
+                            {
+                                title: "结束时间",
+                                dataIndex: "endTime",
+                                formType: "date",
+                                placeholder: "请选择时间",
+                                rules: [{ required: true, message: "结束时间必填" }]
+                            },
+                            {
+                                title: "封装",
+                                dataIndex: "package",
+                                placeholder: "请填入封装",
+                                rules: [{ required: true, message: "封装必填" }]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        title: "质量等级",
+        dataIndex: "grade",
+        formType: "radio",
+        dict: {
+            data: [
+                { label: "军级", value: "1" },
+                { label: "商业级", value: "2" },
+                { label: "宇航级", value: "3" },
+                { label: "工业级", value: "4" }
+            ]
+        },
+        placeholder: "请填入质量等级",
+        rules: [{ required: true, message: "质量等级必填" }]
+    },
+    {
+        formType: "card",
+        title: "极端工况信息",
+        customClass: ["mb-2", "pb-0"],
+        bodyStyle: { paddingBottom: 0 },
+        formList: [
+            {
+                formType: "divider",
+                title: "最好工况",
+                orientation: "left",
+                margin: "20px"
+            },
+            {
+                formType: "grid",
+                cols: [
+                    {
+                        span: 12,
+                        formList: [{ title: "电压", dataIndex: "best_condition_voltage", placeholder: "请填入电压" }]
+                    },
+                    {
+                        span: 12,
+                        formList: [{ title: "温度", dataIndex: "best_condition_tem", placeholder: "请填入温度" }]
+                    }
+                ]
+            },
+            {
+                formType: "divider",
+                title: "典型工况",
+                orientation: "left",
+                margin: "20px"
+            },
+            {
+                formType: "grid",
+                cols: [
+                    {
+                        span: 12,
+                        formList: [{ title: "电压", dataIndex: "typical_condition_voltage", placeholder: "请填入电压" }]
+                    },
+                    {
+                        span: 12,
+                        formList: [{ title: "温度", dataIndex: "typical_condition_tem", placeholder: "请填入温度" }]
+                    }
+                ]
+            },
+            {
+                formType: "divider",
+                title: "最差工况",
+                orientation: "left",
+                margin: "20px"
+            },
+            {
+                formType: "grid",
+                cols: [
+                    {
+                        span: 12,
+                        formList: [{ title: "电压", dataIndex: "low_condition_voltage", placeholder: "请填入电压" }]
+                    },
+                    {
+                        span: 12,
+                        formList: [{ title: "温度", dataIndex: "low_condition_tem", placeholder: "请填入温度" }]
+                    }
+                ]
+            }
+        ]
+    }
+])
+/// 表单的option
+const roundOption = ref({
+    customClass: [""]
+})
 </script>
 
 <style lang="less" scoped>
