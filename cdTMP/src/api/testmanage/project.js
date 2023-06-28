@@ -10,5 +10,38 @@ export default {
             method: "get",
             params
         })
-    }
+    },
+    /**
+     * 添加用户
+     * @returns
+     */
+    save(params = {}) {
+        return request({
+            url: "testmanage/project/save",
+            method: "post",
+            data: params
+        })
+    },
+    /**
+     * 更新数据
+     * @returns
+     */
+    update(id, data = {}) {
+        return request({
+            url: "testmanage/project/update/" + id,
+            method: "put",
+            data
+        })
+    },
+    /**
+     * 删除项目
+     * @returns
+     */
+    delete(data) {
+        return request({
+            url: "testmanage/project/delete",
+            method: "delete",
+            data
+        })
+    },
 }

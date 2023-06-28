@@ -90,5 +90,16 @@ export default {
             method: "put",
             data
         })
-    }
+    },
+    /**
+     * 请求所有user信息
+     * @returns
+     */
+    getUserDict(params = {}) {
+        return request({
+            url: "system/user/dict",
+            method: "get",
+            params
+        })
+    },
 }

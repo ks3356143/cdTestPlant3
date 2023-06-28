@@ -29,6 +29,7 @@ import { reactive, ref, onMounted } from "vue"
 import MaTreeSlider from "@/components/ma-treeSlider/index.vue"
 import userApi from "@/api/system/user"
 import user from "@/api/system/user"
+import { Message } from "@arco-design/web-vue"
 // 切换状态按钮
 const changeStatus = (e, id) => {
     console.log("当前值：", e)
@@ -183,9 +184,24 @@ const crudOptions = reactive({
         viewType: "modal"
         // isFull: true
     },
+    // 用户点击编辑/删除前的hook
+    beforeOpenEdit: (record) => {
+        if (record.id === 1) {
+            Message.error("创始人不可编辑,请关闭窗口！")
+            return false
+        }
+        return true
+    },
+    beforeDelete: (ids) => {
+        if (ids.includes(1)) {
+            Message.error("创始人不可删除")
+            return false
+        }
+        return true
+    }
 })
 const crudColumns = reactive([
-    { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: false, search: true },
+    { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: false },
     {
         title: "名称",
         align: "center",
@@ -235,7 +251,7 @@ const crudColumns = reactive([
     },
     {
         title: "注册时间",
-        dataIndex: "created_at",
+        dataIndex: "create_datetime",
         align: "center",
         width: 180,
         addDisplay: false,

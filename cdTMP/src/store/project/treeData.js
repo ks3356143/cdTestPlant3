@@ -14,9 +14,15 @@ const useTreeDataStore = defineStore("treeDataStore", {
         async initTreeData(projectId) {
             if (this.treeData.length === 0) {
                 const roundData = await projectApi.getRoundInfo(projectId)
-                this.treeData = roundData
-                this.originTreeData = roundData
+                this.treeData = roundData.data
+                this.originTreeData = roundData.data
             }
+        },
+        // 用于新增轮次后显示
+        async resetTreeData(projectId) {
+            const roundData = await projectApi.getRoundInfo(projectId)
+            this.treeData = roundData.data
+            this.originTreeData = roundData.data
         },
         setCurrentNode(nodeKey) {
             this.currentNode = nodeKey

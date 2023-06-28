@@ -100,9 +100,11 @@ const handleSubmit = async ({ values, errors }) => {
             await userStore.login(form)
             const { redirect, ...otherQuery } = router.currentRoute.value.query
             router.push({
-                name: redirect || "Workplace"
+                name: redirect || "Workplace",
+                query:{
+                    ...otherQuery // 将退出时的查询参数放入，这样就不会错误
+                }
             })
-            Message.success("登录成功，等待跳转")
         } catch (err) {
             errorMessage.value = err.message
         } finally {

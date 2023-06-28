@@ -23,9 +23,9 @@ const crudRef = ref()
 const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     api: projectApi.getPageList,
-    add: { show: true },
-    edit: { show: true },
-    delete: { show: true },
+    add: { show: true,api: projectApi.save},
+    edit: { show: true,api: projectApi.update},
+    delete: { show: true ,api:projectApi.delete},
     searchColNumber: 3,
     tablePagination: true,
     operationColumn: true,
@@ -193,7 +193,7 @@ const crudColumns = ref([
         search: true,
         commonRules: [{ required: true, message: "责任人必选" }],
         formType: "select",
-        dict: { url: "system/user/index", props: { label: "name", value: "name" }, translation: true }
+        dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true }
     },
     {
         title: "成员",
@@ -202,7 +202,7 @@ const crudColumns = ref([
         search: true,
         formType: "select",
         multiple: true,
-        dict: { url: "system/user/index", props: { label: "name", value: "name" }, translation: true },
+        dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
         commonRules: [{ required: true, message: "成员至少选择一个" }]
     },
     {
@@ -213,7 +213,7 @@ const crudColumns = ref([
         commonRules: [{ required: true, message: "关键等级必填" }],
         search: true,
         formType: "radio",
-        dict: { name: "security_level", props: { label: "value", value: "key" } }
+        dict: { name: "security_level", props: { label: "title", value: "key" } }
     },
     {
         title: "测试级别",

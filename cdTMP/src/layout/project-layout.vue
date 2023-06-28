@@ -41,17 +41,23 @@
                                             @click="() => handleRoundAddClick(nodeData)"
                                         />
                                     </a-tooltip>
-                                    <a-tooltip content="点击删除轮次"
-                                        ><IconMinus
-                                            style="
-                                                position: absolute;
-                                                right: 25px;
-                                                font-size: 12px;
-                                                top: 8px;
-                                                color: #3370ff;
-                                            "
-                                            @click="() => handleRoundDelClick(nodeData)"
-                                    /></a-tooltip>
+                                    <a-tooltip content="点击删除轮次">
+                                        <a-popconfirm
+                                            content="确定要删除该轮次吗?"
+                                            position="bottom"
+                                            @ok="handleRoundDelClick(nodeData)"
+                                        >
+                                            <IconMinus
+                                                style="
+                                                    position: absolute;
+                                                    right: 25px;
+                                                    font-size: 12px;
+                                                    top: 8px;
+                                                    color: #3370ff;
+                                                "
+                                            />
+                                        </a-popconfirm>
+                                    </a-tooltip>
                                     <a-tooltip content="点击编辑当前轮次"
                                         ><IconEdit
                                             style="
@@ -82,6 +88,7 @@
         :column="roundColumn"
         :options="roundOption"
         width="800px"
+        :submit="handleRoundSubmit"
     ></ma-form-modal>
 </template>
 
@@ -92,10 +99,12 @@ import PageLayout from "@/layout/page-layout.vue"
 import MaFormModal from "@/components/ma-form-modal/index.vue"
 import projectApi from "@/api/project/project"
 import roundApi from "@/api/project/round"
+import { Message } from "@arco-design/web-vue"
 import { useRoute } from "vue-router"
 import { useRouter } from "vue-router"
 import { useTreeDataStore } from "@/store"
 import { storeToRefs } from "pinia"
+import dayjs from "dayjs"
 //~~~~ 缩小后的menu菜单
 const drawerVisible = ref(false)
 provide("toggleDrawerMenu", () => {
@@ -139,7 +148,7 @@ const { treeData, currentNode } = storeToRefs(treeDataStore)
 const projectInfo = ref({ ...route.query })
 const projectId = ref(route.query.id)
 onMounted(async () => {
-    treeDataStore.initTreeData(projectId)
+    treeDataStore.initTreeData(projectId.value)
 })
 /// 点击树状节点-参数1:节点数组，参数2:树node对象
 const pointNode = (value, data) => {
@@ -209,10 +218,17 @@ const maFormModalRef = ref()
 const title = ref("")
 /// 点击新增轮次按钮
 const handleRoundAddClick = (nodeData) => {
-    // 这里是文档写错了
-    console.log(maFormModalRef.value.form);
+    // 这里是文档写错了,调用form是里面组件绑定的数据
     maFormModalRef.value.form = {}
-    maFormModalRef.value.open({})
+    maFormModalRef.value.open({
+        beginTime: dayjs().format("YYYY-MM-DD"),
+        grade: "1",
+        key: `${treeDataStore.treeData.length}`,
+        name: `第${treeDataStore.treeData.length + 1}轮测试`,
+        ident: `${route.query.ident}-R${treeDataStore.treeData.length + 1}`,
+        project: projectId.value
+    })
+    title.value = "新增轮次"
 }
 /// 点击编辑轮次按钮
 const handleRoundEditClick = async (nodeData) => {
@@ -224,8 +240,35 @@ const handleRoundEditClick = async (nodeData) => {
     title.value = `编辑轮次:${data.data.name}`
 }
 /// 点击删除轮次按钮
-const handleRoundDelClick = () => {
-    console.log("删除轮次")
+const handleRoundDelClick = async (value) => {
+    try {
+        await roundApi.delete(projectId.value, value)
+        Message.success("删除成功！")
+        treeDataStore.resetTreeData(projectId.value)
+    } catch {
+        Message.error("删除失败！")
+    }
+}
+/// Ma-form-Modal的提交按钮
+const handleRoundSubmit = async (value) => {
+    console.log(value)
+    if (title.value.slice(0, 1) === "编") {
+        try {
+            await roundApi.update(value.id, value)
+            Message.success("编辑成功！")
+        } catch {
+            Message.error("编辑失败！")
+        }
+    }
+    if (title.value.slice(0, 1) === "新") {
+        try {
+            await roundApi.save(projectId.value, value)
+            Message.success("新增成功！")
+            treeDataStore.resetTreeData(projectId.value)
+        } catch {
+            Message.error("新增失败！")
+        }
+    }
 }
 /// 设置轮次弹窗的列信息
 const roundColumn = ref([

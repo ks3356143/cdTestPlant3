@@ -7,7 +7,7 @@ export default {
      */
     getNoticeList(params = {}) {
         return request({
-            url: "common/getNoticeList",
+            url: "system/getNoticeList",
             method: "get",
             params
         })

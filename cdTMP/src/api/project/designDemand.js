@@ -11,5 +11,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 传入id以及data编辑设计需求
+     * @returns 成功编辑或失败
+     */
+    editDesignDemand(id, data = {}) {
+        return request({
+            url: `project/editDesignDemand/` + id,
+            method: "put",
+            data
+        })
     }
 }
