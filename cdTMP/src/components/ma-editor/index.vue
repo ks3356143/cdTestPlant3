@@ -34,7 +34,6 @@ import "tinymce/plugins/quickbars" //快速工具栏
 import "tinymce/plugins/save" //保存
 import "tinymce/plugins/searchreplace" //查找替换
 import "tinymce/plugins/table" //表格
-import "tinymce/plugins/template" //内容模板
 import "tinymce/plugins/visualblocks" //显示元素范围
 import "tinymce/plugins/visualchars" //显示不可见字符
 import "tinymce/plugins/wordcount" //字数统计
@@ -48,7 +47,7 @@ const props = defineProps({
     plugins: {
         type: [String, Array],
         default:
-            "preview searchreplace autolink directionality visualblocks visualchars template code codesample table charmap nonbreaking insertdatetime advlist lists wordcount autosave"
+            "preview searchreplace autolink directionality visualblocks visualchars code codesample table charmap nonbreaking insertdatetime advlist lists wordcount autosave"
     },
     toolbar: {
         type: [String, Array],

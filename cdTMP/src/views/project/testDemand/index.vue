@@ -97,7 +97,7 @@ const crudColumns = ref([
         search: true,
         formType: "select",
         commonRules: [{ required: true, message: "设计人员必填" }],
-        dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
+        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
         title: "执行人员",
@@ -107,7 +107,7 @@ const crudColumns = ref([
         search: true,
         formType: "select",
         commonRules: [{ required: true, message: "执行人员必填" }],
-        dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
+        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
         title: "审核人员",
@@ -117,7 +117,7 @@ const crudColumns = ref([
         search: true,
         formType: "select",
         commonRules: [{ required: true, message: "审核人员必填" }],
-        dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
+        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
         title: "用例综述",

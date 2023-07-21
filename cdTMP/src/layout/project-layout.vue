@@ -6,15 +6,16 @@
         <a-layout class="layout">
             <a-layout class="layout layout-demo">
                 <a-layout-sider class="layout-sider">
-                    <div class="p-2">
-                        <a-input-group class="mb-2 w-full flex items-center" size="mini">
+                    <div class="p-2 overflow-auto myhcalc">
+                        <a-input-group class="mb-2 w-full flex items-center h-1/12" size="mini">
                             <a-input style="height: 32px" v-model="searchKey" allow-clear></a-input>
                             <a-button @click="handleSearchTreeDataClick">搜索</a-button>
                         </a-input-group>
-                        <a-alert title="提示" style="margin-bottom: 10px" class="mt-0 py-1"
+                        <a-alert title="提示" style="margin-bottom: 10px" class="mt-0 py-1 h-1/12"
                             >空搜索需要点击搜索按钮</a-alert
                         >
                         <a-tree
+                            class="h-10/12"
                             :data="treeData"
                             size="small"
                             block-node
@@ -74,7 +75,7 @@
                         </a-tree>
                     </div>
                 </a-layout-sider>
-                <a-layout class="layout-content">
+                <a-layout class="layout-content myhcalc">
                     <a-layout-content class="work-area project-layout">
                         <PageLayout />
                     </a-layout-content>
@@ -179,35 +180,36 @@ const loadMore = (nodeData) => {
     if (nodeData.level == "0") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getDutInfo(projectInfo.value.id, nodeData.key, nodeData.level)
-            nodeData.children = res
+            // ~~~~~~~~~~~~~注意这里res和res.data，反正nodeData要返回数组~~~~~~~~~~~~~~~~~
+            nodeData.children = res.data
             resolve()
         })
     }
     if (nodeData.level == "1") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getDemandInfo(projectInfo.value.id, nodeData.key, nodeData.level)
-            nodeData.children = res
+            nodeData.children = res.data
             resolve()
         })
     }
     if (nodeData.level == "2") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getTestInfo(projectInfo.value.id, nodeData.key, nodeData.level)
-            nodeData.children = res
+            nodeData.children = res.data
             resolve()
         })
     }
     if (nodeData.level == "3") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getCaseInfo(projectInfo.value.id, nodeData.key, nodeData.level)
-            nodeData.children = res
+            nodeData.children = res.data
             resolve()
         })
     }
     if (nodeData.level == "4") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getProblemInfo(projectInfo.value.id, nodeData.key, nodeData.level)
-            nodeData.children = res
+            nodeData.children = res.data
             resolve()
         })
     }
@@ -469,5 +471,8 @@ const roundOption = ref({
     background-color: var(--color-fill-2);
     transition: padding 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
     position: absolute;
+}
+.myhcalc {
+    height: calc(100% - 60px);
 }
 </style>

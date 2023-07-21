@@ -193,7 +193,7 @@ const crudColumns = ref([
         search: true,
         commonRules: [{ required: true, message: "责任人必选" }],
         formType: "select",
-        dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true }
+        dict: { url: "system/user/index", props: { label: "name", value: "name" }, translation: true }
     },
     {
         title: "成员",
@@ -202,7 +202,7 @@ const crudColumns = ref([
         search: true,
         formType: "select",
         multiple: true,
-        dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
+        dict: { url: "system/user/index", props: { label: "name", value: "name" }, translation: true },
         commonRules: [{ required: true, message: "成员至少选择一个" }]
     },
     {

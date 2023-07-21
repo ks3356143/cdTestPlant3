@@ -74,11 +74,10 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, ref } from "vue"
+import { reactive, ref } from "vue"
 import verifyCode from "@cps/ma-verifyCode/index.vue"
 import { useUserStore } from "@/store"
 import { useRouter, useRoute } from "vue-router"
-import { Message } from "@arco-design/web-vue"
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()

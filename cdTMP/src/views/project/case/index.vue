@@ -260,7 +260,7 @@ const crudColumns = ref([
         search: true,
         formType: "select",
         commonRules: [{ required: true, message: "提单人必填" }],
-        dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
+        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
         title: "提单日期",
@@ -286,7 +286,7 @@ const crudColumns = ref([
         dataIndex: "verifyPerson",
         formType: "select",
         commonRules: [{ required: true, message: "提单人必填" }],
-        dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
+        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
         title: "验证日期",
@@ -300,7 +300,7 @@ const crudColumns = ref([
         dataIndex: "revokePerson",
         formType: "select",
         commonRules: [{ required: true, message: "提单人必填" }],
-        dict: { url: "system/user/index", translation: true, props: { label: "name", value: "name" } }
+        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
         title: "撤销日期",
