@@ -149,8 +149,8 @@ const crudRef = ref()
 const crudOptions = reactive({
     // 顶部每行显示列数
     searchColNumber: 3,
-    // 开启分页
-    tablePagination: true,
+    // 不开启table的分页，但开启我们自己的分页器
+    tablePagination: false,
     // 是否显示索引列
     showIndex: false,
     // 行选择器
@@ -222,7 +222,6 @@ const crudColumns = reactive([
         title: "邮箱",
         align: "center",
         dataIndex: "email",
-        search: true,
         width: 100,
         commonRules: [{ type: "email", message: "请输入正确的邮箱" }]
     },

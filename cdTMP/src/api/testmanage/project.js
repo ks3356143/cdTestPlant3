@@ -12,7 +12,7 @@ export default {
         })
     },
     /**
-     * 添加用户
+     * 添加项目
      * @returns
      */
     save(params = {}) {

@@ -70,8 +70,9 @@ const useUserStore = defineStore("user", {
             return loginAPI
                 .login(form)
                 .then((res) => {
-                    if (res.data.success === true) {
+                    if (res.success === true) {
                         this.setToken(res.data.token)
+                        // this.setToken(res.data.token)
                         return true
                     } else {
                         return false

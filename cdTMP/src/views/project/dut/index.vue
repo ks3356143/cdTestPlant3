@@ -29,7 +29,7 @@ const crudOptions = ref({
     edit: { show: true, api: designDemandApi.editDesignDemand },
     delete: { show: true },
     searchColNumber: 3,
-    tablePagination: true,
+    tablePagination: false,
     operationColumn: true,
     operationColumnAlign:'center',
     formOption: {
@@ -42,7 +42,6 @@ const crudColumns = ref([
         align:'center',
         width: 50,
         dataIndex: "id",
-        search: true,
         commonRules: [{ required: true, message: "标识是必填" }],
         validateTrigger: "blur"
     },

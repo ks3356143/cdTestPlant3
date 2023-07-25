@@ -21,12 +21,12 @@ function createService() {
     // 实例的response响应拦截器
     service.interceptors.response.use(
         (res) => {
-            // 如果发现响应头有文件传输扩展，或则响应头为application/json，或者直接status=200
+            // 如果发现响应头有文件传输扩展，或者响应头为application/json，或者直接status=200
             if (
                 (res.headers["content-disposition"] || !/^application\/json/.test(res.headers["content-type"])) &&
                 res.status === 200
             ) {
-                return res
+                return res.data
                 // 如果发现data中有size字段直接报错
             } else if (res.data.size) {
                 res.data.code = 500

@@ -34,7 +34,7 @@ const crudOptions = ref({
     edit: { show: true },
     delete: { show: true },
     searchColNumber: 3,
-    tablePagination: true,
+    tablePagination: false,
     operationColumn: true,
     scroll: { x: "100%", y: "100%" },
     formOption: {

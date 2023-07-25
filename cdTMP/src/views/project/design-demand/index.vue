@@ -32,7 +32,7 @@ const crudOptions = ref({
     edit: { show: true, api: testDemandApi.editTestDemand },
     delete: { show: true },
     searchColNumber: 3,
-    tablePagination: true,
+    tablePagination: false,
     operationColumn: true,
     formOption: {
         width: 1200

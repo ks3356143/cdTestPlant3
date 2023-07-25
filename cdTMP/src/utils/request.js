@@ -28,7 +28,7 @@ function createService() {
                     !/^application\/json/.test(response.headers["content-type"])) &&
                 response.status === 200
             ) {
-                return response
+                return response.data
             } else if (response.data.size) {
                 response.data.code = 500
                 response.data.message = "服务器内部错误"

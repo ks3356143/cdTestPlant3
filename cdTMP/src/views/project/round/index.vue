@@ -62,7 +62,7 @@ const crudOptions = ref({
     edit: { show: true },
     delete: { show: true },
     searchColNumber: 3,
-    tablePagination: true,
+    tablePagination: false,
     operationColumn: true,
     operationColumnAlign: "center",
     formOption: {
@@ -83,7 +83,6 @@ const crudColumns = ref([
         width: 50,
         align: "center",
         dataIndex: "id",
-        search: true,
         commonRules: [{ required: true, message: "ID是必填" }],
         validateTrigger: "blur"
     },

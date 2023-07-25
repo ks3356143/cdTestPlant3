@@ -220,14 +220,16 @@ const maFormModalRef = ref()
 const title = ref("")
 /// 点击新增轮次按钮
 const handleRoundAddClick = (nodeData) => {
+    let create_number = treeDataStore.getRoundMiddleInfo()
     // 这里是文档写错了,调用form是里面组件绑定的数据
     maFormModalRef.value.form = {}
+    // 这里如果删除中间轮次，那么新增信息应该从中间开始
     maFormModalRef.value.open({
         beginTime: dayjs().format("YYYY-MM-DD"),
         grade: "1",
-        key: `${treeDataStore.treeData.length}`,
-        name: `第${treeDataStore.treeData.length + 1}轮测试`,
-        ident: `${route.query.ident}-R${treeDataStore.treeData.length + 1}`,
+        key: `${create_number}`,
+        name: `第${create_number + 1}轮测试`,
+        ident: `${route.query.ident}-R${create_number + 1}`,
         project: projectId.value
     })
     title.value = "新增轮次"
