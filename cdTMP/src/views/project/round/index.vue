@@ -47,20 +47,21 @@ import { useRoute, useRouter } from "vue-router"
 import dutApi from "@/api/project/dut"
 const route = useRoute()
 const router = useRouter()
+const roundNumber = route.query.key.split("-")[0]
 
 // crud组件
 const crudOptions = ref({
     api: dutApi.getDutList,
+    add: { show: true, api: dutApi.save },
+    edit: { show: true, api: dutApi.update },
+    delete: { show: true, api: dutApi.delete },
     parameters: {
         projectId: route.query.id,
-        round: route.query.key
+        round: roundNumber,
     },
-    operationWidth: 200,
+    operationWidth: 500,
     showIndex: false,
     rowSelection: { showCheckedAll: true },
-    add: { show: true },
-    edit: { show: true },
-    delete: { show: true },
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,

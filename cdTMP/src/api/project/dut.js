@@ -7,9 +7,42 @@ export default {
      */
     getDutList(params = {}) {
         return request({
-            url: `project/getDutList`,
+            url: `/project/getDutList`,
             method: "get",
             params
         })
-    }
+    },
+    /**
+     * 添加被测件
+     * @returns
+     */
+    save(params = {}) {
+        return request({
+            url: "/project/dut/save",
+            method: "post",
+            data: params
+        })
+    },
+    /**
+     * 更新dut
+     * @returns
+     */
+    update(id, data = {}) {
+        return request({
+            url: "/project/dut/update/" + id,
+            method: "put",
+            data
+        })
+    },
+    /**
+     * 删除dut
+     * @returns
+     */
+    delete(data) {
+        return request({
+            url: "/project/dut/delete",
+            method: "delete",
+            data
+        })
+    },
 }

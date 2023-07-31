@@ -255,7 +255,6 @@ const handleRoundDelClick = async (value) => {
 }
 /// Ma-form-Modal的提交按钮
 const handleRoundSubmit = async (value) => {
-    console.log(value)
     if (title.value.slice(0, 1) === "编") {
         try {
             await roundApi.update(value.id, value)

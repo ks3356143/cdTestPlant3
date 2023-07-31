@@ -65,13 +65,24 @@ const submit = async () => {
     }
 
     let response
+    // 在这里添加我们自定义的parameters，注意判断options中是否有parameters-key
     if (currentAction.value === "add") {
         isFunction(options.beforeAdd) && (await options.beforeAdd(formData))
-        response = await options.add.api(formData)
+        // 首先判断是否options.parameters存在
+        if (!options.parameters) {
+            response = await options.add.api(formData)
+        } else {
+            response = await options.add.api({ ...formData, ...options.parameters })
+        }
         isFunction(options.afterAdd) && (await options.afterAdd(response, formData))
     } else {
         isFunction(options.beforeEdit) && (await options.beforeEdit(formData))
-        response = await options.edit.api(formData[options.pk], formData)
+        // 编辑也需要更新
+        if (!options.parameters) {
+            response = await options.edit.api(formData[options.pk], formData)
+        } else {
+            response = await options.edit.api(formData[options.pk], { ...formData, ...options.parameters })
+        }
         isFunction(options.afterEdit) && (await options.afterEdit(response, formData))
     }
     if (response.success) {
