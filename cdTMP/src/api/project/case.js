@@ -11,4 +11,37 @@ export default {
             params
         })
     },
+    /**
+     * 添加测试用例
+     * @returns
+     */
+    save(params = {}) {
+        return request({
+            url: "/project/case/save",
+            method: "post",
+            data: params
+        })
+    },
+    /**
+     * 更新测试用例
+     * @returns
+     */
+    update(id, data = {}) {
+        return request({
+            url: "/project/case/update/" + id,
+            method: "put",
+            data
+        })
+    },
+    /**
+     * 删除测试用例
+     * @returns
+     */
+    delete(data) {
+        return request({
+            url: "/project/case/delete",
+            method: "delete",
+            data
+        })
+    },
 }

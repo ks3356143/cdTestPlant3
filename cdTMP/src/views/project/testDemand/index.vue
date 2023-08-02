@@ -20,6 +20,9 @@ const testDemandNumber = route.query.key.split("-")[3]
 // crud设置
 const crudOptions = ref({
     api: caseApi.getCaseList,
+    add: { show: true, api: caseApi.save },
+    edit: { show: true, api: caseApi.update },
+    delete: { show: true, api: caseApi.delete },
     parameters: {
         projectId: route.query.id,
         round: roundNumber,
@@ -29,9 +32,6 @@ const crudOptions = ref({
     },
     showIndex: false,
     rowSelection: { showCheckedAll: true },
-    add: { show: true },
-    edit: { show: true },
-    delete: { show: true },
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,
