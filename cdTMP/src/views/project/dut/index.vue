@@ -18,6 +18,9 @@ const dutNumber = route.query.key.split("-")[1]
 // crud组件
 const crudOptions = ref({
     api: designDemandApi.getDesignDemandList,
+    add: { show: true ,api: designDemandApi.save},
+    edit: { show: true, api: designDemandApi.editDesignDemand },
+    delete: { show: true,api: designDemandApi.delete },
     parameters: {
         projectId: route.query.id,
         round: roundNumber,
@@ -25,21 +28,18 @@ const crudOptions = ref({
     },
     showIndex: false,
     rowSelection: { showCheckedAll: true },
-    add: { show: true },
-    edit: { show: true, api: designDemandApi.editDesignDemand },
-    delete: { show: true },
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,
-    operationColumnAlign:'center',
+    operationColumnAlign: "center",
     formOption: {
-        width: 1200,
+        width: 1200
     }
 })
 const crudColumns = ref([
     {
         title: "ID",
-        align:'center',
+        align: "center",
         width: 50,
         dataIndex: "id",
         commonRules: [{ required: true, message: "标识是必填" }],
@@ -47,7 +47,7 @@ const crudColumns = ref([
     },
     {
         title: "标识",
-        align:'center',
+        align: "center",
         width: 120,
         dataIndex: "ident",
         search: true,
@@ -56,7 +56,7 @@ const crudColumns = ref([
     },
     {
         title: "需求名称",
-        align:'center',
+        align: "center",
         width: 150,
         dataIndex: "name",
         search: true,
@@ -66,8 +66,9 @@ const crudColumns = ref([
     {
         title: "需求类型",
         width: 150,
-        align:'center',
+        align: "center",
         dataIndex: "demandType",
+        addDefaultValue: "1",
         formType: "radio",
         search: true,
         dict: { name: "demandType", props: { label: "title", value: "key" }, translation: true },
@@ -77,7 +78,7 @@ const crudColumns = ref([
     {
         title: "需求描述",
         dataIndex: "description",
-        hide:true,
+        hide: true,
         width: 300,
         formType: "editor",
         height: 300

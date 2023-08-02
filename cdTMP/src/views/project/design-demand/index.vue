@@ -15,11 +15,14 @@ const route = useRoute()
 const router = useRouter()
 // 根据传参获取key，分别为轮次、设计需求的key
 const roundNumber = route.query.key.split("-")[0]
-const dutNumber = route.query.key.split("-")[0]
+const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
 // crud组件
 const crudOptions = ref({
     api: testDemandApi.getTestDemandList,
+    add: { show: true ,api:testDemandApi.save},
+    edit: { show: true, api: testDemandApi.update },
+    delete: { show: true,api:testDemandApi.delete },
     parameters: {
         projectId: route.query.id,
         round: roundNumber,
@@ -28,9 +31,6 @@ const crudOptions = ref({
     },
     showIndex: false,
     rowSelection: { showCheckedAll: true },
-    add: { show: true },
-    edit: { show: true, api: testDemandApi.editTestDemand },
-    delete: { show: true },
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,

@@ -11,12 +11,37 @@ export default {
             params
         })
     },
-    // 修改测试项信息
-    editTestDemand(id, data = {}) {
+    /**
+     * 添加被测件
+     * @returns
+     */
+    save(params = {}) {
         return request({
-            url: `project/editTestDemand/` + id,
+            url: "/project/testDemand/save",
             method: "post",
+            data: params
+        })
+    },
+    /**
+     * 更新dut
+     * @returns
+     */
+    update(id, data = {}) {
+        return request({
+            url: "/project/testDemand/update/" + id,
+            method: "put",
             data
         })
-    }
+    },
+    /**
+     * 删除dut
+     * @returns
+     */
+    delete(data) {
+        return request({
+            url: "/project/testDemand/delete",
+            method: "delete",
+            data
+        })
+    },
 }

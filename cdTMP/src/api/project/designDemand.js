@@ -13,7 +13,7 @@ export default {
         })
     },
     /**
-     * 传入id以及data编辑设计需求
+     * 编辑设计需求
      * @returns 成功编辑或失败
      */
     editDesignDemand(id, data = {}) {
@@ -22,5 +22,38 @@ export default {
             method: "put",
             data
         })
-    }
+    },
+    /**
+     * 添加设计需求
+     * @returns
+     */
+    save(params = {}) {
+        return request({
+            url: "/project/designDemand/save",
+            method: "post",
+            data: params
+        })
+    },
+    /**
+     * 更新dut
+     * @returns
+     */
+    update(id, data = {}) {
+        return request({
+            url: "/project/designDemand/update/" + id,
+            method: "put",
+            data
+        })
+    },
+    /**
+     * 删除设计需求
+     * @returns
+     */
+    delete(data) {
+        return request({
+            url: "/project/designDemand/delete",
+            method: "delete",
+            data
+        })
+    },
 }
