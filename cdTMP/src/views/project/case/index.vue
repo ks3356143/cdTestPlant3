@@ -20,6 +20,9 @@ const testDemandNumber = route.query.key.split("-")[3]
 const caseNumber = route.query.key.split("-")[4]
 const crudOptions = ref({
     api: problemApi.getProblemList,
+    add: { show: true, api: problemApi.save },
+    edit: { show: true, api: problemApi.update },
+    delete: { show: true, api: problemApi.delete },
     parameters: {
         projectId: route.query.id,
         round: roundNumber,
@@ -30,9 +33,6 @@ const crudOptions = ref({
     },
     showIndex: false,
     rowSelection: { showCheckedAll: true },
-    add: { show: true },
-    edit: { show: true },
-    delete: { show: true },
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,
@@ -275,7 +275,7 @@ const crudColumns = ref([
         commonRules: [{ required: true, message: "提单人必填" }]
     },
     {
-        title: "提单日期",
+        title: "确认日期",
         hide: true,
         dataIndex: "designDate",
         formType: "date"

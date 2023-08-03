@@ -21,15 +21,17 @@ const route = useRoute()
 const data = ref([])
 const loading = ref(true)
 const roundNumber = route.query.key.split("-")[0]
-const designDemandNumber = route.query.key.split("-")[1]
-const testDemandNumber = route.query.key.split("-")[2]
-const caseNumber = route.query.key.split("-")[3]
-const problemNumber = route.query.key.split("-")[4]
+const dutNumber = route.query.key.split("-")[1]
+const designDemandNumber = route.query.key.split("-")[2]
+const testDemandNumber = route.query.key.split("-")[3]
+const caseNumber = route.query.key.split("-")[4]
+const problemNumber = route.query.key.split("-")[5]
 // 请求展示problem数据函数
 const fetchProblemData = async (
     params = {
         projectId: route.query.id,
         round: roundNumber,
+        dut: dutNumber,
         designDemand: designDemandNumber,
         testDemand: testDemandNumber,
         case: caseNumber,
@@ -40,7 +42,7 @@ const fetchProblemData = async (
     try {
         const problemData = await singleProblemApi.getSingleProblem(params)
         data.value = problemData.data // 是个对象
-        console.log(data.value);
+        console.log(data.value)
     } catch (e) {
         Message.error("请求失败，请检测网络")
     } finally {

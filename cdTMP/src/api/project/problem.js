@@ -11,5 +11,38 @@ export default {
             method: "get",
             params
         })
-    }
+    },
+    /**
+     * 添加问题单
+     * @returns
+     */
+    save(params = {}) {
+        return request({
+            url: "/project/problem/save",
+            method: "post",
+            data: params
+        })
+    },
+    /**
+     * 更新问题单
+     * @returns
+     */
+    update(id, data = {}) {
+        return request({
+            url: "/project/problem/update/" + id,
+            method: "put",
+            data
+        })
+    },
+    /**
+     * 删除问题单
+     * @returns
+     */
+    delete(data) {
+        return request({
+            url: "/project/problem/delete",
+            method: "delete",
+            data
+        })
+    },
 }
