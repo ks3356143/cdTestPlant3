@@ -4,6 +4,7 @@ import { resolve } from "path"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 export default ({ mode }) => {
     const env = loadEnv(mode, process.cwd())
+    console.log("当前环境为：", mode)
     const proxyPrefix = env.VITE_APP_PROXY_PREFIX
 
     return defineConfig({
@@ -20,6 +21,7 @@ export default ({ mode }) => {
 
         build: {
             chunkSizeWarningLimit: 3000
+            // assetsPublicPath: "./"
         },
 
         server: {

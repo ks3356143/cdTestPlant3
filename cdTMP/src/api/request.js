@@ -92,6 +92,9 @@ function createRequest(service) {
         const env = import.meta.env
         // localStorage获取token信息
         const token = tool.local.get(env.VITE_APP_TOKEN_PREFIX)
+        console.log("打印token,env.VITE_APP_TOKEN_PREFIX:", env.VITE_APP_TOKEN_PREFIX)
+        console.log("打印proxy_prefix:", env.VITE_APP_PROXY_PREFIX)
+        console.log("打印现在ip地址以及端口env.VITE_APP_BASE_URL:", env.VITE_APP_BASE_URL)
         const configDefault = {
             headers: {
                 Authorization: "Bearer " + token,
@@ -112,6 +115,7 @@ function createRequest(service) {
             option.url = option.url + "?" + stringify(option.params)
             option.params = {}
         }
+        console.log("最后的option是:", option)
         return service(option)
     }
 }
