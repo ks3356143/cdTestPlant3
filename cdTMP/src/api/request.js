@@ -112,7 +112,6 @@ function createRequest(service) {
             option.url = option.url + "?" + stringify(option.params)
             option.params = {}
         }
-        console.log("最后的option是:", option)
         return service(option)
     }
 }

@@ -52,8 +52,8 @@ const roundNumber = route.query.key.split("-")[0]
 // crud组件
 const crudOptions = ref({
     api: dutApi.getDutList,
-    add: { show: true, api: dutApi.save },
-    edit: { show: true, api: dutApi.update },
+    add: { show: true, api: dutApi.save,text:"新增被测件" },
+    edit: { show: true, api: dutApi.update,text:"编辑被测件" },
     delete: { show: true, api: dutApi.delete },
     parameters: {
         projectId: route.query.id,
@@ -68,7 +68,7 @@ const crudOptions = ref({
     operationColumnAlign: "center",
     formOption: {
         viewType: "drawer",
-        width: 600
+        width: 600,
     }
 })
 const beiceType = [

@@ -72,6 +72,21 @@
                                     /></a-tooltip>
                                 </template>
                             </template>
+                            <!-- 节点图标插槽 -->
+                            <template #icon="props">
+                                <template v-if="props.node.level === '1'">
+                                    [被测件]
+                                </template>
+                                <template v-if="props.node.level === '2'">
+                                    [设]
+                                </template>
+                                <template v-if="props.node.level === '3'">
+                                    [项]
+                                </template>
+                                <template v-if="props.node.level === '4'">
+                                    [例]
+                                </template>
+                            </template>
                         </a-tree>
                     </div>
                 </a-layout-sider>
@@ -94,7 +109,7 @@
 </template>
 
 <script setup>
-import { provide, ref, onMounted } from "vue"
+import { provide, ref, onMounted, h } from "vue"
 import NavBar from "@/layout/components/navbar.vue"
 import PageLayout from "@/layout/page-layout.vue"
 import MaFormModal from "@/components/ma-form-modal/index.vue"
