@@ -123,7 +123,8 @@ const crudColumns = ref([
         title: "用例综述",
         align: "center",
         dataIndex: "summarize",
-        search: true
+        search: true,
+        addDefaultValue: ""
     },
     {
         title: "用例初始化",
