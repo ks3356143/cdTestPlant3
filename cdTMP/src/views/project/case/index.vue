@@ -231,28 +231,33 @@ const crudColumns = ref([
         hide: true,
         search: true,
         dataIndex: "operation",
-        formType: "editor"
+        formType: "editor",
+        addDefaultValue: ""
     },
     {
         title: "期望结果",
         hide: true,
-        dataIndex: "expect"
+        dataIndex: "expect",
+        addDefaultValue: ""
     },
     {
         title: "问题结果",
         hide: true,
         dataIndex: "result",
-        formType: "editor"
+        formType: "editor",
+        addDefaultValue: ""
     },
     {
         title: "违反规则",
         hide: true,
-        dataIndex: "rules"
+        dataIndex: "rules",
+        addDefaultValue: ""
     },
     {
         title: "修改建议",
         hide: true,
-        dataIndex: "suggest"
+        dataIndex: "suggest",
+        addDefaultValue: ""
     },
     {
         title: "提单人",
