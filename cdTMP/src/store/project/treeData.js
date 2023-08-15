@@ -24,6 +24,62 @@ const useTreeDataStore = defineStore("treeDataStore", {
             this.treeData = roundData.data
             this.originTreeData = roundData.data
         },
+        // 新增删除dut后更新树状显示
+        async updateDutTreeData(data, projrctId) {
+            console.log(data);
+            let temp = data.key.split("-")
+            temp.pop(-1)
+            let roundKey = temp[0]
+            const nodeKey = temp.join("-")
+            const res = await projectApi.getDutInfo(projrctId, nodeKey, "0")
+            this.treeData[roundKey].children = res.data
+        },
+        // 新增删除designDemand后tree显示
+        async updateDesignDemandTreeData(data, projrctId) {
+            let temp = data.key.split("-")
+            temp.pop(-1)
+            let roundKey = temp[0]
+            let dutKey = temp[1]
+            const nodeKey = temp.join("-")
+            const res = await projectApi.getDemandInfo(projrctId, nodeKey, "1")
+            this.treeData[roundKey].children[dutKey].children = res.data
+        },
+        // 新增删除testDemand后tree显示
+        async updateTestDemandTreeData(data, projrctId) {
+            let temp = data.key.split("-")
+            temp.pop(-1)
+            let roundKey = temp[0]
+            let dutKey = temp[1]
+            let designKey = temp[2]
+            const nodeKey = temp.join("-")
+            const res = await projectApi.getTestInfo(projrctId, nodeKey, "2")
+            this.treeData[roundKey].children[dutKey].children[designKey].children = res.data
+        },
+        // 新增删除case后tree显示
+        async updateCaseTreeData(data, projrctId) {
+            let temp = data.key.split("-")
+            temp.pop(-1)
+            let roundKey = temp[0]
+            let dutKey = temp[1]
+            let designKey = temp[2]
+            let testKey = temp[3]
+            const nodeKey = temp.join("-")
+            const res = await projectApi.getCaseInfo(projrctId, nodeKey, "3")
+            this.treeData[roundKey].children[dutKey].children[designKey].children[testKey].children = res.data
+        },
+        // 新增删除problem后tree显示
+        async updateProblemTreeData(data, projrctId) {
+            let temp = data.key.split("-")
+            temp.pop(-1)
+            let roundKey = temp[0]
+            let dutKey = temp[1]
+            let designKey = temp[2]
+            let testKey = temp[3]
+            let caseKey = temp[4]
+            const nodeKey = temp.join("-")
+            const res = await projectApi.getProblemInfo(projrctId, nodeKey, "4")
+            this.treeData[roundKey].children[dutKey].children[designKey].children[testKey].children[caseKey].children = res.data
+        },
         setCurrentNode(nodeKey) {
             this.currentNode = nodeKey
         },

@@ -11,6 +11,8 @@
 import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import problemApi from "@/api/project/problem"
+import { useTreeDataStore } from "@/store"
+const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
@@ -18,11 +20,25 @@ const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
 const testDemandNumber = route.query.key.split("-")[3]
 const caseNumber = route.query.key.split("-")[4]
+const projectId = ref(route.query.id)
 const crudOptions = ref({
     api: problemApi.getProblemList,
     add: { show: true, api: problemApi.save },
     edit: { show: true, api: problemApi.update },
     delete: { show: true, api: problemApi.delete },
+    afterAdd: (res) => {
+        console.log(res);
+        let id = projectId.value
+        treeDataStore.updateProblemTreeData(res.data, id)
+    },
+    afterEdit: (res) => {
+        let id = projectId.value
+        treeDataStore.updateProblemTreeData(res.data, id)
+    },
+    afterDelete: (res, record) => {
+        let id = projectId.value
+        treeDataStore.updateProblemTreeData(record, id)
+    },
     parameters: {
         projectId: route.query.id,
         round: roundNumber,

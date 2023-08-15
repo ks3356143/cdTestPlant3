@@ -74,18 +74,10 @@
                             </template>
                             <!-- 节点图标插槽 -->
                             <template #icon="props">
-                                <template v-if="props.node.level === '1'">
-                                    [被测件]
-                                </template>
-                                <template v-if="props.node.level === '2'">
-                                    [设]
-                                </template>
-                                <template v-if="props.node.level === '3'">
-                                    [项]
-                                </template>
-                                <template v-if="props.node.level === '4'">
-                                    [例]
-                                </template>
+                                <template v-if="props.node.level === '1'"> [被测件] </template>
+                                <template v-if="props.node.level === '2'"> [设] </template>
+                                <template v-if="props.node.level === '3'"> [项] </template>
+                                <template v-if="props.node.level === '4'"> [例] </template>
                             </template>
                         </a-tree>
                     </div>
@@ -163,12 +155,13 @@ const treeRef = ref()
 const { treeData, currentNode } = storeToRefs(treeDataStore)
 const projectInfo = ref({ ...route.query })
 const projectId = ref(route.query.id)
+// 初始化树状数据
 onMounted(async () => {
     treeDataStore.initTreeData(projectId.value)
 })
-/// 点击树状节点-参数1:节点数组，参数2:树node对象
+
+/// 点击树状节点-参数1:节点数组，参数2:树node对象 - 添加双击处理方式
 const pointNode = (value, data) => {
-    console.log(data.node)
     if (data.node.level === "0") {
         router.push({ name: "round", query: { ...projectInfo.value, key: data.node.key } })
     }
@@ -195,7 +188,6 @@ const loadMore = (nodeData) => {
     if (nodeData.level == "0") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getDutInfo(projectInfo.value.id, nodeData.key, nodeData.level)
-            // ~~~~~~~~~~~~~注意这里res和res.data，反正nodeData要返回数组~~~~~~~~~~~~~~~~~
             nodeData.children = res.data
             resolve()
         })

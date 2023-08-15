@@ -11,16 +11,32 @@
 import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import designDemandApi from "@/api/project/designDemand"
+import { useTreeDataStore } from "@/store"
+const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
+const projectId = ref(route.query.id)
 // crud组件
 const crudOptions = ref({
     api: designDemandApi.getDesignDemandList,
-    add: { show: true ,api: designDemandApi.save},
+    add: { show: true, api: designDemandApi.save },
     edit: { show: true, api: designDemandApi.editDesignDemand },
-    delete: { show: true,api: designDemandApi.delete },
+    delete: { show: true, api: designDemandApi.delete },
+    // 处理添加后函数
+    afterAdd: (res) => {
+        let id = projectId.value
+        treeDataStore.updateDesignDemandTreeData(res.data, id)
+    },
+    afterEdit: (res) => {
+        let id = projectId.value
+        treeDataStore.updateDesignDemandTreeData(res.data, id)
+    },
+    afterDelete: (res, record) => {
+        let id = projectId.value
+        treeDataStore.updateDesignDemandTreeData(record, id)
+    },
     parameters: {
         projectId: route.query.id,
         round: roundNumber,

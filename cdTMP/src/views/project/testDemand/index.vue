@@ -11,18 +11,34 @@
 import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import caseApi from "@/api/project/case"
+import { useTreeDataStore } from "@/store"
+const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
 const testDemandNumber = route.query.key.split("-")[3]
+const projectId = ref(route.query.id)
 // crud设置
 const crudOptions = ref({
     api: caseApi.getCaseList,
     add: { show: true, api: caseApi.save },
     edit: { show: true, api: caseApi.update },
     delete: { show: true, api: caseApi.delete },
+    // 处理新增删除后树状图显示
+    afterAdd: (res) => {
+        let id = projectId.value
+        treeDataStore.updateCaseTreeData(res.data, id)
+    },
+    afterEdit: (res) => {
+        let id = projectId.value
+        treeDataStore.updateCaseTreeData(res.data, id)
+    },
+    afterDelete: (res, record) => {
+        let id = projectId.value
+        treeDataStore.updateCaseTreeData(record, id)
+    },
     parameters: {
         projectId: route.query.id,
         round: roundNumber,

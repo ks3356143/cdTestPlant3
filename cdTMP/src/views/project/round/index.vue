@@ -45,19 +45,34 @@
 import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import dutApi from "@/api/project/dut"
+import { useTreeDataStore } from "@/store"
+const treeDataStore = useTreeDataStore()
 const route = useRoute()
-const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
+const projectId = ref(route.query.id)
 
 // crud组件
 const crudOptions = ref({
     api: dutApi.getDutList,
-    add: { show: true, api: dutApi.save,text:"新增被测件" },
-    edit: { show: true, api: dutApi.update,text:"编辑被测件" },
+    add: { show: true, api: dutApi.save, text: "新增被测件" },
+    // 处理添加后函数
+    afterAdd: (res) => {
+        let id = projectId.value
+        treeDataStore.updateDutTreeData(res.data, id)
+    },
+    afterEdit: (res) => {
+        let id = projectId.value
+        treeDataStore.updateDutTreeData(res.data, id)
+    },
+    afterDelete: (res, record) => {
+        let id = projectId.value
+        treeDataStore.updateDutTreeData(record, id)
+    },
+    edit: { show: true, api: dutApi.update, text: "编辑被测件" },
     delete: { show: true, api: dutApi.delete },
     parameters: {
         projectId: route.query.id,
-        round: roundNumber,
+        round: roundNumber
     },
     operationWidth: 500,
     showIndex: false,
@@ -68,7 +83,7 @@ const crudOptions = ref({
     operationColumnAlign: "center",
     formOption: {
         viewType: "drawer",
-        width: 600,
+        width: 600
     }
 })
 const beiceType = [
