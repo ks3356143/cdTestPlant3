@@ -26,7 +26,6 @@ const useTreeDataStore = defineStore("treeDataStore", {
         },
         // 新增删除dut后更新树状显示
         async updateDutTreeData(data, projrctId) {
-            console.log(data);
             let temp = data.key.split("-")
             temp.pop(-1)
             let roundKey = temp[0]

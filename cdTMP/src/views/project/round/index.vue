@@ -41,7 +41,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import dutApi from "@/api/project/dut"
@@ -123,7 +123,7 @@ const crudColumns = ref([
             translation: true,
             tagColors: { XQ: "blue", SO: "green", SJ: "orangered", XY: "pinkpurple" }
         },
-        control: (value) => {
+        control: (value, data) => {
             if (value === "SO") {
                 return {
                     black_line: { display: true },
@@ -135,6 +135,8 @@ const crudColumns = ref([
                     comment_line: { display: true }
                 }
             } else {
+                // 其他数据清除
+
                 return {
                     black_line: { display: false },
                     pure_code_line: { display: false },
@@ -160,41 +162,74 @@ const crudColumns = ref([
         title: "空行",
         hide: true,
         align: "center",
-        dataIndex: "black_line"
+        dataIndex: "black_line",
+        formType: "input-number"
     },
     {
         title: "纯注释",
         hide: true,
         align: "center",
-        dataIndex: "pure_code_line"
+        dataIndex: "pure_code_line",
+        formType: "input-number"
     },
     {
         title: "混合行",
         hide: true,
         align: "center",
-        dataIndex: "mix_line"
+        dataIndex: "mix_line",
+        formType: "input-number"
     },
     {
         title: "总注释",
         hide: true,
         align: "center",
-        dataIndex: "total_comment_line"
+        dataIndex: "total_comment_line",
+        formType: "input-number"
     },
     {
         title: "总代码",
         align: "center",
-        dataIndex: "total_code_line"
+        dataIndex: "total_code_line",
+        formType: "input-number"
     },
     {
         title: "总行数",
         align: "center",
-        dataIndex: "total_line"
+        dataIndex: "total_line",
+        formType: "input-number"
     },
     {
-        title: "注释率",
+        title: "注释率 %",
         align: "center",
         dataIndex: "comment_line",
-        commonRules: [{ required: true, message: "注释率必填" }]
+        addDisabled: true,
+        editDisabled: true,
+        customRender: ({ record }) => {
+            if (record.total_comment_line && record.total_code_line) {
+                if (isNaN(parseFloat(record.total_comment_line)) || isNaN(parseFloat(record.total_code_line))) {
+                    return "数值错误"
+                }
+                if (parseFloat(record.total_comment_line) <= 0 || parseFloat(record.total_code_line) <= 0) {
+                    return "不能为负数"
+                }
+                if (parseFloat(record.total_comment_line) >= parseFloat(record.total_code_line)) {
+                    return "注释大于总行"
+                }
+                return (
+                    <a-statistic
+                        animation-duration={parseInt(1000)}
+                        precision={2}
+                        animation
+                        value-style={{ color: "lightblue" }}
+                        value={parseFloat(record.total_comment_line / record.total_code_line)}
+                    ></a-statistic>
+                )
+            }
+        },
+        // 注意这个是个创新点
+        control(value, data) {
+            data.comment_line = (data.total_comment_line / data.total_code_line).toFixed(2).toString()
+        }
     }
 ])
 </script>

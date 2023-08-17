@@ -218,7 +218,7 @@ const crudColumns = ref([
     {
         title: "测试级别",
         dataIndex: "test_level",
-        commonRules: [{ required: true, message: "请至少选择一个" }],
+        commonRules: [{ required: true, message: "请至少选择一个测试级别" }],
         addDefaultValue: ["6"],
         hide: true,
         formType: "checkbox",
@@ -227,9 +227,10 @@ const crudColumns = ref([
     {
         title: "平台类型",
         dataIndex: "plant_type",
-        addDefaultValue: "4",
+        commonRules: [{ required: true, message: "请至少选择一个平台类型" }],
+        addDefaultValue: ["3"],
         hide: true,
-        formType: "radio",
+        formType: "checkbox",
         dict: { name: "plant_type", props: { label: "title", value: "key" } }
     },
     {

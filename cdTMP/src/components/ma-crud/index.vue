@@ -473,7 +473,7 @@ const requestHandle = async () => {
             tableData.value = response
         }
     } else {
-        console.error(`ma-crud error：crud.api not is Function.`)
+        console.error(`ma-crud error：crud.api 不是一个 Function.`)
     }
     isFunction(options.value.afterRequest) && options.value.afterRequest(tableData.value)
     loading.value = false
