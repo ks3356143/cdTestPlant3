@@ -21,6 +21,17 @@ const DATAMANAGE = {
                 locale: "字典管理",
                 icon: "icon-book"
             }
+        },
+        {
+            path: "projContact",
+            name: "ProjContact",
+            component: () => import("@/views/datamanage/projContact/index.vue"),
+            meta: {
+                requiresAuth: true,
+                roles: ["*"],
+                locale: "项目联系信息",
+                icon: "icon-phone"
+            }
         }
     ]
 }

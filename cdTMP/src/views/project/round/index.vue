@@ -2,7 +2,7 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns">
+            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #total_code_line="{ record }">
                     <template v-if="record.total_code_line">
                         <a-statistic
@@ -50,7 +50,7 @@ const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const roundNumber = route.query.key.split("-")[0]
 const projectId = ref(route.query.id)
-
+const crudRef = ref()
 // crud组件
 const crudOptions = ref({
     api: dutApi.getDutList,
@@ -108,7 +108,10 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "ident",
         search: true,
-        commonRules: [{ required: true, message: "标识是必填" }],
+        // 这里做的标识预填
+        addDefaultValue: route.query.ident + "-R" + (parseInt(route.query.key) + 1) + "-UT",
+        addDisabled: true,
+        editDisabled: true,
         validateTrigger: "blur"
     },
     {

@@ -23,9 +23,9 @@ const crudRef = ref()
 const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     api: projectApi.getPageList,
-    add: { show: true,api: projectApi.save},
-    edit: { show: true,api: projectApi.update},
-    delete: { show: true ,api:projectApi.delete},
+    add: { show: true, api: projectApi.save },
+    edit: { show: true, api: projectApi.update },
+    delete: { show: true, api: projectApi.delete },
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,
@@ -97,8 +97,7 @@ const crudOptions = ref({
                                 title: "委托方信息",
                                 customClass: ["mt-3", "mb-5", "mx-1"],
                                 formList: [
-                                    { dataIndex: "entrust_ident" },
-                                    { dataIndex: "entrust_legal" },
+                                    { dataIndex: "entrust_unit" },
                                     { dataIndex: "entrust_contact" },
                                     { dataIndex: "entrust_contact_phone" },
                                     { dataIndex: "entrust_email" }
@@ -113,8 +112,7 @@ const crudOptions = ref({
                                 title: "研制方信息",
                                 customClass: ["mt-3", "mb-5", "mx-1"],
                                 formList: [
-                                    { dataIndex: "dev_ident" },
-                                    { dataIndex: "dev_legal" },
+                                    { dataIndex: "dev_unit" },
                                     { dataIndex: "dev_contact" },
                                     { dataIndex: "dev_contact_phone" },
                                     { dataIndex: "dev_email" }
@@ -129,8 +127,7 @@ const crudOptions = ref({
                                 title: "测评中心信息",
                                 customClass: ["mt-3", "mb-5", "mx-1"],
                                 formList: [
-                                    { dataIndex: "test_ident" },
-                                    { dataIndex: "test_legal" },
+                                    { dataIndex: "test_unit" },
                                     { dataIndex: "test_contact" },
                                     { dataIndex: "test_contact_phone" },
                                     { dataIndex: "test_email" }
@@ -262,16 +259,12 @@ const crudColumns = ref([
         dict: { name: "standard", props: { label: "title", value: "key" } }
     },
     {
-        title: "标识",
-        dataIndex: "entrust_ident",
+        title: "单位",
+        dataIndex: "entrust_unit",
         hide: true,
-        rules: [{ required: true, message: "标识必填" }]
-    },
-    {
-        title: "法人",
-        dataIndex: "entrust_legal",
-        hide: true,
-        rules: [{ required: true, message: "法人必填" }]
+        commonRules: [{ required: true, message: "单位必选" }],
+        formType: "select",
+        dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true }
     },
     {
         formType: "input",
@@ -295,16 +288,12 @@ const crudColumns = ref([
         rules: [{ required: true, message: "电子邮箱必填" }]
     },
     {
-        title: "标识",
-        dataIndex: "dev_ident",
+        title: "单位",
+        dataIndex: "dev_unit",
         hide: true,
-        rules: [{ required: true, message: "标识必填" }]
-    },
-    {
-        title: "法人",
-        dataIndex: "dev_legal",
-        hide: true,
-        rules: [{ required: true, message: "法人必填" }]
+        commonRules: [{ required: true, message: "单位必选" }],
+        formType: "select",
+        dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true }
     },
     {
         formType: "input",
@@ -328,16 +317,12 @@ const crudColumns = ref([
         rules: [{ required: true, message: "电子邮箱必填" }]
     },
     {
-        title: "标识",
-        dataIndex: "test_ident",
+        title: "单位",
+        dataIndex: "test_unit",
         hide: true,
-        rules: [{ required: true, message: "标识必填" }]
-    },
-    {
-        title: "法人",
-        dataIndex: "test_legal",
-        hide: true,
-        rules: [{ required: true, message: "法人必填" }]
+        commonRules: [{ required: true, message: "单位必选" }],
+        formType: "select",
+        dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true }
     },
     {
         formType: "input",
