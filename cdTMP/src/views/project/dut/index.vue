@@ -44,7 +44,7 @@ const crudOptions = ref({
     },
     showIndex: false,
     rowSelection: { showCheckedAll: true },
-    searchColNumber: 3,
+    searchColNumber: 4,
     tablePagination: false,
     operationColumn: true,
     operationColumnAlign: "center",
@@ -64,6 +64,7 @@ const crudColumns = ref([
     {
         title: "标识",
         align: "center",
+        sortable: { sortDirections: ["ascend"] },
         width: 120,
         dataIndex: "ident",
         search: true,
@@ -78,6 +79,13 @@ const crudColumns = ref([
         search: true,
         commonRules: [{ required: true, message: "需求名称是必填" }],
         validateTrigger: "blur"
+    },
+    {
+        title:'章节号',
+        align:'center',
+        width:150,
+        dataIndex:'chapter',
+        search:true,
     },
     {
         title: "需求类型",

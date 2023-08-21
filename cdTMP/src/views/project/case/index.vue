@@ -146,6 +146,7 @@ const crudColumns = ref([
     {
         title: "标识",
         align: "center",
+        sortable: { sortDirections: ["ascend"] },
         width: 140,
         search: true,
         dataIndex: "ident",

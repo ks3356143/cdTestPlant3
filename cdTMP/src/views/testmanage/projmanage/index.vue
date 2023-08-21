@@ -146,6 +146,7 @@ const crudColumns = ref([
     {
         title: "标识",
         width: 70,
+        sortable: { sortDirections: ["ascend"] },
         dataIndex: "ident",
         search: true,
         commonRules: [{ required: true, message: "标识是必填" }],

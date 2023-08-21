@@ -105,6 +105,7 @@ const crudColumns = ref([
     {
         title: "标识",
         width: 150,
+        sortable: { sortDirections: ["ascend"] },
         align: "center",
         dataIndex: "ident",
         search: true,
@@ -162,6 +163,30 @@ const crudColumns = ref([
         validateTrigger: "blur"
     },
     {
+        title: "版本",
+        align: "center",
+        dataIndex: "version",
+        search: true,
+        commonRules: [{ required: true, message: "版本必填" }],
+        validateTrigger: "blur"
+    },
+    {
+        title: "单位",
+        align: "center",
+        dataIndex: "release_union",
+        search: true,
+        commonRules: [{ required: true, message: "单位必选" }],
+        formType: "select",
+        dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true }
+    },
+    {
+        title: "发布时间",
+        dataIndex: "release_date",
+        hide: true,
+        commonRules: [{ required: true, message: "时间必填" }],
+        formType: "date"
+    },
+    {
         title: "空行",
         hide: true,
         align: "center",
@@ -191,12 +216,14 @@ const crudColumns = ref([
     },
     {
         title: "总代码",
+        hide: true,
         align: "center",
         dataIndex: "total_code_line",
         formType: "input-number"
     },
     {
         title: "总行数",
+        hide: true,
         align: "center",
         dataIndex: "total_line",
         formType: "input-number"
@@ -205,6 +232,7 @@ const crudColumns = ref([
         title: "注释率 %",
         align: "center",
         dataIndex: "comment_line",
+        hide: true,
         addDisabled: true,
         editDisabled: true,
         customRender: ({ record }) => {

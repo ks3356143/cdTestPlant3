@@ -11,9 +11,9 @@
                             <a-input style="height: 32px" v-model="searchKey" allow-clear></a-input>
                             <a-button @click="handleSearchTreeDataClick">搜索</a-button>
                         </a-input-group>
-                        <a-alert title="提示" style="margin-bottom: 10px" class="mt-0 py-1 h-1/12"
-                            >空搜索需要点击搜索按钮</a-alert
-                        >
+                        <a-button type="primary" @click="toggleExpanded" class="mb-1">
+                            {{ expandedKeys?.length ? "全部收缩" : "全部展开" }}
+                        </a-button>
                         <a-tree
                             class="h-10/12"
                             :data="treeData"
@@ -22,6 +22,7 @@
                             animation
                             @select="pointNode"
                             :load-more="loadMore"
+                            v-model:expanded-keys="expandedKeys"
                             showLine
                             ref="treeRef"
                             border
@@ -280,6 +281,15 @@ const handleRoundSubmit = async (value) => {
         }
     }
 }
+
+// 1.定义展开的tree-key 2.定义全部展开的数据 3.定义展开收缩函数 -> 注意在treeStore里面使用递归处理
+const expandedKeys = ref([])
+const allExpandedKeys = ref([])
+const toggleExpanded = () => {
+    allExpandedKeys.value = treeDataStore.outExpandNode()
+    expandedKeys.value = expandedKeys?.value.length ? [] : allExpandedKeys.value
+}
+
 /// 设置轮次弹窗的列信息
 const roundColumn = ref([
     {

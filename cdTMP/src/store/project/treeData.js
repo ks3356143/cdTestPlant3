@@ -77,7 +77,8 @@ const useTreeDataStore = defineStore("treeDataStore", {
             let caseKey = temp[4]
             const nodeKey = temp.join("-")
             const res = await projectApi.getProblemInfo(projrctId, nodeKey, "4")
-            this.treeData[roundKey].children[dutKey].children[designKey].children[testKey].children[caseKey].children = res.data
+            this.treeData[roundKey].children[dutKey].children[designKey].children[testKey].children[caseKey].children =
+                res.data
         },
         setCurrentNode(nodeKey) {
             this.currentNode = nodeKey
@@ -98,6 +99,28 @@ const useTreeDataStore = defineStore("treeDataStore", {
             } else {
                 return roundLength
             }
+        },
+        // 输出当前树状结构可展开的节点
+        outExpandNode() {
+            // 定义递归函数
+            const res = []
+            function digui(data) {
+                if (Object.prototype.toString.call(data) === "[object Array]") {
+                    for (let i = 0; i < data.length; i++) {
+                        if (data[i].children) {
+                            res.push(data[i].key)
+                            digui(data[i].children)
+                        }
+                    }
+                }
+            }
+            this.treeData.forEach((item) => {
+                if (item.children) {
+                    res.push(item.key)
+                    digui(item.children)
+                }
+            })
+            return res
         }
     }
 })
