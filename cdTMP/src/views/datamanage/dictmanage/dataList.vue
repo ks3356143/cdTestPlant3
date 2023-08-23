@@ -88,6 +88,13 @@ const columns = ref([
         commonRules: [{ required: true, message: "字典标签必填" }]
     },
     {
+        title:"字段缩写",
+        dataIndex:"show_title",
+        width: 220,
+        align: "center",
+        search: true,
+    },
+    {
         title: "字典键值",
         align: "center",
         dataIndex: "key",

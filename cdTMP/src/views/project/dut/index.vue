@@ -2,15 +2,20 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns"></ma-crud>
+            <ma-crud :options="crudOptions" :columns="crudColumns">
+                <template #ident="{ record }">
+                    {{ showType(record) }}
+                </template>
+            </ma-crud>
         </div>
     </div>
 </template>
 
-<script setup>
-import { ref } from "vue"
+<script setup lang="jsx">
+import { ref, computed } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import designDemandApi from "@/api/project/designDemand"
+import commonApi from "@/api/common"
 import { useTreeDataStore } from "@/store"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
@@ -18,6 +23,24 @@ const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const projectId = ref(route.query.id)
+// 显示标识是FT-{标识}-001，大体思路是：根据类型生成FT，拼接标识和key的最后一位
+const demandTypeDict = ref([])
+!(function () {
+    commonApi.getDict("demandType").then((res) => {
+        demandTypeDict.value = res
+    })
+})()
+
+const showType = (record) => {
+    let len = demandTypeDict.value.data.length
+    for (let i = 0; i < len; i++) {
+        if (demandTypeDict.value.data[i].key === record.demandType) {
+            let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
+            let item = demandTypeDict.value.data[i]
+            return item.show_title + "-" + record.ident + "-" + key_string.toString().padStart(3,"0")
+        }
+    }
+}
 // crud组件
 const crudOptions = ref({
     api: designDemandApi.getDesignDemandList,
@@ -81,11 +104,11 @@ const crudColumns = ref([
         validateTrigger: "blur"
     },
     {
-        title:'章节号',
-        align:'center',
-        width:150,
-        dataIndex:'chapter',
-        search:true,
+        title: "章节号",
+        align: "center",
+        width: 150,
+        dataIndex: "chapter",
+        search: true
     },
     {
         title: "需求类型",

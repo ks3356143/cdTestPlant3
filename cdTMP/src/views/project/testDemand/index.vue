@@ -2,7 +2,11 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns"></ma-crud>
+            <ma-crud :options="crudOptions" :columns="crudColumns">
+                <template #ident="{ record }">
+                    {{ showType(record) }}
+                </template>
+            </ma-crud>
         </div>
     </div>
 </template>
@@ -20,6 +24,11 @@ const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
 const testDemandNumber = route.query.key.split("-")[3]
 const projectId = ref(route.query.id)
+// 标识显示字段
+const showType = (record) => {
+    let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
+    return record.ident + "-" + "YL" + key_string.toString().padStart(3,"0")
+}
 // crud设置
 const crudOptions = ref({
     api: caseApi.getCaseList,
@@ -93,8 +102,11 @@ const crudColumns = ref([
         sortable: { sortDirections: ["ascend"] },
         width: 140,
         align: "center",
+        addDisabled: true,
+        addDefaultValue: route.query.key,
+        editDefaultValue: route.query.key,
+        editDisabled: true,
         search: true,
-        commonRules: [{ required: true, message: "标识是必填" }],
         validateTrigger: "blur"
     },
     {

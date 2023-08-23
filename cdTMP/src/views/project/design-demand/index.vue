@@ -2,7 +2,11 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns"></ma-crud>
+            <ma-crud :options="crudOptions" :columns="crudColumns">
+                <template #ident="{ record }">
+                    {{ showType(record) }}
+                </template>
+            </ma-crud>
         </div>
     </div>
 </template>
@@ -12,6 +16,7 @@ import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import testDemandApi from "@/api/project/testDemand"
 import { useTreeDataStore } from "@/store"
+import commonApi from "@/api/common"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
@@ -20,6 +25,23 @@ const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
 const projectId = ref(route.query.id)
+// 标识显示字段
+const testTypeDict = ref([])
+!(function () {
+    commonApi.getDict("testType").then((res) => {
+        testTypeDict.value = res
+    })
+})()
+const showType = (record) => {
+    let len = testTypeDict.value.data.length
+    for (let i = 0; i < len; i++) {
+        if (testTypeDict.value.data[i].key === record.testType) {
+            let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
+            let item = testTypeDict.value.data[i]
+            return item.show_title + "-" + record.ident + "-" + key_string.toString().padStart(3,"0")
+        }
+    }
+}
 // crud组件
 const crudOptions = ref({
     api: testDemandApi.getTestDemandList,

@@ -150,8 +150,9 @@ const crudColumns = ref([
         width: 140,
         search: true,
         dataIndex: "ident",
+        editDisabled: true,
+        addDisabled: true,
         addDefaultValue: `PT_${route.query.ident}_`,
-        commonRules: [{ required: true, message: "标识是必填" }],
         validateTrigger: "blur"
     },
     {
