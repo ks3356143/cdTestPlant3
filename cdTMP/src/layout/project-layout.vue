@@ -15,7 +15,7 @@
                             {{ expandedKeys?.length ? "全部收缩" : "全部展开" }}
                         </a-button>
                         <a-tree
-                            class="h-10/12"
+                            class="h-10/12 select-none"
                             :data="treeData"
                             size="small"
                             block-node
@@ -160,28 +160,94 @@ const projectId = ref(route.query.id)
 onMounted(async () => {
     treeDataStore.initTreeData(projectId.value)
 })
-
+// 1.定义展开的tree-key 2.定义全部展开的数据 3.定义展开收缩函数 -> 注意在treeStore里面使用递归处理
+const expandedKeys = ref([])
+const allExpandedKeys = ref([])
+const toggleExpanded = () => {
+    allExpandedKeys.value = treeDataStore.outExpandNode()
+    expandedKeys.value = expandedKeys?.value.length ? [] : allExpandedKeys.value
+}
 /// 点击树状节点-参数1:节点数组，参数2:树node对象 - 添加双击处理方式
+let timerId = null
+let count = 0
 const pointNode = (value, data) => {
-    if (data.node.level === "0") {
-        router.push({ name: "round", query: { ...projectInfo.value, key: data.node.key } })
+    count++
+    if (timerId) {
+        return
     }
-    if (data.node.level === "1") {
-        router.push({ name: "dut", query: { ...projectInfo.value, key: data.node.key } })
-    }
-    if (data.node.level === "2") {
-        router.push({ name: "designDemand", query: { ...projectInfo.value, key: data.node.key } })
-    }
-    if (data.node.level === "3") {
-        router.push({ name: "testDemand", query: { ...projectInfo.value, key: data.node.key } })
-    }
-    if (data.node.level === "4") {
-        router.push({ name: "case", query: { ...projectInfo.value, key: data.node.key } })
-    }
-    if (data.node.level === "5") {
-        router.push({ name: "problem", query: { ...projectInfo.value, key: data.node.key } })
-    }
-    treeDataStore.setCurrentNode(data.node.key)
+    timerId = setTimeout(async () => {
+        if (count > 1) {
+            // 双击触发 value是点击的节点，data是节点数据
+            if (data.node.level == "0") {
+                projectApi.getDutInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
+                    treeData.value[value].children = res.data
+                    // 添加需要展开数据，注意不要一直push，判断在已展开节点是否包含点击的节点
+                    if (!expandedKeys.value.includes(value[0])) {
+                        expandedKeys.value.push(value[0])
+                    }
+                })
+            }
+            if (data.node.level == "1") {
+                projectApi.getDemandInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
+                    data.node.children = res.data
+                    if (!expandedKeys.value.includes(value[0])) {
+                        expandedKeys.value.push(value[0])
+                    }
+                })
+            }
+            if (data.node.level == "2") {
+                projectApi.getTestInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
+                    data.node.children = res.data
+                    if (!expandedKeys.value.includes(value[0])) {
+                        expandedKeys.value.push(value[0])
+                    }
+                })
+            }
+            if (data.node.level == "3") {
+                projectApi.getCaseInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
+                    data.node.children = res.data
+                    if (!expandedKeys.value.includes(value[0])) {
+                        expandedKeys.value.push(value[0])
+                    }
+                })
+            }
+            if (data.node.level == "4") {
+                projectApi.getProblemInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
+                    data.node.children = res.data
+                    if (!expandedKeys.value.includes(value[0])) {
+                        expandedKeys.value.push(value[0])
+                    }
+                })
+            }
+            count = 0
+            clearTimeout(timerId)
+            timerId = null
+        } else {
+            // 单击触发
+            if (data.node.level === "0") {
+                router.push({ name: "round", query: { ...projectInfo.value, key: data.node.key } })
+            }
+            if (data.node.level === "1") {
+                router.push({ name: "dut", query: { ...projectInfo.value, key: data.node.key } })
+            }
+            if (data.node.level === "2") {
+                router.push({ name: "designDemand", query: { ...projectInfo.value, key: data.node.key } })
+            }
+            if (data.node.level === "3") {
+                router.push({ name: "testDemand", query: { ...projectInfo.value, key: data.node.key } })
+            }
+            if (data.node.level === "4") {
+                router.push({ name: "case", query: { ...projectInfo.value, key: data.node.key } })
+            }
+            if (data.node.level === "5") {
+                router.push({ name: "problem", query: { ...projectInfo.value, key: data.node.key } })
+            }
+            treeDataStore.setCurrentNode(data.node.key)
+            count = 0
+            clearTimeout(timerId)
+            timerId = null
+        }
+    }, 250)
 }
 /// 动态加载函数-参数1:树node对象
 const loadMore = (nodeData) => {
@@ -280,14 +346,6 @@ const handleRoundSubmit = async (value) => {
             Message.error("新增失败！")
         }
     }
-}
-
-// 1.定义展开的tree-key 2.定义全部展开的数据 3.定义展开收缩函数 -> 注意在treeStore里面使用递归处理
-const expandedKeys = ref([])
-const allExpandedKeys = ref([])
-const toggleExpanded = () => {
-    allExpandedKeys.value = treeDataStore.outExpandNode()
-    expandedKeys.value = expandedKeys?.value.length ? [] : allExpandedKeys.value
 }
 
 /// 设置轮次弹窗的列信息

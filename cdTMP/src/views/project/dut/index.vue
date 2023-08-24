@@ -37,7 +37,7 @@ const showType = (record) => {
         if (demandTypeDict.value.data[i].key === record.demandType) {
             let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
             let item = demandTypeDict.value.data[i]
-            return item.show_title + "-" + record.ident + "-" + key_string.toString().padStart(3,"0")
+            return "SJ-" + record.ident + "-" + item.show_title + "-" + key_string.toString().padStart(3, "0")
         }
     }
 }

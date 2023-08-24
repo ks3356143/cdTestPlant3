@@ -27,7 +27,7 @@ const projectId = ref(route.query.id)
 // 标识显示字段
 const showType = (record) => {
     let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
-    return record.ident + "-" + "YL" + key_string.toString().padStart(3,"0")
+    return "YL-" + record.ident + "-" + key_string.toString().padStart(3,"0")
 }
 // crud设置
 const crudOptions = ref({
@@ -125,7 +125,6 @@ const crudColumns = ref([
         align: "center",
         search: true,
         formType: "select",
-        commonRules: [{ required: true, message: "设计人员必填" }],
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
@@ -135,7 +134,6 @@ const crudColumns = ref([
         align: "center",
         search: true,
         formType: "select",
-        commonRules: [{ required: true, message: "执行人员必填" }],
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
@@ -145,7 +143,6 @@ const crudColumns = ref([
         align: "center",
         search: true,
         formType: "select",
-        commonRules: [{ required: true, message: "审核人员必填" }],
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {

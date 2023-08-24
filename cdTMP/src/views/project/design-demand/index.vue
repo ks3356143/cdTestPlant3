@@ -17,6 +17,8 @@ import { useRoute, useRouter } from "vue-router"
 import testDemandApi from "@/api/project/testDemand"
 import { useTreeDataStore } from "@/store"
 import commonApi from "@/api/common"
+import PinYinMatch from "pinyin-match"
+
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
@@ -38,16 +40,16 @@ const showType = (record) => {
         if (testTypeDict.value.data[i].key === record.testType) {
             let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
             let item = testTypeDict.value.data[i]
-            return item.show_title + "-" + record.ident + "-" + key_string.toString().padStart(3,"0")
+            return "XQ-" + record.ident + "-" + item.show_title + "-" + key_string.toString().padStart(3, "0")
         }
     }
 }
 // crud组件
 const crudOptions = ref({
     api: testDemandApi.getTestDemandList,
-    add: { show: true ,api:testDemandApi.save},
+    add: { show: true, api: testDemandApi.save },
     edit: { show: true, api: testDemandApi.update },
-    delete: { show: true,api:testDemandApi.delete },
+    delete: { show: true, api: testDemandApi.delete },
     afterAdd: (res) => {
         let id = projectId.value
         treeDataStore.updateTestDemandTreeData(res.data, id)
@@ -84,11 +86,13 @@ const crudColumns = ref([
     },
     {
         title: "标识",
+        width: 150,
         dataIndex: "ident",
         sortable: { sortDirections: ["ascend"] },
         align: "center",
         search: true,
-        commonRules: [{ required: true, message: "标识是必填" }],
+        addDisabled: true,
+        editDisabled: true,
         validateTrigger: "blur"
     },
     {
@@ -125,13 +129,23 @@ const crudColumns = ref([
         maxLength: 200,
         commonRules: [{ required: true, message: "测试类型必选" }],
         dict: { name: "testType", translation: true, props: { label: "title", value: "key" } },
-        extra: "请保证测试类型选择正确"
+        extra: "请保证测试类型选择正确",
+        filterOption: function (inputValue, selectedOption) {
+            if(inputValue){
+                let matchRes = PinYinMatch.match(selectedOption.label,inputValue)
+                if(matchRes){
+                    return true
+                }
+            }
+        }
     },
     {
         title: "充分条件",
         hide: true,
         addDefaultValue: "覆盖需求相关功能",
         dataIndex: "adequacy",
+        formType: "textarea",
+        maxLength: 256,
         commonRules: [{ required: true, message: "充分性描述必填" }]
     },
     {
@@ -140,7 +154,7 @@ const crudColumns = ref([
         dataIndex: "termination",
         formType: "textarea",
         showWordLimit: true,
-        maxLength: 200,
+        maxLength: 1024,
         addDefaultValue:
             "1.测试正常终止：测试项分解的所有用例执行完毕，达到充分性要求，相关记录完整;\n2.测试异常终止：由于某些特殊原因导致该测试项分解的测试用例不能完全执行，无法执行的原因已记录",
         commonRules: [{ required: true, message: "前提条件必填" }]
@@ -150,13 +164,17 @@ const crudColumns = ref([
         hide: true,
         addDefaultValue: "软件正常运行，外部接口通信正常",
         dataIndex: "premise",
+        formType: "textarea",
+        maxLength: 256,
         commonRules: [{ required: true, message: "前提条件必填" }]
     },
     {
         title: "测试方法",
         align: "center",
         dataIndex: "testMethod",
-        commonRules: [{ required: true, message: "测试方法必填" }]
+        formType: "select",
+        multiple: true,
+        dict: { name: "testMethod", props: { label: "title", value: "key" }, translation: true }
     },
     {
         title: "测试内容",

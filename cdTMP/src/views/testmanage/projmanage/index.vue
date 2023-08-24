@@ -59,7 +59,10 @@ const crudOptions = ref({
                     { span: 8, formList: [{ dataIndex: "beginTime" }] },
                     { span: 8, formList: [{ dataIndex: "endTime" }] },
                     { span: 8, formList: [{ dataIndex: "duty_person" }] },
-                    { span: 8, formList: [{ dataIndex: "member" }] }
+                    { span: 24, formList: [{ dataIndex: "member" }] },
+                    { span: 8, formList: [{ dataIndex: "quality_person" }] },
+                    { span: 8, formList: [{ dataIndex: "vise_person" }] },
+                    { span: 8, formList: [{ dataIndex: "config_person" }] },
                 ]
             },
             {
@@ -202,6 +205,30 @@ const crudColumns = ref([
         multiple: true,
         dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
         commonRules: [{ required: true, message: "成员至少选择一个" }]
+    },
+    {
+        title: "质量保证",
+        dataIndex: "quality_person",
+        hide: true,
+        formType: "select",
+        dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
+        commonRules: [{ required: true, message: "至少选择一个质量保证员" }]
+    },
+    {
+        title: "质量监督",
+        dataIndex: "vise_person",
+        hide: true,
+        formType: "select",
+        dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
+        commonRules: [{ required: true, message: "至少选择一个质量监督员" }]
+    },
+    {
+        title: "配置管理",
+        dataIndex: "config_person",
+        hide: true,
+        formType: "select",
+        dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
+        commonRules: [{ required: true, message: "至少选择一个配置管理员" }]
     },
     {
         title: "关键等级",
