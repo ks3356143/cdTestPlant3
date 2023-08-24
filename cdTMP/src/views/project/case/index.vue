@@ -2,7 +2,11 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns"></ma-crud>
+            <ma-crud :options="crudOptions" :columns="crudColumns">
+                <template #ident="{ record }">
+                    {{ "PT_" + route.query.ident + "_" + record.ident.padStart(3,"0") }}
+                </template>
+            </ma-crud>
         </div>
     </div>
 </template>
@@ -27,7 +31,7 @@ const crudOptions = ref({
     edit: { show: true, api: problemApi.update },
     delete: { show: true, api: problemApi.delete },
     afterAdd: (res) => {
-        console.log(res);
+        console.log(res)
         let id = projectId.value
         treeDataStore.updateProblemTreeData(res.data, id)
     },
@@ -152,7 +156,7 @@ const crudColumns = ref([
         dataIndex: "ident",
         editDisabled: true,
         addDisabled: true,
-        addDefaultValue: `PT_${route.query.ident}_`,
+        addDefaultValue: `${route.query.ident}`,
         validateTrigger: "blur"
     },
     {
