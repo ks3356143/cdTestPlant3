@@ -23,14 +23,23 @@ const crudRef = ref()
 const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     api: projectApi.getPageList,
-    add: { show: true, api: projectApi.save },
-    edit: { show: true, api: projectApi.update },
+    add: { show: true, api: projectApi.save, text: "新增项目" },
+    edit: { show: true, api: projectApi.update, text: "编辑项目" },
     delete: { show: true, api: projectApi.delete },
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,
     operationWidth: 500,
     showIndex: false,
+    // 处理弹窗的title
+    beforeOpenAdd: function () {
+        crudRef.value.crudFormRef.actionTitle = "项目"
+        return true
+    },
+    beforeOpenEdit: function (record) {
+        crudRef.value.crudFormRef.actionTitle = record.ident + "：" + record.name
+        return true
+    },
     formOption: {
         isFull: true,
         layout: [
@@ -62,7 +71,7 @@ const crudOptions = ref({
                     { span: 24, formList: [{ dataIndex: "member" }] },
                     { span: 8, formList: [{ dataIndex: "quality_person" }] },
                     { span: 8, formList: [{ dataIndex: "vise_person" }] },
-                    { span: 8, formList: [{ dataIndex: "config_person" }] },
+                    { span: 8, formList: [{ dataIndex: "config_person" }] }
                 ]
             },
             {

@@ -2,7 +2,7 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns">
+            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #ident="{ record }">
                     {{ showType(record) }}
                 </template>
@@ -20,6 +20,7 @@ import { useTreeDataStore } from "@/store"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
+const crudRef = ref()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const projectId = ref(route.query.id)
@@ -48,6 +49,20 @@ const crudOptions = ref({
     edit: { show: true, api: designDemandApi.editDesignDemand },
     delete: { show: true, api: designDemandApi.delete },
     // 处理添加后函数
+    beforeOpenAdd: function () {
+        let round_key = route.query.key.split("-")[0]
+        let dut_key = route.query.key.split("-")[1]
+        let td = treeDataStore.treeData
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > 设计需求-`
+        return true
+    },
+    beforeOpenEdit: function (record) {
+        let round_key = route.query.key.split("-")[0]
+        let dut_key = route.query.key.split("-")[1]
+        let td = treeDataStore.treeData
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} >设计需求[${record.name}]-`
+        return true
+    },
     afterAdd: (res) => {
         let id = projectId.value
         treeDataStore.updateDesignDemandTreeData(res.data, id)

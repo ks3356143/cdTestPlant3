@@ -56,6 +56,14 @@ const crudOptions = ref({
     api: dutApi.getDutList,
     add: { show: true, api: dutApi.save, text: "新增被测件" },
     // 处理添加后函数
+    beforeOpenAdd: function () {
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${parseInt(route.query.key) + 1}轮>被测件-`
+        return true
+    },
+    beforeOpenEdit: function (record) {
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${parseInt(route.query.key) + 1}轮>被测件[${record.name}]-`
+        return true
+    },
     afterAdd: (res) => {
         let id = projectId.value
         treeDataStore.updateDutTreeData(res.data, id)

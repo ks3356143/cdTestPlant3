@@ -2,7 +2,7 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns">
+            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #ident="{ record }">
                     {{ showType(record) }}
                 </template>
@@ -22,6 +22,7 @@ import PinYinMatch from "pinyin-match"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
+const crudRef = ref()
 // 根据传参获取key，分别为轮次、设计需求的key
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
@@ -50,6 +51,22 @@ const crudOptions = ref({
     add: { show: true, api: testDemandApi.save },
     edit: { show: true, api: testDemandApi.update },
     delete: { show: true, api: testDemandApi.delete },
+    beforeOpenAdd: function () {
+        let round_key = route.query.key.split("-")[0]
+        let dut_key = route.query.key.split("-")[1]
+        let design_key = route.query.key.split("-")[2]
+        let td = treeDataStore.treeData
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > ${td[round_key].children[dut_key].children[design_key].title} > 测试项-`
+        return true
+    },
+    beforeOpenEdit: function (record) {
+        let round_key = route.query.key.split("-")[0]
+        let dut_key = route.query.key.split("-")[1]
+        let design_key = route.query.key.split("-")[2]
+        let td = treeDataStore.treeData
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > ${td[round_key].children[dut_key].children[design_key].title} >测试项[${record.name}]-`
+        return true
+    },
     afterAdd: (res) => {
         let id = projectId.value
         treeDataStore.updateTestDemandTreeData(res.data, id)
@@ -131,9 +148,9 @@ const crudColumns = ref([
         dict: { name: "testType", translation: true, props: { label: "title", value: "key" } },
         extra: "请保证测试类型选择正确",
         filterOption: function (inputValue, selectedOption) {
-            if(inputValue){
-                let matchRes = PinYinMatch.match(selectedOption.label,inputValue)
-                if(matchRes){
+            if (inputValue) {
+                let matchRes = PinYinMatch.match(selectedOption.label, inputValue)
+                if (matchRes) {
                     return true
                 }
             }

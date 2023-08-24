@@ -148,13 +148,22 @@ const close = () => {
     form.value = {}
 }
 const add = () => {
-    actionTitle.value = "新增"
+    if (!actionTitle.value) {
+        actionTitle.value = "新增"
+    } else {
+        actionTitle.value += "新增"
+    }
     currentAction.value = "add"
     form.value = {}
     open()
 }
 const edit = (data) => {
-    actionTitle.value = "编辑"
+    if (!actionTitle.value) {
+        actionTitle.value = "编辑"
+    } else {
+        actionTitle.value += "编辑"
+    }
+
     currentAction.value = "edit"
     form.value = {}
     for (let i in data) form.value[i] = data[i]
@@ -357,5 +366,5 @@ const getFormColumns = async (type = "add") => {
     await init()
     return formColumns.value
 }
-defineExpose({ add, edit, currentAction, form, getFormColumns })
+defineExpose({ add, edit, currentAction, form, getFormColumns, actionTitle })
 </script>

@@ -31,7 +31,7 @@
         </div>
         <div class="_crud-content">
             <div class="operation-tools lg:flex justify-between mb-3" ref="crudOperationRef">
-                <a-space class="lg:flex block lg:inline-block">
+                <a-space class="lg:flex block">
                     <slot name="tableBeforeButtons"></slot>
                     <slot name="tableButtons">
                         <a-button

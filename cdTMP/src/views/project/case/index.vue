@@ -2,7 +2,7 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns">
+            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #ident="{ record }">
                     {{ "PT_" + route.query.ident + "_" + record.ident.padStart(3,"0") }}
                 </template>
@@ -24,12 +24,42 @@ const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
 const testDemandNumber = route.query.key.split("-")[3]
 const caseNumber = route.query.key.split("-")[4]
+const crudRef = ref()
 const projectId = ref(route.query.id)
 const crudOptions = ref({
     api: problemApi.getProblemList,
     add: { show: true, api: problemApi.save },
     edit: { show: true, api: problemApi.update },
     delete: { show: true, api: problemApi.delete },
+    beforeOpenAdd: function () {
+        let round_key = route.query.key.split("-")[0]
+        let dut_key = route.query.key.split("-")[1]
+        let design_key = route.query.key.split("-")[2]
+        let test_key = route.query.key.split("-")[3]
+        let case_key = route.query.key.split("-")[4]
+        let td = treeDataStore.treeData
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
+        ${td[round_key].title} > ${td[round_key].children[dut_key].title} >
+        ${td[round_key].children[dut_key].children[design_key].title} >
+        ${td[round_key].children[dut_key].children[design_key].children[test_key].title} >
+        ${td[round_key].children[dut_key].children[design_key].children[test_key].children[case_key].title} > 用例-`
+        return true
+    },
+    beforeOpenEdit: function (record) {
+        let round_key = route.query.key.split("-")[0]
+        let dut_key = route.query.key.split("-")[1]
+        let design_key = route.query.key.split("-")[2]
+        let test_key = route.query.key.split("-")[3]
+        let case_key = route.query.key.split("-")[4]
+        let td = treeDataStore.treeData
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
+        ${td[round_key].title} > ${td[round_key].children[dut_key].title} >
+        ${td[round_key].children[dut_key].children[design_key].title} >
+        ${td[round_key].children[dut_key].children[design_key].children[test_key].title} >
+        ${td[round_key].children[dut_key].children[design_key].children[test_key].children[case_key].title}
+        >用例[${record.name}]-`
+        return true
+    },
     afterAdd: (res) => {
         console.log(res)
         let id = projectId.value
