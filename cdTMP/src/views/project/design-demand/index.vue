@@ -52,17 +52,19 @@ const crudOptions = ref({
     edit: { show: true, api: testDemandApi.update },
     delete: { show: true, api: testDemandApi.delete },
     beforeOpenAdd: function () {
-        let round_key = route.query.key.split("-")[0]
-        let dut_key = route.query.key.split("-")[1]
-        let design_key = route.query.key.split("-")[2]
+        let key_split =  route.query.key.split("-")
+        let round_key = key_split[0]
+        let dut_key = key_split[1]
+        let design_key = key_split[2]
         let td = treeDataStore.treeData
         crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > ${td[round_key].children[dut_key].children[design_key].title} > 测试项-`
         return true
     },
     beforeOpenEdit: function (record) {
-        let round_key = route.query.key.split("-")[0]
-        let dut_key = route.query.key.split("-")[1]
-        let design_key = route.query.key.split("-")[2]
+        let key_split =  route.query.key.split("-")
+        let round_key = key_split[0]
+        let dut_key = key_split[1]
+        let design_key = key_split[2]
         let td = treeDataStore.treeData
         crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > ${td[round_key].children[dut_key].children[design_key].title} >测试项[${record.name}]-`
         return true

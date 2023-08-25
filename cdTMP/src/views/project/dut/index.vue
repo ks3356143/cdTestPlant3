@@ -50,15 +50,17 @@ const crudOptions = ref({
     delete: { show: true, api: designDemandApi.delete },
     // 处理添加后函数
     beforeOpenAdd: function () {
-        let round_key = route.query.key.split("-")[0]
-        let dut_key = route.query.key.split("-")[1]
+        let key_split =  route.query.key.split("-")
+        let round_key = key_split[0]
+        let dut_key = key_split[1]
         let td = treeDataStore.treeData
         crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > 设计需求-`
         return true
     },
     beforeOpenEdit: function (record) {
-        let round_key = route.query.key.split("-")[0]
-        let dut_key = route.query.key.split("-")[1]
+        let key_split =  route.query.key.split("-")
+        let round_key = key_split[0]
+        let dut_key = key_split[1]
         let td = treeDataStore.treeData
         crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} >设计需求[${record.name}]-`
         return true

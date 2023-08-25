@@ -32,11 +32,12 @@ const crudOptions = ref({
     edit: { show: true, api: problemApi.update },
     delete: { show: true, api: problemApi.delete },
     beforeOpenAdd: function () {
-        let round_key = route.query.key.split("-")[0]
-        let dut_key = route.query.key.split("-")[1]
-        let design_key = route.query.key.split("-")[2]
-        let test_key = route.query.key.split("-")[3]
-        let case_key = route.query.key.split("-")[4]
+        let key_split =  route.query.key.split("-")
+        let round_key = key_split[0]
+        let dut_key = key_split[1]
+        let design_key = key_split[2]
+        let test_key = key_split[3]
+        let case_key = key_split[4]
         let td = treeDataStore.treeData
         crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
         ${td[round_key].title} > ${td[round_key].children[dut_key].title} >
@@ -46,11 +47,12 @@ const crudOptions = ref({
         return true
     },
     beforeOpenEdit: function (record) {
-        let round_key = route.query.key.split("-")[0]
-        let dut_key = route.query.key.split("-")[1]
-        let design_key = route.query.key.split("-")[2]
-        let test_key = route.query.key.split("-")[3]
-        let case_key = route.query.key.split("-")[4]
+        let key_split =  route.query.key.split("-")
+        let round_key = key_split[0]
+        let dut_key = key_split[1]
+        let design_key = key_split[2]
+        let test_key = key_split[3]
+        let case_key = key_split[4]
         let td = treeDataStore.treeData
         crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
         ${td[round_key].title} > ${td[round_key].children[dut_key].title} >

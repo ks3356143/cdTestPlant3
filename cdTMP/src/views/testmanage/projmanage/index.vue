@@ -4,7 +4,7 @@
             <!-- ma-crud组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #operationBeforeExtend="{ record }">
-                    <a-link @click="$router.push({ name: 'project', query: record })">进入工作区</a-link>
+                    <a-link @click="enterWorkPlant(record)">进入工作区</a-link>
                     <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link>
                 </template>
             </ma-crud>
@@ -14,10 +14,20 @@
 </template>
 <script lang="jsx" setup>
 import { ref } from "vue"
+import { useRoute, useRouter } from "vue-router"
 import projectApi from "@/api/testmanage/project"
 import preview from "./cpns/preview.vue"
+const router = useRouter()
 // 定义预览组件的Ref
 const previewRef = ref(null)
+// 点击进入工作区函数 - 每次点击后都清除localStorage中树状目录数据
+const enterWorkPlant = function (record) {
+    if (localStorage.getItem("tree_local_data")) {
+        localStorage.removeItem("tree_local_data")
+    }
+    router.push({ name: "project", query: record })
+}
+
 // CRUD-OPTIONS
 const crudRef = ref()
 const crudOptions = ref({

@@ -57,11 +57,13 @@ const crudOptions = ref({
     add: { show: true, api: dutApi.save, text: "新增被测件" },
     // 处理添加后函数
     beforeOpenAdd: function () {
-        crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${parseInt(route.query.key) + 1}轮>被测件-`
+        let round_str = parseInt(route.query.key) + 1
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${round_str}轮>被测件-`
         return true
     },
     beforeOpenEdit: function (record) {
-        crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${parseInt(route.query.key) + 1}轮>被测件[${record.name}]-`
+        let round_str = parseInt(route.query.key) + 1
+        crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${round_str}轮>被测件[${record.name}]-`
         return true
     },
     afterAdd: (res) => {

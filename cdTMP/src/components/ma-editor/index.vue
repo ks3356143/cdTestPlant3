@@ -79,6 +79,7 @@ const initConfig = reactive({
     toolbar_mode: "wrap",
     plugins: props.plugins,
     toolbar: props.toolbar,
+    skeletonScreen: true,
     branding: false,
     content_css: "/tinymce/skins/content/default/content.css",
     setup: (editor) => {

@@ -12,11 +12,20 @@ const useTreeDataStore = defineStore("treeDataStore", {
     actions: {
         // 不能使用箭头函数，无法绑定this
         async initTreeData(projectId) {
+            // 获取localStorage的treeData数据
+            if(localStorage.getItem("tree_local_data")){
+                this.treeData = JSON.parse(localStorage.getItem("tree_local_data"))
+            }
             if (this.treeData.length === 0) {
                 const roundData = await projectApi.getRoundInfo(projectId)
                 this.treeData = roundData.data
                 this.originTreeData = roundData.data
             }
+            // 将用户关闭页面数据储存于localStorage中 -> 注意用户打开其他项目 -> 务必清除localStorage的tree_local_data数据
+            // 暂定在点击进入工作台时清除!!!
+            window.addEventListener("beforeunload",()=>{
+                localStorage.setItem("tree_local_data",JSON.stringify(this.treeData))
+            })
         },
         // 用于新增轮次后显示
         async resetTreeData(projectId) {

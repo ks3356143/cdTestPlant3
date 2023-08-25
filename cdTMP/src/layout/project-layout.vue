@@ -23,6 +23,7 @@
                             @select="pointNode"
                             :load-more="loadMore"
                             v-model:expanded-keys="expandedKeys"
+                            v-model:selected-keys="selectedKeys"
                             showLine
                             ref="treeRef"
                             border
@@ -160,6 +161,9 @@ const projectId = ref(route.query.id)
 onMounted(async () => {
     treeDataStore.initTreeData(projectId.value)
 })
+// v-model绑定选中节点
+const selectedKeys = ref([])
+const previousKey = ref(null)
 // 1.定义展开的tree-key 2.定义全部展开的数据 3.定义展开收缩函数 -> 注意在treeStore里面使用递归处理
 const expandedKeys = ref([])
 const allExpandedKeys = ref([])
@@ -171,6 +175,9 @@ const toggleExpanded = () => {
 let timerId = null
 let count = 0
 const pointNode = (value, data) => {
+    // 获取处理单击不选中，双击选中的变量
+    let catch_selected_key = selectedKeys.value
+    selectedKeys.value = previousKey.value
     count++
     if (timerId) {
         return
@@ -243,6 +250,10 @@ const pointNode = (value, data) => {
                 router.push({ name: "problem", query: { ...projectInfo.value, key: data.node.key } })
             }
             treeDataStore.setCurrentNode(data.node.key)
+            // 单击设置选择的key
+            selectedKeys.value = catch_selected_key
+            // 单击后设置previous选中的key是什么
+            previousKey.value = catch_selected_key
             count = 0
             clearTimeout(timerId)
             timerId = null
