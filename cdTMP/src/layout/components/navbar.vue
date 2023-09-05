@@ -20,7 +20,7 @@
         <ul class="right-side">
             <li>
                 <a-tooltip content="搜索-暂无">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'">
+                    <a-button class="nav-btn" type="outline" :shape="'circle'" @click="testCreate">
                         <template #icon>
                             <icon-search />
                         </template>
@@ -103,6 +103,9 @@
 </template>
 
 <script setup>
+// 测试接口导入
+import dgGenerateApi from "@/api/generate/dgGenerate"
+// ~~~~~~~~~
 import { computed, inject } from "vue"
 import { useAppStore } from "@/store"
 import { useFullscreen } from "@vueuse/core"
@@ -153,6 +156,11 @@ const toggleDrawerMenu = inject("toggleDrawerMenu")
 const handleClickLogo = () => {
     console.log("回到workplace")
     router.push({ name: "Workplace" })
+}
+
+// 测试生成文档
+const testCreate = ()=>{
+    dgGenerateApi.createTestDemand()
 }
 </script>
 
