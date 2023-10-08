@@ -158,10 +158,12 @@ const handleClickLogo = () => {
     router.push({ name: "Workplace" })
 }
 
-// 测试生成文档
-const testCreate = ()=>{
-    dgGenerateApi.createTestDemand()
+// 测试生成文档-测试项和方法
+const testCreate = async ()=>{
+    const st = await dgGenerateApi.createTestDemand()
+    Message.success(st.message)
 }
+
 </script>
 
 <style scoped lang="less">

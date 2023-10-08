@@ -68,13 +68,13 @@ const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     operationColumn: true,
     operationWidth: 160,
-    operationColumnAlign:'center',
+    operationColumnAlign: "center",
     beforeAdd: (form) => {
         form.id = currentRow.value?.id
     },
     add: { show: true, api: dictApi.saveDictItem },
     edit: { show: true, api: dictApi.updateDictItemData },
-    delete: { show: true, api: dictApi.realDeleteItem },
+    delete: { show: true, api: dictApi.realDeleteItem }
 })
 // crudColumns
 const columns = ref([
@@ -84,15 +84,14 @@ const columns = ref([
         align: "center",
         dataIndex: "title",
         search: true,
-        width: 220,
+        width: 150,
         commonRules: [{ required: true, message: "字典标签必填" }]
     },
     {
-        title:"字段缩写",
-        dataIndex:"show_title",
-        width: 220,
+        title: "字段缩写",
+        dataIndex: "show_title",
         align: "center",
-        search: true,
+        search: true
     },
     {
         title: "字典键值",
@@ -101,7 +100,6 @@ const columns = ref([
         addDisplay: false,
         editDisplay: false,
         search: true,
-        width: 220,
         commonRules: [{ required: true, message: "字典键值必填" }]
     },
     {
@@ -110,7 +108,7 @@ const columns = ref([
         dataIndex: "sort",
         formType: "input-number",
         addDefaultValue: 1,
-        width: 180,
+        width: 130,
         min: 0,
         max: 1000
     },
@@ -123,7 +121,7 @@ const columns = ref([
         formType: "radio",
         dict: { name: "data_status", props: { label: "title", value: "key" } },
         addDefaultValue: "1",
-        width: 180
+        width: 70
     },
     {
         title: "备注",
@@ -140,7 +138,28 @@ const columns = ref([
         editDisplay: false,
         search: true,
         formType: "range",
-        width: 180
+        width: 110
+    },
+    {
+        title: "文档名称",
+        dataIndex: "doc_name",
+        align: "center",
+        search: false,
+        placeholder: "如果不是标准则不填"
+    },
+    {
+        title: "发布日期",
+        dataIndex: "publish_date",
+        align: "center",
+        search: false,
+        placeholder: "如果不是标准则不填"
+    },
+    {
+        title: "标准来源",
+        dataIndex: "source",
+        align: "center",
+        search: false,
+        placeholder: "如果不是标准则不填"
     }
 ])
 

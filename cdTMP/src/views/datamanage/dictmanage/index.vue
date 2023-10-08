@@ -60,7 +60,7 @@ const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     searchColNumber: 4,
     tablePagination: false,
-    operationColumn: true,
+    operationColumn: true
 })
 
 const crudColumns = ref([
@@ -107,7 +107,7 @@ const crudColumns = ref([
         search: true,
         formType: "range",
         width: 180
-    }
+    },
 ])
 </script>
 

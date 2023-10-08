@@ -45,6 +45,14 @@ const crudColumns = ref([
         search: true,
         width: 220,
         commonRules: [{ required: true, message: "法人必填" }]
+    },
+    {
+        title:'地址',
+        align:'center',
+        dataIndex:'addr',
+        search:true,
+        width:200,
+        commonRules: [{ required: true, message: "公司地址必填" }]
     }
 ])
 </script>

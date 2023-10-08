@@ -6,6 +6,8 @@
                 <template #operationBeforeExtend="{ record }">
                     <a-link @click="enterWorkPlant(record)">进入工作区</a-link>
                     <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link>
+                    <a-link @click="createYiju(record)"><icon-eye />【测试】生成依据文件</a-link>
+                    <a-link @click="createContact(record)"><icon-eye />【测试】联系方式</a-link>
                 </template>
             </ma-crud>
         </div>
@@ -17,6 +19,8 @@ import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import projectApi from "@/api/testmanage/project"
 import preview from "./cpns/preview.vue"
+import dgGenerateApi from "@/api/generate/dgGenerate"
+import { Message } from "@arco-design/web-vue"
 const router = useRouter()
 // 定义预览组件的Ref
 const previewRef = ref(null)
@@ -27,6 +31,17 @@ const enterWorkPlant = function (record) {
     }
     router.push({ name: "project", query: record })
 }
+
+// ~~~~~~~~测试生成文档~~~~~~~~
+const createYiju = async (record) => {
+    const st = await dgGenerateApi.createYiju({ id: record.id })
+    Message.success(st.message)
+}
+const createContact = async (record) => {
+    const st = await dgGenerateApi.createContact({ id: record.id })
+    Message.success(st.message)
+}
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // CRUD-OPTIONS
 const crudRef = ref()

@@ -148,7 +148,10 @@ const close = () => {
     form.value = {}
 }
 const add = () => {
+    const strArr = ["新增编辑", "编辑新增", "新增新增", "编辑编辑", "编辑", "新增"]
     if (!actionTitle.value) {
+        actionTitle.value = "新增"
+    } else if (strArr.includes(actionTitle.value)) {
         actionTitle.value = "新增"
     } else {
         actionTitle.value += "新增"
@@ -158,7 +161,10 @@ const add = () => {
     open()
 }
 const edit = (data) => {
+    const strArr = ["新增编辑", "编辑新增", "新增新增", "编辑编辑", "编辑", "新增"]
     if (!actionTitle.value) {
+        actionTitle.value = "编辑"
+    } else if (strArr.includes(actionTitle.value)) {
         actionTitle.value = "编辑"
     } else {
         actionTitle.value += "编辑"
