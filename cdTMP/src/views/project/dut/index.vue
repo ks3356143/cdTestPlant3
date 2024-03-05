@@ -50,7 +50,7 @@ const crudOptions = ref({
     delete: { show: true, api: designDemandApi.delete },
     // 处理添加后函数
     beforeOpenAdd: function () {
-        let key_split =  route.query.key.split("-")
+        let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]
         let td = treeDataStore.treeData
@@ -58,7 +58,7 @@ const crudOptions = ref({
         return true
     },
     beforeOpenEdit: function (record) {
-        let key_split =  route.query.key.split("-")
+        let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]
         let td = treeDataStore.treeData
@@ -98,7 +98,7 @@ const crudColumns = ref([
         align: "center",
         width: 50,
         dataIndex: "id",
-        commonRules: [{ required: true, message: "标识是必填" }],
+        commonRules: [{ required: true, message: "ID必填" }],
         validateTrigger: "blur"
     },
     {

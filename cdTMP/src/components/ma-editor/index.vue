@@ -51,8 +51,8 @@ const props = defineProps({
     },
     toolbar: {
         type: [String, Array],
-        default:
-            "code undo redo restoredraft | paste pastetext |bold italic underline strikethrough codesample | preview | alignleft alignjustify indent formatpainter | \
+        default: // 如果要取消粘贴只粘贴文本，需要用户加格式请加上pastetext
+            "code undo redo restoredraft | paste |bold italic underline strikethrough codesample | preview | alignleft alignjustify indent formatpainter | \
     styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | charmap pagebreak insertdatetime"
     }
 })
@@ -81,6 +81,7 @@ const initConfig = reactive({
     toolbar: props.toolbar,
     skeletonScreen: true,
     branding: false,
+    paste_as_text: true, // 粘贴文字只能是纯文本
     content_css: "/tinymce/skins/content/default/content.css",
     setup: (editor) => {
         editor.on("init", () => {

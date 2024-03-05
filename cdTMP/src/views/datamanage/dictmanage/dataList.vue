@@ -59,6 +59,30 @@ const open = (row) => {
     crudRef.value.requestParams = { id: currentRow.value.id }
     crudRef.value.requestData()
     visible.value = true
+    // 判断如果是行数据的code值为standard则不显示‘文档名称’‘发布来源’‘发布日期’,且表单也不显示
+    // columnService可以动态设置表格列的属性!!!
+    const columnService = crudRef.value.getColumnService()
+    if (currentRow.value.code === "standard") {
+        columnService.get("doc_name").setAttr("hide", false)
+        columnService.get("publish_date").setAttr("hide", false)
+        columnService.get("source").setAttr("hide", false)
+        columnService.get("doc_name").setAttr("addDisplay", true)
+        columnService.get("publish_date").setAttr("addDisplay", true)
+        columnService.get("source").setAttr("addDisplay", true)
+        columnService.get("doc_name").setAttr("editDisplay", true)
+        columnService.get("publish_date").setAttr("editDisplay", true)
+        columnService.get("source").setAttr("editDisplay", true)
+    } else {
+        columnService.get("doc_name").setAttr("hide", true)
+        columnService.get("publish_date").setAttr("hide", true)
+        columnService.get("source").setAttr("hide", true)
+        columnService.get("doc_name").setAttr("addDisplay", false)
+        columnService.get("publish_date").setAttr("addDisplay", false)
+        columnService.get("source").setAttr("addDisplay", false)
+        columnService.get("doc_name").setAttr("editDisplay", false)
+        columnService.get("publish_date").setAttr("editDisplay", false)
+        columnService.get("source").setAttr("editDisplay", false)
+    }
 }
 // crudOptions
 const crudOptions = ref({
@@ -76,6 +100,7 @@ const crudOptions = ref({
     edit: { show: true, api: dictApi.updateDictItemData },
     delete: { show: true, api: dictApi.realDeleteItem }
 })
+
 // crudColumns
 const columns = ref([
     { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },
@@ -159,7 +184,7 @@ const columns = ref([
         dataIndex: "source",
         align: "center",
         search: false,
-        placeholder: "如果不是标准则不填"
+        placeholder: "如果不是标准则不填",
     }
 ])
 

@@ -6,18 +6,47 @@
                 <template #ident="{ record }">
                     {{ showType(record) }}
                 </template>
+                <!-- 表格前置扩展槽:添加关联按钮 -->
+                <template #tableAfterButtons>
+                    <a-button type="outline" status="warning" @click="handleOpenRelationCSX">
+                        <template #icon>
+                            <icon-tags />
+                        </template>
+                        关联测试项
+                    </a-button>
+                </template>
             </ma-crud>
         </div>
+        <!-- 关联的modal组件 -->
+        <a-modal v-model:visible="visible" width="700px" draggable :on-before-ok="handleRelatedOk">
+            <template #title>关联测试项</template>
+            <div class="pb-3">已存在的关联项:</div>
+            <a-typography-paragraph>
+                <ol class="ol-reset">
+                    <li v-for="item in computedRelatedData">{{ item }}</li>
+                </ol>
+            </a-typography-paragraph>
+            <div class="pb-3">选择关联的测试需求项:</div>
+            <a-cascader
+                :options="options"
+                multiple
+                allow-search
+                placeholder="暂无关联测试项，请选择..."
+                :loading="cascaderLoading"
+                v-model:model-value="relatedData"
+            />
+        </a-modal>
     </div>
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref, computed } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import testDemandApi from "@/api/project/testDemand"
 import { useTreeDataStore } from "@/store"
 import commonApi from "@/api/common"
 import PinYinMatch from "pinyin-match"
+import { Message } from "@arco-design/web-vue"
 
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
@@ -28,6 +57,79 @@ const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
 const projectId = ref(route.query.id)
+// ~~~~~关联相关变量和函数~~~~~
+// 定义关联弹窗变量函数
+const visible = ref(false)
+const relatedData = ref([])
+const computedRelatedData = computed(() => {
+    const labelResultList = []
+    options.value.forEach((item) => {
+        if (item.children) {
+            item.children.forEach((child) => {
+                if (relatedData.value.includes(child.value)) {
+                    labelResultList.push(child.label)
+                }
+            })
+        }
+    })
+    return labelResultList
+})
+// 定义cascader的加载圈
+const cascaderLoading = ref(false)
+// 点击关联测试项-button
+const handleOpenRelationCSX = async () => {
+    // 请求接口获取数据
+    cascaderLoading.value = true
+    visible.value = true
+    // 点击进入时清除关联
+    relatedData.value = []
+    const res = await testDemandApi.getRelatedTestDemand({ id: projectId.value, round: roundNumber })
+    options.value = res.data
+    // 找出本设计需求design对应已关联的测试项
+    const res_exist = await testDemandApi.getExistRelatedTestDemand({
+        project_id: projectId.value,
+        roundNumber,
+        dutNumber,
+        designDemandNumber
+    })
+    relatedData.value = res_exist.data
+    cascaderLoading.value = false
+}
+// 点击关联确定按钮
+const handleRelatedOk = async () => {
+    // 获取级联数据
+    const relationDestItemIds = relatedData.value
+    if (relationDestItemIds.length > 0) {
+        const res = await testDemandApi.solveRelatedTestDemand({
+            data: relationDestItemIds,
+            project_id: projectId.value,
+            roundNumber,
+            dutNumber,
+            designDemandNumber
+        })
+        if (res.code == 200) {
+            Message.success(res.message)
+            return true
+        }
+    } else {
+        const res = await testDemandApi.solveRelatedTestDemand({
+            data: [],
+            project_id: projectId.value,
+            roundNumber,
+            dutNumber,
+            designDemandNumber
+        })
+        if (res.code == 200) {
+            Message.success(res.message)
+            return true
+        }
+    }
+    return false
+}
+// 级联cascade组件options
+const options = ref([])
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 // 标识显示字段
 const testTypeDict = ref([])
 !(function () {
@@ -52,7 +154,7 @@ const crudOptions = ref({
     edit: { show: true, api: testDemandApi.update },
     delete: { show: true, api: testDemandApi.delete },
     beforeOpenAdd: function () {
-        let key_split =  route.query.key.split("-")
+        let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]
         let design_key = key_split[2]
@@ -61,7 +163,7 @@ const crudOptions = ref({
         return true
     },
     beforeOpenEdit: function (record) {
-        let key_split =  route.query.key.split("-")
+        let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]
         let design_key = key_split[2]
@@ -216,4 +318,8 @@ const crudColumns = ref([
 ])
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.ol-reset {
+    list-style: auto;
+}
+</style>

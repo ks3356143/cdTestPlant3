@@ -32,6 +32,17 @@ const DATAMANAGE = {
                 locale: "项目联系信息",
                 icon: "icon-phone"
             }
+        },
+        {
+            path: "abbreviation",
+            name: "abbreviation",
+            component: () => import("@/views/datamanage/abbreviation/index.vue"),
+            meta: {
+                requiresAuth: true,
+                roles: ["*"],
+                locale: "缩略语",
+                icon: "icon-scissor"
+            }
         }
     ]
 }

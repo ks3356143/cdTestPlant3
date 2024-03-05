@@ -69,6 +69,7 @@
                     "
                     type="primary"
                   ><icon-eye /> {{ options.see.text || '查看' }}</a-link> -->
+
                                     <a-link
                                         v-if="
                                             (isFunction(options.edit.show)
@@ -106,9 +107,7 @@
                                                 : options.delete.show
                                         "
                                     >
-                                        <a-link
-                                            type="primary"
-                                        >
+                                        <a-link type="primary">
                                             <icon-delete />
                                             {{
                                                 props.isRecovery

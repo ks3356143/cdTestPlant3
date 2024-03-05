@@ -100,7 +100,8 @@ const beiceType = [
     { label: "源代码", value: "SO" },
     { label: "设计说明", value: "SJ" },
     { label: "需求文档", value: "XQ" },
-    { label: "通信协议", value: "XY" }
+    { label: "通信协议", value: "XY" },
+    { label: "研制总要求", value: "YZ" }
 ]
 
 const crudColumns = ref([
@@ -135,7 +136,7 @@ const crudColumns = ref([
         dict: {
             data: beiceType,
             translation: true,
-            tagColors: { XQ: "blue", SO: "green", SJ: "orangered", XY: "pinkpurple" }
+            tagColors: { XQ: "blue", SO: "green", SJ: "orangered", XY: "pinkpurple",YZ:"red" }
         },
         control: (value, data) => {
             if (value === "SO") {
@@ -150,7 +151,6 @@ const crudColumns = ref([
                 }
             } else {
                 // 其他数据清除
-
                 return {
                     black_line: { display: false },
                     pure_code_line: { display: false },
@@ -178,6 +178,14 @@ const crudColumns = ref([
         dataIndex: "version",
         search: true,
         commonRules: [{ required: true, message: "版本必填" }],
+        validateTrigger: "blur"
+    },
+    {
+        title: "用户标识",
+        align: "center",
+        dataIndex: "ref",
+        search: true,
+        commonRules: [{ required: true, message: "用户标识或编号必填" }],
         validateTrigger: "blur"
     },
     {

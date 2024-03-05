@@ -47,6 +47,8 @@
         "@vitejs/plugin-vue-jsx": "^3.0.1",
         "@vue/babel-plugin-jsx": "^1.1.1",
         "autoprefixer": "^10.4.14",
+        "browserslist": "^4.23.0",
+        "caniuse-lite": "^1.0.30001591",
         "eslint": "^8.42.0",
         "eslint-plugin-vue": "^9.14.1",
         "less": "^4.1.3",

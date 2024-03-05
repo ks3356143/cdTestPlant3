@@ -44,4 +44,37 @@ export default {
             data
         })
     },
+    /**
+     * 请求一个项目的所有测试需求（即测试项）
+     * @returns
+     */
+    getRelatedTestDemand(params = {}) {
+        return request({
+            url: "/project/testDemand/getRelatedTestDemand",
+            method: "get",
+            params
+        })
+    },
+    /**
+     * 设计需求关联测试需求（测试项）的接口请求
+     * @returns
+     */
+    solveRelatedTestDemand(params = {}) {
+        return request({
+            url: "/project/testDemand/solveRelatedTestDemand",
+            method: "post",
+            data: params
+        })
+    },
+    /**
+     * 根据当前设计需求design，找出已关联非自己的测试项
+     * @returns
+     */
+    getExistRelatedTestDemand(params = {}) {
+        return request({
+            url: "/project/testDemand/getExistRelatedTestDemand",
+            method: "post",
+            data: params
+        })
+    }
 }

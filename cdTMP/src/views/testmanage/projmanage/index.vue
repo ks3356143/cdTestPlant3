@@ -6,12 +6,17 @@
                 <template #operationBeforeExtend="{ record }">
                     <a-link @click="enterWorkPlant(record)">进入工作区</a-link>
                     <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link>
-                    <a-link @click="createYiju(record)"><icon-eye />【测试】生成依据文件</a-link>
-                    <a-link @click="createContact(record)"><icon-eye />【测试】联系方式</a-link>
+                    <a-link @click="createItem(record)">生成测试项</a-link>
+                    <a-link @click="createYiju(record)"><icon-eye />[测试]生成依据文件</a-link>
+                    <a-link @click="createContact(record)"><icon-eye />[测试]联系方式</a-link>
+                    <a-link @click="createInter(record)"><icon-eye />[测试]生成接口</a-link>
+                    <a-link @click="createZhuiZ(record)"><icon-eye />[测试]研总追踪</a-link>
+                    <a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link>
                 </template>
             </ma-crud>
         </div>
         <preview ref="previewRef"></preview>
+        <Progress :visible="visible" :isComplete="isComplete" @clickConfirm="handleModalConfirmClick"></Progress>
     </div>
 </template>
 <script lang="jsx" setup>
@@ -20,7 +25,9 @@ import { useRoute, useRouter } from "vue-router"
 import projectApi from "@/api/testmanage/project"
 import preview from "./cpns/preview.vue"
 import dgGenerateApi from "@/api/generate/dgGenerate"
+import dgSeitaiGenerateApi from "@/api/generate/dgSeitaiGenerate"
 import { Message } from "@arco-design/web-vue"
+import Progress from "./cpns/progress.vue"
 const router = useRouter()
 // 定义预览组件的Ref
 const previewRef = ref(null)
@@ -31,15 +38,95 @@ const enterWorkPlant = function (record) {
     }
     router.push({ name: "project", query: record })
 }
-
+// 这里放弹出进度条组件变量
+const visible = ref(false)
+const isComplete = ref(false)
+const handleModalConfirmClick = () => {
+    visible.value = false
+}
 // ~~~~~~~~测试生成文档~~~~~~~~
-const createYiju = async (record) => {
-    const st = await dgGenerateApi.createYiju({ id: record.id })
+const createSeitaiDagang = async (record) => {
+    // 根据一系列文档生成大纲 - 这里有进度条组件、a-modal组件
+    // 1.打开进度条组件
+    visible.value = true
+    isComplete.value = false
+    const st = await dgSeitaiGenerateApi.createDagangSeiTai({ id: record.id }).catch((err) => {
+        isComplete.value = true
+        visible.value = false
+    })
+    isComplete.value = true
     Message.success(st.message)
 }
-const createContact = async (record) => {
-    const st = await dgGenerateApi.createContact({ id: record.id })
+
+const createItem = async (record) => {
+    // 生成测试项文档
+    const st = await dgGenerateApi.createTestDemand({ id: record.id })
     Message.success(st.message)
+}
+
+const createYiju = async (record) => {
+    // 标准依据文件
+    const st = await dgGenerateApi.createYiju({ id: record.id })
+    // 技术依据文件
+    const st2 = await dgGenerateApi.createTechYiju({ id: record.id })
+    // 生成时间和地点
+    const st3 = await dgGenerateApi.createTimeaddress({ id: record.id })
+    // 生成被测软件功能列表
+    const st4 = await dgGenerateApi.createFuncList({ id: record.id })
+    // 生成测评对象-软件组成
+    const st5 = await dgGenerateApi.createSoftComposition({ id: record.id })
+    Message.success(st.message)
+    Message.success(st2.message)
+    Message.success(st3.message)
+    Message.success(st4.message)
+    Message.success(st5.message)
+}
+const createContact = async (record) => {
+    // 生成联系人和方式
+    const st = await dgGenerateApi.createContact({ id: record.id })
+    // 生成测试充分性（adequancy）和有效性（effectiveness）说明
+    const st2 = await dgGenerateApi.createAdequacyEffectiveness({ id: record.id })
+    // 生成测评组织及分工
+    const st3 = await dgGenerateApi.createGroup({ id: record.id })
+    // 生成测评保障
+    const st4 = await dgGenerateApi.createGuarantee({ id: record.id })
+    // 生成缩略语
+    const st5 = await dgGenerateApi.createAbbreviation({ id: record.id })
+    Message.success(st.message)
+    Message.success(st2.message)
+    Message.success(st3.message)
+    Message.success(st4.message)
+    Message.success(st5.message)
+}
+
+const createInter = async (record) => {
+    // 生成-被测软件接口
+    const st = await dgGenerateApi.createInterface({ id: record.id })
+    // 生成-被测软件性能
+    const st2 = await dgGenerateApi.createPerformance({ id: record.id })
+    // 生成-被测软件基本信息
+    const st3 = await dgGenerateApi.createBaseInformation({ id: record.id })
+    // 生成-测试总体要求
+    const st4 = await dgGenerateApi.createRequirement({ id: record.id })
+    Message.success(st.message)
+    Message.success(st2.message)
+    Message.success(st3.message)
+    Message.success(st4.message)
+}
+
+const createZhuiZ = async (record) => {
+    // 生成-研总-测试项对照表
+    const st = await dgGenerateApi.createYzComparison({ id: record.id })
+    // 生成-需求规格说明-测试项对照表
+    const st2 = await dgGenerateApi.createXqComparison({ id: record.id })
+    // 生成-反向测试项-需求规格说明对照表
+    const st3 = await dgGenerateApi.createFanXqComparison({ id: record.id })
+    // 生成-代码质量度量分析表
+    const st4 = await dgGenerateApi.createCodeQuality({ id: record.id })
+    Message.success(st.message)
+    Message.success(st2.message)
+    Message.success(st3.message)
+    Message.success(st4.message)
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -94,6 +181,7 @@ const crudOptions = ref({
                     { span: 8, formList: [{ dataIndex: "endTime" }] },
                     { span: 8, formList: [{ dataIndex: "duty_person" }] },
                     { span: 24, formList: [{ dataIndex: "member" }] },
+                    { span: 24, formList: [{ dataIndex: "abbreviation" }] },
                     { span: 8, formList: [{ dataIndex: "quality_person" }] },
                     { span: 8, formList: [{ dataIndex: "vise_person" }] },
                     { span: 8, formList: [{ dataIndex: "config_person" }] }
@@ -239,6 +327,15 @@ const crudColumns = ref([
         multiple: true,
         dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
         commonRules: [{ required: true, message: "成员至少选择一个" }]
+    },
+    {
+        title: "缩略语",
+        dataIndex: "abbreviation",
+        hide: true,
+        search: false,
+        formType: "select",
+        multiple: true,
+        dict: { url: "system/abbreviation/index", props: { label: "title", value: "title" }, translation: true }
     },
     {
         title: "质量保证",

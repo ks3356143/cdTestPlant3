@@ -20,7 +20,7 @@
         <ul class="right-side">
             <li>
                 <a-tooltip content="搜索-暂无">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'" @click="testCreate">
+                    <a-button class="nav-btn" type="outline" :shape="'circle'">
                         <template #icon>
                             <icon-search />
                         </template>
@@ -159,11 +159,10 @@ const handleClickLogo = () => {
 }
 
 // 测试生成文档-测试项和方法
-const testCreate = async ()=>{
+const testCreate = async () => {
     const st = await dgGenerateApi.createTestDemand()
     Message.success(st.message)
 }
-
 </script>
 
 <style scoped lang="less">
