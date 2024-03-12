@@ -4,17 +4,32 @@
             <!-- ma-crud组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #operationBeforeExtend="{ record }">
+                    <a-popover title="文档生成组合按钮" trigger="click">
+                        <a-button type="primary" size="mini">
+                            <template #icon>
+                                <icon-plus />
+                            </template>
+                            文档生成
+                        </a-button>
+                        <template #content>
+                            <p><a-link @click="createDgItem(record)">大纲二段文档</a-link></p>
+                            <p><a-link @click="createSmItem(record)">说明二段文档</a-link></p>
+                            <p><a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link></p>
+                            <p><a-link @click="createSeitaiShuoming(record)"><icon-eye />[测试]生成最后说明</a-link></p>
+                        </template>
+                    </a-popover>
                     <a-link @click="enterWorkPlant(record)">进入工作区</a-link>
                     <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link>
-                    <a-link @click="createDgItem(record)">大纲二段文档</a-link>
-                    <a-link @click="createSmItem(record)">说明二段文档</a-link>
-                    <a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link>
-                    <a-link @click="createSeitaiShuoming(record)"><icon-eye />[测试]生成最后说明</a-link>
                 </template>
             </ma-crud>
         </div>
         <preview ref="previewRef"></preview>
-        <Progress :visible="visible" :isComplete="isComplete" @clickConfirm="handleModalConfirmClick"></Progress>
+        <Progress
+            :visible="visible"
+            :isComplete="isComplete"
+            :text="ptext"
+            @clickConfirm="handleModalConfirmClick"
+        ></Progress>
     </div>
 </template>
 <script lang="jsx" setup>
@@ -40,13 +55,20 @@ const enterWorkPlant = function (record) {
 // 这里放弹出进度条组件变量
 const visible = ref(false)
 const isComplete = ref(false)
+const ptext = ref("测评大纲")
 const handleModalConfirmClick = () => {
     visible.value = false
 }
 // ~~~~~~~~测试说明生成文档~~~~~~~~
 const createSeitaiShuoming = async (record) => {
-    const st = await seitaiGenerateApi.createShuomingSeiTai({ id: record.id })
-
+    ptext.value = "测试说明"
+    visible.value = true
+    isComplete.value = false
+    const st = await seitaiGenerateApi.createShuomingSeiTai({ id: record.id }).catch((err) => {
+        isComplete.value = true
+        visible.value = false
+    })
+    isComplete.value = true
     Message.success(st.message)
 }
 
@@ -54,6 +76,7 @@ const createSeitaiShuoming = async (record) => {
 const createSeitaiDagang = async (record) => {
     // 根据一系列文档生成大纲 - 这里有进度条组件、a-modal组件
     // 1.打开进度条组件
+    ptext.value = "测评大纲"
     visible.value = true
     isComplete.value = false
     const st = await seitaiGenerateApi.createDagangSeiTai({ id: record.id }).catch((err) => {
@@ -88,7 +111,6 @@ const createSmItem = async (record) => {
     const st9 = await smGenerateApi.createSMCaseBreifList({ id: record.id })
     // 生成说明追踪
     const st10 = await smGenerateApi.createSMTrack({ id: record.id })
-
     Message.success(st10.message)
 }
 // 大纲生成二级文档

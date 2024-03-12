@@ -8,7 +8,7 @@
             :on-before-ok="handleClickConfirmButton"
             @cancel="handleClickConfirmButton"
         >
-            <template #title>生成大纲进度</template>
+            <template #title>正在生成{{ text }}</template>
             <div><a-progress :percent="percent" size="large" /></div>
         </a-modal>
     </div>
@@ -26,6 +26,10 @@ const props = defineProps({
     isComplete: {
         type: Boolean,
         default: false
+    },
+    text: {
+        type: String,
+        default: "测评大纲"
     }
 })
 const percent = ref(0)
