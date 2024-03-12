@@ -101,11 +101,22 @@ export default {
     },
     /**
      *
-     * @returns 生成测评大纲-被测软件性能
+     * @returns 生成测评大纲-被测软件基本信息
      */
     createBaseInformation(params = {}) {
         return request({
             url: `/generate/create/baseInformation`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成软硬件环境output_dir
+     */
+    createEnvironment(params = {}) {
+        return request({
+            url: `/generate/create/environment`,
             method: "get",
             params
         })
@@ -209,4 +220,15 @@ export default {
             params
         })
     },
+    /**
+     *
+     * @returns 生成-主要战技指标
+     */
+    createMainTech(params = {}) {
+        return request({
+            url: `/generate/create/mainTech`,
+            method: "get",
+            params
+        })
+    }
 }

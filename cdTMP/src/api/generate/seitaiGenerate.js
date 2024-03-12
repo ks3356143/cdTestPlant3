@@ -10,5 +10,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 如果缺少部分文件给与提示
+     * @returns 根据output_dir以及output_dir/sm中文档生成测试说明
+     */
+    createShuomingSeiTai(params = {}) {
+        return request({
+            url: `/create/smDocument`,
+            method: "get",
+            params
+        })
     }
 }

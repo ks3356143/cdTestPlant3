@@ -6,12 +6,10 @@
                 <template #operationBeforeExtend="{ record }">
                     <a-link @click="enterWorkPlant(record)">进入工作区</a-link>
                     <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link>
-                    <a-link @click="createItem(record)">生成测试项</a-link>
-                    <a-link @click="createYiju(record)"><icon-eye />[测试]生成依据文件</a-link>
-                    <a-link @click="createContact(record)"><icon-eye />[测试]联系方式</a-link>
-                    <a-link @click="createInter(record)"><icon-eye />[测试]生成接口</a-link>
-                    <a-link @click="createZhuiZ(record)"><icon-eye />[测试]研总追踪</a-link>
+                    <a-link @click="createDgItem(record)">大纲二段文档</a-link>
+                    <a-link @click="createSmItem(record)">说明二段文档</a-link>
                     <a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link>
+                    <a-link @click="createSeitaiShuoming(record)"><icon-eye />[测试]生成最后说明</a-link>
                 </template>
             </ma-crud>
         </div>
@@ -25,7 +23,8 @@ import { useRoute, useRouter } from "vue-router"
 import projectApi from "@/api/testmanage/project"
 import preview from "./cpns/preview.vue"
 import dgGenerateApi from "@/api/generate/dgGenerate"
-import dgSeitaiGenerateApi from "@/api/generate/dgSeitaiGenerate"
+import seitaiGenerateApi from "@/api/generate/seitaiGenerate"
+import smGenerateApi from "@/api/generate/smGenerate"
 import { Message } from "@arco-design/web-vue"
 import Progress from "./cpns/progress.vue"
 const router = useRouter()
@@ -44,13 +43,20 @@ const isComplete = ref(false)
 const handleModalConfirmClick = () => {
     visible.value = false
 }
-// ~~~~~~~~测试生成文档~~~~~~~~
+// ~~~~~~~~测试说明生成文档~~~~~~~~
+const createSeitaiShuoming = async (record) => {
+    const st = await seitaiGenerateApi.createShuomingSeiTai({ id: record.id })
+
+    Message.success(st.message)
+}
+
+// ~~~~~~~~测试大纲生成文档~~~~~~~~
 const createSeitaiDagang = async (record) => {
     // 根据一系列文档生成大纲 - 这里有进度条组件、a-modal组件
     // 1.打开进度条组件
     visible.value = true
     isComplete.value = false
-    const st = await dgSeitaiGenerateApi.createDagangSeiTai({ id: record.id }).catch((err) => {
+    const st = await seitaiGenerateApi.createDagangSeiTai({ id: record.id }).catch((err) => {
         isComplete.value = true
         visible.value = false
     })
@@ -58,15 +64,39 @@ const createSeitaiDagang = async (record) => {
     Message.success(st.message)
 }
 
-const createItem = async (record) => {
+// 说明生成二级文档
+const createSmItem = async (record) => {
+    // 生成测评对象 - 和大纲一样 - 可能会删除
+    const st = await dgGenerateApi.createSoftComposition({ id: record.id })
+    // 生成被测软件功能 - 和大纲重复 - 可能会删除
+    const st1 = await dgGenerateApi.createFuncList({ id: record.id })
+    // 生成被测软件接口 - 和大纲重复 - 可能会删除
+    const st2 = await dgGenerateApi.createInterface({ id: record.id })
+    // 生成被测软件性能 - 和大纲重复 - 可能会删除
+    const st3 = await dgGenerateApi.createPerformance({ id: record.id })
+    // 生成被测软件基本信息 - 和大纲重复 - 可能会删除
+    const st4 = await dgGenerateApi.createBaseInformation({ id: record.id })
+    // 生成标准类引用文档 - 和大纲重复 - 可能会删除
+    const st5 = await dgGenerateApi.createYiju({ id: record.id })
+    // 生成技术类引用文档列表 -> 在大纲基础上添加《测评大纲》
+    const st6 = await smGenerateApi.createSMTechyiju({ id: record.id })
+    // 生成软硬件环境（注意标题级别不一样，这个在最后处理）
+    const st7 = await dgGenerateApi.createEnvironment({ id: record.id })
+    // 生成用例全
+    const st8 = await smGenerateApi.createSMCaseList({ id: record.id })
+    // 生成用例列表-那个表格
+    const st9 = await smGenerateApi.createSMCaseBreifList({ id: record.id })
+    // 生成说明追踪
+    const st10 = await smGenerateApi.createSMTrack({ id: record.id })
+
+    Message.success(st10.message)
+}
+// 大纲生成二级文档
+const createDgItem = async (record) => {
     // 生成测试项文档
     const st = await dgGenerateApi.createTestDemand({ id: record.id })
-    Message.success(st.message)
-}
-
-const createYiju = async (record) => {
     // 标准依据文件
-    const st = await dgGenerateApi.createYiju({ id: record.id })
+    const st1 = await dgGenerateApi.createYiju({ id: record.id })
     // 技术依据文件
     const st2 = await dgGenerateApi.createTechYiju({ id: record.id })
     // 生成时间和地点
@@ -75,58 +105,37 @@ const createYiju = async (record) => {
     const st4 = await dgGenerateApi.createFuncList({ id: record.id })
     // 生成测评对象-软件组成
     const st5 = await dgGenerateApi.createSoftComposition({ id: record.id })
-    Message.success(st.message)
-    Message.success(st2.message)
-    Message.success(st3.message)
-    Message.success(st4.message)
-    Message.success(st5.message)
-}
-const createContact = async (record) => {
     // 生成联系人和方式
-    const st = await dgGenerateApi.createContact({ id: record.id })
+    const st6 = await dgGenerateApi.createContact({ id: record.id })
     // 生成测试充分性（adequancy）和有效性（effectiveness）说明
-    const st2 = await dgGenerateApi.createAdequacyEffectiveness({ id: record.id })
+    const st7 = await dgGenerateApi.createAdequacyEffectiveness({ id: record.id })
     // 生成测评组织及分工
-    const st3 = await dgGenerateApi.createGroup({ id: record.id })
+    const st8 = await dgGenerateApi.createGroup({ id: record.id })
     // 生成测评保障
-    const st4 = await dgGenerateApi.createGuarantee({ id: record.id })
+    const st9 = await dgGenerateApi.createGuarantee({ id: record.id })
     // 生成缩略语
-    const st5 = await dgGenerateApi.createAbbreviation({ id: record.id })
-    Message.success(st.message)
-    Message.success(st2.message)
-    Message.success(st3.message)
-    Message.success(st4.message)
-    Message.success(st5.message)
-}
-
-const createInter = async (record) => {
+    const st10 = await dgGenerateApi.createAbbreviation({ id: record.id })
     // 生成-被测软件接口
-    const st = await dgGenerateApi.createInterface({ id: record.id })
+    const st11 = await dgGenerateApi.createInterface({ id: record.id })
     // 生成-被测软件性能
-    const st2 = await dgGenerateApi.createPerformance({ id: record.id })
+    const st12 = await dgGenerateApi.createPerformance({ id: record.id })
     // 生成-被测软件基本信息
-    const st3 = await dgGenerateApi.createBaseInformation({ id: record.id })
+    const st13 = await dgGenerateApi.createBaseInformation({ id: record.id })
     // 生成-测试总体要求
-    const st4 = await dgGenerateApi.createRequirement({ id: record.id })
-    Message.success(st.message)
-    Message.success(st2.message)
-    Message.success(st3.message)
-    Message.success(st4.message)
-}
-
-const createZhuiZ = async (record) => {
+    const st14 = await dgGenerateApi.createRequirement({ id: record.id })
     // 生成-研总-测试项对照表
-    const st = await dgGenerateApi.createYzComparison({ id: record.id })
+    const st15 = await dgGenerateApi.createYzComparison({ id: record.id })
     // 生成-需求规格说明-测试项对照表
-    const st2 = await dgGenerateApi.createXqComparison({ id: record.id })
+    const st16 = await dgGenerateApi.createXqComparison({ id: record.id })
     // 生成-反向测试项-需求规格说明对照表
-    const st3 = await dgGenerateApi.createFanXqComparison({ id: record.id })
+    const st17 = await dgGenerateApi.createFanXqComparison({ id: record.id })
     // 生成-代码质量度量分析表
-    const st4 = await dgGenerateApi.createCodeQuality({ id: record.id })
-    Message.success(st.message)
-    Message.success(st2.message)
-    Message.success(st3.message)
-    Message.success(st4.message)
+    const st18 = await dgGenerateApi.createCodeQuality({ id: record.id })
+    // 生成-软硬件环境
+    const st19 = await dgGenerateApi.createEnvironment({ id: record.id })
+    // 生成-主要战技指标
+    const st20 = await dgGenerateApi.createMainTech({ id: record.id })
+    Message.success(st20.message)
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -538,3 +547,4 @@ const crudColumns = ref([
     }
 }
 </style>
+@/api/generate/seitaiGenerate
