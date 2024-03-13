@@ -71,19 +71,4 @@ export default {
             }
         })
     },
-    /**
-     * 根据项目名、树节点等级和key查找问题单
-     * @returns 返回问题单problem
-     */
-    getProblemInfo(projectId, key, level) {
-        return request({
-            url: `project/getProblemInfo`,
-            method: "get",
-            params: {
-                projectId: projectId,
-                key: key,
-                level: level
-            }
-        })
-    },
 }

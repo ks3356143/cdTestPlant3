@@ -218,14 +218,6 @@ const pointNode = (value, data) => {
                     }
                 })
             }
-            if (data.node.level == "4") {
-                projectApi.getProblemInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
-                    data.node.children = res.data
-                    if (!expandedKeys.value.includes(value[0])) {
-                        expandedKeys.value.push(value[0])
-                    }
-                })
-            }
             count = 0
             clearTimeout(timerId)
             timerId = null
@@ -246,9 +238,9 @@ const pointNode = (value, data) => {
             if (data.node.level === "4") {
                 router.push({ name: "case", query: { ...projectInfo.value, key: data.node.key } })
             }
-            if (data.node.level === "5") {
-                router.push({ name: "problem", query: { ...projectInfo.value, key: data.node.key } })
-            }
+            // if (data.node.level === "5") {
+            //     router.push({ name: "problem", query: { ...projectInfo.value, key: data.node.key } })
+            // }
             treeDataStore.setCurrentNode(data.node.key)
             // 单击设置选择的key
             selectedKeys.value = catch_selected_key
@@ -287,13 +279,6 @@ const loadMore = (nodeData) => {
     if (nodeData.level == "3") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getCaseInfo(projectInfo.value.id, nodeData.key, nodeData.level)
-            nodeData.children = res.data
-            resolve()
-        })
-    }
-    if (nodeData.level == "4") {
-        return new Promise(async (resolve) => {
-            const res = await projectApi.getProblemInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res.data
             resolve()
         })

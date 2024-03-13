@@ -145,7 +145,6 @@ const columns = ref([
         addDefaultValue: "1",
         formType: "radio",
         dict: { name: "data_status", props: { label: "title", value: "key" } },
-        addDefaultValue: "1",
         width: 70
     },
     {

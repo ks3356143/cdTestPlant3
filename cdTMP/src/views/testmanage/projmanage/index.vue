@@ -14,8 +14,13 @@
                         <template #content>
                             <p><a-link @click="createDgItem(record)">大纲二段文档</a-link></p>
                             <p><a-link @click="createSmItem(record)">说明二段文档</a-link></p>
-                            <p><a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link></p>
-                            <p><a-link @click="createSeitaiShuoming(record)"><icon-eye />[测试]生成最后说明</a-link></p>
+                            <p><a-link @click="createJLItem(record)">记录二级文档</a-link></p>
+                            <p>
+                                <a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link>
+                            </p>
+                            <p>
+                                <a-link @click="createSeitaiShuoming(record)"><icon-eye />[测试]生成最后说明</a-link>
+                            </p>
                         </template>
                     </a-popover>
                     <a-link @click="enterWorkPlant(record)">进入工作区</a-link>
@@ -40,6 +45,7 @@ import preview from "./cpns/preview.vue"
 import dgGenerateApi from "@/api/generate/dgGenerate"
 import seitaiGenerateApi from "@/api/generate/seitaiGenerate"
 import smGenerateApi from "@/api/generate/smGenerate"
+import jlGenerateApi from "@/api/generate/jlGenerate"
 import { Message } from "@arco-design/web-vue"
 import Progress from "./cpns/progress.vue"
 const router = useRouter()
@@ -84,6 +90,13 @@ const createSeitaiDagang = async (record) => {
         visible.value = false
     })
     isComplete.value = true
+    Message.success(st.message)
+}
+
+// 记录生成二级文档
+const createJLItem = async (record) => {
+    const st = await jlGenerateApi.createJLcaserecord({ id: record.id })
+
     Message.success(st.message)
 }
 

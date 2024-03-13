@@ -75,20 +75,6 @@ const useTreeDataStore = defineStore("treeDataStore", {
             const res = await projectApi.getCaseInfo(projrctId, nodeKey, "3")
             this.treeData[roundKey].children[dutKey].children[designKey].children[testKey].children = res.data
         },
-        // 新增删除problem后tree显示
-        async updateProblemTreeData(data, projrctId) {
-            let temp = data.key.split("-")
-            temp.pop(-1)
-            let roundKey = temp[0]
-            let dutKey = temp[1]
-            let designKey = temp[2]
-            let testKey = temp[3]
-            let caseKey = temp[4]
-            const nodeKey = temp.join("-")
-            const res = await projectApi.getProblemInfo(projrctId, nodeKey, "4")
-            this.treeData[roundKey].children[dutKey].children[designKey].children[testKey].children[caseKey].children =
-                res.data
-        },
         setCurrentNode(nodeKey) {
             this.currentNode = nodeKey
         },
