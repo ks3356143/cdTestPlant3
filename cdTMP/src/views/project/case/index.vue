@@ -17,7 +17,11 @@
                 </template>
             </ma-crud>
         </div>
-        <problem-choose ref="problemchoose" @deleted="related_reload"></problem-choose>
+        <problem-choose
+            ref="problemchoose"
+            @deleted="related_reload"
+            @relatedOrunrelated="related_reload"
+        ></problem-choose>
     </div>
 </template>
 

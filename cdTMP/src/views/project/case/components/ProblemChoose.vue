@@ -19,6 +19,10 @@
                         <template #unchecked> 未关联 </template>
                     </a-switch>
                 </template>
+                <!-- ident插槽 -->
+                <template #ident="{ record }">
+                    {{ "PT_" + route.query.ident + "_" + record.ident.padStart(3, "0") }}
+                </template>
             </ma-crud>
         </div>
     </a-modal>
@@ -31,7 +35,7 @@ import { Message } from "@arco-design/web-vue"
 import { useRoute, useRouter } from "vue-router"
 const route = useRoute()
 // 定义emits
-const emits = defineEmits(["deleted"])
+const emits = defineEmits(["deleted", "relatedOrunrelated"])
 
 // ~~~定义关联的switch-值改变处理~~~ 该函数返回false或返回Promise[reject]则停止切换
 /// 定义个switch的加载loading属性
@@ -56,6 +60,7 @@ const handleRelatedChange = async (record) => {
         loading.value = false
     }
     loading.value = false
+    emits("relatedOrunrelated")
     Message.success(res.message)
 }
 
@@ -83,10 +88,10 @@ const crudOptions = ref({
         key: route.query.key
     },
     showTools: false, // 不显示工具栏
-    tablePagination: false,
     operationColumn: true,
     operationColumnAlign: "center", // 操作列居中
     isDbClickEdit: false, // 双击不编辑当前列
+    bordered: { cell: true },
     formOption: {
         width: 1000,
         layout: [
