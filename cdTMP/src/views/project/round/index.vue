@@ -51,6 +51,14 @@ const route = useRoute()
 const roundNumber = route.query.key.split("-")[0]
 const projectId = ref(route.query.id)
 const crudRef = ref()
+
+let beiceType = [
+    { label: "源代码", value: "SO" },
+    { label: "设计说明", value: "SJ" },
+    { label: "需求文档", value: "XQ" },
+    { label: "通信协议", value: "XY" },
+    { label: "研制总要求", value: "YZ" }
+]
 // crud组件
 const crudOptions = ref({
     api: dutApi.getDutList,
@@ -96,13 +104,6 @@ const crudOptions = ref({
         width: 600
     }
 })
-const beiceType = [
-    { label: "源代码", value: "SO" },
-    { label: "设计说明", value: "SJ" },
-    { label: "需求文档", value: "XQ" },
-    { label: "通信协议", value: "XY" },
-    { label: "研制总要求", value: "YZ" }
-]
 
 const crudColumns = ref([
     {
@@ -136,7 +137,7 @@ const crudColumns = ref([
         dict: {
             data: beiceType,
             translation: true,
-            tagColors: { XQ: "blue", SO: "green", SJ: "orangered", XY: "pinkpurple",YZ:"red" }
+            tagColors: { XQ: "blue", SO: "green", SJ: "orangered", XY: "pinkpurple", YZ: "red" }
         },
         control: (value, data) => {
             if (value === "SO") {

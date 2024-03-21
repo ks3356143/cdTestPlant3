@@ -21,5 +21,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * TODO:如果缺少部分文件给与提示
+     * @returns 根据output_dir以及output_dir/JL中文档生成测试记录
+     */
+    createJiluSeiTai(params = {}) {
+        return request({
+            url: `/create/jlDocument`,
+            method: "get",
+            params
+        })
     }
 }

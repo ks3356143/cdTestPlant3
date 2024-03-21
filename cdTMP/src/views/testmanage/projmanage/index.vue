@@ -21,6 +21,9 @@
                             <p>
                                 <a-link @click="createSeitaiShuoming(record)"><icon-eye />[测试]生成最后说明</a-link>
                             </p>
+                            <p>
+                                <a-link @click="createSeitaiJilu(record)"><icon-eye />[测试]生成最后记录</a-link>
+                            </p>
                         </template>
                     </a-popover>
                     <a-link @click="enterWorkPlant(record)">进入工作区</a-link>
@@ -86,6 +89,18 @@ const createSeitaiDagang = async (record) => {
     visible.value = true
     isComplete.value = false
     const st = await seitaiGenerateApi.createDagangSeiTai({ id: record.id }).catch((err) => {
+        isComplete.value = true
+        visible.value = false
+    })
+    isComplete.value = true
+    Message.success(st.message)
+}
+// ~~~~~~~~记录生成文档~~~~~~~~
+const createSeitaiJilu = async (record) => {
+    ptext.value = "测试记录"
+    visible.value = true
+    isComplete.value = false
+    const st = await seitaiGenerateApi.createJiluSeiTai({ id: record.id }).catch((err) => {
         isComplete.value = true
         visible.value = false
     })
@@ -221,10 +236,13 @@ const crudOptions = ref({
             {
                 formType: "grid",
                 cols: [
-                    { span: 8, formList: [{ dataIndex: "beginTime" }] },
-                    { span: 8, formList: [{ dataIndex: "endTime" }] },
-                    { span: 8, formList: [{ dataIndex: "duty_person" }] },
-                    { span: 24, formList: [{ dataIndex: "member" }] },
+                    { span: 6, formList: [{ dataIndex: "beginTime" }] },
+                    { span: 6, formList: [{ dataIndex: "endTime" }] },
+                    { span: 6, formList: [{ dataIndex: "duty_person" }] },
+                    { span: 6, formList: [{ dataIndex: "runtime" }] },
+                    { span: 12, formList: [{ dataIndex: "member" }] },
+                    { span: 6, formList: [{ dataIndex: "soft_type" }] },
+                    { span: 6, formList: [{ dataIndex: "devplant" }] },
                     { span: 24, formList: [{ dataIndex: "abbreviation" }] },
                     { span: 8, formList: [{ dataIndex: "quality_person" }] },
                     { span: 8, formList: [{ dataIndex: "vise_person" }] },
@@ -363,6 +381,14 @@ const crudColumns = ref([
         dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true }
     },
     {
+        title: "运行环境",
+        dataIndex: "runtime",
+        hide: true,
+        search: false,
+        formType: "select",
+        dict: { name: "runtime", props: { label: "title", value: "key" } }
+    },
+    {
         title: "成员",
         dataIndex: "member",
         hide: true,
@@ -371,6 +397,30 @@ const crudColumns = ref([
         multiple: true,
         dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
         commonRules: [{ required: true, message: "成员至少选择一个" }]
+    },
+    {
+        // 后台默认值1，可不填
+        title: "软件类型",
+        dataIndex: "soft_type",
+        hide: true,
+        search: true,
+        formType: "select",
+        dict: {
+            data: [
+                { label: "新研", value: 1 },
+                { label: "改造", value: 2 }
+            ],
+            translation: true
+        },
+        commonRules: [{ required: true, message: "软件类型必填" }]
+    },
+    {
+        title: "开发环境",
+        dataIndex: "devplant",
+        hide: true,
+        search: false,
+        formType: "select",
+        dict: { name: "devplant", props: { label: "title", value: "key" } }
     },
     {
         title: "缩略语",
