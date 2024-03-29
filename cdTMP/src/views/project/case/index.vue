@@ -151,6 +151,13 @@ const crudOptions = ref({
             },
             {
                 formType: "divider",
+                title: "解决问题"
+            },
+            {
+                dataIndex: "solve"
+            },
+            {
+                formType: "divider",
                 title: "人员信息"
             },
             {
@@ -326,6 +333,13 @@ const crudColumns = ref([
         hide: true,
         dataIndex: "suggest",
         addDefaultValue: ""
+    },
+    {
+        title: "处理方式",
+        hide: true,
+        dataIndex: "solve",
+        addDefaultValue: "",
+        formType: "textarea"
     },
     {
         title: "提单人",

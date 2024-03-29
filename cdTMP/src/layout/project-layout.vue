@@ -14,16 +14,21 @@
                         <a-button type="primary" @click="toggleExpanded" class="mb-1">
                             {{ expandedKeys?.length ? "全部收缩" : "全部展开" }}
                         </a-button>
+                        <a-popconfirm type="warning" @ok="handleCopyNode" content="是否确定根据选中节点进行创建？">
+                            <a-button type="primary" class="ml-2"> 复制选中节点创建第二轮 </a-button>
+                        </a-popconfirm>
                         <a-tree
                             class="h-10/12 select-none"
                             :data="treeData"
                             size="small"
+                            checkable
                             block-node
                             animation
                             @select="pointNode"
                             :load-more="loadMore"
                             v-model:expanded-keys="expandedKeys"
                             v-model:selected-keys="selectedKeys"
+                            v-model:checked-keys="checkedKeys"
                             showLine
                             ref="treeRef"
                             border
@@ -100,6 +105,21 @@
         width="800px"
         :submit="handleRoundSubmit"
     ></ma-form-modal>
+    <!-- 如果没有第一轮的SO_dut则弹窗 -->
+    <ma-form-modal
+        ref="soDutFormRef"
+        title="新增第一轮源代码被测件"
+        :column="soDutColumn"
+        width="800px"
+        :submit="handleSoDutSubmit"
+        :custom-cancel="handleSoDutCancel"
+    ></ma-form-modal>
+    <Progress
+        :visible="visible"
+        :isComplete="isComplete"
+        :text="ptext"
+        @clickConfirm="handleModalConfirmClick"
+    ></Progress>
 </template>
 
 <script setup>
@@ -109,12 +129,46 @@ import PageLayout from "@/layout/page-layout.vue"
 import MaFormModal from "@/components/ma-form-modal/index.vue"
 import projectApi from "@/api/project/project"
 import roundApi from "@/api/project/round"
-import { Message } from "@arco-design/web-vue"
+import dutApi from "@/api/project/dut"
+import copyApi from "@/api/treeOperation/copy"
+import { Message, Notification } from "@arco-design/web-vue"
 import { useRoute } from "vue-router"
 import { useRouter } from "vue-router"
 import { useTreeDataStore } from "@/store"
 import { storeToRefs } from "pinia"
 import dayjs from "dayjs"
+import Progress from "@/views/testmanage/projmanage/cpns/progress.vue"
+/// 初始化round轮次数据
+const treeDataStore = useTreeDataStore()
+const route = useRoute()
+const router = useRouter()
+const treeRef = ref()
+const { treeData, currentNode } = storeToRefs(treeDataStore)
+const projectInfo = ref({ ...route.query })
+const projectId = ref(route.query.id)
+//~~~~ 复制粘贴流程
+const checkedKeys = ref([])
+/// 点击复制按钮
+const handleCopyNode = async () => {
+    // 打印下checked节点key
+    console.log(checkedKeys.value)
+    visible.value = true
+    isComplete.value = false
+    const st = await copyApi.copyCheckedNode().catch((err) => {
+        isComplete.value = true
+        visible.value = false
+    })
+    isComplete.value = true
+    Message.success(st.message)
+}
+/// 进度条变量
+const visible = ref(false)
+const isComplete = ref(false)
+const ptext = ref("第二轮数据")
+const handleModalConfirmClick = () => {
+    visible.value = false
+}
+
 //~~~~ 缩小后的menu菜单
 const drawerVisible = ref(false)
 provide("toggleDrawerMenu", () => {
@@ -123,6 +177,13 @@ provide("toggleDrawerMenu", () => {
 //~~~~ 搜索绑定与搜索按钮点击
 const searchKey = ref("")
 const handleSearchTreeDataClick = () => {
+    if (!treeDataStore.originTreeData) {
+        return
+    }
+    if (searchKey.value.match(/^[ ]*$/)) {
+        treeData.value = treeDataStore.originTreeData
+        return
+    }
     const loop = (itemdata) => {
         const result = []
         itemdata.forEach((item) => {
@@ -149,17 +210,40 @@ const handleSearchTreeDataClick = () => {
     }
 }
 //~~~~ 树状组件
-/// 初始化round轮次数据
-const treeDataStore = useTreeDataStore()
-const route = useRoute()
-const router = useRouter()
-const treeRef = ref()
-const { treeData, currentNode } = storeToRefs(treeDataStore)
-const projectInfo = ref({ ...route.query })
-const projectId = ref(route.query.id)
+// ~~~~定义弹出a-form-modal的submit方法~~~
+const handleSoDutSubmit = async (data) => {
+    // 只有一个参数就是被提交的数据，然后返回false阻止弹窗消失
+    const input_data = { ...data, project_id: projectId.value }
+    const res = await dutApi.createR1SoDut(input_data)
+    if (res.code == 200) {
+        treeDataStore.updateDutTreeData(res.data, projectId.value)
+        Message.success("添加成功...")
+        setTimeout(() => {
+            location.reload()
+        }, 500)
+        return
+    }
+    return false
+}
+// ~~~~定义弹出a-form-modal的cancel方法-返回false则无法关闭弹窗~~~~
+const handleSoDutCancel = () => {
+    Notification.error("必须添加第一轮源代码信息，无法关闭!")
+    return false
+}
 // 初始化树状数据
+// so_dut弹窗ref对象
+const soDutFormRef = ref()
 onMounted(async () => {
     treeDataStore.initTreeData(projectId.value)
+    // 检查是否存在第一轮的源代码dut
+    /// 主动后端请求
+    const res = await dutApi.getSoExists({ id: projectId.value })
+    /// 如果包含第一轮源代码则不处理，不包含则弹窗必须添加dut
+    if (!res.data.exists) {
+        // 这里就必须让用户选择添加了
+        Message.warning("识别到您未添加第一轮源代码的信息，此信息必填")
+        soDutFormRef.value.open({})
+    }
 })
 // v-model绑定选中节点
 const selectedKeys = ref([])
@@ -254,13 +338,12 @@ const pointNode = (value, data) => {
 }
 /// 动态加载函数-参数1:树node对象
 const loadMore = (nodeData) => {
-    console.log("动态加载的节点为：", nodeData) // 输出点击节点的key,以及添加上去的level属性
     if (nodeData.level == "0") {
         return new Promise(async (resolve) => {
             const res = await projectApi.getDutInfo(projectInfo.value.id, nodeData.key, nodeData.level)
             nodeData.children = res.data
             resolve()
-        })
+        }).catch()
     }
     if (nodeData.level == "1") {
         return new Promise(async (resolve) => {
@@ -319,9 +402,7 @@ const handleRoundDelClick = async (value) => {
         await roundApi.delete(projectId.value, value)
         Message.success("删除成功！")
         treeDataStore.resetTreeData(projectId.value)
-    } catch {
-        Message.error("删除失败！")
-    }
+    } catch {}
 }
 /// Ma-form-Modal的提交按钮
 const handleRoundSubmit = async (value) => {
@@ -482,6 +563,64 @@ const roundColumn = ref([
 const roundOption = ref({
     customClass: [""]
 })
+// 源代码so_dut的弹窗
+const soDutColumn = ref([
+    {
+        title: "代码版本",
+        dataIndex: "version",
+        placeholder: "请输入代码版本",
+        rules: [{ required: true, message: "代码版本必填" }]
+    },
+    {
+        title: "用户标识",
+        dataIndex: "userRef",
+        placeholder: "请输入用户标识"
+    },
+    {
+        title: "单位",
+        dataIndex: "unit",
+        placeholder: "请选择单位名称",
+        formType: "select",
+        dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true },
+        rules: [{ required: true, message: "单位必选" }]
+    },
+    {
+        title: "发布时间",
+        dataIndex: "date",
+        rules: [{ required: true, message: "时间必填" }],
+        formType: "date"
+    },
+    {
+        title: "空行",
+        dataIndex: "black_line",
+        formType: "input-number"
+    },
+    {
+        title: "纯注释?",
+        dataIndex: "pure_code_line",
+        formType: "input-number"
+    },
+    {
+        title: "混合行?",
+        dataIndex: "mix_line",
+        formType: "input-number"
+    },
+    {
+        title: "总注释",
+        dataIndex: "total_comment_line",
+        formType: "input-number"
+    },
+    {
+        title: "总代码",
+        dataIndex: "total_code_line",
+        formType: "input-number"
+    },
+    {
+        title: "总行数",
+        dataIndex: "total_line",
+        formType: "input-number"
+    }
+])
 </script>
 
 <style lang="less" scoped>

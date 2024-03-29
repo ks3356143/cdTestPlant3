@@ -140,6 +140,13 @@ const crudOptions = ref({
             },
             {
                 formType: "divider",
+                title: "解决问题"
+            },
+            {
+                dataIndex: "solve"
+            },
+            {
+                formType: "divider",
                 title: "人员信息"
             },
             {
@@ -323,12 +330,46 @@ const columns = ref([
         addDefaultValue: ""
     },
     {
+        title: "处理方式",
+        hide: true,
+        dataIndex: "solve",
+        addDefaultValue: "",
+        formType: "textarea"
+    },
+    {
         title: "提单人",
         dataIndex: "postPerson",
         search: true,
+        hide: true,
         formType: "select",
         commonRules: [{ required: true, message: "提单人必填" }],
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
+    },
+    {
+        title: "悬挂状态",
+        dataIndex: "hang",
+        search: false,
+        addDisplay: false,
+        editDisplay: false,
+        align: "center",
+        customRender: ({ record }) => {
+            // 判断是否为悬挂状态record.hang[Boolean]
+            let tagObj
+            if (record.hang) {
+                tagObj = (
+                    <a-tag size="small" bordered color="green">
+                        有关联用例
+                    </a-tag>
+                )
+            } else {
+                tagObj = (
+                    <a-tag size="small" bordered color="red">
+                        悬挂
+                    </a-tag>
+                )
+            }
+            return <a-space size="mini">{tagObj}</a-space>
+        }
     },
     {
         title: "是否关联",

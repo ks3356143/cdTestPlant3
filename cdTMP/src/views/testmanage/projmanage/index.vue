@@ -15,6 +15,7 @@
                             <p><a-link @click="createDgItem(record)">大纲二段文档</a-link></p>
                             <p><a-link @click="createSmItem(record)">说明二段文档</a-link></p>
                             <p><a-link @click="createJLItem(record)">记录二级文档</a-link></p>
+                            <p><a-link @click="createBgItem(record)">报告二级文档</a-link></p>
                             <p>
                                 <a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link>
                             </p>
@@ -23,6 +24,9 @@
                             </p>
                             <p>
                                 <a-link @click="createSeitaiJilu(record)"><icon-eye />[测试]生成最后记录</a-link>
+                            </p>
+                            <p>
+                                <a-link @click="createSeitaiBaogao(record)"><icon-eye />[测试]生成测评报告</a-link>
                             </p>
                         </template>
                     </a-popover>
@@ -49,8 +53,10 @@ import dgGenerateApi from "@/api/generate/dgGenerate"
 import seitaiGenerateApi from "@/api/generate/seitaiGenerate"
 import smGenerateApi from "@/api/generate/smGenerate"
 import jlGenerateApi from "@/api/generate/jlGenerate"
+import bgGenerateApi from "@/api/generate/bgGenerate"
 import { Message } from "@arco-design/web-vue"
 import Progress from "./cpns/progress.vue"
+import hoosk from "@/views/testmanage/projmanage/hooks.js"
 const router = useRouter()
 // 定义预览组件的Ref
 const previewRef = ref(null)
@@ -71,14 +77,7 @@ const handleModalConfirmClick = () => {
 // ~~~~~~~~测试说明生成文档~~~~~~~~
 const createSeitaiShuoming = async (record) => {
     ptext.value = "测试说明"
-    visible.value = true
-    isComplete.value = false
-    const st = await seitaiGenerateApi.createShuomingSeiTai({ id: record.id }).catch((err) => {
-        isComplete.value = true
-        visible.value = false
-    })
-    isComplete.value = true
-    Message.success(st.message)
+    hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createShuomingSeiTai, record.id)
 }
 
 // ~~~~~~~~测试大纲生成文档~~~~~~~~
@@ -86,26 +85,18 @@ const createSeitaiDagang = async (record) => {
     // 根据一系列文档生成大纲 - 这里有进度条组件、a-modal组件
     // 1.打开进度条组件
     ptext.value = "测评大纲"
-    visible.value = true
-    isComplete.value = false
-    const st = await seitaiGenerateApi.createDagangSeiTai({ id: record.id }).catch((err) => {
-        isComplete.value = true
-        visible.value = false
-    })
-    isComplete.value = true
-    Message.success(st.message)
+    hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createDagangSeiTai, record.id)
 }
 // ~~~~~~~~记录生成文档~~~~~~~~
 const createSeitaiJilu = async (record) => {
     ptext.value = "测试记录"
-    visible.value = true
-    isComplete.value = false
-    const st = await seitaiGenerateApi.createJiluSeiTai({ id: record.id }).catch((err) => {
-        isComplete.value = true
-        visible.value = false
-    })
-    isComplete.value = true
-    Message.success(st.message)
+    hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createJiluSeiTai, record.id)
+}
+
+// ~~~~~~~~报告生成文档~~~~~~~~
+const createSeitaiBaogao = async (record) => {
+    ptext.value = "测评报告"
+    hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createBgDocument, record.id)
 }
 
 // 记录生成二级文档
@@ -114,7 +105,6 @@ const createJLItem = async (record) => {
 
     Message.success(st.message)
 }
-
 // 说明生成二级文档
 const createSmItem = async (record) => {
     // 生成测评对象 - 和大纲一样 - 可能会删除
@@ -186,6 +176,23 @@ const createDgItem = async (record) => {
     // 生成-主要战技指标
     const st20 = await dgGenerateApi.createMainTech({ id: record.id })
     Message.success(st20.message)
+}
+// 报告生成二级文档
+const createBgItem = async (record) => {
+    const st1 = await bgGenerateApi.createBgTechYiju({ id: record.id })
+    const st2 = await bgGenerateApi.createBgTimeaddress({ id: record.id })
+    const st3 = await bgGenerateApi.createBgBaseInformation({ id: record.id })
+    const st4 = await bgGenerateApi.createBgCompletionstatus({ id: record.id })
+    const st5 = await bgGenerateApi.createBgSummary({ id: record.id })
+    const st6 = await bgGenerateApi.createBgContentandresults1({ id: record.id })
+    const st7 = await bgGenerateApi.createBgContentandresults2({ id: record.id })
+    const st8 = await bgGenerateApi.createBgEffectAndAdquacy({ id: record.id })
+    const st9 = await bgGenerateApi.createBgDemandEffective({ id: record.id })
+    const st10 = await bgGenerateApi.createBgQualityEvaluate({ id: record.id })
+    const st11 = await bgGenerateApi.createBgEntire({ id: record.id })
+    const st12 = await bgGenerateApi.createBgYzxqTrack({ id: record.id })
+    const st13 = await bgGenerateApi.createBgProblemsSummary({ id: record.id })
+    Message.success(st13.message)
 }
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

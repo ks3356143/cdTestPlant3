@@ -45,4 +45,26 @@ export default {
             data
         })
     },
+    /**
+     * 查询是否存在第一轮是否存在源代码dut
+     * @returns {bool} 第一轮是否存在源代码dut
+     */
+    getSoExists(params = {}) {
+        return request({
+            url: "/project/dut/soExist",
+            method: "get",
+            params
+        })
+    },
+    /**
+     * 强制弹窗提交的第一轮源代码被测件-新增接口
+     * @returns
+     */
+    createR1SoDut(params = {}) {
+        return request({
+            url: "/project/dut/createR1Sodut",
+            method: "post",
+            data: params
+        })
+    }
 }

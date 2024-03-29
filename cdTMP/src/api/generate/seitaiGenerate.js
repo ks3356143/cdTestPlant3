@@ -32,5 +32,16 @@ export default {
             method: "get",
             params
         })
-    }
+    },
+    /**
+     * TODO:如果缺少部分文件给与提示
+     * @returns 根据output_dir以及output_dir/bg中文档生成测评报告
+     */
+    createBgDocument(params = {}) {
+        return request({
+            url: `/create/bgDocument`,
+            method: "get",
+            params
+        })
+    },
 }

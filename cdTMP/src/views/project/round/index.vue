@@ -213,14 +213,14 @@ const crudColumns = ref([
         formType: "input-number"
     },
     {
-        title: "纯注释",
+        title: "纯注释?",
         hide: true,
         align: "center",
         dataIndex: "pure_code_line",
         formType: "input-number"
     },
     {
-        title: "混合行",
+        title: "混合行?",
         hide: true,
         align: "center",
         dataIndex: "mix_line",

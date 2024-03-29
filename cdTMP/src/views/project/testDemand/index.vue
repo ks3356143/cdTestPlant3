@@ -28,7 +28,16 @@ const projectId = ref(route.query.id)
 // 标识显示字段
 const showType = (record) => {
     let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
-    return "YL-" + record.ident + "-" + key_string.toString().padStart(3, "0")
+    let k_string_array = record.key.split("-")
+    let demand_key = parseInt(k_string_array.slice(-2)[0]) + 1
+    return (
+        "YL-" +
+        record.ident +
+        "-" +
+        demand_key.toString().padStart(3, "0") +
+        "-" +
+        key_string.toString().padStart(3, "0")
+    )
 }
 // crud设置
 const crudOptions = ref({
@@ -38,7 +47,7 @@ const crudOptions = ref({
     delete: { show: true, api: caseApi.delete },
     // 处理新增删除后树状图显示
     beforeOpenAdd: function () {
-        let key_split =  route.query.key.split("-")
+        let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]
         let design_key = key_split[2]
@@ -51,7 +60,7 @@ const crudOptions = ref({
         return true
     },
     beforeOpenEdit: function (record) {
-        let key_split =  route.query.key.split("-")
+        let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]
         let design_key = key_split[2]

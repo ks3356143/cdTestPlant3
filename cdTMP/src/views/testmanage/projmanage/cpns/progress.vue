@@ -41,7 +41,7 @@ const handleClickConfirmButton = () => {
     }
     Notification.warning({
         title: "无法关闭",
-        content: "生成大纲未完成，请等待生成完成后再关闭"
+        content: `生成${props.text}未完成，请等待生成完成后再关闭`
     })
     return false
 }
