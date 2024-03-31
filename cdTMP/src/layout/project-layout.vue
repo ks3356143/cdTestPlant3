@@ -177,13 +177,6 @@ provide("toggleDrawerMenu", () => {
 //~~~~ 搜索绑定与搜索按钮点击
 const searchKey = ref("")
 const handleSearchTreeDataClick = () => {
-    if (!treeDataStore.originTreeData) {
-        return
-    }
-    if (searchKey.value.match(/^[ ]*$/)) {
-        treeData.value = treeDataStore.originTreeData
-        return
-    }
     const loop = (itemdata) => {
         const result = []
         itemdata.forEach((item) => {

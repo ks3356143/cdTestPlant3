@@ -16,6 +16,7 @@ const useTreeDataStore = defineStore("treeDataStore", {
             // 获取localStorage的treeData数据
             if (localStorage.getItem("tree_local_data")) {
                 this.treeData = JSON.parse(localStorage.getItem("tree_local_data"))
+                this.originTreeData = JSON.parse(localStorage.getItem("tree_local_data"))
             }
             if (this.treeData.length === 0) {
                 const roundData = await projectApi.getRoundInfo(projectId)
