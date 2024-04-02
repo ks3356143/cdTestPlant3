@@ -16,6 +16,8 @@
                             <p><a-link @click="createSmItem(record)">说明二段文档</a-link></p>
                             <p><a-link @click="createJLItem(record)">记录二级文档</a-link></p>
                             <p><a-link @click="createBgItem(record)">报告二级文档</a-link></p>
+                            <p><a-link @click="createHsmItem(record)">回归说明二级文档</a-link></p>
+                            <p><a-link @click="createHjlItem(record)">回归记录二级文档</a-link></p>
                             <p>
                                 <a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link>
                             </p>
@@ -27,6 +29,12 @@
                             </p>
                             <p>
                                 <a-link @click="createSeitaiBaogao(record)"><icon-eye />[测试]生成测评报告</a-link>
+                            </p>
+                            <p>
+                                <a-link @click="createSeitaiHsm(record)"><icon-eye />[测试]回归测试说明</a-link>
+                            </p>
+                            <p>
+                                <a-link @click="createSeitaiHjl(record)"><icon-eye />[测试]回归测试记录</a-link>
                             </p>
                         </template>
                     </a-popover>
@@ -54,6 +62,8 @@ import seitaiGenerateApi from "@/api/generate/seitaiGenerate"
 import smGenerateApi from "@/api/generate/smGenerate"
 import jlGenerateApi from "@/api/generate/jlGenerate"
 import bgGenerateApi from "@/api/generate/bgGenerate"
+import hsmGenerateApi from "@/api/generate/hsmGenerate"
+import hjlGenerateApi from "@/api/generate/hjlGenerate"
 import { Message } from "@arco-design/web-vue"
 import Progress from "./cpns/progress.vue"
 import hoosk from "@/views/testmanage/projmanage/hooks.js"
@@ -97,6 +107,16 @@ const createSeitaiJilu = async (record) => {
 const createSeitaiBaogao = async (record) => {
     ptext.value = "测评报告"
     hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createBgDocument, record.id)
+}
+// ~~~~~~~~回归测试说明~~~~~~~~
+const createSeitaiHsm = async (record) => {
+    ptext.value = "回归测试说明"
+    hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createHsmDocument, record.id)
+}
+// ~~~~~~~~回归测试记录~~~~~~~~
+const createSeitaiHjl = async (record) => {
+    ptext.value = "回归测试记录"
+    hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createHjlDocument, record.id)
 }
 
 // 记录生成二级文档
@@ -194,6 +214,25 @@ const createBgItem = async (record) => {
     const st13 = await bgGenerateApi.createBgProblemsSummary({ id: record.id })
     Message.success(st13.message)
 }
+// 回归测试说明二级文档
+const createHsmItem = async (record) => {
+    await hsmGenerateApi.createBasicInfo({ id: record.id })
+    await hsmGenerateApi.createDocSummary({ id: record.id })
+    await hsmGenerateApi.createJstech({ id: record.id })
+    await hsmGenerateApi.createChangePart({ id: record.id })
+    await hsmGenerateApi.createHdemand({ id: record.id })
+    await hsmGenerateApi.createCaseListDesc({ id: record.id })
+    await hsmGenerateApi.createCaseList({ id: record.id })
+    const st = await hsmGenerateApi.createTrack({ id: record.id })
+    Message.success(st.message)
+}
+// 回归测试记录二级文档
+const createHjlItem = async (record) => {
+    await hjlGenerateApi.createBasicInfo({ id: record.id })
+    const st = await hjlGenerateApi.createCaseinfo({ id: record.id })
+    Message.success(st.message)
+}
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // CRUD-OPTIONS

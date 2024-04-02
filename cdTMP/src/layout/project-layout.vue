@@ -15,7 +15,9 @@
                             {{ expandedKeys?.length ? "全部收缩" : "全部展开" }}
                         </a-button>
                         <a-popconfirm type="warning" @ok="handleCopyNode" content="是否确定根据选中节点进行创建？">
-                            <a-button type="primary" class="ml-2"> 复制选中节点创建第二轮 </a-button>
+                            <a-button type="outline" status="warning" class="ml-1">
+                                <template #icon> <icon-plus /></template>点击复制创建轮次
+                            </a-button>
                         </a-popconfirm>
                         <a-tree
                             class="h-10/12 select-none"
@@ -150,16 +152,26 @@ const projectId = ref(route.query.id)
 const checkedKeys = ref([])
 /// 点击复制按钮
 const handleCopyNode = async () => {
+    // 1.先判断是否选中了节点
+    if (checkedKeys.value.length < 1) {
+        Message.error("您未选择节点，请选择后再试...")
+        return
+    }
     // 打印下checked节点key
-    console.log(checkedKeys.value)
     visible.value = true
     isComplete.value = false
-    const st = await copyApi.copyCheckedNode().catch((err) => {
-        isComplete.value = true
-        visible.value = false
-    })
+    const st = await copyApi
+        .copyCheckedNode({ checkedNodes: checkedKeys.value, project_id: projectId.value })
+        .catch((err) => {
+            isComplete.value = true
+            visible.value = false
+        })
     isComplete.value = true
     Message.success(st.message)
+    // 处理完后需要更新树结构
+    treeDataStore.resetTreeData(projectId.value)
+    // 清除右侧路由的组件显示，不然会因为数据而出错
+    router.replace({ name: "project" })
 }
 /// 进度条变量
 const visible = ref(false)
@@ -333,28 +345,42 @@ const pointNode = (value, data) => {
 const loadMore = (nodeData) => {
     if (nodeData.level == "0") {
         return new Promise(async (resolve) => {
-            const res = await projectApi.getDutInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+            const res = await projectApi.getDutInfo(projectInfo.value.id, nodeData.key, nodeData.level).catch((err) => {
+                resolve() // 捕获错误，让动态加载不再一直转圈
+            })
             nodeData.children = res.data
             resolve()
-        }).catch()
+        })
     }
     if (nodeData.level == "1") {
         return new Promise(async (resolve) => {
-            const res = await projectApi.getDemandInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+            const res = await projectApi
+                .getDemandInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+                .catch((err) => {
+                    resolve()
+                })
             nodeData.children = res.data
             resolve()
         })
     }
     if (nodeData.level == "2") {
         return new Promise(async (resolve) => {
-            const res = await projectApi.getTestInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+            const res = await projectApi
+                .getTestInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+                .catch((err) => {
+                    resolve()
+                })
             nodeData.children = res.data
             resolve()
         })
     }
     if (nodeData.level == "3") {
         return new Promise(async (resolve) => {
-            const res = await projectApi.getCaseInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+            const res = await projectApi
+                .getCaseInfo(projectInfo.value.id, nodeData.key, nodeData.level)
+                .catch((err) => {
+                    resolve()
+                })
             nodeData.children = res.data
             resolve()
         })
@@ -395,6 +421,7 @@ const handleRoundDelClick = async (value) => {
         await roundApi.delete(projectId.value, value)
         Message.success("删除成功！")
         treeDataStore.resetTreeData(projectId.value)
+        router.replace({ name: "project" })
     } catch {}
 }
 /// Ma-form-Modal的提交按钮

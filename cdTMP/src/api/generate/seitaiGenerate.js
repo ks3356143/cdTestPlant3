@@ -44,4 +44,26 @@ export default {
             params
         })
     },
+    /**
+     * TODO:如果缺少部分文件给与提示
+     * @returns 根据output_dir以及output_dir/hsm中文档生成回归测试说明（特殊多个文件）
+     */
+    createHsmDocument(params = {}) {
+        return request({
+            url: `/create/hsmDocument`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     * TODO:如果缺少部分文件给与提示
+     * @returns 根据output_dir以及output_dir/hjl中文档生成回归测试记录（特殊多个文件）
+     */
+    createHjlDocument(params = {}) {
+        return request({
+            url: `/create/hjlDocument`,
+            method: "get",
+            params
+        })
+    }
 }

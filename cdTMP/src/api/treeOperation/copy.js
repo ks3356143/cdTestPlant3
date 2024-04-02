@@ -7,8 +7,8 @@ export default {
     copyCheckedNode(params = {}) {
         return request({
             url: `/treeOperation/copy`,
-            method: "get",
-            params
+            method: "post",
+            data: params
         })
     }
 }
