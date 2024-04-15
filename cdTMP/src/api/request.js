@@ -98,7 +98,7 @@ function createRequest(service) {
                 "Accept-Language": "zh_CN",
                 "Content-Type": get(config, "headers.Content-Type", "application/json;charset=UTF-8")
             },
-            timeout: 10000,
+            timeout: 20000,
             baseURL: env.VITE_APP_OPEN_PROXY === "true" ? env.VITE_APP_PROXY_PREFIX : env.VITE_APP_BASE_URL,
             data: {}
         }
