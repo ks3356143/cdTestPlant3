@@ -42,7 +42,7 @@ const showType = (record) => {
 // crud设置
 const crudOptions = ref({
     api: caseApi.getCaseList,
-    add: { show: true, api: caseApi.save },
+    add: { show: true, api: caseApi.save, text: "新增用例" },
     edit: { show: true, api: caseApi.update },
     delete: { show: true, api: caseApi.delete },
     // 处理新增删除后树状图显示
@@ -237,13 +237,15 @@ const crudColumns = ref([
                 title: "是否通过",
                 dataIndex: "passed",
                 formType: "radio",
-                dict: { name: "passType", props: { label: "title", value: "key" } }
+                dict: { name: "passType", props: { label: "title", value: "key" } },
+                commonRules: [{ required: true, message: "是否通过必填" }]
             },
             {
                 title: "执行状态",
                 dataIndex: "status",
                 formType: "radio",
-                dict: { name: "execType", props: { label: "title", value: "key" } }
+                dict: { name: "execType", props: { label: "title", value: "key" } },
+                commonRules: [{ required: true, message: "执行状态必填" }]
             }
         ]
     }

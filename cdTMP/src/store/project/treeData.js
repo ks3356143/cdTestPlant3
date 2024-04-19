@@ -13,11 +13,28 @@ const useTreeDataStore = defineStore("treeDataStore", {
     actions: {
         // 不能使用箭头函数，无法绑定this
         async initTreeData(projectId) {
-            // 获取localStorage的treeData数据
+            // 先判断储存的pid是否存在
+            const pid = localStorage.getItem("pid")
+            // 如果不存在，则请求后台树状数据
+            if (!pid) {
+                const roundData = await projectApi.getRoundInfo(projectId)
+                this.treeData = roundData.data
+                this.originTreeData = roundData.data
+            }
+            // 如果存在，但是项目变为了其他
+            if (pid && pid !== projectId) {
+                const roundData = await projectApi.getRoundInfo(projectId)
+                this.treeData = roundData.data
+                this.originTreeData = roundData.data
+            }
+            // 每次进入工作区存一个localStorage项目ID
+            localStorage.setItem("pid", projectId)
+            // 获取localStorage的treeData数据-F5刷新问题解决
             if (localStorage.getItem("tree_local_data")) {
                 this.treeData = JSON.parse(localStorage.getItem("tree_local_data"))
                 this.originTreeData = JSON.parse(localStorage.getItem("tree_local_data"))
             }
+            /// 如果没有tree_local_data则请求后台数据
             if (this.treeData.length === 0) {
                 const roundData = await projectApi.getRoundInfo(projectId)
                 this.treeData = roundData.data

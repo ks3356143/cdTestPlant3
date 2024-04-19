@@ -2,41 +2,7 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
-                <template #total_code_line="{ record }">
-                    <template v-if="record.total_code_line">
-                        <a-statistic
-                            :animation-duration="1000"
-                            :value="parseInt(record.total_code_line)"
-                            animation
-                            :value-style="{ color: '#0fbf60' }"
-                        ></a-statistic>
-                    </template>
-                </template>
-                <template #total_line="{ record }">
-                    <template v-if="record.total_line">
-                        <a-statistic
-                            :animation-duration="1000"
-                            :value="parseInt(record.total_line)"
-                            animation
-                            :value-style="{ color: 'orange' }"
-                        ></a-statistic>
-                    </template>
-                </template>
-                <template #comment_line="{ record }">
-                    <template v-if="record.comment_line">
-                        <a-statistic
-                            :animation-duration="1000"
-                            :precision="2"
-                            :value="parseFloat(record.comment_line)"
-                            animation
-                            :value-style="{ color: 'lightblue' }"
-                        >
-                            <template #suffix> % </template>
-                        </a-statistic>
-                    </template>
-                </template>
-            </ma-crud>
+            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef"></ma-crud>
         </div>
     </div>
 </template>
@@ -143,23 +109,23 @@ const crudColumns = ref([
             if (value === "SO") {
                 return {
                     black_line: { display: true },
-                    pure_code_line: { display: true },
+                    code_line: { display: true },
                     mix_line: { display: true },
-                    total_comment_line: { display: true },
+                    comment_line: { display: true },
                     total_code_line: { display: true },
                     total_line: { display: true },
-                    comment_line: { display: true }
+                    comment_percent: { display: true }
                 }
             } else {
                 // 其他数据清除
                 return {
                     black_line: { display: false },
-                    pure_code_line: { display: false },
+                    code_line: { display: false },
                     mix_line: { display: false },
-                    total_comment_line: { display: false },
+                    comment_line: { display: false },
                     total_code_line: { display: false },
                     total_line: { display: false },
-                    comment_line: { display: false }
+                    comment_percent: { display: false }
                 }
             }
         }
@@ -213,57 +179,55 @@ const crudColumns = ref([
         formType: "input-number"
     },
     {
-        title: "纯注释?",
+        title: "纯代码行",
         hide: true,
         align: "center",
-        dataIndex: "pure_code_line",
+        dataIndex: "code_line",
         formType: "input-number"
     },
     {
-        title: "混合行?",
+        title: "纯注释行",
+        hide: true,
+        align: "center",
+        dataIndex: "comment_line",
+        formType: "input-number"
+    },
+    {
+        title: "混合行",
         hide: true,
         align: "center",
         dataIndex: "mix_line",
         formType: "input-number"
     },
     {
-        title: "总注释",
-        hide: true,
-        align: "center",
-        dataIndex: "total_comment_line",
-        formType: "input-number"
-    },
-    {
-        title: "总代码",
-        hide: true,
-        align: "center",
-        dataIndex: "total_code_line",
-        formType: "input-number"
-    },
-    {
-        title: "总行数",
-        hide: true,
-        align: "center",
-        dataIndex: "total_line",
-        formType: "input-number"
-    },
-    {
         title: "注释率 %",
         align: "center",
-        dataIndex: "comment_line",
+        dataIndex: "comment_percent",
         hide: true,
         addDisabled: true,
         editDisabled: true,
         customRender: ({ record }) => {
-            if (record.total_comment_line && record.total_code_line) {
-                if (isNaN(parseFloat(record.total_comment_line)) || isNaN(parseFloat(record.total_code_line))) {
+            const sum_line =
+                parseFloat(record.comment_line) +
+                parseFloat(record.mix_line) +
+                parseFloat(record.black_line) +
+                parseFloat(record.code_line)
+            if (record.comment_line && record.mix_line && record.black_line && record.code_line) {
+                if (
+                    isNaN(parseFloat(record.comment_line)) ||
+                    isNaN(parseFloat(record.mix_line)) ||
+                    isNaN(parseFloat(record.black_line)) ||
+                    isNaN(parseFloat(record.code_line))
+                ) {
                     return "数值错误"
                 }
-                if (parseFloat(record.total_comment_line) <= 0 || parseFloat(record.total_code_line) <= 0) {
+                if (
+                    parseFloat(record.comment_line) <= 0 ||
+                    parseFloat(record.mix_line) <= 0 ||
+                    parseFloat(record.black_line) <= 0 ||
+                    parseFloat(record.code_line) <= 0
+                ) {
                     return "不能为负数"
-                }
-                if (parseFloat(record.total_comment_line) >= parseFloat(record.total_code_line)) {
-                    return "注释大于总行"
                 }
                 return (
                     <a-statistic
@@ -271,14 +235,22 @@ const crudColumns = ref([
                         precision={2}
                         animation
                         value-style={{ color: "lightblue" }}
-                        value={parseFloat(record.total_comment_line / record.total_code_line)}
+                        value={(parseFloat(record.comment_line) + parseFloat(record.mix_line)) / sum_line}
                     ></a-statistic>
                 )
             }
         },
         // 注意这个是个创新点
         control(value, data) {
-            data.comment_line = (data.total_comment_line / data.total_code_line).toFixed(2).toString()
+            data.comment_percent = (
+                (parseFloat(data.comment_line) + parseFloat(data.mix_line)) /
+                (parseFloat(data.comment_line) +
+                    parseFloat(data.mix_line) +
+                    parseFloat(data.black_line) +
+                    parseFloat(data.code_line))
+            )
+                .toFixed(2)
+                .toString()
         }
     }
 ])

@@ -239,7 +239,7 @@ const handleSoDutCancel = () => {
 // so_dut弹窗ref对象
 const soDutFormRef = ref()
 onMounted(async () => {
-    treeDataStore.initTreeData(projectId.value)
+    await treeDataStore.initTreeData(projectId.value)
     // 检查是否存在第一轮的源代码dut
     /// 主动后端请求
     const res = await dutApi.getSoExists({ id: projectId.value })
@@ -613,32 +613,22 @@ const soDutColumn = ref([
     {
         title: "空行",
         dataIndex: "black_line",
-        formType: "input-number"
+        formType: "input"
     },
     {
-        title: "纯注释?",
-        dataIndex: "pure_code_line",
-        formType: "input-number"
+        title: "纯注释",
+        dataIndex: "comment_line",
+        formType: "input"
     },
     {
-        title: "混合行?",
+        title: "混合行",
         dataIndex: "mix_line",
-        formType: "input-number"
+        formType: "input"
     },
     {
-        title: "总注释",
-        dataIndex: "total_comment_line",
-        formType: "input-number"
-    },
-    {
-        title: "总代码",
-        dataIndex: "total_code_line",
-        formType: "input-number"
-    },
-    {
-        title: "总行数",
-        dataIndex: "total_line",
-        formType: "input-number"
+        title: "纯代码",
+        dataIndex: "code_line",
+        formType: "input"
     }
 ])
 </script>

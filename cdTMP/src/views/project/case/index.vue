@@ -54,7 +54,7 @@ const related_reload = () => {
 
 const crudOptions = ref({
     api: problemApi.getProblemList,
-    add: { show: true, api: problemApi.save },
+    add: { show: true, api: problemApi.save, text: "新增问题单" },
     edit: { show: true, api: problemApi.update },
     delete: { show: true, api: problemApi.delete },
     operationColumnAlign: "center", // 操作列居中
