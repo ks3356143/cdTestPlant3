@@ -106,7 +106,7 @@ const loginChartOptions = ref({
         formatter(params) {
             return `<div class="login-chart">
         <p class="tooltip-title">${params[0].axisValueLabel}</p>
-        <div class="content-panel"><span>项目新增</span><span class="tooltip-value">${Number(
+        <div class="content-panel"><span>项目数量</span><span class="tooltip-value">${Number(
             params[0].value
         ).toLocaleString()}</span></div>
       </div>`

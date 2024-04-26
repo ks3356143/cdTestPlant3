@@ -62,7 +62,7 @@ function createService() {
                     case 401:
                         err("登录状态已过期，需要重新登录")
                         tool.local.clear()
-                        window.location.href = "/"
+                        window.location.href = "/login"
                         break
                     case 403:
                         err("没有权限访问该资源")

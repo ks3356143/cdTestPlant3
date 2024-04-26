@@ -15,11 +15,7 @@
                         <a-space size="large" class="mr-3">
                             <div class="text-right">
                                 <div>总数</div>
-                                <div>2</div>
-                            </div>
-                            <div class="text-right">
-                                <div>新增</div>
-                                <div><icon-caret-up class="text-green-600" /> 15</div>
+                                <div>{{ statistics.ucount }}</div>
                             </div>
                         </a-space>
                     </div>
@@ -39,11 +35,7 @@
                         <a-space size="large" class="mr-3">
                             <div class="text-right">
                                 <div>总数</div>
-                                <div>23</div>
-                            </div>
-                            <div class="text-right">
-                                <div>减少</div>
-                                <div><icon-caret-down class="text-red-600" /> 2</div>
+                                <div>{{ statistics.ppcount }}</div>
                             </div>
                         </a-space>
                     </div>
@@ -63,11 +55,7 @@
                         <a-space size="large" class="mr-3">
                             <div class="text-right">
                                 <div>总数</div>
-                                <div>234</div>
-                            </div>
-                            <div class="text-right">
-                                <div>新增</div>
-                                <div><icon-caret-down class="text-red-600" /> 3</div>
+                                <div>{{ statistics.pcount }}</div>
                             </div>
                         </a-space>
                     </div>
@@ -83,15 +71,11 @@
                 <div class="flex justify-between h-full">
                     <div class="en-title bg-green-600">OC</div>
                     <div class="w-full ml-3.5 flex justify-between items-center">
-                        提交项目总数
+                        完成项目总数
                         <a-space size="large" class="mr-3">
                             <div class="text-right">
                                 <div>总数</div>
-                                <div>45</div>
-                            </div>
-                            <div class="text-right">
-                                <div>新增</div>
-                                <div><icon-caret-up class="text-green-600" /> 2</div>
+                                <div>{{ statistics.pdcount }}</div>
                             </div>
                         </a-space>
                     </div>
@@ -100,6 +84,21 @@
         </div>
     </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue"
+import workplaceApi from "@/api/system/workplace"
+const statistics = ref({
+    ucount: 0,
+    pcount: 0,
+    pdcount: 0,
+    ppcount: 0
+})
+onMounted(async () => {
+    const statisticsRes = await workplaceApi.getStatistics()
+    statistics.value = statisticsRes.data
+})
+</script>
 
 <style scoped>
 .en-title {

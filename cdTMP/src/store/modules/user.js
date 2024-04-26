@@ -79,7 +79,6 @@ const useUserStore = defineStore("user", {
                     }
                 })
                 .catch((e) => {
-                    console.log(e)
                     return false
                 })
         },

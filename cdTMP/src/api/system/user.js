@@ -102,4 +102,15 @@ export default {
             params
         })
     },
+    /**
+     * 加载LDAP的用户数据
+     * @returns
+     */
+    loadLDAPUsers(params = {}) {
+        return request({
+            url: "system/user/ldap",
+            method: "get",
+            params
+        })
+    }
 }

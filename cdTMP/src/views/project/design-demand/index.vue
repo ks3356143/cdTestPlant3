@@ -151,7 +151,7 @@ const showType = (record) => {
 const crudOptions = ref({
     api: testDemandApi.getTestDemandList,
     add: { show: true, api: testDemandApi.save, text: "新增测试项" },
-    edit: { show: true, api: testDemandApi.update },
+    edit: { show: true, api: testDemandApi.update, text: "修改测试项" },
     delete: { show: true, api: testDemandApi.delete },
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")

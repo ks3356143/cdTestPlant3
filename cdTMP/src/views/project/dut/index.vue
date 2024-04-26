@@ -46,7 +46,7 @@ const showType = (record) => {
 const crudOptions = ref({
     api: designDemandApi.getDesignDemandList,
     add: { show: true, api: designDemandApi.save, text: "新增设计需求" },
-    edit: { show: true, api: designDemandApi.editDesignDemand },
+    edit: { show: true, api: designDemandApi.editDesignDemand,text:'编辑设计需求' },
     delete: { show: true, api: designDemandApi.delete },
     // 处理添加后函数
     beforeOpenAdd: function () {

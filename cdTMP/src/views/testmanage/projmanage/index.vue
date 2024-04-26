@@ -454,7 +454,8 @@ const crudColumns = ref([
         dict: {
             data: [
                 { label: "新研", value: 1 },
-                { label: "改造", value: 2 }
+                { label: "改造", value: 2 },
+                { label: "沿用", value: 3 }
             ],
             translation: true
         },

@@ -43,7 +43,7 @@ const showType = (record) => {
 const crudOptions = ref({
     api: caseApi.getCaseList,
     add: { show: true, api: caseApi.save, text: "新增用例" },
-    edit: { show: true, api: caseApi.update },
+    edit: { show: true, api: caseApi.update, text: "修改用例" },
     delete: { show: true, api: caseApi.delete },
     // 处理新增删除后树状图显示
     beforeOpenAdd: function () {

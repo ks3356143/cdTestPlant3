@@ -2,39 +2,38 @@ import NProgress from "nprogress" // progress bar
 import { useUserStore } from "@/store"
 // userInfo守卫
 export default function setupUserLoginInfoGuard(router) {
-    router.beforeEach(async (to, from, next) => {
+    router.beforeEach(async (to, from) => {
         NProgress.start()
         const userStore = useUserStore()
         if (userStore.isLogin()) {
             if (userStore.role) {
-                next()
+                return
             } else {
                 try {
                     await userStore.info()
-                    next()
+                    return
                 } catch (error) {
                     await userStore.logout()
-                    next({
+                    return {
                         name: "login",
                         query: {
                             redirect: to.name,
                             ...to.query
                         }
-                    })
+                    }
                 }
             }
         } else {
             if (to.name === "login") {
-                next()
                 return
             }
-            next({
+            return {
                 name: "login",
                 query: {
                     redirect: to.name,
                     ...to.query
                 }
-            })
+            }
         }
     })
 }

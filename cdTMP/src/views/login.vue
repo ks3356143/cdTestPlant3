@@ -78,11 +78,13 @@ import { reactive, ref } from "vue"
 import verifyCode from "@cps/ma-verifyCode/index.vue"
 import { useUserStore } from "@/store"
 import { useRouter, useRoute } from "vue-router"
+import userApi from "@/api/system/user"
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 // 绑定登录form的数据
-const form = reactive({ username: "superAdmin", password: "admin123", code: "" })
+// const form = reactive({ username: "superAdmin", password: "admin123", code: "" })
+const form = reactive({ username: "", password: "", code: "" })
 // 获取验证码dom && arco表单loading
 const Verify = ref(null)
 const loading = ref(null)
@@ -96,14 +98,20 @@ const handleSubmit = async ({ values, errors }) => {
     if (Verify.value.checkResult(form.code) && !errors) {
         // 登录逻辑需要用到userStore
         try {
-            await userStore.login(form)
-            const { redirect, ...otherQuery } = router.currentRoute.value.query
-            router.push({
-                name: redirect || "Workplace",
-                query:{
-                    ...otherQuery // 将退出时的查询参数放入，这样就不会错误
-                }
-            })
+            const login_res = await userStore.login(form)
+            if (login_res) {
+                const { redirect, ...otherQuery } = router.currentRoute.value.query
+                router.push({
+                    name: redirect || "Workplace",
+                    query: {
+                        ...otherQuery // 将退出时的查询参数放入，这样就不会错误
+                    }
+                })
+                // 暂时加载LDAP数据
+                await userApi.loadLDAPUsers()
+            } else {
+                return
+            }
         } catch (err) {
             errorMessage.value = err.message
         } finally {
