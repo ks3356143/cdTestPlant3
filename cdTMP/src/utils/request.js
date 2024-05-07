@@ -61,8 +61,16 @@ function createService() {
                         break
                     case 401:
                         err("登录状态已过期，需要重新登录")
+                        // 清楚本地localStorage
                         tool.local.clear()
-                        window.location.href = "/login"
+                        // 移动到网站的根目录-这里不需要因为导航守卫可以返回login页面
+                        if (
+                            error.response.data.data.code === 40001 ||
+                            error.response.data.data.detail === "No active account found with the given credentials"
+                        ) {
+                        } else {
+                            window.location.href = "/"
+                        }
                         break
                     case 403:
                         err("没有权限访问该资源")
