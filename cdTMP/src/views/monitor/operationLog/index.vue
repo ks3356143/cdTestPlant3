@@ -6,6 +6,14 @@
                 <template #create_datetime="{ record }">
                     {{ record.create_datetime.replace("T", " ") }}
                 </template>
+                <template #tableBeforeButtons>
+                    <a-button type="primary" status="warning" @click="handleDeleteLogButton"
+                        ><template #icon> <icon-delete /> </template>删除7天前数据</a-button
+                    >
+                    <a-button type="primary" status="danger" @click="handleDeleteAllLogButton"
+                        ><template #icon> <icon-delete /> </template>删除全部日志</a-button
+                    >
+                </template>
             </ma-crud>
         </div>
     </div>
@@ -14,6 +22,7 @@
 <script setup>
 import { ref, reactive } from "vue"
 import operationApi from "@/api/monitor/operationLog"
+import { Message } from "@arco-design/web-vue"
 
 const crudRef = ref()
 const crudOptions = reactive({
@@ -31,6 +40,16 @@ const crudColumns = reactive([
     { title: "操作内容", dataIndex: "operate_des", align: "center" },
     { title: "时间", dataIndex: "create_datetime", align: "center", search: true, formType: "range" }
 ])
+// 删除日志按钮事件处理函数
+const handleDeleteLogButton = async () => {
+    const res = await operationApi.deleteOperationLogs() // 参数：{day:4}保留4天内的日志
+    Message.success(res.message)
+}
+const handleDeleteAllLogButton = async () => {
+    const res = await operationApi.deleteOperationLogs({ day: 0 }) // 0表示删除全部日志
+    crudRef.value.refresh()
+    Message.success(res.message)
+}
 </script>
 
 <style lang="less" scoped></style>

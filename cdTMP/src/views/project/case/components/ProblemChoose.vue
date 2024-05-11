@@ -196,7 +196,7 @@ const columns = ref([
         validateTrigger: "blur"
     },
     {
-        title: "标识",
+        title: "问题标识",
         align: "center",
         sortable: { sortDirections: ["ascend"] },
         width: 140,

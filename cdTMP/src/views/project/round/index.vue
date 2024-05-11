@@ -50,6 +50,9 @@ const crudOptions = ref({
     },
     afterDelete: (res, record) => {
         let id = projectId.value
+        if (!record) {
+            record = { key: route.query.key + "-X" }
+        }
         treeDataStore.updateDutTreeData(record, id)
     },
     edit: { show: true, api: dutApi.update, text: "编辑被测件" },
@@ -81,7 +84,7 @@ const crudColumns = ref([
         validateTrigger: "blur"
     },
     {
-        title: "标识",
+        title: "测件标识",
         width: 150,
         sortable: { sortDirections: ["ascend"] },
         align: "center",

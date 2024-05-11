@@ -25,19 +25,10 @@ const designDemandNumber = route.query.key.split("-")[2]
 const testDemandNumber = route.query.key.split("-")[3]
 const crudRef = ref()
 const projectId = ref(route.query.id)
-// 标识显示字段
+// 标识显示字段-用例比较特殊让后端返回了“FT”字样，因为FT是在测试项里面标识的
 const showType = (record) => {
     let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
-    let k_string_array = record.key.split("-")
-    let demand_key = parseInt(k_string_array.slice(-2)[0]) + 1
-    return (
-        "YL-" +
-        record.ident +
-        "-" +
-        demand_key.toString().padStart(3, "0") +
-        "-" +
-        key_string.toString().padStart(3, "0")
-    )
+    return "YL-" + record.testType + "-" + record.ident + "-" + key_string.toString().padStart(3, "0")
 }
 // crud设置
 const crudOptions = ref({
@@ -83,6 +74,9 @@ const crudOptions = ref({
     },
     afterDelete: (res, record) => {
         let id = projectId.value
+        if (!record) {
+            record = { key: route.query.key + "-X" }
+        }
         treeDataStore.updateCaseTreeData(record, id)
     },
     parameters: {
@@ -93,6 +87,7 @@ const crudOptions = ref({
         testDemand: testDemandNumber
     },
     showIndex: false,
+    showTools: false,
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,
     tablePagination: false,
@@ -134,7 +129,7 @@ const crudColumns = ref([
         fixed: "left"
     },
     {
-        title: "标识",
+        title: "用例标识",
         dataIndex: "ident",
         sortable: { sortDirections: ["ascend"] },
         width: 140,
@@ -220,7 +215,8 @@ const crudColumns = ref([
             {
                 title: "操作",
                 dataIndex: "operation",
-                formType: "editor"
+                formType: "editor",
+                height: 180
             },
             {
                 title: "预期",
@@ -230,8 +226,8 @@ const crudColumns = ref([
             {
                 title: "结果",
                 dataIndex: "result",
-
-                formType: "editor"
+                formType: "editor",
+                height: 180
             },
             {
                 title: "是否通过",
@@ -250,6 +246,11 @@ const crudColumns = ref([
         ]
     }
 ])
+// 暴露刷新表格方法给外部
+const refreshCrudTable = () => {
+    crudRef.value.refresh()
+}
+defineExpose({ refreshCrudTable })
 </script>
 
 <style lang="less" scoped></style>

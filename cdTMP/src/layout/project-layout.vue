@@ -22,11 +22,15 @@
                         <a-tree
                             class="h-10/12 select-none"
                             :data="treeData"
-                            size="small"
+                            size="mini"
                             checkable
                             block-node
+                            draggable
                             animation
+                            auto-expand-parent
                             @select="pointNode"
+                            @drop="ondrop"
+                            :allow-drop="allowdrop"
                             :load-more="loadMore"
                             v-model:expanded-keys="expandedKeys"
                             v-model:selected-keys="selectedKeys"
@@ -34,6 +38,7 @@
                             showLine
                             ref="treeRef"
                             border
+                            @contextmenu="displayRightMenu"
                             :default-selected-keys="[currentNode ? currentNode : route.query.key]"
                         >
                             <!-- 在轮次节点可以新增、编辑、删除、复制 -->
@@ -81,6 +86,11 @@
                                     /></a-tooltip>
                                 </template>
                             </template>
+                            <!-- 设计节点的图标 -->
+                            <template #switcher-icon="node, { isLeaf }">
+                                <IconDown v-if="!isLeaf" />
+                                <IconFile v-if="isLeaf" />
+                            </template>
                             <!-- 节点图标插槽 -->
                             <template #icon="props">
                                 <template v-if="props.node.level === '1'"> [被测件] </template>
@@ -93,7 +103,7 @@
                 </a-layout-sider>
                 <a-layout class="layout-content myhcalc">
                     <a-layout-content class="work-area project-layout">
-                        <PageLayout />
+                        <PageLayout ref="routeViewRef" />
                     </a-layout-content>
                 </a-layout>
             </a-layout>
@@ -122,6 +132,79 @@
         :text="ptext"
         @clickConfirm="handleModalConfirmClick"
     ></Progress>
+    <!-- 右键菜单 -->
+    <a-dropdown
+        v-model:popup-visible="popupVisible"
+        :popup-container="popupContainer"
+        position="bottom"
+        alignPoint
+        :style="{ display: 'block' }"
+    >
+        <div
+            :style="{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '300px',
+                backgroundColor: 'var(--color-fill-2)'
+            }"
+        ></div>
+        <template #content>
+            <a-dgroup title="执行操作">
+                <a-doption @click="handleDoptionClickGreateCases">
+                    <template #icon>
+                        <icon-plus-circle />
+                    </template>
+                    根据测试子项生成所属用例
+                </a-doption>
+            </a-dgroup>
+            <a-dgroup title="复制">
+                <a-doption @click="handleDoptionClickCopyDemand">
+                    <template #icon>
+                        <icon-copy />
+                    </template>
+                    复制到设计需求下...
+                </a-doption>
+            </a-dgroup>
+        </template>
+    </a-dropdown>
+    <!-- 复制modal组件 -->
+    <!-- 关联的modal组件 -->
+    <a-modal v-model:visible="modalVisible" width="700px" draggable :on-before-ok="handleCopyDemand">
+        <template #title>复制到设计需求</template>
+        <div class="pb-3">选择复制到的节点:</div>
+        <a-cascader
+            :options="options"
+            allow-search
+            allow-clear
+            size="large"
+            placeholder="复制到选择的设计需求节点下"
+            :loading="cascaderLoading"
+            v-model:model-value="relatedCopyData"
+        />
+        <div class="mt-3"><a-checkbox v-model="checkboxValue">是否复制用例？</a-checkbox></div>
+    </a-modal>
+    <!-- 拖拽用例气泡提示 -->
+    <a-popconfirm
+        v-model:popup-visible="paoVisible"
+        ok-text="移动"
+        cancel-text="复制"
+        @ok="paoOk"
+        @cancel="paoCancel"
+        :popup-container="paoContainer"
+        content="选择移动/复制"
+    >
+    </a-popconfirm>
+    <a-popconfirm
+        v-model:popup-visible="pao2Visible"
+        ok-text="移动"
+        cancel-text="复制"
+        @ok="paoOk2"
+        @cancel="paoCancel2"
+        :popup-container="pao2Container"
+        content="选择移动/复制"
+    >
+    </a-popconfirm>
 </template>
 
 <script setup>
@@ -133,13 +216,18 @@ import projectApi from "@/api/project/project"
 import roundApi from "@/api/project/round"
 import dutApi from "@/api/project/dut"
 import copyApi from "@/api/treeOperation/copy"
-import { Message, Notification } from "@arco-design/web-vue"
+import caseApi from "@/api/project/case"
+import designApi from "@/api/project/designDemand"
+import demandApi from "@/api/project/testDemand"
+import { Message, Notification, Tr } from "@arco-design/web-vue"
 import { useRoute } from "vue-router"
 import { useRouter } from "vue-router"
 import { useTreeDataStore } from "@/store"
 import { storeToRefs } from "pinia"
 import dayjs from "dayjs"
 import Progress from "@/views/testmanage/projmanage/cpns/progress.vue"
+// router-view里面组件的ref
+const routeViewRef = ref()
 /// 初始化round轮次数据
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
@@ -459,7 +547,7 @@ const roundColumn = ref([
                     {
                         span: 12,
                         formList: [
-                            { title: "标识", dataIndex: "ident" },
+                            { title: "轮次标识", dataIndex: "ident", disabled: true },
                             {
                                 title: "开始时间",
                                 dataIndex: "beginTime",
@@ -614,27 +702,216 @@ const soDutColumn = ref([
         title: "空行",
         dataIndex: "black_line",
         formType: "input-number",
-        rules: [{ required: true, message: "空行数必填" }],
+        rules: [{ required: true, message: "空行数必填" }]
     },
     {
         title: "纯注释",
         dataIndex: "comment_line",
         formType: "input-number",
-        rules: [{ required: true, message: "纯注释数必填" }],
+        rules: [{ required: true, message: "纯注释数必填" }]
     },
     {
         title: "混合行",
         dataIndex: "mix_line",
         formType: "input-number",
-        rules: [{ required: true, message: "混合行必填" }],
+        rules: [{ required: true, message: "混合行必填" }]
     },
     {
         title: "纯代码",
         dataIndex: "code_line",
         formType: "input-number",
-        rules: [{ required: true, message: "纯代码行必填" }],
+        rules: [{ required: true, message: "纯代码行必填" }]
     }
 ])
+
+// 大功能：右键菜单实现
+/// ~~~右键菜单弹出~~~
+const popupVisible = ref(false)
+/// 右键菜单的挂载容器
+const popupContainer = ref()
+/// 组件全局
+const rightClickNode = { level: 3, isLeaf: false, nodekey: "", title: "" }
+/// 紧点击测试项节点显示右键菜单
+const displayRightMenu = (e) => {
+    const { proxy } = e.target.__vueParentComponent
+    const { level, isLeaf, nodekey, title } = proxy
+    if (level === 3) {
+        e.preventDefault()
+        // 首先将被右键点击的node储存到组件全局
+        rightClickNode.level = level
+        rightClickNode.isLeaf = isLeaf
+        rightClickNode.nodekey = nodekey
+        rightClickNode.title = title
+        // 将popup组件绑定到被右键点击的元素
+        popupContainer.value = e.target
+        popupVisible.value = true
+    }
+}
+/// 点击popup自动生成对应测试项的用例按钮处理函数
+const handleDoptionClickGreateCases = async () => {
+    // 将project_id加入参数
+    rightClickNode.project_id = projectId.value
+    const res = await caseApi.createByDemand(rightClickNode)
+    routeViewRef.value.refresh()
+}
+/// 复制modal级联选择器的选项
+const options = ref([])
+const modalVisible = ref(false)
+const relatedCopyData = ref(0)
+const cascaderLoading = ref(false)
+/// 点击popup复制测试项
+const handleDoptionClickCopyDemand = async () => {
+    // 首先是要获取选项数据
+    cascaderLoading.value = true
+    modalVisible.value = true
+    // 请求后端给级联选择器数据
+    const res = await designApi.getRelatedCasDesign({ id: projectId.value }).catch((err) => {
+        Message.error("请求后端数据发生错误，请重试")
+        cascaderLoading.value = false
+    })
+    options.value = res.data
+    // 先获取当前右击的需求的key -> 然后找到所属design的nodekey
+    const currentDemandKey = rightClickNode.nodekey
+    const belongDesignKey = currentDemandKey.substring(0, currentDemandKey.lastIndexOf("-"))
+    // 默认赋值给demand的当前design，直接点击确定可以复制到当前
+    options.value.forEach((item) => {
+        item.children.forEach((tem) => {
+            tem.children.forEach((design_obj) => {
+                if (belongDesignKey === design_obj.key) {
+                    relatedCopyData.value = design_obj.value
+                }
+            })
+        })
+    })
+    cascaderLoading.value = false
+    // 将checkbox-depth参数设置为非勾选
+    checkboxValue.value = false
+}
+/// 点击复制modal弹窗确定按钮
+const checkboxValue = ref(false)
+const handleCopyDemand = async () => {
+    // 获取选择的design的id
+    const design_id = relatedCopyData.value
+    // 没有选取则直接返回false
+    if (!design_id) {
+        return false
+    }
+    // 这里进行复制的数据处理
+    const res = await demandApi.copyToDesign({
+        project_id: projectId.value,
+        design_id: design_id,
+        demand_key: rightClickNode.nodekey,
+        depth: checkboxValue.value
+    })
+    if ((res.code = 200)) {
+        // 注意必须传projectId，否则返回空
+        treeDataStore.updateTestDemandTreeData(res.data, projectId.value)
+        Notification.success("复制成功,为避免重复,设置了(复制)字样,请手动修改...")
+        return true
+    } else {
+        Message.error("复制失败，服务器错误")
+    }
+}
+
+// ~~~~~~~~大功能：拖拽~~~~~~~~
+const paoVisible = ref(false)
+const paoContainer = ref(null)
+const pao2Visible = ref(false)
+const pao2Container = ref(null)
+/// 储存被拖拽到的节点以及拖拽的节点
+let dragNodeGlobal = null
+let dropNodeGlobal = null
+let dragDropPosition = 0
+
+/// 节点在可释放目标释放的操作 - drapNode是被拖拽的节点，dropNone是释放在哪个节点下，dropPosition是释放的位置-1,0...
+const ondrop = ({ e, dragNode, dropNode, dropPosition }) => {
+    const data = treeData.value // 1.这是整体的树数据
+    // 拖拽逻辑：
+    // 1.首先只能拖拽用例节点才能实现功能
+    if (dragNode.level === "4") {
+        // 2.1.如果是拖拽到测试项节点下
+        if (dropNode.level === "3") {
+            // 2.1.1.如果位置为0，则放在了测试项里面,为1，-1在测试上下都不处理
+            if (dropPosition === 0) {
+                // 判断用例是否已经测试项节点里面了
+                if (!dropNode.children || !dropNode.children.includes(dragNode)) {
+                    // 不在测试项里面，则弹出提示是复制还是移动
+                    dragNodeGlobal = dragNode
+                    dropNodeGlobal = dropNode
+                    paoContainer.value = e.target.parentElement
+                    paoVisible.value = true
+                }
+            }
+        } else if (dropNode.level === "4") {
+            // 2.2.如果拖拽到测试用例节点，注意拖动到自己上下方不触发
+            // 2.2.1先要判断用例是否是同一个demand，则是改变顺序
+            dragNodeGlobal = dragNode
+            dropNodeGlobal = dropNode
+            pao2Container.value = e.target.parentElement
+            pao2Visible.value = true
+            dragDropPosition = dropPosition
+        }
+    }
+}
+/// 只运行拖拽用例节点和测试项2种节点
+const allowdrop = (options) => {
+    if (options.dropNode.level === "4" || options.dropNode.level === "3") {
+        return true
+    }
+}
+/// 拖拽后弹出气泡-移动
+const paoOk = async () => {
+    const res = await caseApi.copyOrMoveCaseToDemand({
+        project_id: projectId.value,
+        case_key: dragNodeGlobal.key,
+        demand_key: dropNodeGlobal.key,
+        move: true
+    })
+    await treeDataStore.updateCaseTreeData(res.data.oldCaseKey, projectId.value)
+    await treeDataStore.updateCaseTreeData(res.data.newCaseKey, projectId.value)
+    routeViewRef.value.refresh()
+    Notification.success("移动用例成功")
+}
+/// 拖拽后弹出气泡-复制
+const paoCancel = async () => {
+    const res = await caseApi.copyOrMoveCaseToDemand({
+        project_id: projectId.value,
+        case_key: dragNodeGlobal.key,
+        demand_key: dropNodeGlobal.key,
+        move: false
+    })
+    await treeDataStore.updateCaseTreeData(res.data.oldCaseKey, projectId.value)
+    await treeDataStore.updateCaseTreeData(res.data.newCaseKey, projectId.value)
+    routeViewRef.value.refresh()
+    Notification.success("复制用例成功")
+}
+/// 同级分2个气泡ok是移动，cancel是复制
+const paoOk2 = async () => {
+    const res = await caseApi.copyOrMoveCaseByCase({
+        project_id: projectId.value,
+        drag_key: dragNodeGlobal.key,
+        drop_key: dropNodeGlobal.key,
+        position: dragDropPosition,
+        move: true
+    })
+    await treeDataStore.updateCaseTreeData(res.data.old, projectId.value)
+    await treeDataStore.updateCaseTreeData(res.data.new, projectId.value)
+    routeViewRef.value.refresh()
+    Notification.success("移动用例成功")
+}
+const paoCancel2 = async () => {
+    const res = await caseApi.copyOrMoveCaseByCase({
+        project_id: projectId.value,
+        drag_key: dragNodeGlobal.key,
+        drop_key: dropNodeGlobal.key,
+        position: dragDropPosition,
+        move: false
+    })
+    await treeDataStore.updateCaseTreeData(res.data.old, projectId.value)
+    await treeDataStore.updateCaseTreeData(res.data.new, projectId.value)
+    routeViewRef.value.refresh()
+    Notification.success("复制用例成功")
+}
 </script>
 
 <style lang="less" scoped>

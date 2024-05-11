@@ -24,7 +24,7 @@ const crudRef = ref()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const projectId = ref(route.query.id)
-// 显示标识是FT-{标识}-001，大体思路是：根据类型生成FT，拼接标识和key的最后一位
+// 5月8日修改设计需求标识就按SJ-FT-设计需求标识来
 const demandTypeDict = ref([])
 !(function () {
     commonApi.getDict("demandType").then((res) => {
@@ -36,9 +36,8 @@ const showType = (record) => {
     let len = demandTypeDict.value.data.length
     for (let i = 0; i < len; i++) {
         if (demandTypeDict.value.data[i].key === record.demandType) {
-            let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
             let item = demandTypeDict.value.data[i]
-            return "SJ-" + record.ident + "-" + item.show_title + "-" + key_string.toString().padStart(3, "0")
+            return "SJ-" + item.show_title + "-" + record.ident
         }
     }
 }
@@ -46,7 +45,7 @@ const showType = (record) => {
 const crudOptions = ref({
     api: designDemandApi.getDesignDemandList,
     add: { show: true, api: designDemandApi.save, text: "新增设计需求" },
-    edit: { show: true, api: designDemandApi.editDesignDemand,text:'编辑设计需求' },
+    edit: { show: true, api: designDemandApi.editDesignDemand, text: "编辑设计需求" },
     delete: { show: true, api: designDemandApi.delete },
     // 处理添加后函数
     beforeOpenAdd: function () {
@@ -75,6 +74,9 @@ const crudOptions = ref({
     },
     afterDelete: (res, record) => {
         let id = projectId.value
+        if (!record) {
+            record = { key: route.query.key + "-X" }
+        }
         treeDataStore.updateDesignDemandTreeData(record, id)
     },
     parameters: {
@@ -90,7 +92,8 @@ const crudOptions = ref({
     operationColumnAlign: "center",
     formOption: {
         width: 1200
-    }
+    },
+    showTools: false
 })
 const crudColumns = ref([
     {
@@ -102,14 +105,15 @@ const crudColumns = ref([
         validateTrigger: "blur"
     },
     {
-        title: "标识",
+        title: "设需标识",
         align: "center",
         sortable: { sortDirections: ["ascend"] },
         width: 120,
         dataIndex: "ident",
         search: true,
         commonRules: [{ required: true, message: "标识是必填" }],
-        validateTrigger: "blur"
+        validateTrigger: "blur",
+        placeholder: "请输入文档中设计需求的标识"
     },
     {
         title: "需求名称",

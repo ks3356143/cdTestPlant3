@@ -4,18 +4,29 @@
             <!-- 这里主要在路由定义是否缓存页面 -->
             <component :is="Component" v-if="route.meta.ignoreCache" :key="route.fullPath" />
             <keep-alive v-else :include="cacheList">
-                <component :is="Component" :key="route.fullPath"></component>
+                <component :is="Component" ref="viewChild" :key="route.fullPath"></component>
             </keep-alive>
         </transition>
     </router-view>
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { useTabBarStore } from "@/store"
 // 获取缓存列表
 const tabBarStore = useTabBarStore()
 const cacheList = computed(() => tabBarStore.getCacheList)
+// 调用router-view组件的刷新方法
+const viewChild = ref()
+const refresh = () => {
+    try {
+        viewChild.value.refreshCrudTable()
+    } catch (err) {
+        console.log("无法找到router-view动态组件的刷新函数")
+    } finally {
+    }
+}
+defineExpose({ refresh })
 </script>
 
 <style lang="less" scoped></style>

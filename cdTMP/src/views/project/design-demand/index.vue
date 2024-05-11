@@ -141,9 +141,8 @@ const showType = (record) => {
     let len = testTypeDict.value.data.length
     for (let i = 0; i < len; i++) {
         if (testTypeDict.value.data[i].key === record.testType) {
-            let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
             let item = testTypeDict.value.data[i]
-            return "XQ-" + record.ident + "-" + item.show_title + "-" + key_string.toString().padStart(3, "0")
+            return "XQ-" + item.show_title + "-" + record.ident
         }
     }
 }
@@ -153,6 +152,7 @@ const crudOptions = ref({
     add: { show: true, api: testDemandApi.save, text: "新增测试项" },
     edit: { show: true, api: testDemandApi.update, text: "修改测试项" },
     delete: { show: true, api: testDemandApi.delete },
+    showTools: false,
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")
         let round_key = key_split[0]
@@ -181,6 +181,9 @@ const crudOptions = ref({
     },
     afterDelete: (res, record) => {
         let id = projectId.value
+        if (!record) {
+            record = { key: route.query.key + "-X" }
+        }
         treeDataStore.updateTestDemandTreeData(record, id)
     },
     parameters: {
@@ -206,15 +209,15 @@ const crudColumns = ref([
         dataIndex: "id"
     },
     {
-        title: "标识",
+        title: "测项标识",
         width: 150,
         dataIndex: "ident",
         sortable: { sortDirections: ["ascend"] },
         align: "center",
         search: true,
-        addDisabled: true,
-        editDisabled: true,
-        validateTrigger: "blur"
+        validateTrigger: "blur",
+        placeholder: "请填写测试项的标识，注意标识不能重复",
+        commonRules: [{ required: true, message: "测试项标识必填" }]
     },
     {
         title: "名称",
@@ -261,36 +264,7 @@ const crudColumns = ref([
         }
     },
     {
-        title: "充分条件",
-        hide: true,
-        addDefaultValue: "覆盖需求相关功能",
-        dataIndex: "adequacy",
-        formType: "textarea",
-        maxLength: 256,
-        commonRules: [{ required: true, message: "充分性描述必填" }]
-    },
-    {
-        title: "终止条件",
-        hide: true,
-        dataIndex: "termination",
-        formType: "textarea",
-        showWordLimit: true,
-        maxLength: 1024,
-        addDefaultValue:
-            "1.测试正常终止：测试项分解的所有用例执行完毕，达到充分性要求，相关记录完整;\n2.测试异常终止：由于某些特殊原因导致该测试项分解的测试用例不能完全执行，无法执行的原因已记录",
-        commonRules: [{ required: true, message: "前提条件必填" }]
-    },
-    {
-        title: "前提条件",
-        hide: true,
-        addDefaultValue: "软件正常运行，外部接口通信正常",
-        dataIndex: "premise",
-        formType: "textarea",
-        maxLength: 256,
-        commonRules: [{ required: true, message: "前提条件必填" }]
-    },
-    {
-        title: "测试方法",
+        title: "测试手段",
         align: "center",
         dataIndex: "testMethod",
         formType: "select",
@@ -298,24 +272,70 @@ const crudColumns = ref([
         dict: { name: "testMethod", props: { label: "title", value: "key" }, translation: true }
     },
     {
-        title: "测试内容",
+        title: "充分性要求",
+        hide: true,
+        addDefaultValue: "覆盖需求相关功能",
+        dataIndex: "adequacy",
+        formType: "textarea",
+        maxLength: 256,
+        commonRules: [{ required: true, message: "充分性描述必填" }],
+        addDefaultValue:
+            "测试用例覆盖XX子项名称1、XX子项名称2、XX子项名称3子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。"
+    },
+    {
+        title: "测试子项",
         hide: true,
         dataIndex: "testContent",
-        commonRules: [{ required: true, message: "测试内容必填" }],
+        commonRules: [{ required: true, message: "测试方法是必填的" }],
         formType: "children-form",
-        type: "table",
         formList: [
             {
-                title: "测试分解",
-                dataIndex: "testXuQiu"
+                title: "子项名称",
+                dataIndex: "subName",
+                placeholder: "对应测试项描述标题，和测试方法的标题",
+                rules: [{ required: true, message: "测试子项名称必填" }],
+                onChange: (ev) => {
+                    // 取出子项的对象数组
+                    const subItemFormData = crudRef.value.getFormData().testContent
+                    // 取出充分性条件字段字符串
+                    const mapRes = subItemFormData.map((subItem) => subItem.subName)
+                    crudRef.value.getFormData().adequacy = `测试用例覆盖${mapRes}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
+                }
             },
             {
-                title: "预期",
-                dataIndex: "testYuQi"
+                title: "子项描述",
+                dataIndex: "subDesc",
+                placeholder: "对应大纲测试项表格的测试项描述",
+                rules: [{ required: true, message: "测试子项描述必填" }]
+            },
+            {
+                title: "条件",
+                dataIndex: "condition",
+                placeholder: "在什么环境和前置条件下"
+            },
+            {
+                title: "操作",
+                dataIndex: "operation",
+                placeholder: "通过xxx操作"
+            },
+            {
+                title: "观察",
+                dataIndex: "observe",
+                placeholder: "查看xxx内容"
+            },
+            {
+                title: "期望",
+                dataIndex: "expect",
+                placeholder: "xxx结果正确"
             }
         ]
     }
 ])
+// 暴露给route-view的刷新表格函数
+const refreshCrudTable = () => {
+    crudRef.value.refresh()
+}
+defineExpose({ refreshCrudTable })
 </script>
 
 <style lang="less" scoped>

@@ -76,5 +76,16 @@ export default {
             method: "post",
             data: params
         })
+    },
+    /**
+     * 复制demand到指定design下面
+     * @returns 复制是否成功
+     */
+    copyToDesign(params = {}) {
+        return request({
+            url: "/project/testDemand/copy_to_design",
+            method: "post",
+            data: params
+        })
     }
 }

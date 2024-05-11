@@ -248,6 +248,7 @@ const crudOptions = ref({
     operationColumn: true,
     operationWidth: 500,
     showIndex: false,
+    showTools: false,
     // 处理弹窗的title
     beforeOpenAdd: function () {
         crudRef.value.crudFormRef.actionTitle = "项目"
@@ -377,8 +378,8 @@ const crudOptions = ref({
 // CRUD-CLOMNS
 const crudColumns = ref([
     {
-        title: "标识",
-        width: 70,
+        title: "项目标识",
+        width: 90,
         sortable: { sortDirections: ["ascend"] },
         dataIndex: "ident",
         search: true,

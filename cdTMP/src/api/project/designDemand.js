@@ -56,4 +56,15 @@ export default {
             data
         })
     },
+    /**
+     * 获取级联选择器所需要的（复制功能）级联design列表
+     * @returns data_list:三级级联列表
+     */
+    getRelatedCasDesign(params = {}) {
+        return request({
+            url: "/project/designDemand/getRelatedDesign",
+            method: "get",
+            params
+        })
+    },
 }

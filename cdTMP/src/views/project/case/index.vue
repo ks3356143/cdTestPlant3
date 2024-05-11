@@ -98,6 +98,7 @@ const crudOptions = ref({
         case: caseNumber
     },
     showIndex: false,
+    showTools: false,
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,
     tablePagination: false,
@@ -201,7 +202,7 @@ const crudColumns = ref([
         validateTrigger: "blur"
     },
     {
-        title: "标识",
+        title: "问题标识",
         align: "center",
         sortable: { sortDirections: ["ascend"] },
         width: 140,
