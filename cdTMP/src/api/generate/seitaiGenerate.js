@@ -65,5 +65,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * TODO:生成最终问题单
+     * @returns 返回是否正确生成问题单
+     */
+    createWtdDocument(params = {}) {
+        return request({
+            url: `/create/wtdDocument`,
+            method: "get",
+            params
+        })
     }
 }

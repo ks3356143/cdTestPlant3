@@ -132,30 +132,32 @@ const crudOptions = ref({
                 ]
             },
             {
-                formType: "divider",
-                title: "问题详情"
+                formType: "divider"
             },
             {
                 dataIndex: "operation"
             },
             {
-                dataIndex: "expect"
-            },
-            {
                 dataIndex: "result"
             },
             {
-                dataIndex: "rules"
-            },
-            {
-                dataIndex: "suggest"
-            },
-            {
                 formType: "divider",
-                title: "解决问题"
+                title: "开发方回填"
+            },
+            {
+                dataIndex: "analysis"
+            },
+            {
+                dataIndex: "effect_scope"
             },
             {
                 dataIndex: "solve"
+            },
+            {
+                formType: "divider"
+            },
+            {
+                dataIndex: "verify_result"
             },
             {
                 formType: "divider",
@@ -182,13 +184,6 @@ const crudOptions = ref({
                     { span: 12, formList: [{ dataIndex: "verifyDate" }] }
                 ]
             },
-            {
-                formType: "grid",
-                cols: [
-                    { span: 12, formList: [{ dataIndex: "revokePerson" }] },
-                    { span: 12, formList: [{ dataIndex: "revokeDate" }] }
-                ]
-            }
         ]
     }
 })
@@ -303,7 +298,7 @@ const crudColumns = ref([
         }
     },
     {
-        title: "问题操作",
+        title: "问题描述",
         hide: true,
         search: true,
         dataIndex: "operation",
@@ -311,65 +306,69 @@ const crudColumns = ref([
         addDefaultValue: ""
     },
     {
-        title: "期望结果",
-        hide: true,
-        dataIndex: "expect",
-        addDefaultValue: ""
-    },
-    {
-        title: "问题结果",
+        title: "问题影响",
         hide: true,
         dataIndex: "result",
         formType: "editor",
         addDefaultValue: ""
     },
     {
-        title: "违反规则",
+        title: "原因分析",
         hide: true,
-        dataIndex: "rules",
+        dataIndex: "analysis",
+        formType: "editor",
         addDefaultValue: ""
     },
     {
-        title: "修改建议",
+        title: "影响域分析",
         hide: true,
-        dataIndex: "suggest",
+        dataIndex: "effect_scope",
+        formType: "editor",
         addDefaultValue: ""
     },
     {
-        title: "处理方式",
+        title: "改正措施",
         hide: true,
         dataIndex: "solve",
         addDefaultValue: "",
         formType: "textarea"
     },
     {
-        title: "提单人",
+        title: "回归结果",
+        hide: true,
+        dataIndex: "verify_result",
+        addDefaultValue: "",
+        formType: "editor"
+    },
+    {
+        title: "测试人员",
         dataIndex: "postPerson",
         search: true,
         formType: "select",
-        commonRules: [{ required: true, message: "提单人必填" }],
+        commonRules: [{ required: true, message: "测试人员必填" }],
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
-        title: "提单日期",
+        title: "测试日期",
         hide: true,
         dataIndex: "postDate",
         formType: "date"
     },
     {
-        title: "设师上级",
+        title: "开发人员",
         hide: true,
         dataIndex: "designerPerson",
-        commonRules: [{ required: true, message: "提单人必填" }]
+        formType: "input",
+        commonRules: [{ required: true, message: "开发人员必填" }],
     },
     {
-        title: "确认日期",
+        title: "开发方日期",
         hide: true,
         dataIndex: "designDate",
         formType: "date"
     },
     {
-        title: "验证人",
+        title: "回归人员",
         hide: true,
         dataIndex: "verifyPerson",
         formType: "select",
@@ -377,25 +376,11 @@ const crudColumns = ref([
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
-        title: "验证日期",
+        title: "回归日期",
         hide: true,
         dataIndex: "verifyDate",
         formType: "date"
     },
-    {
-        title: "撤销人",
-        hide: true,
-        dataIndex: "revokePerson",
-        formType: "select",
-        commonRules: [{ required: true, message: "提单人必填" }],
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
-    },
-    {
-        title: "撤销日期",
-        hide: true,
-        dataIndex: "revokeDate",
-        formType: "date"
-    }
 ])
 </script>
 

@@ -63,6 +63,7 @@ const crudOptions = ref({
     },
     operationWidth: 500,
     showIndex: false,
+    showTools: false,
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,
     tablePagination: false,
@@ -180,7 +181,7 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "black_line",
         formType: "input-number",
-        commonRules: [{ required: true, message: "空行数必填" }],
+        commonRules: [{ required: true, message: "空行数必填" }]
     },
     {
         title: "纯代码行",
@@ -188,7 +189,7 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "code_line",
         formType: "input-number",
-        commonRules: [{ required: true, message: "纯代码行数必填" }],
+        commonRules: [{ required: true, message: "纯代码行数必填" }]
     },
     {
         title: "纯注释行",
@@ -196,7 +197,7 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "comment_line",
         formType: "input-number",
-        commonRules: [{ required: true, message: "纯注释行数必填" }],
+        commonRules: [{ required: true, message: "纯注释行数必填" }]
     },
     {
         title: "混合行",
@@ -204,7 +205,7 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "mix_line",
         formType: "input-number",
-        commonRules: [{ required: true, message: "混合行数必填" }],
+        commonRules: [{ required: true, message: "混合行数必填" }]
     },
     {
         title: "注释率 %",

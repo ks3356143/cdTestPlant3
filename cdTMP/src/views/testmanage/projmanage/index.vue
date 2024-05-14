@@ -18,6 +18,7 @@
                             <p><a-link @click="createBgItem(record)">报告二级文档</a-link></p>
                             <p><a-link @click="createHsmItem(record)">回归说明二级文档</a-link></p>
                             <p><a-link @click="createHjlItem(record)">回归记录二级文档</a-link></p>
+                            <p><a-link @click="createWtdItem(record)">问题单二级文档</a-link></p>
                             <p>
                                 <a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link>
                             </p>
@@ -35,6 +36,9 @@
                             </p>
                             <p>
                                 <a-link @click="createSeitaiHjl(record)"><icon-eye />[测试]回归测试记录</a-link>
+                            </p>
+                            <p>
+                                <a-link @click="createSeitaiWtd(record)"><icon-eye />[测试]生成问题单</a-link>
                             </p>
                         </template>
                     </a-popover>
@@ -64,6 +68,7 @@ import jlGenerateApi from "@/api/generate/jlGenerate"
 import bgGenerateApi from "@/api/generate/bgGenerate"
 import hsmGenerateApi from "@/api/generate/hsmGenerate"
 import hjlGenerateApi from "@/api/generate/hjlGenerate"
+import wtdGenerateApi from "@/api/generate/wtdGenerate"
 import { Message } from "@arco-design/web-vue"
 import Progress from "./cpns/progress.vue"
 import hoosk from "@/views/testmanage/projmanage/hooks.js"
@@ -117,6 +122,11 @@ const createSeitaiHsm = async (record) => {
 const createSeitaiHjl = async (record) => {
     ptext.value = "回归测试记录"
     hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createHjlDocument, record.id)
+}
+// ~~~~~~~~问题单~~~~~~~~
+const createSeitaiWtd = async (record) => {
+    ptext.value = "问题单"
+    hoosk.create_entire_doc(visible, isComplete, seitaiGenerateApi.createWtdDocument, record.id)
 }
 
 // 记录生成二级文档
@@ -230,6 +240,11 @@ const createHsmItem = async (record) => {
 const createHjlItem = async (record) => {
     await hjlGenerateApi.createBasicInfo({ id: record.id })
     const st = await hjlGenerateApi.createCaseinfo({ id: record.id })
+    Message.success(st.message)
+}
+// 问题单二级文档
+const createWtdItem = async (record) => {
+    const st = await wtdGenerateApi.createWtdTable({ id: record.id })
     Message.success(st.message)
 }
 

@@ -205,6 +205,15 @@
         content="选择移动/复制"
     >
     </a-popconfirm>
+    <!-- w1:外部下拉选项组件 -->
+    <roundRight
+        :fvisible="roundRightVisible"
+        @update:visible="roundRightVisible = false"
+        :container="roundRightContainer"
+        @click-problem-show="handleProblemShowClick"
+    ></roundRight>
+    <!-- w2:轮次的问题单ma-crud，这里要传参2个，首先是请求另外一个接口，然后取消是否关联字段 -->
+    <problem-choose ref="problemRoundRef" hasRelated="roundProblem" :title="problemTitle"></problem-choose>
 </template>
 
 <script setup>
@@ -219,6 +228,10 @@ import copyApi from "@/api/treeOperation/copy"
 import caseApi from "@/api/project/case"
 import designApi from "@/api/project/designDemand"
 import demandApi from "@/api/project/testDemand"
+// 轮次的右键菜单，单独一个组件 -> 在treeComponents里面
+import roundRight from "./treeComponents/roundRight.vue"
+// 问题单ma-crud
+import ProblemChoose from "@/views/project/case/components/ProblemChoose.vue"
 import { Message, Notification, Tr } from "@arco-design/web-vue"
 import { useRoute } from "vue-router"
 import { useRouter } from "vue-router"
@@ -731,10 +744,17 @@ const popupVisible = ref(false)
 const popupContainer = ref()
 /// 组件全局
 const rightClickNode = { level: 3, isLeaf: false, nodekey: "", title: "" }
+/// 轮次右键dropdown显示变量
+const roundRightVisible = ref(false)
+/// 轮次右键dropdown的容器
+const roundRightContainer = ref(null)
+/// 轮次问题单标题表里
+const problemTitle = ref("第1轮问题单")
 /// 紧点击测试项节点显示右键菜单
 const displayRightMenu = (e) => {
     const { proxy } = e.target.__vueParentComponent
     const { level, isLeaf, nodekey, title } = proxy
+    // 如果是测试项则弹出【1.根据测试项步骤生成当前测试项用例 2.复制测试项到设计需求】
     if (level === 3) {
         e.preventDefault()
         // 首先将被右键点击的node储存到组件全局
@@ -746,6 +766,22 @@ const displayRightMenu = (e) => {
         popupContainer.value = e.target
         popupVisible.value = true
     }
+    if (level === 0) {
+        // 测试显示下拉框
+        e.preventDefault()
+        rightClickNode.level = level
+        rightClickNode.isLeaf = isLeaf
+        rightClickNode.nodekey = nodekey
+        rightClickNode.title = title
+        problemTitle.value = `第${+rightClickNode.nodekey + 1}轮问题单`
+        roundRightContainer.value = e.target.parentElement
+        roundRightVisible.value = true
+    }
+}
+/// 点击轮次-用户选择了打开问题单
+const handleProblemShowClick = () => {
+    // 这里要显示轮次的问题单
+    problemRoundRef.value.open(rightClickNode.nodekey)
 }
 /// 点击popup自动生成对应测试项的用例按钮处理函数
 const handleDoptionClickGreateCases = async () => {
@@ -912,6 +948,8 @@ const paoCancel2 = async () => {
     routeViewRef.value.refresh()
     Notification.success("复制用例成功")
 }
+// ~~~~大功能：轮次问题单~~~~
+const problemRoundRef = ref(null)
 </script>
 
 <style lang="less" scoped>

@@ -1,6 +1,6 @@
 <template>
-    <a-modal v-model:visible="visible" width="1200px" :footer="false">
-        <template #title>关联添加问题单</template>
+    <a-modal v-model:visible="visible" width="1200px" :footer="false" draggable>
+        <template #title>{{ title }}</template>
         <!-- crud组件 -->
         <div class="lg:w-full w-full">
             <ma-crud :options="crudOptions" :columns="columns" ref="crudRef">
@@ -34,6 +34,17 @@ import problemApi from "@/api/project/problem"
 import { Message } from "@arco-design/web-vue"
 import { useRoute, useRouter } from "vue-router"
 const route = useRoute()
+// 定义props
+const props = defineProps({
+    hasRelated: {
+        type: String,
+        default: "relatedProblem"
+    },
+    title: {
+        type: String,
+        default: "添加关联问题单"
+    }
+})
 // 定义emits
 const emits = defineEmits(["deleted", "relatedOrunrelated"])
 
@@ -70,8 +81,17 @@ const visible = ref(false)
 
 // 定义open事件
 const open = (row) => {
-    crudRef.value.requestData() // 手动请求数据
-    visible.value = true
+    if (props.hasRelated === "roundProblem") {
+        const columnService = crudRef.value.getColumnService()
+        columnService.get("related").setAttr("hide", true)
+        crudRef.value.requestParams = { round_key: row }
+        crudRef.value.requestData() // 这里要变化，请求的API变化
+        visible.value = true
+    }
+    if (props.hasRelated === "relatedProblem") {
+        crudRef.value.requestData() // 手动请求数据
+        visible.value = true
+    }
 }
 // crudOptions设置
 const crudOptions = ref({
@@ -81,6 +101,7 @@ const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     operationWidth: 160,
     operationColumnAlign: "center",
+    add: { show: true, api: problemApi.save, text: "新增无关联用例的问题单" },
     edit: { show: true, api: problemApi.modalupdate },
     delete: { show: true, api: problemApi.delete },
     parameters: {
@@ -120,30 +141,32 @@ const crudOptions = ref({
                 ]
             },
             {
-                formType: "divider",
-                title: "问题详情"
+                formType: "divider"
             },
             {
                 dataIndex: "operation"
             },
             {
-                dataIndex: "expect"
-            },
-            {
                 dataIndex: "result"
             },
             {
-                dataIndex: "rules"
+                title: "开发方回填",
+                formType: "divider"
             },
             {
-                dataIndex: "suggest"
+                dataIndex: "analysis"
             },
             {
-                formType: "divider",
-                title: "解决问题"
+                dataIndex: "effect_scope"
             },
             {
                 dataIndex: "solve"
+            },
+            {
+                formType: "divider"
+            },
+            {
+                dataIndex: "verify_result"
             },
             {
                 formType: "divider",
@@ -168,13 +191,6 @@ const crudOptions = ref({
                 cols: [
                     { span: 12, formList: [{ dataIndex: "verifyPerson" }] },
                     { span: 12, formList: [{ dataIndex: "verifyDate" }] }
-                ]
-            },
-            {
-                formType: "grid",
-                cols: [
-                    { span: 12, formList: [{ dataIndex: "revokePerson" }] },
-                    { span: 12, formList: [{ dataIndex: "revokeDate" }] }
                 ]
             }
         ]
@@ -297,7 +313,7 @@ const columns = ref([
         }
     },
     {
-        title: "问题操作",
+        title: "问题描述",
         hide: true,
         search: true,
         dataIndex: "operation",
@@ -305,44 +321,47 @@ const columns = ref([
         addDefaultValue: ""
     },
     {
-        title: "期望结果",
-        hide: true,
-        dataIndex: "expect",
-        addDefaultValue: ""
-    },
-    {
-        title: "问题结果",
+        title: "问题影响",
         hide: true,
         dataIndex: "result",
         formType: "editor",
         addDefaultValue: ""
     },
     {
-        title: "违反规则",
+        title: "原因分析",
         hide: true,
-        dataIndex: "rules",
+        dataIndex: "analysis",
+        formType: "editor",
         addDefaultValue: ""
     },
     {
-        title: "修改建议",
+        title: "影响域分析",
         hide: true,
-        dataIndex: "suggest",
+        dataIndex: "effect_scope",
+        formType: "editor",
         addDefaultValue: ""
     },
     {
-        title: "处理方式",
+        title: "改正措施",
         hide: true,
         dataIndex: "solve",
         addDefaultValue: "",
         formType: "textarea"
     },
     {
-        title: "提单人",
+        title: "回归结果",
+        hide: true,
+        dataIndex: "verify_result",
+        addDefaultValue: "",
+        formType: "editor"
+    },
+    {
+        title: "测试人员",
         dataIndex: "postPerson",
         search: true,
         hide: true,
         formType: "select",
-        commonRules: [{ required: true, message: "提单人必填" }],
+        commonRules: [{ required: true, message: "测试人员必填" }],
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
@@ -357,14 +376,14 @@ const columns = ref([
             let tagObj
             if (record.hang) {
                 tagObj = (
-                    <a-tag size="small" bordered color="green">
-                        有关联用例
+                    <a-tag size="small" bordered color="red">
+                        悬挂
                     </a-tag>
                 )
             } else {
                 tagObj = (
-                    <a-tag size="small" bordered color="red">
-                        悬挂
+                    <a-tag size="small" bordered color="green">
+                        有关联用例
                     </a-tag>
                 )
             }
@@ -380,49 +399,36 @@ const columns = ref([
         editDisplay: false
     },
     {
-        title: "提单日期",
+        title: "测试日期",
         hide: true,
         dataIndex: "postDate",
         formType: "date"
     },
     {
-        title: "设师上级",
+        title: "开发人员",
         hide: true,
         dataIndex: "designerPerson",
-        commonRules: [{ required: true, message: "提单人必填" }]
+        formType: "input",
+        commonRules: [{ required: true, message: "开发人员必填" }]
     },
     {
-        title: "确认日期",
+        title: "开发方日期",
         hide: true,
         dataIndex: "designDate",
         formType: "date"
     },
     {
-        title: "验证人",
+        title: "回归人员",
         hide: true,
         dataIndex: "verifyPerson",
         formType: "select",
-        commonRules: [{ required: true, message: "提单人必填" }],
+        commonRules: [{ required: true, message: "回归人" }],
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
     {
-        title: "验证日期",
+        title: "回归日期",
         hide: true,
         dataIndex: "verifyDate",
-        formType: "date"
-    },
-    {
-        title: "撤销人",
-        hide: true,
-        dataIndex: "revokePerson",
-        formType: "select",
-        commonRules: [{ required: true, message: "提单人必填" }],
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
-    },
-    {
-        title: "撤销日期",
-        hide: true,
-        dataIndex: "revokeDate",
         formType: "date"
     }
 ])
