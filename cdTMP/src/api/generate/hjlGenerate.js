@@ -22,4 +22,15 @@ export default {
             params
         })
     },
+    /**
+     * 删除回归测试记录output/hjl里面的所有文件
+     * @returns
+     */
+    deleteHJLFiles(params = {}) {
+        return request({
+            url: `/generateHJL/create/deleteHJLDocument`,
+            method: "get",
+            params
+        })
+    }
 }

@@ -42,7 +42,7 @@ const appStore = useAppStore()
 
 const props = defineProps({
     modelValue: { type: String },
-    height: { type: Number, default: 250 },
+    height: { type: Number, default: 200 },
     id: { type: String, default: () => "tinymce" + new Date().getTime().toString() },
     plugins: {
         type: [String, Array],
@@ -51,8 +51,9 @@ const props = defineProps({
     },
     toolbar: {
         type: [String, Array],
-        default: // 如果要取消粘贴只粘贴文本，需要用户加格式请加上pastetext
-            "code undo redo restoredraft | paste |bold italic underline strikethrough codesample | preview | alignleft alignjustify indent formatpainter | \
+        // 如果要取消粘贴只粘贴文本，需要用户加格式请加上pastetext
+        default:
+            "code undo redo restoredraft | paste |bold codesample | preview | alignleft alignjustify indent formatpainter | \
     styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | charmap pagebreak insertdatetime"
     }
 })
@@ -116,3 +117,4 @@ watch(
     (vl) => emit("change", vl)
 )
 </script>
+<style lang="less"></style>

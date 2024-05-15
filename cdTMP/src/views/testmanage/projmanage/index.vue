@@ -164,68 +164,72 @@ const createSmItem = async (record) => {
 // 大纲生成二级文档
 const createDgItem = async (record) => {
     // 生成测试项文档
-    const st = await dgGenerateApi.createTestDemand({ id: record.id })
+    await dgGenerateApi.createTestDemand({ id: record.id })
     // 标准依据文件
-    const st1 = await dgGenerateApi.createYiju({ id: record.id })
+    await dgGenerateApi.createYiju({ id: record.id })
     // 技术依据文件
-    const st2 = await dgGenerateApi.createTechYiju({ id: record.id })
+    await dgGenerateApi.createTechYiju({ id: record.id })
     // 生成时间和地点
-    const st3 = await dgGenerateApi.createTimeaddress({ id: record.id })
+    await dgGenerateApi.createTimeaddress({ id: record.id })
     // 生成被测软件功能列表
-    const st4 = await dgGenerateApi.createFuncList({ id: record.id })
+    await dgGenerateApi.createFuncList({ id: record.id })
     // 生成测评对象-软件组成
-    const st5 = await dgGenerateApi.createSoftComposition({ id: record.id })
+    await dgGenerateApi.createSoftComposition({ id: record.id })
     // 生成联系人和方式
-    const st6 = await dgGenerateApi.createContact({ id: record.id })
+    await dgGenerateApi.createContact({ id: record.id })
     // 生成测试充分性（adequancy）和有效性（effectiveness）说明
-    const st7 = await dgGenerateApi.createAdequacyEffectiveness({ id: record.id })
+    await dgGenerateApi.createAdequacyEffectiveness({ id: record.id })
     // 生成测评组织及分工
-    const st8 = await dgGenerateApi.createGroup({ id: record.id })
+    await dgGenerateApi.createGroup({ id: record.id })
     // 生成测评保障
-    const st9 = await dgGenerateApi.createGuarantee({ id: record.id })
+    await dgGenerateApi.createGuarantee({ id: record.id })
     // 生成缩略语
-    const st10 = await dgGenerateApi.createAbbreviation({ id: record.id })
+    await dgGenerateApi.createAbbreviation({ id: record.id })
     // 生成-被测软件接口
-    const st11 = await dgGenerateApi.createInterface({ id: record.id })
+    await dgGenerateApi.createInterface({ id: record.id })
     // 生成-被测软件性能
-    const st12 = await dgGenerateApi.createPerformance({ id: record.id })
+    await dgGenerateApi.createPerformance({ id: record.id })
     // 生成-被测软件基本信息
-    const st13 = await dgGenerateApi.createBaseInformation({ id: record.id })
+    await dgGenerateApi.createBaseInformation({ id: record.id })
     // 生成-测试总体要求
-    const st14 = await dgGenerateApi.createRequirement({ id: record.id })
+    await dgGenerateApi.createRequirement({ id: record.id })
     // 生成-研总-测试项对照表
-    const st15 = await dgGenerateApi.createYzComparison({ id: record.id })
+    await dgGenerateApi.createYzComparison({ id: record.id })
     // 生成-需求规格说明-测试项对照表
-    const st16 = await dgGenerateApi.createXqComparison({ id: record.id })
+    await dgGenerateApi.createXqComparison({ id: record.id })
     // 生成-反向测试项-需求规格说明对照表
-    const st17 = await dgGenerateApi.createFanXqComparison({ id: record.id })
+    await dgGenerateApi.createFanXqComparison({ id: record.id })
     // 生成-代码质量度量分析表
-    const st18 = await dgGenerateApi.createCodeQuality({ id: record.id })
+    await dgGenerateApi.createCodeQuality({ id: record.id })
     // 生成-软硬件环境
-    const st19 = await dgGenerateApi.createEnvironment({ id: record.id })
+    await dgGenerateApi.createEnvironment({ id: record.id })
     // 生成-主要战技指标
-    const st20 = await dgGenerateApi.createMainTech({ id: record.id })
-    Message.success(st20.message)
+    const st = await dgGenerateApi.createMainTech({ id: record.id })
+    Message.success(st.message)
 }
 // 报告生成二级文档
 const createBgItem = async (record) => {
-    const st1 = await bgGenerateApi.createBgTechYiju({ id: record.id })
-    const st2 = await bgGenerateApi.createBgTimeaddress({ id: record.id })
-    const st3 = await bgGenerateApi.createBgBaseInformation({ id: record.id })
-    const st4 = await bgGenerateApi.createBgCompletionstatus({ id: record.id })
-    const st5 = await bgGenerateApi.createBgSummary({ id: record.id })
-    const st6 = await bgGenerateApi.createBgContentandresults1({ id: record.id })
-    const st7 = await bgGenerateApi.createBgContentandresults2({ id: record.id })
-    const st8 = await bgGenerateApi.createBgEffectAndAdquacy({ id: record.id })
-    const st9 = await bgGenerateApi.createBgDemandEffective({ id: record.id })
-    const st10 = await bgGenerateApi.createBgQualityEvaluate({ id: record.id })
-    const st11 = await bgGenerateApi.createBgEntire({ id: record.id })
-    const st12 = await bgGenerateApi.createBgYzxqTrack({ id: record.id })
-    const st13 = await bgGenerateApi.createBgProblemsSummary({ id: record.id })
-    Message.success(st13.message)
+    // 删除output/bg文件夹下文件
+    await bgGenerateApi.deleteBGFiles({ id: record.id })
+    await bgGenerateApi.createBgTechYiju({ id: record.id })
+    await bgGenerateApi.createBgTimeaddress({ id: record.id })
+    await bgGenerateApi.createBgBaseInformation({ id: record.id })
+    await bgGenerateApi.createBgCompletionstatus({ id: record.id })
+    await bgGenerateApi.createBgSummary({ id: record.id })
+    await bgGenerateApi.createBgContentandresults1({ id: record.id })
+    await bgGenerateApi.createBgContentandresults2({ id: record.id })
+    await bgGenerateApi.createBgEffectAndAdquacy({ id: record.id })
+    await bgGenerateApi.createBgDemandEffective({ id: record.id })
+    await bgGenerateApi.createBgQualityEvaluate({ id: record.id })
+    await bgGenerateApi.createBgEntire({ id: record.id })
+    await bgGenerateApi.createBgYzxqTrack({ id: record.id })
+    const st = await bgGenerateApi.createBgProblemsSummary({ id: record.id })
+    Message.success(st.message)
 }
 // 回归测试说明二级文档
 const createHsmItem = async (record) => {
+    // 先调用删除文件夹里面文件
+    await hsmGenerateApi.deleteHSMFiles({ id: record.id })
     await hsmGenerateApi.createBasicInfo({ id: record.id })
     await hsmGenerateApi.createDocSummary({ id: record.id })
     await hsmGenerateApi.createJstech({ id: record.id })
@@ -238,6 +242,8 @@ const createHsmItem = async (record) => {
 }
 // 回归测试记录二级文档
 const createHjlItem = async (record) => {
+    // 先调用删除文件夹里面文件
+    await hjlGenerateApi.deleteHJLFiles({ id: record.id })
     await hjlGenerateApi.createBasicInfo({ id: record.id })
     const st = await hjlGenerateApi.createCaseinfo({ id: record.id })
     Message.success(st.message)

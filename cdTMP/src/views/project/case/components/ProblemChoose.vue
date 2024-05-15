@@ -65,14 +65,15 @@ const handleRelatedChange = async (record) => {
             record.related = !record.related
             loading.value = false
         })
-    if (!res.data.isOK) {
-        // 后台说没关联成功则保持不变
-        record.related = !record.related
-        loading.value = false
+    if (res) {
+        if (!res.data.isOK) {
+            // 后台说没关联成功则保持不变
+            record.related = !record.related
+            loading.value = false
+        }
     }
     loading.value = false
     emits("relatedOrunrelated")
-    Message.success(res.message)
 }
 
 // 数据定义

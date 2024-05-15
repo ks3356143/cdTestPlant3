@@ -143,4 +143,15 @@ export default {
             params
         })
     },
+    /**
+     * 删除output/bg中所有文件，防止之前数据干扰
+     * @returns
+     */
+    deleteBGFiles(params = {}) {
+        return request({
+            url: `/generateBG/create/deleteBGDocument`,
+            method: "get",
+            params
+        })
+    }
 }

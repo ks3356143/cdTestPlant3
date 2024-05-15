@@ -161,7 +161,7 @@ const handleSubmit = async ({ values, errors }) => {
         height: 491px;
         background-image: url(@/assets/login_picture.svg);
         background-repeat: no-repeat;
-        background-position: center 60px;
+        background-position: center 140px;
         background-size: contain;
     }
 

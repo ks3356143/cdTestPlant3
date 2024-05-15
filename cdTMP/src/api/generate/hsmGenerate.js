@@ -87,5 +87,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 删除output/hsm中的所有文件，例如：防止没有第三轮，出现第三轮
+     * @returns
+     */
+    deleteHSMFiles(params = {}) {
+        return request({
+            url: `/generateHSM/create/deleteHSMDocument`,
+            method: "get",
+            params
+        })
     }
 }

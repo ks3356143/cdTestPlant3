@@ -31,6 +31,7 @@ import { useRoute, useRouter } from "vue-router"
 import problemApi from "@/api/project/problem"
 import { useTreeDataStore } from "@/store"
 import ProblemChoose from "./components/ProblemChoose.vue"
+import { Message } from "@arco-design/web-vue"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
@@ -59,6 +60,12 @@ const crudOptions = ref({
     delete: { show: true, api: problemApi.delete },
     operationColumnAlign: "center", // 操作列居中
     beforeOpenAdd: function () {
+        // 先判断是否已经有个问题单了，如果有则不让用户创建
+        if (crudRef.value.getTableData().length >= 1) {
+            Message.error("该用例已经存在问题单了，可在轮次树节点右键添加无关联问题单")
+            return false
+        }
+        // 下面是弹窗的标题路径
         let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]
@@ -183,7 +190,7 @@ const crudOptions = ref({
                     { span: 12, formList: [{ dataIndex: "verifyPerson" }] },
                     { span: 12, formList: [{ dataIndex: "verifyDate" }] }
                 ]
-            },
+            }
         ]
     }
 })
@@ -359,7 +366,7 @@ const crudColumns = ref([
         hide: true,
         dataIndex: "designerPerson",
         formType: "input",
-        commonRules: [{ required: true, message: "开发人员必填" }],
+        commonRules: [{ required: true, message: "开发人员必填" }]
     },
     {
         title: "开发方日期",
@@ -380,7 +387,7 @@ const crudColumns = ref([
         hide: true,
         dataIndex: "verifyDate",
         formType: "date"
-    },
+    }
 ])
 </script>
 

@@ -299,7 +299,7 @@ const crudColumns = ref([
                     const subItemFormData = crudRef.value.getFormData().testContent
                     // 取出充分性条件字段字符串
                     const mapRes = subItemFormData.map((subItem) => subItem.subName)
-                    crudRef.value.getFormData().adequacy = `测试用例覆盖${mapRes}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
+                    crudRef.value.getFormData().adequacy = `测试用例覆盖${mapRes.join('、')}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
                 }
             },
             {
