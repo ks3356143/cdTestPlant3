@@ -12,7 +12,7 @@ export default {
         })
     },
     /**
-     * 添加轮次
+     * 添加轮次，并自动添加文档审查、代码审查、静态分析设计需求
      * @returns
      */
     save(project_id, params = {}) {

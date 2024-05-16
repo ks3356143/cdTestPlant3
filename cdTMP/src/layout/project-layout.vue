@@ -120,7 +120,7 @@
     <!-- 如果没有第一轮的SO_dut则弹窗 -->
     <ma-form-modal
         ref="soDutFormRef"
-        title="新增第一轮源代码被测件"
+        :title="soDutModalTitle"
         :column="soDutColumn"
         width="800px"
         :submit="handleSoDutSubmit"
@@ -253,6 +253,20 @@ const projectId = ref(route.query.id)
 const checkedKeys = ref([])
 /// 点击复制按钮
 const handleCopyNode = async () => {
+    // 0.先判断是否是同一个轮次的节点
+    let firstNodeRoundKey = ""
+    let isFirst = true
+    checkedKeys.value.forEach((item) => {
+        if (isFirst) {
+            firstNodeRoundKey = item.split("-")[0]
+            isFirst = false
+        } else {
+            if (item.split("-")[0] !== firstNodeRoundKey) {
+                Message.error("请选择同一轮次的节点进行复制")
+                return
+            }
+        }
+    })
     // 1.先判断是否选中了节点
     if (checkedKeys.value.length < 1) {
         Message.error("您未选择节点，请选择后再试...")
@@ -269,10 +283,13 @@ const handleCopyNode = async () => {
         })
     isComplete.value = true
     Message.success(st.message)
+    Notification.warning("请注意自动生成的设计需求、测试项、用例信息重复，需要修改")
+    // 清空checkedKeys
+    checkedKeys.value = []
     // 处理完后需要更新树结构
     treeDataStore.resetTreeData(projectId.value)
-    // 清除右侧路由的组件显示，不然会因为数据而出错
-    router.replace({ name: "project" })
+    // 清除右侧路由的组件显示，不然会因为数据而出错，当然直接复制query可能是错误信息
+    router.replace({ name: "project", query: route.query })
 }
 /// 进度条变量
 const visible = ref(false)
@@ -323,7 +340,7 @@ const handleSoDutSubmit = async (data) => {
     const res = await dutApi.createR1SoDut(input_data)
     if (res.code == 200) {
         treeDataStore.updateDutTreeData(res.data, projectId.value)
-        Message.success("添加成功...")
+        Message.success("添加源代码被测件成功，并自动创建第一轮的文档审查、静态分析、代码审查测试项和用例")
         setTimeout(() => {
             location.reload()
         }, 500)
@@ -333,23 +350,31 @@ const handleSoDutSubmit = async (data) => {
 }
 // ~~~~定义弹出a-form-modal的cancel方法-返回false则无法关闭弹窗~~~~
 const handleSoDutCancel = () => {
-    Notification.error("必须添加第一轮源代码信息，无法关闭!")
+    Notification.error("必须按要求添加源代码信息，无法关闭!")
     return false
 }
 // 初始化树状数据
 // so_dut弹窗ref对象
 const soDutFormRef = ref()
-onMounted(async () => {
-    await treeDataStore.initTreeData(projectId.value)
-    // 检查是否存在第一轮的源代码dut
+/// 强制弹窗的标题
+const soDutModalTitle = ref("强制添加第一轮源代码信息")
+// 辅助函数，传入res.data来判断是否强制弹窗
+const handleSoDutExistsForceModal = async () => {
     /// 主动后端请求
     const res = await dutApi.getSoExists({ id: projectId.value })
-    /// 如果包含第一轮源代码则不处理，不包含则弹窗必须添加dut
-    if (!res.data.exists) {
-        // 这里就必须让用户选择添加了
-        Message.warning("识别到您未添加第一轮源代码的信息，此信息必填")
-        soDutFormRef.value.open({})
-    }
+    res.data.round_list.forEach((item) => {
+        if (!item.isExists) {
+            Message.warning(`识别到您未添加第${parseInt(item.key) + 1}轮源代码的信息，请填写信息自动创建`)
+            soDutModalTitle.value = `强制添加第${parseInt(item.key) + 1}轮源代码的信息`
+            soDutFormRef.value.open({ round_key: item.key })
+            return
+        }
+    })
+}
+onMounted(async () => {
+    await treeDataStore.initTreeData(projectId.value)
+    // 依次找轮次里面是否有源代码被测件，如果没有则强制弹窗让用户创建
+    handleSoDutExistsForceModal()
 })
 // v-model绑定选中节点
 const selectedKeys = ref([])
@@ -522,10 +547,10 @@ const handleRoundDelClick = async (value) => {
         await roundApi.delete(projectId.value, value)
         Message.success("删除成功！")
         treeDataStore.resetTreeData(projectId.value)
-        router.replace({ name: "project" })
+        router.replace({ name: "project", query: route.query })
     } catch {}
 }
-/// Ma-form-Modal的提交按钮
+/// Ma-form-Modal的提交按钮 - 轮次新增/编辑逻辑
 const handleRoundSubmit = async (value) => {
     if (title.value.slice(0, 1) === "编") {
         try {
@@ -540,6 +565,8 @@ const handleRoundSubmit = async (value) => {
             await roundApi.save(projectId.value, value)
             Message.success("新增成功！")
             treeDataStore.resetTreeData(projectId.value)
+            // 调用判断函数，判断是否轮次有源代码dut
+            handleSoDutExistsForceModal()
         } catch {
             Message.error("新增失败！")
         }
@@ -571,8 +598,7 @@ const roundColumn = ref([
                             {
                                 title: "速度等级",
                                 dataIndex: "speedGrade",
-                                placeholder: "请填入速度等级",
-                                rules: [{ required: true, message: "速度等级必填" }]
+                                placeholder: "请填入速度等级"
                             }
                         ]
                     },
@@ -590,8 +616,7 @@ const roundColumn = ref([
                             {
                                 title: "封装",
                                 dataIndex: "package",
-                                placeholder: "请填入封装",
-                                rules: [{ required: true, message: "封装必填" }]
+                                placeholder: "请填入封装"
                             }
                         ]
                     }
@@ -687,9 +712,16 @@ const roundOption = ref({
 // 源代码so_dut的弹窗
 const soDutColumn = ref([
     {
+        title: "轮次key",
+        dataIndex: "round_key",
+        placeholder: "非用户填写",
+        disabled: true,
+        rules: [{ required: true, message: "非用户填写，但必填" }]
+    },
+    {
         title: "代码版本",
         dataIndex: "version",
-        placeholder: "请输入代码版本",
+        placeholder: "请输入代码版本，注意不要带V",
         rules: [{ required: true, message: "代码版本必填" }]
     },
     {
@@ -862,6 +894,11 @@ let dragDropPosition = 0
 /// 节点在可释放目标释放的操作 - drapNode是被拖拽的节点，dropNone是释放在哪个节点下，dropPosition是释放的位置-1,0...
 const ondrop = ({ e, dragNode, dropNode, dropPosition }) => {
     const data = treeData.value // 1.这是整体的树数据
+    // 提示用户只能拖拽用例节点
+    if (dragNode.level === "3") {
+        Message.warning("只能拖拽用例节点")
+        return
+    }
     // 拖拽逻辑：
     // 1.首先只能拖拽用例节点才能实现功能
     if (dragNode.level === "4") {
@@ -872,6 +909,12 @@ const ondrop = ({ e, dragNode, dropNode, dropPosition }) => {
                 // 判断用例是否已经测试项节点里面了
                 if (!dropNode.children || !dropNode.children.includes(dragNode)) {
                     // 不在测试项里面，则弹出提示是复制还是移动
+                    dragNodeGlobal = dragNode
+                    dropNodeGlobal = dropNode
+                    paoContainer.value = e.target.parentElement
+                    paoVisible.value = true
+                } else if (dropNode.children.includes(dragNode)) {
+                    // 这里就用例拖拽到当前的测试项节点，则可弹出复制弹窗
                     dragNodeGlobal = dragNode
                     dropNodeGlobal = dropNode
                     paoContainer.value = e.target.parentElement

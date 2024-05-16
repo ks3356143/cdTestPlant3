@@ -138,28 +138,28 @@ const createJLItem = async (record) => {
 // 说明生成二级文档
 const createSmItem = async (record) => {
     // 生成测评对象 - 和大纲一样 - 可能会删除
-    const st = await dgGenerateApi.createSoftComposition({ id: record.id })
+    await dgGenerateApi.createSoftComposition({ id: record.id })
     // 生成被测软件功能 - 和大纲重复 - 可能会删除
-    const st1 = await dgGenerateApi.createFuncList({ id: record.id })
+    await dgGenerateApi.createFuncList({ id: record.id })
     // 生成被测软件接口 - 和大纲重复 - 可能会删除
-    const st2 = await dgGenerateApi.createInterface({ id: record.id })
+    await dgGenerateApi.createInterface({ id: record.id })
     // 生成被测软件性能 - 和大纲重复 - 可能会删除
-    const st3 = await dgGenerateApi.createPerformance({ id: record.id })
+    await dgGenerateApi.createPerformance({ id: record.id })
     // 生成被测软件基本信息 - 和大纲重复 - 可能会删除
-    const st4 = await dgGenerateApi.createBaseInformation({ id: record.id })
+    await dgGenerateApi.createBaseInformation({ id: record.id })
     // 生成标准类引用文档 - 和大纲重复 - 可能会删除
-    const st5 = await dgGenerateApi.createYiju({ id: record.id })
+    await dgGenerateApi.createYiju({ id: record.id })
     // 生成技术类引用文档列表 -> 在大纲基础上添加《测评大纲》
-    const st6 = await smGenerateApi.createSMTechyiju({ id: record.id })
+    await smGenerateApi.createSMTechyiju({ id: record.id })
     // 生成软硬件环境（注意标题级别不一样，这个在最后处理）
-    const st7 = await dgGenerateApi.createEnvironment({ id: record.id })
+    await dgGenerateApi.createEnvironment({ id: record.id })
     // 生成用例全
-    const st8 = await smGenerateApi.createSMCaseList({ id: record.id })
+    await smGenerateApi.createSMCaseList({ id: record.id })
     // 生成用例列表-那个表格
-    const st9 = await smGenerateApi.createSMCaseBreifList({ id: record.id })
+    await smGenerateApi.createSMCaseBreifList({ id: record.id })
     // 生成说明追踪
-    const st10 = await smGenerateApi.createSMTrack({ id: record.id })
-    Message.success(st10.message)
+    const st = await smGenerateApi.createSMTrack({ id: record.id })
+    Message.success(st.message)
 }
 // 大纲生成二级文档
 const createDgItem = async (record) => {
