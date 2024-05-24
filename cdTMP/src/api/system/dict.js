@@ -2,6 +2,17 @@ import { request } from "@/api/request"
 
 export default {
     /**
+     * 传入字段的code，返回所属code信息
+     * @returns 返回所属code信息
+     */
+    getDictByCode(params = {}) {
+        return request({
+            url: `system/dataDict/list`,
+            method: "get",
+            params
+        })
+    },
+    /**
      * 请求dict全部数据
      * @returns dict全部数据
      */

@@ -6,8 +6,17 @@
                 <template #ident="{ record }">
                     {{ showType(record) }}
                 </template>
+                <template #tableAfterButtons>
+                    <a-button status="success" type="outline" @click="handleAddFileInputDemand">
+                        <template #icon>
+                            <icon-plus />
+                        </template>
+                        上传需求快捷录入
+                    </a-button>
+                </template>
             </ma-crud>
         </div>
+        <file-input-modal ref="fileInputRef"></file-input-modal>
     </div>
 </template>
 
@@ -17,6 +26,7 @@ import { useRoute, useRouter } from "vue-router"
 import designDemandApi from "@/api/project/designDemand"
 import commonApi from "@/api/common"
 import { useTreeDataStore } from "@/store"
+import FileInputModal from "./components/FileInputModal/index.vue"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const router = useRouter()
@@ -152,6 +162,11 @@ const crudColumns = ref([
         height: 300
     }
 ])
+// ~~~大功能打开ma-form-modal~~~
+const fileInputRef = ref(null)
+const handleAddFileInputDemand = () => {
+    fileInputRef.value.open();
+}
 </script>
 
 <style lang="less" scoped></style>

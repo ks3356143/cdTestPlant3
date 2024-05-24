@@ -3,7 +3,12 @@
         <div class="left-side">
             <a-space>
                 <img src="@/assets/img/wxwx-logo.svg" class="logo" alt="logo" @click="handleClickLogo" />
-                <a-typography-title :style="{ margin: 0, fontSize: '18px' }" :heading="5">
+                <a-typography-title
+                    class="title"
+                    @click="handleClickLogo"
+                    :style="{ margin: 0, fontSize: '18px' }"
+                    :heading="5"
+                >
                     成都测试管理平台
                 </a-typography-title>
                 <icon-menu-fold
@@ -154,7 +159,6 @@ const handleLogout = () => {
 const toggleDrawerMenu = inject("toggleDrawerMenu")
 // 点击图标返回首页
 const handleClickLogo = () => {
-    console.log("回到workplace")
     router.push({ name: "Workplace" })
 }
 
@@ -219,6 +223,27 @@ const testCreate = async () => {
     }
     .trigger-btn {
         margin-left: 14px;
+    }
+}
+
+.title {
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.3s;
+    text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.2);
+    &:hover {
+        color: #fff;
+        -webkit-animation: neon6 0.5s ease-in-out infinite alternate;
+        -moz-animation: neon6 0.5s ease-in-out infinite alternate;
+        animation: neon6 0.5s ease-in-out infinite alternate;
+    }
+}
+@keyframes neon6 {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #2563eb, 0 0 30px #2563eb, 0 0 40px #2563eb;
+    }
+    to {
+        text-shadow: 0 0 5px #fff, 0 0 10px #2563eb, 0 0 15px #2563eb, 0 0 20px #2563eb;
     }
 }
 </style>
