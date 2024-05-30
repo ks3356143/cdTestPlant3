@@ -57,6 +57,7 @@ const crudOptions = ref({
         let design_key = key_split[2]
         let test_key = key_split[3]
         let td = treeDataStore.treeData
+        console.log(route.query.key)
         crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
         ${td[round_key].title} > ${td[round_key].children[dut_key].title} >
         ${td[round_key].children[dut_key].children[design_key].title} >

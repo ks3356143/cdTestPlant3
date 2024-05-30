@@ -19,7 +19,7 @@
             </a-space>
         </div>
         <div class="center-side flex items-center justify-center font-bold text-lg">
-            <template v-if="title"> 项目名称：{{ title }} </template>
+            <template v-if="title"> 项目名称：{{ $route.query.ident }}-{{ title }} </template>
             <Menu v-if="topMenu"></Menu>
         </div>
         <ul class="right-side">
