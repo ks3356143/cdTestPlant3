@@ -13,7 +13,7 @@
     "dependencies": {
         "@arco-design/color": "^0.4.0",
         "@arco-design/web-vue": "^2.46.2",
-        "@tinymce/tinymce-vue": "^5.0.0",
+        "@tinymce/tinymce-vue": "^5.1.1",
         "@vueuse/core": "^10.1.2",
         "axios": "^1.4.0",
         "crypto-js": "^4.1.1",
@@ -30,7 +30,7 @@
         "postcss-import": "^15.1.0",
         "qs": "^6.11.2",
         "sortablejs": "^1.15.0",
-        "tinymce": "^6.1.0",
+        "tinymce": "^6.8.3",
         "vue": "^3.3.0",
         "vue-clipboard3": "^2.0.0",
         "vue-color-kit": "^1.0.5",

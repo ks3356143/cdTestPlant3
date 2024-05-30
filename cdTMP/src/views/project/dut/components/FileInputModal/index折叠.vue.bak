@@ -41,69 +41,64 @@
             </div>
             <a-spin :loading="loading" tip="解析word完成，需要时间渲染HTML元素..." :style="{ width: '100%' }">
                 <div class="demand-container">
-                    <a-list :data="htmlData" :pagination-props="{ defaultPageSize: 15, total: htmlData.length }">
-                        <template #item="{ item, index }">
-                            <a-list-item>
-                                <div class="item-container">
-                                    <a-input-group>
-                                        <a-input
-                                            placeholder="章节号"
-                                            v-model="item.chapter"
-                                            :style="{ width: '100px' }"
-                                            @click.stop.prevent
-                                        ></a-input>
-                                        <a-input
-                                            placeholder="标题"
-                                            v-model="item.title"
-                                            :style="{ width: '300px' }"
-                                            @click.stop.prevent
-                                        ></a-input>
-                                        <a-input
-                                            placeholder="标识"
-                                            v-model="item.ident"
-                                            :style="{ width: '200px' }"
-                                            @click.stop.prevent
-                                        ></a-input>
-                                        <a-select
-                                            :style="{ width: '150px' }"
-                                            placeholder="请选择设计需求类型"
-                                            @click.stop.prevent
-                                            v-model="item.demandType"
-                                        >
-                                            <a-option v-for="it in demandType" :value="it.key">{{ it.title }}</a-option>
-                                        </a-select>
-                                    </a-input-group>
-                                    <a-button-group>
-                                        <a-button
-                                            type="primary"
-                                            status="success"
-                                            size="small"
-                                            @click.stop.prevent="handledownCreate(index)"
-                                        >
-                                            <template #icon>
-                                                <icon-plus />
-                                            </template>
-                                            下方新增
-                                        </a-button>
-                                        <a-button
-                                            type="primary"
-                                            status="danger"
-                                            size="small"
-                                            @click.stop.prevent="handleDelete(index)"
-                                        >
-                                            <template #icon>
-                                                <icon-delete />
-                                            </template>
-                                            删除该条
-                                        </a-button>
-                                    </a-button-group>
-                                </div>
-                                <div class="content">
-                                    <MaEditor v-model="item.content" />
-                                </div>
-                            </a-list-item>
-                        </template>
-                    </a-list>
+                    <Empty v-if="!htmlData.length"></Empty>
+                    <a-collapse show-expand-icon destroy-on-hide v-show="htmlData.length">
+                        <a-collapse-item v-for="(item, index) in htmlData" :key="index">
+                            <template #header>
+                                <a-input-group>
+                                    <a-input
+                                        placeholder="章节号"
+                                        v-model="item.chapter"
+                                        :style="{ width: '110px' }"
+                                        @click.stop.prevent
+                                    ></a-input>
+                                    <a-input
+                                        placeholder="标题"
+                                        v-model="item.title"
+                                        :style="{ width: '300px' }"
+                                        @click.stop.prevent
+                                    ></a-input>
+                                    <a-input
+                                        placeholder="标识"
+                                        v-model="item.ident"
+                                        :style="{ width: '200px' }"
+                                        @click.stop.prevent
+                                    ></a-input>
+                                    <a-select
+                                        :style="{ width: '200px' }"
+                                        placeholder="请选择设计需求类型"
+                                        @click.stop.prevent
+                                        v-model="item.demandType"
+                                    >
+                                        <a-option v-for="it in demandType" :value="it.key">{{ it.title }}</a-option>
+                                    </a-select>
+                                </a-input-group>
+                            </template>
+                            <div class="content">
+                                <MaEditor v-model="item.content" />
+                            </div>
+                            <template #extra>
+                                <a-button-group>
+                                    <a-button
+                                        type="primary"
+                                        status="success"
+                                        size="mini"
+                                        @click.stop.prevent="handledownCreate(index)"
+                                    >
+                                        +下方新增
+                                    </a-button>
+                                    <a-button
+                                        type="primary"
+                                        status="danger"
+                                        size="mini"
+                                        @click.stop.prevent="handleDelete(index)"
+                                    >
+                                        删除该条
+                                    </a-button>
+                                </a-button-group>
+                            </template>
+                        </a-collapse-item>
+                    </a-collapse>
                 </div>
             </a-spin>
         </a-modal>
@@ -259,13 +254,5 @@ defineExpose({ open })
 .important-text {
     font-weight: 700;
     color: red;
-}
-.item-container {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 5px;
-    border: 1px solid #ccc;
-    border-bottom: none;
 }
 </style>

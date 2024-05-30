@@ -24,6 +24,7 @@ app.use(router)
 app.use(pinia)
 app.use(globalComponents)
 // app.use(directive)
+// 虚拟列表
 
 // 注册ma-icon图标
 const modules = import.meta.glob("./assets/ma-icons/*.vue", { eager: true })

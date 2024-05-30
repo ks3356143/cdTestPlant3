@@ -840,5 +840,6 @@ defineExpose({
 }
 ._crud-footer {
     z-index: 10;
+    height: 80px;
 }
 </style>

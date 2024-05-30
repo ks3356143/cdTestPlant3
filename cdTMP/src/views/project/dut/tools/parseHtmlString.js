@@ -22,7 +22,7 @@ function getNeedH2NodeList(h1h2Node) {
             h2ObjList.push(h2Obj)
         }
     })
-    // 1.后续增加识别的章节可从这里修改
+    // 1.~~~~TODO:可以从这里修改识别范围~~~~
     return h2ObjList.filter(
         (item) =>
             item.text.includes("CSCI功能需求") ||
@@ -48,16 +48,101 @@ export function parseHtmlStringByDemandDut(htmlString) {
     const demandArray = []
     let h2Index = 0
     let locker = false
+    // 3.将H3和H4的索引增加
+    let currentH3ele = {
+        initChapter: "",
+        index: 0,
+        title: "",
+        ident: "",
+        isIn: false
+    }
+    let currentH4ele = {
+        initChapter: "",
+        index: 0,
+        title: "",
+        ident: ""
+    }
+    let adpterIndex = 0
+
     allArray.forEach((element) => {
         // 2.1.找到h2ObjArray的位置
         if (h2ObjArray[h2Index] && element === h2ObjArray[h2Index].dom) {
             h2Index += 1
+            currentH3ele.index = 0
             locker = true
         } else if (element.tagName === "H1" || element.tagName === "H2") {
             locker = false
         } else if (locker && element.tagName !== "H2") {
-            console.log(element)
-            // 这里就是有效信息了，注意还要找H3/H4等信息 - 然后通过h2的索引也可以知道章节号
+            // 就是从H3开始需求的
+            if (element.tagName === "H3") {
+                // 按顺序解析到H3
+                currentH3ele.index += 1
+                currentH4ele.index = 0
+                const splitString = element.innerText.split(/[（()）]/)
+                currentH3ele.title = splitString[0]
+                currentH3ele.ident = splitString[1] ? splitString[1] : ""
+                currentH3ele.initChapter = h2ObjArray[h2Index - 1].chapter + "." + currentH3ele.index
+                // 将isIn变为true，说明当前解析在这里面
+                currentH3ele.isIn = true
+                // 段落索引设置0
+                adpterIndex = 0
+            } else if (element.tagName === "H4") {
+                // 按顺序解析到H4
+                currentH4ele.index += 1
+                const splitString = element.innerText.split(/[（()）]/)
+                currentH4ele.title = splitString[0]
+                currentH4ele.ident = splitString[1] ? splitString[1] : ""
+                // 将H3的isIn变为false，说明在H4里面不在H3了
+                currentH3ele.isIn = false
+                // chapter
+                currentH4ele.initChapter = currentH3ele.initChapter + "." + currentH4ele.index
+                // 段落索引
+                adpterIndex = 0
+            } else {
+                // 当currentH3ele的title有值的时候开始解析
+                if (currentH3ele.title) {
+                    const demandObj = {
+                        chapter: "",
+                        title: "",
+                        ident: "",
+                        demandType: "",
+                        content: ""
+                    }
+                    if (currentH3ele.isIn) {
+                        demandObj.chapter = currentH3ele.initChapter
+                        demandObj.title = currentH3ele.title
+                        demandObj.ident = currentH3ele.ident
+                        demandObj.demandType = demandObj.title.includes("接口") ? "3" : "1"
+                    } else {
+                        demandObj.chapter = currentH4ele.initChapter
+                        demandObj.title = currentH4ele.title
+                        demandObj.ident = currentH4ele.ident
+                        demandObj.demandType = demandObj.title.includes("接口") ? "3" : "1"
+                    }
+                    // 1.解析table元素
+                    if (element.tagName === "TABLE") {
+                        demandObj.content = element.outerHTML
+                        adpterIndex += 1
+                        demandObj.ident = demandObj.ident + `-t${adpterIndex}`
+                        demandArray.push(demandObj)
+                    }
+                    // 2.解析p元素-注意排除图片元素
+                    if (element.tagName === "P" && !element.querySelector("img")) {
+                        demandObj.content = element.innerText
+                        adpterIndex += 1
+                        demandObj.ident = demandObj.ident + `-p${adpterIndex}`
+                        demandArray.push(demandObj)
+                    }
+                    // 3.解析ol和ul元素
+                    if (element.tagName === "OL" || element.tagName === "UL") {
+                        demandObj.content = element.innerHTML
+                        adpterIndex += 1
+                        demandObj.ident = demandObj.ident + `-u${adpterIndex}`
+                        demandArray.push(demandObj)
+                    }
+                }
+            }
         }
     })
+    return demandArray
 }

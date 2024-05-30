@@ -18,7 +18,7 @@
                 />
             </a-space>
         </div>
-        <div class="center-side flex items-center justify-center">
+        <div class="center-side flex items-center justify-center font-bold text-lg">
             <template v-if="title"> 项目名称：{{ title }} </template>
             <Menu v-if="topMenu"></Menu>
         </div>

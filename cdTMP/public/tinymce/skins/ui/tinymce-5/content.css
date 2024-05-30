@@ -536,7 +536,7 @@ pre[class*="language-"] {
   right: -1px;
   top: -1px;
 }
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+@media screen and (forced-colors: active), (forced-colors: none) {
   .mce-content-body td[data-mce-selected]::after,
   .mce-content-body th[data-mce-selected]::after {
     border-color: rgba(0, 84, 180, 0.7);

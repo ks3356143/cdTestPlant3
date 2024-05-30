@@ -35,6 +35,17 @@ export default {
         })
     },
     /**
+     * 批量添加设计需求
+     * @returns
+     */
+    multiSave(params = {}) {
+        return request({
+            url: "/project/designDemand/multi_save",
+            method: "post",
+            data: params
+        })
+    },
+    /**
      * 更新dut
      * @returns
      */
@@ -66,5 +77,5 @@ export default {
             method: "get",
             params
         })
-    },
+    }
 }

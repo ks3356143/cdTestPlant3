@@ -52,7 +52,7 @@ const useTreeDataStore = defineStore("treeDataStore", {
             this.treeData = roundData.data
             this.originTreeData = roundData.data
         },
-        // 新增删除dut后更新树状显示
+        // 新增删除dut后更新树状显示-注意传的key是dut下面的design的key
         async updateDutTreeData(data, projrctId) {
             let temp = data.key.split("-")
             temp.pop(-1)
@@ -61,7 +61,7 @@ const useTreeDataStore = defineStore("treeDataStore", {
             const res = await projectApi.getDutInfo(projrctId, nodeKey, "0")
             this.treeData[roundKey].children = res.data
         },
-        // 新增删除designDemand后tree显示
+        // 新增删除designDemand后tree显示-注意传的是测试项的key
         async updateDesignDemandTreeData(data, projrctId) {
             let temp = data.key.split("-")
             temp.pop(-1)
