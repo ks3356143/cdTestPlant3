@@ -12,7 +12,7 @@
     },
     "dependencies": {
         "@arco-design/color": "^0.4.0",
-        "@arco-design/web-vue": "^2.46.2",
+        "@arco-design/web-vue": "^2.55.2",
         "@tinymce/tinymce-vue": "^5.1.1",
         "@vueuse/core": "^10.1.2",
         "axios": "^1.4.0",
@@ -31,7 +31,7 @@
         "qs": "^6.11.2",
         "sortablejs": "^1.15.0",
         "tinymce": "^6.8.3",
-        "vue": "^3.3.0",
+        "vue": "^3.4.27",
         "vue-clipboard3": "^2.0.0",
         "vue-color-kit": "^1.0.5",
         "vue-echarts": "^6.5.5",
@@ -41,11 +41,11 @@
     "devDependencies": {
         "@types/lodash": "^4.14.195",
         "@types/mockjs": "^1.0.7",
-        "@types/node": "^20.2.5",
+        "@types/node": "^20.12.13",
         "@types/nprogress": "^0.2.0",
         "@types/qs": "^6.9.7",
-        "@vitejs/plugin-vue": "^4.1.0",
-        "@vitejs/plugin-vue-jsx": "^3.0.1",
+        "@vitejs/plugin-vue": "^5.0.4",
+        "@vitejs/plugin-vue-jsx": "^4.0.0",
         "@vue/babel-plugin-jsx": "^1.1.1",
         "autoprefixer": "^10.4.14",
         "browserslist": "^4.23.0",
@@ -57,6 +57,6 @@
         "postcss": "^8.4.24",
         "prettier": "^2.8.8",
         "tailwindcss": "^3.3.2",
-        "vite": "^4.3.9"
+        "vite": "^5.2.12"
     }
 }

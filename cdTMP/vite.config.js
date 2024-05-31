@@ -6,7 +6,6 @@ export default ({ mode }) => {
     const env = loadEnv(mode, process.cwd())
     console.log("当前环境为：", mode)
     const proxyPrefix = env.VITE_APP_PROXY_PREFIX
-
     return defineConfig({
         base: env.VITE_APP_BASE,
         plugins: [vue(), vueJsx()],
@@ -18,7 +17,10 @@ export default ({ mode }) => {
                 vue: "vue/dist/vue.esm-bundler.js"
             }
         },
-
+        define: {
+            __VUE_PROD_DEVTOOLS__: false,
+            __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
+        },
         build: {
             chunkSizeWarningLimit: 3000
             // assetsPublicPath: "./"

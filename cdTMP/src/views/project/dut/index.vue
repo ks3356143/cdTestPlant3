@@ -7,11 +7,11 @@
                     {{ showType(record) }}
                 </template>
                 <template #tableAfterButtons>
-                    <a-button status="success" type="outline" @click="handleAddFileInputDemand">
+                    <a-button status="success" type="outline" @click="handleAddFileInputDemand" v-if="isXQ === 'XQ'">
                         <template #icon>
                             <icon-plus />
                         </template>
-                        上传需求快捷录入
+                        上传需求规格说明快捷录入
                     </a-button>
                 </template>
             </ma-crud>
@@ -24,6 +24,7 @@
 import { ref, computed } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import designDemandApi from "@/api/project/designDemand"
+import dutApi from "@/api/project/dut"
 import commonApi from "@/api/common"
 import { useTreeDataStore } from "@/store"
 import FileInputModal from "./components/FileInputModal/index.vue"
@@ -41,6 +42,14 @@ const demandTypeDict = ref([])
         demandTypeDict.value = res
     })
 })()
+
+// 5月31日更新，获取当前dut的类型，以判断是否显示“需求录入”的按钮
+const isXQ = ref("")
+async function isXQdemand() {
+    const res = await dutApi.getDutType({ key: route.query.key, project_id: projectId.value })
+    isXQ.value = res.data.dut_type
+}
+isXQdemand()
 
 const showType = (record) => {
     let len = demandTypeDict.value.data.length
@@ -165,7 +174,7 @@ const crudColumns = ref([
 // ~~~大功能打开ma-form-modal~~~
 const fileInputRef = ref(null)
 const handleAddFileInputDemand = () => {
-    fileInputRef.value.open();
+    fileInputRef.value.open()
 }
 </script>
 

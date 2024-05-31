@@ -17,6 +17,7 @@ import "@/style/global.less"
 // 读取package.json打印个软件名称和版本
 import tool from "@/utils/tool"
 import packageJson from "../package.json"
+// 启动app之前
 const app = createApp(App)
 app.use(ArcoVue, {})
 app.use(ArcoVueIcon)
@@ -24,7 +25,6 @@ app.use(router)
 app.use(pinia)
 app.use(globalComponents)
 // app.use(directive)
-// 虚拟列表
 
 // 注册ma-icon图标
 const modules = import.meta.glob("./assets/ma-icons/*.vue", { eager: true })

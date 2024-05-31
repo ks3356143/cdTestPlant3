@@ -20,7 +20,7 @@
                             </a-button>
                         </a-popconfirm>
                         <a-tree
-                            class="h-10/12 select-none"
+                            class="h-10/12 select-none my-arco-wrap-class"
                             :data="treeData"
                             size="mini"
                             checkable
@@ -1056,5 +1056,10 @@ const problemRoundRef = ref(null)
 }
 .myhcalc {
     height: calc(100% - 60px);
+}
+.my-arco-wrap-class :deep(.arco-tree-node-title-text) {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 </style>

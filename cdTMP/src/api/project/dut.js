@@ -66,5 +66,16 @@ export default {
             method: "post",
             data: params
         })
+    },
+    /**
+     * 请求打开dut.vue页面，查看当前dut的类型“XQ/XY/SO等”
+     * @returns
+     */
+    getDutType(params = {}) {
+        return request({
+            url: "/project/dut/dut_type",
+            method: "get",
+            params
+        })
     }
 }

@@ -57,7 +57,6 @@ const crudOptions = ref({
         let design_key = key_split[2]
         let test_key = key_split[3]
         let td = treeDataStore.treeData
-        console.log(route.query.key)
         crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
         ${td[round_key].title} > ${td[round_key].children[dut_key].title} >
         ${td[round_key].children[dut_key].children[design_key].title} >
@@ -116,6 +115,21 @@ const crudOptions = ref({
                             { span: 8, formList: [{ dataIndex: "monitorPerson" }] }
                         ]
                     }
+                ]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "summarize" }] }]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "initialization" }] }]
+            },
+            {
+                formType: "grid",
+                cols: [
+                    { span: 12, formList: [{ dataIndex: "premise" }] },
+                    { span: 12, formList: [{ dataIndex: "exe_time" }] }
                 ]
             }
         ]
@@ -196,6 +210,12 @@ const crudColumns = ref([
         dataIndex: "premise",
         hide: true,
         addDefaultValue: "软件正常启动，各界面显示工作正常"
+    },
+    {
+        title: "执行时间",
+        dataIndex: "exe_time",
+        hide: true,
+        formType: "date",
     },
     {
         title: "测试步骤",
