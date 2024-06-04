@@ -11,14 +11,14 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="jsx">
 import { ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import caseApi from "@/api/project/case"
+import dictApi from "@/api/system/dict"
 import { useTreeDataStore } from "@/store"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
-const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
@@ -30,6 +30,7 @@ const showType = (record) => {
     let key_string = parseInt(record.key.substring(record.key.lastIndexOf("-") + 1)) + 1
     return "YL-" + record.testType + "-" + record.ident + "-" + key_string.toString().padStart(3, "0")
 }
+
 // crud设置
 const crudOptions = ref({
     api: caseApi.getCaseList,
@@ -138,7 +139,7 @@ const crudOptions = ref({
 const crudColumns = ref([
     {
         title: "ID",
-        width: 50,
+        width: 60,
         align: "center",
         dataIndex: "id",
         fixed: "left"
@@ -166,6 +167,83 @@ const crudColumns = ref([
         validateTrigger: "blur"
     },
     {
+        title: "执行情况",
+        align: "center",
+        display: false,
+        addDisplay: false,
+        editDisplay: false,
+        customRender: ({ record }) => {
+            // 执行情况逻辑，查看所有步骤的执行情况 - 暂时硬编码
+            let completeCount = 0
+            let stepCount = record.testStep.length
+            record.testStep.forEach((item) => {
+                if (item.status === "1") {
+                    completeCount++
+                }
+            })
+            if (completeCount === stepCount) {
+                return (
+                    <a-tag bordered color="green">
+                        已执行
+                    </a-tag>
+                )
+            } else if (completeCount > 0 && completeCount < stepCount) {
+                return (
+                    <a-tag bordered color="orange">
+                        部分执行
+                    </a-tag>
+                )
+            } else {
+                return (
+                    <a-tag bordered color="red">
+                        未执行
+                    </a-tag>
+                )
+            }
+        }
+    },
+    {
+        title: "是否通过",
+        align: "center",
+        display: false,
+        addDisplay: false,
+        editDisplay: false,
+        customRender: ({ record }) => {
+            let passCount = 0
+            let failCount = 0
+            let stepCount = record.testStep.length
+            record.testStep.forEach((item) => {
+                if (item.passed === "1") {
+                    passCount++
+                } else if (item.passed === "2") {
+                    failCount++
+                }
+            })
+            if (failCount > 0) {
+                return (
+                    <a-tag bordered color="red">
+                        未通过
+                    </a-tag>
+                )
+            } else {
+                if (passCount === stepCount) {
+                    return (
+                        <a-tag bordered color="green">
+                            已通过
+                        </a-tag>
+                    )
+                } else {
+                    return (
+                        <a-tag bordered color="orange">
+                            包含未执行
+                        </a-tag>
+                    )
+                }
+            }
+        }
+    },
+
+    {
         title: "设计人员",
         width: 80,
         dataIndex: "designPerson",
@@ -188,7 +266,7 @@ const crudColumns = ref([
         dataIndex: "monitorPerson",
         width: 80,
         align: "center",
-        search: true,
+        hide: true,
         formType: "select",
         dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
     },
@@ -196,6 +274,7 @@ const crudColumns = ref([
         title: "用例综述",
         align: "center",
         dataIndex: "summarize",
+        hide: true,
         search: true,
         addDefaultValue: ""
     },
@@ -215,7 +294,7 @@ const crudColumns = ref([
         title: "执行时间",
         dataIndex: "exe_time",
         hide: true,
-        formType: "date",
+        formType: "date"
     },
     {
         title: "测试步骤",

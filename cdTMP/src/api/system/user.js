@@ -112,5 +112,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 获取用户分组group的id和层级信息
+     * @returns
+     */
+    getGroupList(params = {}) {
+        return request({
+            url: "system/user/group/list",
+            method: "get",
+            params
+        })
     }
 }

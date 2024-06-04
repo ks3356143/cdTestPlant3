@@ -1,14 +1,6 @@
 <template>
     <div class="ma-content-block lg:flex justify-between p-4">
-        <div class="lg:w-2/12 w-full h-full p-2 shadow">
-            <ma-tree-slider
-                v-model="depts"
-                searchPlaceholder="用户类型"
-                :field-names="{ title: 'label', value: 'value' }"
-                @click="switchDept"
-            ></ma-tree-slider>
-        </div>
-        <div class="lg:w-10/12 w-full lg:ml-4 mt-5 lg:mt-0">
+        <div class="lg:w-12/12 w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #status="{ record }">
@@ -26,7 +18,6 @@
 
 <script setup>
 import { reactive, ref, onMounted } from "vue"
-import MaTreeSlider from "@/components/ma-treeSlider/index.vue"
 import userApi from "@/api/system/user"
 import user from "@/api/system/user"
 import { Message } from "@arco-design/web-vue"
@@ -34,115 +25,6 @@ import { Message } from "@arco-design/web-vue"
 const changeStatus = (e, id) => {
     console.log("当前值：", e)
     console.log("当前ID：", id)
-}
-// 树状组件-注意在onMounted中加载数据，不然不显示
-const depts = ref([])
-onMounted(() => {
-    depts.value = [
-        {
-            id: 15,
-            parent_id: 0,
-            value: 15,
-            label: "成都分部",
-            children: [
-                {
-                    id: 16,
-                    parent_id: 15,
-                    value: 16,
-                    label: "FPGA组"
-                },
-                {
-                    id: 17,
-                    parent_id: 15,
-                    value: 17,
-                    label: "CPU组"
-                }
-            ]
-        },
-        {
-            id: 1,
-            parent_id: 0,
-            value: 1,
-            label: "上海本部",
-            children: [
-                {
-                    id: 3,
-                    parent_id: 1,
-                    value: 3,
-                    label: "FPGA组",
-                    children: [
-                        {
-                            id: 6,
-                            parent_id: 3,
-                            value: 6,
-                            label: "研发部门"
-                        },
-                        {
-                            id: 7,
-                            parent_id: 3,
-                            value: 7,
-                            label: "市场部门"
-                        },
-                        {
-                            id: 8,
-                            parent_id: 3,
-                            value: 8,
-                            label: "测试部门"
-                        },
-                        {
-                            id: 9,
-                            parent_id: 3,
-                            value: 9,
-                            label: "财务部门"
-                        },
-                        {
-                            id: 10,
-                            parent_id: 3,
-                            value: 10,
-                            label: "运维部门"
-                        }
-                    ]
-                },
-                {
-                    id: 2,
-                    parent_id: 1,
-                    value: 2,
-                    label: "CPU组",
-                    children: [
-                        {
-                            id: 11,
-                            parent_id: 2,
-                            value: 11,
-                            label: "市场部门",
-                            children: [
-                                {
-                                    id: 13,
-                                    parent_id: 11,
-                                    value: 13,
-                                    label: "外勤"
-                                },
-                                {
-                                    id: 14,
-                                    parent_id: 11,
-                                    value: 14,
-                                    label: "行政"
-                                }
-                            ]
-                        },
-                        {
-                            id: 12,
-                            parent_id: 2,
-                            value: 12,
-                            label: "财务部门"
-                        }
-                    ]
-                }
-            ]
-        }
-    ]
-})
-const switchDept = (key) => {
-    console.log("选择", key)
 }
 // crud组件
 const crudRef = ref()
@@ -160,9 +42,10 @@ const crudOptions = reactive({
     // 是否显示操作列
     operationColumn: true,
     operationWidth: 200,
+    showTools: false,
     // 设置列表数据API
     api: userApi.getPageList,
-    // 设置新增接口-show为true则显示按钮、
+    // 设置新增接口-show为true则显示按钮
     add: {
         show: true,
         api: userApi.save

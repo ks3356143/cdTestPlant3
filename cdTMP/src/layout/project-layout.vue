@@ -23,6 +23,7 @@
                             class="h-10/12 select-none my-arco-wrap-class"
                             :data="treeData"
                             size="mini"
+                            showLine
                             checkable
                             block-node
                             draggable
@@ -35,7 +36,6 @@
                             v-model:expanded-keys="expandedKeys"
                             v-model:selected-keys="selectedKeys"
                             v-model:checked-keys="checkedKeys"
-                            showLine
                             ref="treeRef"
                             border
                             @contextmenu="displayRightMenu"
@@ -239,6 +239,7 @@ import { useTreeDataStore } from "@/store"
 import { storeToRefs } from "pinia"
 import dayjs from "dayjs"
 import Progress from "@/views/testmanage/projmanage/cpns/progress.vue"
+import { getContextNodeInfo } from "@/layout/hooks/tools"
 // router-view里面组件的ref
 const routeViewRef = ref()
 /// 初始化round轮次数据
@@ -783,10 +784,9 @@ const roundRightContainer = ref(null)
 const problemTitle = ref("第1轮问题单")
 /// 紧点击测试项节点显示右键菜单
 const displayRightMenu = (e) => {
-    const { proxy } = e.target.__vueParentComponent
-    const { level, isLeaf, nodekey, title } = proxy
+    const { nodekey, level, title, isLeaf } = getContextNodeInfo(e.target)
     // 如果是测试项则弹出【1.根据测试项步骤生成当前测试项用例 2.复制测试项到设计需求】
-    if (level === 3) {
+    if (+level === 3) {
         e.preventDefault()
         // 首先将被右键点击的node储存到组件全局
         rightClickNode.level = level
@@ -797,7 +797,7 @@ const displayRightMenu = (e) => {
         popupContainer.value = e.target
         popupVisible.value = true
     }
-    if (level === 0) {
+    if (+level === 0) {
         // 测试显示下拉框
         e.preventDefault()
         rightClickNode.level = level
@@ -1061,5 +1061,8 @@ const problemRoundRef = ref(null)
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+.chen-node-title {
+    cursor: help;
 }
 </style>
