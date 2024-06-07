@@ -6,7 +6,7 @@
                     <img src="@/assets/avatar/zhu.jpg" />
                 </a-avatar>
                 <div class="pl-3 mt-2">
-                    <div class="content-block-title">{{ userStore.name }}，今天天气很好，欢迎回来！</div>
+                    <div class="content-block-title">{{ userStore.name }}，好久不见，欢迎回来！</div>
                     <div class="leading-5 mt-2 flex items-center">
                         <a-tag color="red" bordered class="mr-2">好用的测试工具集</a-tag>
                         欢迎使用测试管理平台 ⭐长期更新。

@@ -1,8 +1,8 @@
 <template>
     <!-- 描述列表组件 -->
     <a-modal width="1000px" v-model:visible="visible" :footer="false">
-        <template #title>{{ previewRecord.name }}</template>
-        <ma-info :columns="columns" :data="previewRecord" :column="3"></ma-info>
+        <template #title>项目名称：{{ previewRecord.name }}</template>
+        <ma-info :columns="props.columns" :data="previewRecord" :column="1" size="mini"></ma-info>
     </a-modal>
 </template>
 
@@ -12,11 +12,15 @@ import MaInfo from "@/components/ma-info/index.vue"
 // 提供open方法给外界，并获取整行数据
 const visible = ref(false)
 const previewRecord = ref({})
-const columns = ref([])
-const open = (record, outColumns) => {
+const props = defineProps({
+    columns: {
+        type: Array,
+        default: () => []
+    }
+})
+const open = (record) => {
     visible.value = true
     previewRecord.value = record
-    columns.value = outColumns
 }
 defineExpose({ open })
 // MA-INFO的columns

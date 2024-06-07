@@ -19,7 +19,11 @@
             </a-space>
         </div>
         <div class="center-side flex items-center justify-center font-bold text-lg">
-            <template v-if="title"> 项目名称：{{ $route.query.ident }}-{{ title }} </template>
+            <template v-if="title">
+                <a-typography-title :style="{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }" :heading="4">
+                    项目名称：{{ $route.query.ident }}-{{ title }}
+                </a-typography-title>
+            </template>
             <Menu v-if="topMenu"></Menu>
         </div>
         <ul class="right-side">
@@ -43,8 +47,8 @@
                 <!-- 这里有个下拉列表 -->
             </li>
             <li>
-                <a-tooltip content="切换主题-暂无">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'">
+                <a-tooltip content="切换主题">
+                    <a-button @click="handleChangeTheme" class="nav-btn" type="outline" :shape="'circle'">
                         <template #icon>
                             <icon-moon-fill />
                         </template>
@@ -121,6 +125,12 @@ import Menu from "@/layout/components/menu.vue"
 import { useRouter } from "vue-router"
 const router = useRouter()
 const appStore = useAppStore()
+// 切换暗黑主题
+const handleChangeTheme = () => {
+    document.body.hasAttribute("arco-theme")
+        ? document.body.removeAttribute("arco-theme")
+        : document.body.setAttribute("arco-theme", "dark")
+}
 // title管理-默认在后台
 const props = defineProps({
     title: {

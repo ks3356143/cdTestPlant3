@@ -1,5 +1,8 @@
 <template>
     <router-view v-slot="{ Component, route }" class="mx-2 my-2">
+        <template v-if="!Component">
+            <Empty class="full-empty" />
+        </template>
         <transition name="ma-fade" mode="out-in" appear>
             <!-- 这里主要在路由定义是否缓存页面 -->
             <component :is="Component" v-if="route.meta.ignoreCache" :key="route.fullPath" />
@@ -13,6 +16,7 @@
 <script setup>
 import { computed, ref } from "vue"
 import { useTabBarStore } from "@/store"
+import Empty from "@/components/Empty/index.vue"
 // 获取缓存列表
 const tabBarStore = useTabBarStore()
 const cacheList = computed(() => tabBarStore.getCacheList)
@@ -29,4 +33,8 @@ const refresh = () => {
 defineExpose({ refresh })
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.full-empty {
+    width: 79vw;
+}
+</style>

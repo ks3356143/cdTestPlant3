@@ -37,6 +37,7 @@ const crudOptions = ref({
     add: { show: true, api: caseApi.save, text: "新增用例" },
     edit: { show: true, api: caseApi.update, text: "修改用例" },
     delete: { show: true, api: caseApi.delete },
+    operationColumnAlign:'center',
     // 处理新增删除后树状图显示
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")

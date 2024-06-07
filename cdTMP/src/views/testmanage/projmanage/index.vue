@@ -12,42 +12,91 @@
                             文档生成
                         </a-button>
                         <template #content>
-                            <p><a-link @click="createDgItem(record)">大纲二段文档</a-link></p>
-                            <p><a-link @click="createSmItem(record)">说明二段文档</a-link></p>
-                            <p><a-link @click="createJLItem(record)">记录二级文档</a-link></p>
-                            <p><a-link @click="createBgItem(record)">报告二级文档</a-link></p>
-                            <p><a-link @click="createHsmItem(record)">回归说明二级文档</a-link></p>
-                            <p><a-link @click="createHjlItem(record)">回归记录二级文档</a-link></p>
-                            <p><a-link @click="createWtdItem(record)">问题单二级文档</a-link></p>
                             <p>
-                                <a-link @click="createSeitaiDagang(record)"><icon-eye />[测试]生成最后大纲</a-link>
+                                <a-link
+                                    :disabled="isGenerating"
+                                    :loading="isDgLoading"
+                                    @click="createDgItem($event, record)"
+                                >
+                                    大纲二段文档
+                                </a-link>
                             </p>
                             <p>
-                                <a-link @click="createSeitaiShuoming(record)"><icon-eye />[测试]生成最后说明</a-link>
+                                <a-link :disabled="isGenerating" :loading="isSmLoading" @click="createSmItem(record)">
+                                    说明二段文档
+                                </a-link>
                             </p>
                             <p>
-                                <a-link @click="createSeitaiJilu(record)"><icon-eye />[测试]生成最后记录</a-link>
+                                <a-link :disabled="isGenerating" :loading="isJlloading" @click="createJLItem(record)">
+                                    记录二级文档
+                                </a-link>
                             </p>
                             <p>
-                                <a-link @click="createSeitaiBaogao(record)"><icon-eye />[测试]生成测评报告</a-link>
+                                <a-link :disabled="isGenerating" :loading="isBgLoading" @click="createBgItem(record)">
+                                    报告二级文档
+                                </a-link>
                             </p>
                             <p>
-                                <a-link @click="createSeitaiHsm(record)"><icon-eye />[测试]回归测试说明</a-link>
+                                <a-link :disabled="isGenerating" :loading="ishsmLoading" @click="createHsmItem(record)">
+                                    回归说明二级文档
+                                </a-link>
                             </p>
                             <p>
-                                <a-link @click="createSeitaiHjl(record)"><icon-eye />[测试]回归测试记录</a-link>
+                                <a-link :disabled="isGenerating" :loading="ishjlLoading" @click="createHjlItem(record)">
+                                    回归记录二级文档
+                                </a-link>
                             </p>
                             <p>
-                                <a-link @click="createSeitaiWtd(record)"><icon-eye />[测试]生成问题单</a-link>
+                                <a-link :disabled="isGenerating" :loading="isWtdLoading" @click="createWtdItem(record)">
+                                    问题单二级文档
+                                </a-link>
+                            </p>
+                            <p>
+                                <a-link :disabled="isGenerating" @click="createSeitaiDagang(record)">
+                                    <icon-eye />
+                                    [测试]生成最后大纲
+                                </a-link>
+                            </p>
+                            <p>
+                                <a-link :disabled="isGenerating" @click="createSeitaiShuoming(record)">
+                                    <icon-eye />[测试]生成最后说明
+                                </a-link>
+                            </p>
+                            <p>
+                                <a-link :disabled="isGenerating" @click="createSeitaiJilu(record)"
+                                    ><icon-eye />[测试]生成最后记录</a-link
+                                >
+                            </p>
+                            <p>
+                                <a-link :disabled="isGenerating" @click="createSeitaiBaogao(record)"
+                                    ><icon-eye />[测试]生成测评报告</a-link
+                                >
+                            </p>
+                            <p>
+                                <a-link :disabled="isGenerating" @click="createSeitaiHsm(record)"
+                                    ><icon-eye />[测试]回归测试说明</a-link
+                                >
+                            </p>
+                            <p>
+                                <a-link :disabled="isGenerating" @click="createSeitaiHjl(record)"
+                                    ><icon-eye />[测试]回归测试记录</a-link
+                                >
+                            </p>
+                            <p>
+                                <a-link :disabled="isGenerating" @click="createSeitaiWtd(record)"
+                                    ><icon-eye />[测试]生成问题单</a-link
+                                >
                             </p>
                         </template>
                     </a-popover>
-                    <a-link @click="enterWorkPlant(record)">进入工作区</a-link>
-                    <a-link @click="previewRef.open(record, crudColumns)"><icon-eye />预览</a-link>
+                    <a-button @click="enterWorkPlant(record)" size="mini" status="warning" type="outline">
+                        工作区
+                    </a-button>
+                    <a-link @click="previewRef.open(record)"><icon-eye />预览</a-link>
                 </template>
             </ma-crud>
         </div>
-        <preview ref="previewRef"></preview>
+        <preview ref="previewRef" :columns="crudColumns"></preview>
         <Progress
             :visible="visible"
             :isComplete="isComplete"
@@ -74,7 +123,7 @@ import Progress from "./cpns/progress.vue"
 import hoosk from "@/views/testmanage/projmanage/hooks.js"
 const router = useRouter()
 // 定义预览组件的Ref
-const previewRef = ref(null)
+const previewRef = ref()
 // 点击进入工作区函数 - 每次点击后都清除localStorage中树状目录数据
 const enterWorkPlant = function (record) {
     if (localStorage.getItem("tree_local_data")) {
@@ -89,6 +138,16 @@ const ptext = ref("测评大纲")
 const handleModalConfirmClick = () => {
     visible.value = false
 }
+// 该变量用于显示所以生成文档的按钮是否->禁用
+const isGenerating = ref(false)
+// 用于显示是否正在加载（全部按钮各一个）
+const isDgLoading = ref(false)
+const isSmLoading = ref(false)
+const isBgLoading = ref(false)
+const isJlloading = ref(false)
+const ishsmLoading = ref(false)
+const ishjlLoading = ref(false)
+const isWtdLoading = ref(false)
 // ~~~~~~~~测试说明生成文档~~~~~~~~
 const createSeitaiShuoming = async (record) => {
     ptext.value = "测试说明"
@@ -131,127 +190,141 @@ const createSeitaiWtd = async (record) => {
 
 // 记录生成二级文档
 const createJLItem = async (record) => {
-    const st = await jlGenerateApi.createJLcaserecord({ id: record.id })
-
-    Message.success(st.message)
+    isGenerating.value = true
+    isJlloading.value = true
+    await jlGenerateApi.createJLcaserecord({ id: record.id }).finally(() => {
+        isGenerating.value = false
+        isJlloading.value = false
+    })
+    Message.success("记录-片段库生成成功，请查看output/jl文件夹")
 }
 // 说明生成二级文档
 const createSmItem = async (record) => {
-    // 生成测评对象 - 和大纲一样 - 可能会删除
-    await dgGenerateApi.createSoftComposition({ id: record.id })
-    // 生成被测软件功能 - 和大纲重复 - 可能会删除
-    await dgGenerateApi.createFuncList({ id: record.id })
-    // 生成被测软件接口 - 和大纲重复 - 可能会删除
-    await dgGenerateApi.createInterface({ id: record.id })
-    // 生成被测软件性能 - 和大纲重复 - 可能会删除
-    await dgGenerateApi.createPerformance({ id: record.id })
-    // 生成被测软件基本信息 - 和大纲重复 - 可能会删除
-    await dgGenerateApi.createBaseInformation({ id: record.id })
-    // 生成标准类引用文档 - 和大纲重复 - 可能会删除
-    await dgGenerateApi.createYiju({ id: record.id })
-    // 生成技术类引用文档列表 -> 在大纲基础上添加《测评大纲》
-    await smGenerateApi.createSMTechyiju({ id: record.id })
-    // 生成软硬件环境（注意标题级别不一样，这个在最后处理）
-    await dgGenerateApi.createEnvironment({ id: record.id })
-    // 生成用例全
-    await smGenerateApi.createSMCaseList({ id: record.id })
-    // 生成用例列表-那个表格
-    await smGenerateApi.createSMCaseBreifList({ id: record.id })
-    // 生成说明追踪
-    const st = await smGenerateApi.createSMTrack({ id: record.id })
-    Message.success(st.message)
+    isGenerating.value = true
+    isSmLoading.value = true
+    const id = record.id
+    await Promise.all([
+        dgGenerateApi.createSoftComposition({ id }), // 生成测评对象 - 和大纲一样
+        dgGenerateApi.createFuncList({ id }), // 生成被测软件功能 - 和大纲重复
+        dgGenerateApi.createInterface({ id }), // 生成被测软件接口 - 和大纲重复 - 可能会删除
+        dgGenerateApi.createPerformance({ id }), // 生成被测软件性能 - 和大纲重复 - 可能会删除
+        dgGenerateApi.createBaseInformation({ id }), // 生成被测软件基本信息 - 和大纲重复 - 可能会删除
+        dgGenerateApi.createYiju({ id }), // 生成标准类引用文档 - 和大纲重复 - 可能会删除
+        smGenerateApi.createSMTechyiju({ id }), // 生成技术类引用文档列表 -> 在大纲基础上添加《测评大纲》
+        dgGenerateApi.createEnvironment({ id }), // 生成软硬件环境（注意标题级别不一样，这个在最后处理）
+        smGenerateApi.createSMCaseList({ id }), // 生成用例全
+        smGenerateApi.createSMCaseBreifList({ id }), // 生成用例列表-那个表格
+        smGenerateApi.createSMTrack({ id }) // 生成说明追踪
+    ]).finally(() => {
+        isGenerating.value = false
+        isSmLoading.value = false
+    })
+    Message.success("说明-片段库生成成功，请查看output/sm文件夹")
 }
 // 大纲生成二级文档
-const createDgItem = async (record) => {
-    // 生成测试项文档
-    await dgGenerateApi.createTestDemand({ id: record.id })
-    // 标准依据文件
-    await dgGenerateApi.createYiju({ id: record.id })
-    // 技术依据文件
-    await dgGenerateApi.createTechYiju({ id: record.id })
-    // 生成时间和地点
-    await dgGenerateApi.createTimeaddress({ id: record.id })
-    // 生成被测软件功能列表
-    await dgGenerateApi.createFuncList({ id: record.id })
-    // 生成测评对象-软件组成
-    await dgGenerateApi.createSoftComposition({ id: record.id })
-    // 生成联系人和方式
-    await dgGenerateApi.createContact({ id: record.id })
-    // 生成测试充分性（adequancy）和有效性（effectiveness）说明
-    await dgGenerateApi.createAdequacyEffectiveness({ id: record.id })
-    // 生成测评组织及分工
-    await dgGenerateApi.createGroup({ id: record.id })
-    // 生成测评保障
-    await dgGenerateApi.createGuarantee({ id: record.id })
-    // 生成缩略语
-    await dgGenerateApi.createAbbreviation({ id: record.id })
-    // 生成-被测软件接口
-    await dgGenerateApi.createInterface({ id: record.id })
-    // 生成-被测软件性能
-    await dgGenerateApi.createPerformance({ id: record.id })
-    // 生成-被测软件基本信息
-    await dgGenerateApi.createBaseInformation({ id: record.id })
-    // 生成-测试总体要求
-    await dgGenerateApi.createRequirement({ id: record.id })
-    // 生成-研总-测试项对照表
-    await dgGenerateApi.createYzComparison({ id: record.id })
-    // 生成-需求规格说明-测试项对照表
-    await dgGenerateApi.createXqComparison({ id: record.id })
-    // 生成-反向测试项-需求规格说明对照表
-    await dgGenerateApi.createFanXqComparison({ id: record.id })
-    // 生成-代码质量度量分析表
-    await dgGenerateApi.createCodeQuality({ id: record.id })
-    // 生成-软硬件环境
-    await dgGenerateApi.createEnvironment({ id: record.id })
-    // 生成-主要战技指标
-    const st = await dgGenerateApi.createMainTech({ id: record.id })
-    Message.success(st.message)
+const createDgItem = async (e, record) => {
+    isGenerating.value = true
+    isDgLoading.value = true
+    const id = record.id
+    await Promise.all([
+        dgGenerateApi.createTestDemand({ id }), // 生成第一轮测试项
+        dgGenerateApi.createYiju({ id }), // 生成依据文件
+        dgGenerateApi.createTechYiju({ id }), // 技术依据文件
+        dgGenerateApi.createContact({ id }), // 生成联系人和方式
+        dgGenerateApi.createTimeaddress({ id }), // 生成测评时间和地点
+        dgGenerateApi.createFuncList({ id }), // 生成被测软件功能列表
+        dgGenerateApi.createSoftComposition({ id }), // 生成测评对象-软件组成
+        dgGenerateApi.createAdequacyEffectiveness({ id }), // 生成测试充分性（adequancy）和有效性（effectiveness）说明
+        dgGenerateApi.createGroup({ id }), // 生成测评组织及分工
+        dgGenerateApi.createGuarantee({ id }), // 生成测评保障
+        dgGenerateApi.createAbbreviation({ id }), // 生成缩略语
+        dgGenerateApi.createInterface({ id }), // 生成-被测软件接口
+        dgGenerateApi.createPerformance({ id }), // 生成-被测软件性能
+        dgGenerateApi.createBaseInformation({ id }), // 生成-被测软件基本信息
+        dgGenerateApi.createRequirement({ id }), // 生成-测试总体要求
+        dgGenerateApi.createYzComparison({ id }), // 生成-研总-测试项对照表
+        dgGenerateApi.createXqComparison({ id }), // 生成-需求规格说明-测试项对照表
+        dgGenerateApi.createFanXqComparison({ id }), // 生成-反向测试项-需求规格说明对照表
+        dgGenerateApi.createCodeQuality({ id }), // 生成-代码质量度量分析表
+        dgGenerateApi.createEnvironment({ id }), // 生成-软硬件环境
+        dgGenerateApi.createMainTech({ id }) // 生成-主要战技指标
+    ]).finally(() => {
+        isGenerating.value = false
+        isDgLoading.value = false
+    })
+    Message.success("大纲-片段库文档生成成功，请查看output/dg文件夹")
 }
 // 报告生成二级文档
 const createBgItem = async (record) => {
-    // 删除output/bg文件夹下文件
-    await bgGenerateApi.deleteBGFiles({ id: record.id })
-    await bgGenerateApi.createBgTechYiju({ id: record.id })
-    await bgGenerateApi.createBgTimeaddress({ id: record.id })
-    await bgGenerateApi.createBgBaseInformation({ id: record.id })
-    await bgGenerateApi.createBgCompletionstatus({ id: record.id })
-    await bgGenerateApi.createBgSummary({ id: record.id })
-    await bgGenerateApi.createBgContentandresults1({ id: record.id })
-    await bgGenerateApi.createBgContentandresults2({ id: record.id })
-    await bgGenerateApi.createBgEffectAndAdquacy({ id: record.id })
-    await bgGenerateApi.createBgDemandEffective({ id: record.id })
-    await bgGenerateApi.createBgQualityEvaluate({ id: record.id })
-    await bgGenerateApi.createBgEntire({ id: record.id })
-    await bgGenerateApi.createBgYzxqTrack({ id: record.id })
-    const st = await bgGenerateApi.createBgProblemsSummary({ id: record.id })
-    Message.success(st.message)
+    isGenerating.value = true
+    isBgLoading.value = true
+    const id = record.id
+    await Promise.all([
+        bgGenerateApi.deleteBGFiles({ id }), // 删除output/bg文件夹下文件
+        bgGenerateApi.createBgTechYiju({ id }),
+        bgGenerateApi.createBgTimeaddress({ id }),
+        bgGenerateApi.createBgBaseInformation({ id }),
+        bgGenerateApi.createBgCompletionstatus({ id }),
+        bgGenerateApi.createBgSummary({ id }),
+        bgGenerateApi.createBgContentandresults1({ id }),
+        bgGenerateApi.createBgContentandresults2({ id }),
+        bgGenerateApi.createBgEffectAndAdquacy({ id }),
+        bgGenerateApi.createBgDemandEffective({ id }),
+        bgGenerateApi.createBgQualityEvaluate({ id }),
+        bgGenerateApi.createBgEntire({ id }),
+        bgGenerateApi.createBgYzxqTrack({ id }),
+        bgGenerateApi.createBgProblemsSummary({ id })
+    ]).finally(() => {
+        isGenerating.value = false
+        isBgLoading.value = false
+    })
+    Message.success("报告-片段库文档生成成功，请查看output/bg文件夹")
 }
 // 回归测试说明二级文档
 const createHsmItem = async (record) => {
-    // 先调用删除文件夹里面文件
-    await hsmGenerateApi.deleteHSMFiles({ id: record.id })
-    await hsmGenerateApi.createBasicInfo({ id: record.id })
-    await hsmGenerateApi.createDocSummary({ id: record.id })
-    await hsmGenerateApi.createJstech({ id: record.id })
-    await hsmGenerateApi.createChangePart({ id: record.id })
-    await hsmGenerateApi.createHdemand({ id: record.id })
-    await hsmGenerateApi.createCaseListDesc({ id: record.id })
-    await hsmGenerateApi.createCaseList({ id: record.id })
-    const st = await hsmGenerateApi.createTrack({ id: record.id })
-    Message.success(st.message)
+    const id = record.id
+    isGenerating.value = true
+    ishsmLoading.value = true
+    await Promise.all([
+        hsmGenerateApi.deleteHSMFiles({ id }), // 先删除以前文件
+        hsmGenerateApi.createBasicInfo({ id }),
+        hsmGenerateApi.createDocSummary({ id }),
+        hsmGenerateApi.createJstech({ id }),
+        hsmGenerateApi.createChangePart({ id }),
+        hsmGenerateApi.createHdemand({ id }),
+        hsmGenerateApi.createCaseListDesc({ id }),
+        hsmGenerateApi.createCaseList({ id }),
+        hsmGenerateApi.createTrack({ id })
+    ]).finally(() => {
+        isGenerating.value = false
+        ishsmLoading.value = false
+    })
+    Message.success("回归说明-片段库文档生成成功，请查看output/hsm文件夹")
 }
 // 回归测试记录二级文档
 const createHjlItem = async (record) => {
-    // 先调用删除文件夹里面文件
-    await hjlGenerateApi.deleteHJLFiles({ id: record.id })
-    await hjlGenerateApi.createBasicInfo({ id: record.id })
-    const st = await hjlGenerateApi.createCaseinfo({ id: record.id })
-    Message.success(st.message)
+    const id = record.id
+    isGenerating.value = true
+    ishjlLoading.value = true
+    await Promise.all([
+        hjlGenerateApi.deleteHJLFiles({ id }), // 先调用删除文件夹里面文件
+        hjlGenerateApi.createBasicInfo({ id }),
+        hjlGenerateApi.createCaseinfo({ id })
+    ]).finally(() => {
+        isGenerating.value = false
+        ishjlLoading.value = false
+    })
+    Message.success("回归记录-片段库文档生成成功，请查看output/hjl文件夹")
 }
 // 问题单二级文档
 const createWtdItem = async (record) => {
-    const st = await wtdGenerateApi.createWtdTable({ id: record.id })
-    Message.success(st.message)
+    isGenerating.value = true
+    isWtdLoading.value = true
+    await wtdGenerateApi.createWtdTable({ id: record.id }).finally(() => {
+        isGenerating.value = false
+        isWtdLoading.value = false
+    })
+    Message.success("问题单-片段库文档生成成功，请查看output/wtd文件夹")
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -270,6 +343,8 @@ const crudOptions = ref({
     operationWidth: 500,
     showIndex: false,
     showTools: false,
+    operationColumnWidth: 220, // 操作列宽度
+    operationColumnAlign: "center", // 操作列对齐方式
     // 处理弹窗的title
     beforeOpenAdd: function () {
         crudRef.value.crudFormRef.actionTitle = "项目"
@@ -426,7 +501,20 @@ const crudColumns = ref([
     {
         title: "结束时间",
         dataIndex: "endTime",
-        formType: "date"
+        formType: "date",
+        extra: "注意：开始时间和结束时间影响大纲、报告多个时间，谨慎填写",
+        commonRules: [
+            {
+                required: true,
+                message: "结束时间必填"
+            },
+            {
+                validator: (value, validationCallbackFunction) => {
+                    let beginTime = crudRef.value.getFormData().beginTime
+                    value < beginTime ? validationCallbackFunction("开始时间必须小于结束时间") : null
+                }
+            }
+        ]
     },
     // 这是只为了搜索的字段
     {

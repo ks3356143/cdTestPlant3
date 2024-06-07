@@ -96,7 +96,25 @@
                                 <template v-if="props.node.level === '1'"> [被测件] </template>
                                 <template v-if="props.node.level === '2'"> [设] </template>
                                 <template v-if="props.node.level === '3'"> [项] </template>
-                                <template v-if="props.node.level === '4'"> [例] </template>
+                                <template v-if="props.node.level === '4'">
+                                    <template v-if="props.node.isRelatedProblem">
+                                        <a-tooltip content="有问题单关联">
+                                            <button>[@]</button>
+                                        </a-tooltip>
+                                    </template>
+                                    <template v-else>
+                                        <template v-if="props.node.isNotPassed">
+                                            <a-tooltip content="该用例未通过，但是未关联问题单，请关联">
+                                                <button :style="{ color: 'red' }">[×]</button>
+                                            </a-tooltip>
+                                        </template>
+                                        <template v-else>
+                                            <a-tooltip content="该用例未执行或已通过，未关联问题单">
+                                                <button>[>]</button>
+                                            </a-tooltip>
+                                        </template>
+                                    </template>
+                                </template>
                             </template>
                         </a-tree>
                     </div>
@@ -593,12 +611,32 @@ const roundColumn = ref([
                                 dataIndex: "beginTime",
                                 formType: "date",
                                 placeholder: "请选择时间",
-                                rules: [{ required: true, message: "开始时间必填" }]
+                                extra: "尽量大于项目开始时间13天，生成文档才符合要求",
+                                rules: [
+                                    { required: true, message: "开始时间必填" },
+                                    {
+                                        validator: (value, callback) => {
+                                            const projectBegin = route.query.beginTime
+                                            value <= projectBegin
+                                                ? callback(
+                                                      "不能早于项目开始时间，由于还有前期测试设计阶段，建议大于项目开始时间13天"
+                                                  )
+                                                : null
+                                        }
+                                    }
+                                ]
                             },
                             {
                                 title: "速度等级",
                                 dataIndex: "speedGrade",
                                 placeholder: "请填入速度等级"
+                            },
+                            {
+                                title: "动态地点",
+                                dataIndex: "location",
+                                placeholder: "请填入测试地点",
+                                extra: "该字段影响时间相关表格的地点",
+                                rules: [{ required: true, message: "测试地点是必填的" }]
                             }
                         ]
                     },
@@ -611,12 +649,36 @@ const roundColumn = ref([
                                 dataIndex: "endTime",
                                 formType: "date",
                                 placeholder: "请选择时间",
-                                rules: [{ required: true, message: "结束时间必填" }]
+                                extra: "该字段决定《测试记录》封面时间",
+                                rules: [
+                                    { required: true, message: "结束时间必填" },
+                                    {
+                                        validator(value, errorCallback) {
+                                            let start = maFormModalRef.value.form.beginTime
+                                            value < start ? errorCallback("结束时间不能小于开始时间") : null
+                                        }
+                                    }
+                                ]
                             },
                             {
                                 title: "封装",
                                 dataIndex: "package",
                                 placeholder: "请填入封装"
+                            },
+                            {
+                                title: "质量等级",
+                                dataIndex: "grade",
+                                formType: "select",
+                                dict: {
+                                    data: [
+                                        { label: "军级", value: "1" },
+                                        { label: "商业级", value: "2" },
+                                        { label: "宇航级", value: "3" },
+                                        { label: "工业级", value: "4" }
+                                    ]
+                                },
+                                placeholder: "请填入质量等级",
+                                rules: [{ required: true, message: "质量等级必填" }]
                             }
                         ]
                     }
@@ -624,21 +686,7 @@ const roundColumn = ref([
             }
         ]
     },
-    {
-        title: "质量等级",
-        dataIndex: "grade",
-        formType: "radio",
-        dict: {
-            data: [
-                { label: "军级", value: "1" },
-                { label: "商业级", value: "2" },
-                { label: "宇航级", value: "3" },
-                { label: "工业级", value: "4" }
-            ]
-        },
-        placeholder: "请填入质量等级",
-        rules: [{ required: true, message: "质量等级必填" }]
-    },
+
     {
         formType: "card",
         title: "极端工况信息",

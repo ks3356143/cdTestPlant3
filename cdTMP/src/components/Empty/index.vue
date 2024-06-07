@@ -21,6 +21,7 @@ const text = ref("暂无数据")
     color: #aaa;
     p {
         margin-top: 6px;
+        user-select: none;
     }
 }
 </style>

@@ -1,15 +1,15 @@
 <template>
-    <div>
-        <a-layout-footer class="flex items-center justify-center h-10 footer text-center"
-            >成都测试管理平台
-        </a-layout-footer>
-    </div>
+    <a-layout-footer class="flex items-center justify-center h-10 footer text-center">
+        <a-typography-title :heading="8"> 成都测试管理平台 </a-typography-title>
+    </a-layout-footer>
 </template>
 
 <script setup></script>
 
 <style lang="less" scoped>
 .footer {
+    border-top: 1px solid var(--color-border);
     color: var(--color-text-2);
+    background-color: var(--color-bg-2);
 }
 </style>

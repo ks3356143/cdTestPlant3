@@ -27,14 +27,14 @@
 
 <script setup lang="jsx">
 import { ref } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { useRoute } from "vue-router"
 import problemApi from "@/api/project/problem"
 import { useTreeDataStore } from "@/store"
 import ProblemChoose from "./components/ProblemChoose.vue"
 import { Message } from "@arco-design/web-vue"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
-const router = useRouter()
+// const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
@@ -59,6 +59,8 @@ const crudOptions = ref({
     edit: { show: true, api: problemApi.update },
     delete: { show: true, api: problemApi.delete },
     operationColumnAlign: "center", // 操作列居中
+    // 列表选项卡配置
+    tabs:{},
     beforeOpenAdd: function () {
         // 先判断是否已经有个问题单了，如果有则不让用户创建
         if (crudRef.value.getTableData().length >= 1) {
@@ -106,6 +108,7 @@ const crudOptions = ref({
     },
     showIndex: false,
     showTools: false,
+    operationColumnAlign:'center',
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,
     tablePagination: false,

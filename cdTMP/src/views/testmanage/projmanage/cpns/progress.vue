@@ -51,13 +51,14 @@ watch(
     () => props.visible,
     (newVal, oldVal) => {
         if (newVal) {
+            percent.value = 0
             timer = setInterval(() => {
                 if (percent.value <= 0.95) {
                     let temp = parseFloat(percent.value.toFixed(2))
                     temp += 0.01
                     percent.value = parseFloat(temp.toFixed(2))
                 }
-            }, 100)
+            }, 120)
         } else {
             // 进度条清零
             percent.value = 0

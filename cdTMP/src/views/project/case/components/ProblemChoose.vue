@@ -23,7 +23,14 @@
                 <template #ident="{ record }">
                     {{ "PT_" + route.query.ident + "_" + record.ident.padStart(3, "0") }}
                 </template>
+                <!-- table按钮后置插槽：这里用于提醒 -->
+                <template #tableAfterButtons>
+                    <a-alert banner class="alert">
+                        表格问题单右键可以查看<span :style="{ color: 'red', fontWeight: 700 }">关联用例信息</span>
+                    </a-alert>
+                </template>
             </ma-crud>
+            <case-modal ref="caseModalRef"></case-modal>
         </div>
     </a-modal>
 </template>
@@ -31,8 +38,10 @@
 <script setup lang="jsx">
 import { ref } from "vue"
 import problemApi from "@/api/project/problem"
-import { Message } from "@arco-design/web-vue"
+import problemSingleApi from "@/api/project/singleProblem"
+import { Message, Notification } from "@arco-design/web-vue"
 import { useRoute, useRouter } from "vue-router"
+import CaseModal from "./CaseModal.vue"
 const route = useRoute()
 // 定义props
 const props = defineProps({
@@ -79,6 +88,7 @@ const handleRelatedChange = async (record) => {
 // 数据定义
 const crudRef = ref()
 const visible = ref(false)
+const caseModalRef = ref()
 
 // 定义open事件
 const open = (row) => {
@@ -113,6 +123,25 @@ const crudOptions = ref({
     operationColumn: true,
     operationColumnAlign: "center", // 操作列居中
     isDbClickEdit: false, // 双击不编辑当前列
+    contextMenu: {
+        enabled: true,
+        items: [
+            {
+                operation: "scancase",
+                icon: "icon-list",
+                text: "查看关联用例",
+                onCommand: async (args) => {
+                    const hang = args.record.hang
+                    const problemId = args.record.id
+                    if (hang) {
+                        Notification.warning("该问题单未关联用例")
+                    }
+                    const res = await problemSingleApi.getRelativeCases({ id: problemId })
+                    caseModalRef.value.open(res.data)
+                }
+            }
+        ]
+    },
     bordered: { cell: true },
     formOption: {
         width: 1000,
@@ -437,5 +466,10 @@ const columns = ref([
 // 暴露自己的open方法
 defineExpose({ open })
 </script>
-
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.alert {
+    max-height: 32px;
+    background-color: transparent;
+    user-select: none;
+}
+</style>
