@@ -71,7 +71,8 @@ const crudOptions = ref({
     operationColumnAlign: "center",
     formOption: {
         viewType: "drawer",
-        width: 600
+        width: 600,
+        mask: false
     }
 })
 
@@ -118,7 +119,8 @@ const crudColumns = ref([
                     comment_line: { display: true },
                     total_code_line: { display: true },
                     total_line: { display: true },
-                    comment_percent: { display: true }
+                    comment_percent: { display: true },
+                    release_date: { display: false }
                 }
             } else {
                 // 其他数据清除
@@ -129,7 +131,8 @@ const crudColumns = ref([
                     comment_line: { display: false },
                     total_code_line: { display: false },
                     total_line: { display: false },
-                    comment_percent: { display: false }
+                    comment_percent: { display: false },
+                    release_date: { display: true }
                 }
             }
         }
@@ -140,7 +143,7 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "name",
         search: true,
-        commonRules: [{ required: true, message: "需求名称是必填" }],
+        commonRules: [{ required: true, message: "被测件名称必填" }],
         validateTrigger: "blur"
     },
     {
@@ -157,7 +160,8 @@ const crudColumns = ref([
         dataIndex: "ref",
         search: true,
         commonRules: [{ required: true, message: "用户标识或编号必填" }],
-        validateTrigger: "blur"
+        validateTrigger: "blur",
+        help: "客户使用的标识"
     },
     {
         title: "单位",
@@ -181,7 +185,8 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "black_line",
         formType: "input-number",
-        commonRules: [{ required: true, message: "空行数必填" }]
+        commonRules: [{ required: true, message: "空行数必填" }],
+        min: 0
     },
     {
         title: "纯代码行",
@@ -189,7 +194,8 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "code_line",
         formType: "input-number",
-        commonRules: [{ required: true, message: "纯代码行数必填" }]
+        commonRules: [{ required: true, message: "纯代码行数必填" }],
+        min: 0
     },
     {
         title: "纯注释行",
@@ -197,7 +203,8 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "comment_line",
         formType: "input-number",
-        commonRules: [{ required: true, message: "纯注释行数必填" }]
+        commonRules: [{ required: true, message: "纯注释行数必填" }],
+        min: 0
     },
     {
         title: "混合行",
@@ -205,7 +212,9 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "mix_line",
         formType: "input-number",
-        commonRules: [{ required: true, message: "混合行数必填" }]
+        help: "混合行是指：代码中一行即包含代码也包含注释",
+        commonRules: [{ required: true, message: "混合行数必填" }],
+        min: 0
     },
     {
         title: "注释率 %",
@@ -248,7 +257,7 @@ const crudColumns = ref([
                 )
             }
         },
-        // 注意这个是个创新点
+        // 字段交互控制
         control(value, data) {
             data.comment_percent = (
                 (parseFloat(data.comment_line) + parseFloat(data.mix_line)) /

@@ -98,10 +98,9 @@ const router = createRouter({
                         locale: "问题单详情",
                         icon: "icon-arrow-right"
                     }
-                },
+                }
             ]
         },
-
         // 后台管理的路由以及404和重定向路由
         ...appRoutes,
         REDIRECT_MAIN,

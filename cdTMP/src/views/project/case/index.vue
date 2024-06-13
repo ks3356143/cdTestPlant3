@@ -79,7 +79,7 @@ const crudOptions = ref({
         ${td[round_key].title} > ${td[round_key].children[dut_key].title} >
         ${td[round_key].children[dut_key].children[design_key].title} >
         ${td[round_key].children[dut_key].children[design_key].children[test_key].title} >
-        ${td[round_key].children[dut_key].children[design_key].children[test_key].children[case_key].title} > 用例-`
+        ${td[round_key].children[dut_key].children[design_key].children[test_key].children[case_key].title} > 问题单-`
         return true
     },
     beforeOpenEdit: function (record) {

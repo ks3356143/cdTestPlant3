@@ -5,13 +5,20 @@
         unmount-on-close
         @cancel="modal.cancel"
         :width="width"
+        draggable
         :on-before-cancel="modal.customCancel"
+        v-bind="$attrs"
     >
         <template #title>
             {{ prop.title }}
         </template>
         <slot name="body"></slot>
-        <ma-form ref="maFormRef" :columns="prop.column" v-model="form" :options="{ ...options, showButtons: false }" />
+        <ma-form
+            ref="maFormRef"
+            :columns="prop.column"
+            v-model="form"
+            :options="{ ...options, showButtons: false }"
+        ></ma-form>
     </a-modal>
 </template>
 
@@ -60,7 +67,7 @@ const modal = reactive({
         return prop.submit(form._rawValue)
     },
     customCancel() {
-        if(prop.customCancel){
+        if (prop.customCancel) {
             return prop.customCancel()
         }
         return true

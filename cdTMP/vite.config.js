@@ -25,7 +25,6 @@ export default ({ mode }) => {
             chunkSizeWarningLimit: 3000
             // assetsPublicPath: "./"
         },
-
         server: {
             host: "0.0.0.0",
             port: env.VITE_APP_PORT || process.env.port,

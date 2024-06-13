@@ -146,7 +146,9 @@ const paddingStyle = computed(() => {
         overflow-y: hidden;
     }
 }
-
+.work-area {
+    position: relative; // 注意这个是改变v-loading这些东西
+}
 .menu-wrapper {
     height: 100%;
     overflow: auto;

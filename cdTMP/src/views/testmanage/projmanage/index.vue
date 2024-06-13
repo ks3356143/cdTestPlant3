@@ -93,6 +93,7 @@
                         工作区
                     </a-button>
                     <a-link @click="previewRef.open(record)"><icon-eye />预览</a-link>
+                    <a-link @click="handleBoardClick(record)"><icon-dashboard />项目看板</a-link>
                 </template>
             </ma-crud>
         </div>
@@ -328,6 +329,15 @@ const createWtdItem = async (record) => {
 }
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// 1.跳转到项目看板页面
+const handleBoardClick = (record) => {
+    router.push({
+        name: "projBoard",
+        params: {
+            projectId: record.id
+        }
+    })
+}
 
 // CRUD-OPTIONS
 const crudRef = ref()
@@ -343,7 +353,7 @@ const crudOptions = ref({
     operationWidth: 500,
     showIndex: false,
     showTools: false,
-    operationColumnWidth: 220, // 操作列宽度
+    operationColumnWidth: 280, // 操作列宽度
     operationColumnAlign: "center", // 操作列对齐方式
     // 处理弹窗的title
     beforeOpenAdd: function () {
@@ -386,30 +396,27 @@ const crudOptions = ref({
                     { span: 12, formList: [{ dataIndex: "member" }] },
                     { span: 6, formList: [{ dataIndex: "soft_type" }] },
                     { span: 6, formList: [{ dataIndex: "devplant" }] },
-                    { span: 24, formList: [{ dataIndex: "abbreviation" }] },
-                    { span: 8, formList: [{ dataIndex: "quality_person" }] },
-                    { span: 8, formList: [{ dataIndex: "vise_person" }] },
-                    { span: 8, formList: [{ dataIndex: "config_person" }] }
+                    { span: 6, formList: [{ dataIndex: "abbreviation" }] },
+                    { span: 6, formList: [{ dataIndex: "quality_person" }] },
+                    { span: 6, formList: [{ dataIndex: "vise_person" }] },
+                    { span: 6, formList: [{ dataIndex: "config_person" }] }
                 ]
             },
             {
                 formType: "grid",
-                cols: [{ span: 24, formList: [{ dataIndex: "security_level" }] }]
-            },
-            {
-                formType: "grid",
                 cols: [
-                    { span: 12, formList: [{ dataIndex: "test_level" }] },
+                    { span: 6, formList: [{ dataIndex: "security_level" }] },
+                    { span: 6, formList: [{ dataIndex: "language" }] },
                     { span: 12, formList: [{ dataIndex: "plant_type" }] }
                 ]
             },
             {
                 formType: "grid",
-                cols: [{ span: 24, formList: [{ dataIndex: "report_type" }] }]
+                cols: [{ span: 24, formList: [{ dataIndex: "test_level" }] }]
             },
             {
                 formType: "grid",
-                cols: [{ span: 24, formList: [{ dataIndex: "language" }] }]
+                cols: [{ span: 24, formList: [{ dataIndex: "report_type" }] }]
             },
             {
                 formType: "grid",
@@ -484,6 +491,7 @@ const crudColumns = ref([
     },
     {
         title: "项目名称",
+        width: 110,
         dataIndex: "name",
         search: true,
         commonRules: [{ required: true, message: "名称是必填" }]
@@ -491,7 +499,7 @@ const crudColumns = ref([
     { title: "工程型号", dataIndex: "engin_model", hide: true },
     { title: "分系统", dataIndex: "section_system", hide: true },
     { title: "子系统", dataIndex: "sub_system", hide: true },
-    { title: "设备", dataIndex: "device", hide: true },
+    { title: "设备名称", dataIndex: "device", hide: true },
     {
         title: "开始日期",
         dataIndex: "beginTime",
@@ -502,7 +510,7 @@ const crudColumns = ref([
         title: "结束时间",
         dataIndex: "endTime",
         formType: "date",
-        extra: "注意：开始时间和结束时间影响大纲、报告多个时间，谨慎填写",
+        extra: "注意：结束时间需要晚于最后一轮结束时间",
         commonRules: [
             {
                 required: true,
@@ -626,7 +634,7 @@ const crudColumns = ref([
         title: "测试级别",
         dataIndex: "test_level",
         commonRules: [{ required: true, message: "请至少选择一个测试级别" }],
-        addDefaultValue: ["6"],
+        addDefaultValue: ["4"],
         hide: true,
         formType: "checkbox",
         dict: { name: "test_level", props: { label: "title", value: "key" } }
@@ -643,7 +651,7 @@ const crudColumns = ref([
     {
         title: "报告类型",
         dataIndex: "report_type",
-        addDefaultValue: "1",
+        addDefaultValue: "9",
         search: true,
         commonRules: [{ required: true, message: "报告类型必填" }],
         // 字典-report_type
@@ -656,16 +664,18 @@ const crudColumns = ref([
         addDefaultValue: ["1"],
         commonRules: [{ required: true, message: "请至少选择一个" }],
         hide: true,
-        formType: "checkbox",
+        formType: "select",
+        multiple: true,
         dict: { name: "language", props: { label: "title", value: "key" } }
     },
     {
         title: "依据标准",
         dataIndex: "standard",
-        addDefaultValue: ["1"],
+        addDefaultValue: ["1", "2", "3", "4", "9"],
         commonRules: [{ required: true, message: "请至少选择一个" }],
         hide: true,
-        formType: "checkbox",
+        multiple: true,
+        formType: "select",
         dict: { name: "standard", props: { label: "title", value: "key" } }
     },
     {
@@ -681,21 +691,27 @@ const crudColumns = ref([
         title: "联系人",
         dataIndex: "entrust_contact",
         hide: true,
-        rules: [{ required: true, message: "联系人必填" }]
+        commonRules: [{ required: true, message: "联系人必填" }]
     },
     {
         formType: "input",
         title: "联系电话",
+        maxLength: 11,
         dataIndex: "entrust_contact_phone",
         hide: true,
-        rules: [{ required: true, message: "联系电话必填" }]
+        commonRules: [
+            { required: true, message: "联系电话必填" },
+            {
+                match: /^1[3456789]\d{9}$/,
+                message: "电话号码格式错误"
+            }
+        ]
     },
     {
         formType: "input",
         title: "电子邮箱",
         dataIndex: "entrust_email",
-        hide: true,
-        rules: [{ required: true, message: "电子邮箱必填" }]
+        hide: true
     },
     {
         title: "单位",
@@ -710,21 +726,27 @@ const crudColumns = ref([
         title: "联系人",
         dataIndex: "dev_contact",
         hide: true,
-        rules: [{ required: true, message: "联系人必填" }]
+        commonRules: [{ required: true, message: "联系人必填" }]
     },
     {
         formType: "input",
         title: "联系电话",
+        maxLength: 11,
         dataIndex: "dev_contact_phone",
         hide: true,
-        rules: [{ required: true, message: "联系电话必填" }]
+        commonRules: [
+            { required: true, message: "联系电话必填" },
+            {
+                match: /^1[3456789]\d{9}$/,
+                message: "电话号码格式错误"
+            }
+        ]
     },
     {
         formType: "input",
         title: "电子邮箱",
         dataIndex: "dev_email",
-        hide: true,
-        rules: [{ required: true, message: "电子邮箱必填" }]
+        hide: true
     },
     {
         title: "单位",
@@ -739,21 +761,27 @@ const crudColumns = ref([
         title: "联系人",
         dataIndex: "test_contact",
         hide: true,
-        rules: [{ required: true, message: "联系人必填" }]
+        commonRules: [{ required: true, message: "联系人必填" }]
     },
     {
         formType: "input",
         title: "联系电话",
         dataIndex: "test_contact_phone",
         hide: true,
-        rules: [{ required: true, message: "联系电话必填" }]
+        maxLength: 11,
+        commonRules: [
+            { required: true, message: "联系电话必填" },
+            {
+                match: /^1[3456789]\d{9}$/,
+                message: "电话号码格式错误"
+            }
+        ]
     },
     {
         formType: "input",
         title: "电子邮箱",
         dataIndex: "test_email",
-        hide: true,
-        rules: [{ required: true, message: "电子邮箱必填" }]
+        hide: true
     },
     {
         title: "状态",

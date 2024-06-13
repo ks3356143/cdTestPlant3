@@ -71,4 +71,17 @@ export default {
             }
         })
     },
+    /**
+     * 根据项目id查询项目->看板的所有信息
+     * @returns 返回看板所有信息
+     */
+    getBoardInfo(projectId) {
+        return request({
+            url: `/testmanage/project/board`,
+            method: "get",
+            params: {
+                id: projectId
+            }
+        })
+    }
 }

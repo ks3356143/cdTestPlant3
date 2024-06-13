@@ -24,7 +24,8 @@ app.use(ArcoVueIcon)
 app.use(router)
 app.use(pinia)
 app.use(globalComponents)
-// app.use(directive)
+import directives from "@/directives"
+app.use(directives)
 
 // 注册ma-icon图标
 const modules = import.meta.glob("./assets/ma-icons/*.vue", { eager: true })

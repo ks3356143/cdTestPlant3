@@ -60,7 +60,8 @@ const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     searchColNumber: 4,
     tablePagination: false,
-    operationColumn: true
+    operationColumn: true,
+    showTools:false,
 })
 
 const crudColumns = ref([

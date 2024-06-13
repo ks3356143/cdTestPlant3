@@ -2,7 +2,13 @@
     <!-- 描述列表组件 -->
     <a-modal width="1000px" v-model:visible="visible" :footer="false">
         <template #title>项目名称：{{ previewRecord.name }}</template>
-        <ma-info :columns="props.columns" :data="previewRecord" :column="1" size="mini"></ma-info>
+        <ma-info
+            class="my-custom-class"
+            :columns="props.columns"
+            :data="previewRecord"
+            :column="1"
+            size="mini"
+        ></ma-info>
     </a-modal>
 </template>
 
@@ -26,4 +32,13 @@ defineExpose({ open })
 // MA-INFO的columns
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.my-custom-class {
+    :deep(.arco-space-horizontal) {
+        flex-wrap: wrap;
+    }
+    :deep(.arco-space-item){
+        margin-bottom: 2px;
+    }
+}
+</style>

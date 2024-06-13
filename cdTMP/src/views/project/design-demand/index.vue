@@ -249,11 +249,12 @@ const crudColumns = ref([
         align: "center",
         formType: "select",
         sortable: { sortDirections: ["ascend", "descend"] },
-        addDefaultValue: "3",
+        addDefaultValue: "4",
         maxLength: 200,
         commonRules: [{ required: true, message: "测试类型必选" }],
         dict: { name: "testType", translation: true, props: { label: "title", value: "key" } },
         extra: "请保证测试类型选择正确",
+        // 这是arco的属性，所以在ma-crud和ma-form可以直接使用arco属性和事件（事件+onXXX）
         filterOption: function (inputValue, selectedOption) {
             if (inputValue) {
                 let matchRes = PinYinMatch.match(selectedOption.label, inputValue)
@@ -261,7 +262,7 @@ const crudColumns = ref([
                     return true
                 }
             }
-        }
+        },
     },
     {
         title: "测试手段",
@@ -299,7 +300,9 @@ const crudColumns = ref([
                     const subItemFormData = crudRef.value.getFormData().testContent
                     // 取出充分性条件字段字符串
                     const mapRes = subItemFormData.map((subItem) => subItem.subName)
-                    crudRef.value.getFormData().adequacy = `测试用例覆盖${mapRes.join('、')}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
+                    crudRef.value.getFormData().adequacy = `测试用例覆盖${mapRes.join(
+                        "、"
+                    )}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
                 }
             },
             {

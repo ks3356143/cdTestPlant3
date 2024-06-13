@@ -130,17 +130,17 @@ const crudColumns = ref([
         width: 120,
         dataIndex: "ident",
         search: true,
-        commonRules: [{ required: true, message: "标识是必填" }],
         validateTrigger: "blur",
-        placeholder: "请输入文档中设计需求的标识"
+        placeholder: "请输入文档中设计需求的标识",
+        help:'若不知道则填"无"或不填'
     },
     {
-        title: "需求名称",
+        title: "设需名称",
         align: "center",
         width: 150,
         dataIndex: "name",
         search: true,
-        commonRules: [{ required: true, message: "需求名称是必填" }],
+        commonRules: [{ required: true, message: "设计需求名称是必填" }],
         validateTrigger: "blur"
     },
     {
@@ -148,7 +148,8 @@ const crudColumns = ref([
         align: "center",
         width: 150,
         dataIndex: "chapter",
-        search: true
+        search: true,
+        help:'若为隐含需求则填"/"'
     },
     {
         title: "需求类型",

@@ -2,7 +2,7 @@
     <a-modal v-model:visible="visible" fullscreen :footer="false">
         <template #title>维护数据字典 →【{{ currentRow.name }}】</template>
         <!-- crud组件 -->
-        <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
+        <div class="lg:w-full w-full lg:mt-0">
             <ma-crud :options="crudOptions" :columns="columns" ref="crudRef">
                 <!-- 排序列 -->
                 <template #sort="{ record }">
@@ -93,6 +93,7 @@ const crudOptions = ref({
     operationColumn: true,
     operationWidth: 160,
     operationColumnAlign: "center",
+    showTools: false,
     beforeAdd: (form) => {
         form.id = currentRow.value?.id
     },
@@ -183,7 +184,7 @@ const columns = ref([
         dataIndex: "source",
         align: "center",
         search: false,
-        placeholder: "如果不是标准则不填",
+        placeholder: "如果不是标准则不填"
     }
 ])
 

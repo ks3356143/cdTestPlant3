@@ -134,7 +134,8 @@
         :options="roundOption"
         width="800px"
         :submit="handleRoundSubmit"
-    ></ma-form-modal>
+    >
+    </ma-form-modal>
     <!-- 如果没有第一轮的SO_dut则弹窗 -->
     <ma-form-modal
         ref="soDutFormRef"
@@ -143,7 +144,12 @@
         width="800px"
         :submit="handleSoDutSubmit"
         :custom-cancel="handleSoDutCancel"
-    ></ma-form-modal>
+        cancelText="返回项目页面"
+        :cancel-button-props="{ status: 'warning' }"
+        :closable="false"
+        :mask-closable="false"
+    >
+    </ma-form-modal>
     <Progress
         :visible="visible"
         :isComplete="isComplete"
@@ -158,15 +164,6 @@
         alignPoint
         :style="{ display: 'block' }"
     >
-        <div
-            :style="{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '300px',
-                backgroundColor: 'var(--color-fill-2)'
-            }"
-        ></div>
         <template #content>
             <a-dgroup title="执行操作">
                 <a-doption @click="handleDoptionClickGreateCases">
@@ -369,8 +366,8 @@ const handleSoDutSubmit = async (data) => {
 }
 // ~~~~定义弹出a-form-modal的cancel方法-返回false则无法关闭弹窗~~~~
 const handleSoDutCancel = () => {
-    Notification.error("必须按要求添加源代码信息，无法关闭!")
-    return false
+    Notification.error("必须按要求添加源代码信息，返回项目列表页面!")
+    router.replace({ name: "Projmanage" })
 }
 // 初始化树状数据
 // so_dut弹窗ref对象
@@ -686,7 +683,6 @@ const roundColumn = ref([
             }
         ]
     },
-
     {
         formType: "card",
         title: "极端工况信息",
@@ -775,7 +771,9 @@ const soDutColumn = ref([
     {
         title: "用户标识",
         dataIndex: "userRef",
-        placeholder: "请输入用户标识"
+        placeholder: "请输入用户标识",
+        help: "客户使用的标识",
+        rules: [{ required: true, message: "用户标识为客户的标识，必填，可随意填写后面再修改" }]
     },
     {
         title: "单位",
@@ -866,7 +864,7 @@ const handleProblemShowClick = () => {
 const handleDoptionClickGreateCases = async () => {
     // 将project_id加入参数
     rightClickNode.project_id = projectId.value
-    const res = await caseApi.createByDemand(rightClickNode)
+    await caseApi.createByDemand(rightClickNode)
     routeViewRef.value.refresh()
 }
 /// 复制modal级联选择器的选项
