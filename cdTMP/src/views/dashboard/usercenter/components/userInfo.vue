@@ -34,7 +34,7 @@ const userInfo = reactive({
 
 const modifyInfo = async (data) => {
     // 注意要用values
-    console.log(data.values);
-    Message.success("模拟请求成功，后续写接口")
+    console.log(data.values)
+    Message.error("由于采用LDAP登录无法修改!")
 }
 </script>

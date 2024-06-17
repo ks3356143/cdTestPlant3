@@ -1,12 +1,38 @@
 <template>
     <div class="ma-content-block p-3 mt-3 bg-white">
-        <ma-chart height="300px" :option="loginChartOptions" />
+        <a-spin class="chartContainer" :loading="isDataLoading" tip="图标数据加载中...">
+            <ma-chart height="300px" :option="loginChartOptions" v-if="!isDataLoading" />
+        </a-spin>
     </div>
 </template>
 
 <script setup>
-import { nextTick, onMounted, ref } from "vue"
+import { computed, ref } from "vue"
 import { graphic } from "echarts"
+import fetchData from "@/hooks/fetchData"
+import commonApi from "@/api/common"
+// 传给hook的远程请求数据函数
+async function fetchDataFunc() {
+    return await commonApi.getChartData()
+}
+const { loadingData, isDataLoading } = fetchData(
+    [
+        { month: "1", count: 2 },
+        { month: "2", count: 10 }
+    ],
+    fetchDataFunc
+)
+// 计算属性：将loadingData转为xAxis
+const xAxisData = computed(() => {
+    return loadingData.value.map((item) => {
+        return item.month + "月"
+    })
+})
+const yAxisData = computed(() => {
+    return loadingData.value.map((item) => {
+        return item.count
+    })
+})
 
 function graphicFactory(side) {
     return {
@@ -22,38 +48,26 @@ function graphicFactory(side) {
     }
 }
 
-const xAxis = ref([
-    "2022-07-06",
-    "2022-07-07",
-    "2022-07-08",
-    "2022-07-09",
-    "2022-07-10",
-    "2022-07-11",
-    "2022-07-12",
-    "2022-07-13",
-    "2022-07-14",
-    "2022-07-15"
-])
-const chartsData = ref([32, 56, 61, 89, 12, 33, 56, 92, 180, 25])
-const graphicElements = ref([graphicFactory({ left: "2.6%" }), graphicFactory({ right: 0 })])
+const graphicElements = ref([graphicFactory({ left: "3%" }), graphicFactory({ right: 0 })])
 
-const loginChartOptions = ref({
+const loginChartOptions = computed(() => ({
+    title: {
+        text: `项目每月统计-${new Date().getFullYear()}年份`
+    },
     grid: {
-        left: "2.6%",
-        right: "0",
-        top: "10",
+        left: "3%",
+        right: "3%",
+        top: "50",
         bottom: "30"
     },
     xAxis: {
         type: "category",
         offset: 2,
-        data: xAxis.value,
-        boundaryGap: false,
+        data: xAxisData.value,
+        boundaryGap: true,
         axisLabel: {
             color: "#4E5969",
             formatter(value, idx) {
-                if (idx === 0) return ""
-                if (idx === xAxis.value.length - 1) return ""
                 return `${value}`
             }
         },
@@ -66,8 +80,7 @@ const loginChartOptions = ref({
         splitLine: {
             show: true,
             interval: (idx) => {
-                if (idx === 0) return false
-                if (idx === xAxis.value.length - 1) return false
+                if (idx === xAxisData.value.length - 1) return false
                 return true
             },
             lineStyle: {
@@ -117,10 +130,10 @@ const loginChartOptions = ref({
     },
     series: [
         {
-            data: chartsData.value,
+            data: yAxisData.value,
             type: "line",
             smooth: true,
-            symbolSize: 12,
+            symbolSize: 14,
             emphasis: {
                 focus: "series",
                 itemStyle: {
@@ -160,5 +173,12 @@ const loginChartOptions = ref({
             }
         }
     ]
-})
+}))
 </script>
+
+<style lang="less" scoped>
+.chartContainer {
+    width: 100%;
+    height: 300px;
+}
+</style>

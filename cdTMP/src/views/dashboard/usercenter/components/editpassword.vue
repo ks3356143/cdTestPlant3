@@ -69,7 +69,7 @@ const modifyPassword = async (data) => {
             Message.error("确认密码与新密码不一致")
             return
         }
-        Message.success("修改密码成功！")
+        Message.error("由于采用LDAP认证，请联系内网管理员修改!")
         // const response = await user.modifyPassword(data.values)
         // if (response.success) {
         //     tool.local.clear()

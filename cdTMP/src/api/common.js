@@ -20,5 +20,14 @@ export default {
             url: "system/dataDict/list?code=" + code,
             method: "get"
         })
+    },
+    /**
+     * 获取项目一年内每月统计数据
+     */
+    getChartData() {
+        return request({
+            url: "system/statistics/chart",
+            method: "get"
+        })
     }
 }

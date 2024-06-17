@@ -9,7 +9,6 @@
                 <a-link @click="viewDetail(record)">{{ record.title }}</a-link>
             </template>
         </a-table>
-
         <a-modal v-model:visible="detailVisible" fullscreen :footer="false">
             <template #title>公告详情</template>
             <a-typography :style="{ marginTop: '-30px' }">
