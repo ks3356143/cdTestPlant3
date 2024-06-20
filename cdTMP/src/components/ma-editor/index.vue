@@ -142,7 +142,6 @@ const initConfig = reactive({
             cleanStyles(element)
             removeUnwantedSpansAndMore(element)
             removeCommentNodes(element)
-            console.log(element)
         })
         // 将处理后的fragment转换回HTML字符串
         args.content = doc.body.innerHTML

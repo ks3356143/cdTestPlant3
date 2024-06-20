@@ -3,7 +3,7 @@
         <template v-if="!Component">
             <Empty class="full-empty" />
         </template>
-        <transition name="ma-fade" mode="out-in" appear>
+        <transition name="ma-slide-down" mode="out-in" appear>
             <!-- 这里主要在路由定义是否缓存页面 -->
             <component :is="Component" v-if="route.meta.ignoreCache" :key="route.fullPath" />
             <keep-alive v-else :include="cacheList">

@@ -8,7 +8,8 @@ const DATAMANAGE = {
         requiresAuth: true,
         icon: "icon-storage",
         order: 99,
-        locale: "数据管理"
+        locale: "数据管理",
+        title: "数据管理"
     },
     children: [
         {
@@ -19,7 +20,8 @@ const DATAMANAGE = {
                 requiresAuth: true,
                 roles: ["*"],
                 locale: "字典管理",
-                icon: "icon-book"
+                icon: "icon-book",
+                title: "字典管理"
             }
         },
         {
@@ -30,7 +32,8 @@ const DATAMANAGE = {
                 requiresAuth: true,
                 roles: ["*"],
                 locale: "项目联系信息",
-                icon: "icon-phone"
+                icon: "icon-phone",
+                title: "项目联系信息"
             }
         },
         {
@@ -41,7 +44,8 @@ const DATAMANAGE = {
                 requiresAuth: true,
                 roles: ["*"],
                 locale: "缩略语",
-                icon: "icon-scissor"
+                icon: "icon-scissor",
+                title: "缩略语"
             }
         }
     ]

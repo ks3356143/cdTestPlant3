@@ -8,7 +8,8 @@ const DASHBOARD = {
         requiresAuth: true,
         icon: "icon-home",
         order: 99,
-        locale: "首页"
+        locale: "首页",
+        title: "首页"
     },
     children: [
         {
@@ -19,7 +20,8 @@ const DASHBOARD = {
                 requiresAuth: true,
                 roles: ["*"],
                 locale: "工作台",
-                icon: "icon-dashboard"
+                icon: "icon-dashboard",
+                title: "工作台"
             }
         },
         {
@@ -30,7 +32,8 @@ const DASHBOARD = {
                 requiresAuth: true,
                 roles: ["*"],
                 locale: "用户中心",
-                icon: "icon-user"
+                icon: "icon-user",
+                title: "用户中心"
             }
         },
         {
@@ -41,9 +44,10 @@ const DASHBOARD = {
                 requiresAuth: true,
                 roles: ["*"],
                 locale: "用户管理",
-                icon: "icon-user-group"
+                icon: "icon-user-group",
+                title: "用户管理"
             }
-        },
+        }
     ]
 }
 

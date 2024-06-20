@@ -42,4 +42,4 @@ app.config.globalProperties.$url = import.meta.env.VITE_APP_BASE
 app.mount("#app")
 
 // 无用的东西：下面就打印一个东西
-tool.capsule("ChengduTestManagePlant", `v${packageJson.version} debug`)
+tool.capsule("TestManagePlant", `v${packageJson.version} debug`)

@@ -4,7 +4,7 @@
             <!-- crud组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #create_datetime="{ record }">
-                    {{ record.create_datetime.replace("T", " ") }}
+                    {{ record.create_datetime.split(".")[0].replace("T", " ") }}
                 </template>
                 <template #tableBeforeButtons>
                     <a-button type="primary" status="warning" @click="handleDeleteLogButton"
@@ -29,9 +29,9 @@ const crudOptions = reactive({
     api: operationApi.getOperationsLogs,
     showIndex: false,
     pageLayout: "fixed",
-    rowSelection: { showCheckedAll: true },
     showTools: false,
-    tablePagination: false
+    tablePagination: false,
+    bordered: { wrapper: true, cell: true }
 })
 const crudColumns = reactive([
     { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },

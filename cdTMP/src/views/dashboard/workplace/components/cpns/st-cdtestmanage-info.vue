@@ -23,7 +23,7 @@
                 </a>
             </a-card>
             <div class="mt-2">管理平台版本</div>
-            <a-tag class="mt-2" color="#0fc6c2">cdTestPlant V0.0.1</a-tag>
+            <a-tag class="mt-2" color="#0fc6c2">TestManagePlant V0.0.1</a-tag>
         </div>
     </div>
 </template>

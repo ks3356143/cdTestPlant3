@@ -123,5 +123,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 改变用户启用/停用状态
+     * @returns
+     */
+    changeUserStatus(params = {}) {
+        return request({
+            url: "system/user/change_status",
+            method: "get",
+            params
+        })
     }
 }

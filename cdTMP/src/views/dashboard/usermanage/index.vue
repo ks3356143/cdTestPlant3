@@ -22,9 +22,11 @@ import userApi from "@/api/system/user"
 import user from "@/api/system/user"
 import { Message } from "@arco-design/web-vue"
 // 切换状态按钮
-const changeStatus = (e, id) => {
-    console.log("当前值：", e)
-    console.log("当前ID：", id)
+const changeStatus = async (e, id) => {
+    const res = await userApi.changeUserStatus({ user_status: e, userId: id })
+    if (res.data) {
+        Message.success(res.data === "1" ? "启用成功" : "禁用成功")
+    }
 }
 // crud组件
 const crudRef = ref()
@@ -67,6 +69,7 @@ const crudOptions = reactive({
         viewType: "modal"
         // isFull: true
     },
+    operationColumnAlign: "center",
     // 用户点击编辑/删除前的hook
     beforeOpenEdit: (record) => {
         if (record.id === 1) {
@@ -93,7 +96,7 @@ const crudColumns = reactive([
         width: 80,
         commonRules: [{ required: true, message: "名称必填" }]
     },
-    { title: "用户名", dataIndex: "username", search: true },
+    { title: "用户名", dataIndex: "username", search: true, align: "center" },
     {
         title: "电话",
         align: "center",

@@ -25,11 +25,12 @@ const crudOptions = ref({
     showIndex: false,
     searchColNumber: 3,
     tablePagination: false,
-    rowSelection: { showCheckedAll: true }
+    rowSelection: { showCheckedAll: true },
+    showTools: false
 })
 const crudColumns = ref([
     { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },
-    { title: "公司编号", align: "center", dataIndex: "key", search: true, width: 220 },
+    { title: "公司编号", align: "center", dataIndex: "key", search: true, width: 220, formType: "input-number" },
     {
         title: "名称",
         align: "center",
@@ -47,11 +48,11 @@ const crudColumns = ref([
         commonRules: [{ required: true, message: "法人必填" }]
     },
     {
-        title:'地址',
-        align:'center',
-        dataIndex:'addr',
-        search:true,
-        width:200,
+        title: "地址",
+        align: "center",
+        dataIndex: "addr",
+        search: true,
+        width: 200,
         commonRules: [{ required: true, message: "公司地址必填" }]
     }
 ])

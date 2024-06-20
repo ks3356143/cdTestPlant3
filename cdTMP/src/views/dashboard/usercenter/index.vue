@@ -1,13 +1,11 @@
 <template>
     <div class="block">
         <div class="user-header rounded-sm text-center">
-            <div class="pt-3 mx-auto avatar-box">
-                <ma-upload rounded></ma-upload>
+            <div class="pt-6 mx-auto avatar-box top-box">
+                {{ userStore.name }}
             </div>
             <div>
-                <a-tag size="large" class="mt-3 rounded-full" color="#de53ff">
-                    {{ userStore.role }}
-                </a-tag>
+                <a-tag size="large" class="mt-3 rounded-full" color="#de53ff"> 账号：{{ userStore.username }} </a-tag>
             </div>
         </div>
         <a-layout-content class="block lg:flex lg:justify-between">
@@ -41,9 +39,10 @@
                                 v-for="(item, idx) in operationLogList"
                                 :key="idx"
                             >
-                                您于 {{ item.create_datetime }} 请求了 {{ item.request_path }}，状态码：{{
-                                    item.response_code
-                                }}
+                                您于 {{ item.create_datetime }} 请求了 {{ item.request_path }}，<span
+                                    :class="{ nostatus: item.response_code === '200' ? false : true }"
+                                    >状态码：{{ item.response_code }}</span
+                                >
                             </a-timeline-item>
                         </a-timeline>
                     </a-tab-pane>
@@ -91,8 +90,14 @@ const operationLogList = computed(() => {
 }
 .user-header {
     width: 100%;
-    height: 200px;
+    height: 150px;
     background: url("@/assets/userBanner.jpg") no-repeat;
     background-size: cover;
+}
+.nostatus {
+    color: red;
+}
+.top-box {
+    font-size: 2rem;
 }
 </style>
