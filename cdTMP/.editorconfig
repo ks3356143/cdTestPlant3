@@ -1,4 +1,3 @@
-# http://editorconfig.org
 root = true # 当前配置在项目根
 
 [*] # 表示所有文件适用

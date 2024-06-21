@@ -35,6 +35,6 @@ defineExpose({ refresh })
 
 <style lang="less" scoped>
 .full-empty {
-    width: 79vw;
+    width: 100%;
 }
 </style>

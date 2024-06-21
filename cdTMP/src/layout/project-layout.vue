@@ -119,7 +119,7 @@
                         </a-tree>
                     </div>
                 </a-layout-sider>
-                <a-layout class="layout-content myhcalc">
+                <a-layout class="layout-content myhcalc my-custom">
                     <a-layout-content class="work-area project-layout">
                         <PageLayout ref="routeViewRef" />
                     </a-layout-content>
@@ -326,7 +326,7 @@ const handleSearchTreeDataClick = () => {
     const loop = (itemdata) => {
         const result = []
         itemdata.forEach((item) => {
-            if (item.title.indexOf(searchKey.value) > -1) {
+            if (item.title.indexOf(searchKey.value.replace(" ", "")) > -1) {
                 result.push({ ...item })
             } else if (item.children) {
                 const filterdata = loop(item.children)
@@ -640,7 +640,7 @@ const roundColumn = ref([
                     {
                         span: 12,
                         formList: [
-                            { title: "名称", dataIndex: "name" },
+                            { title: "名称", dataIndex: "name", rules: [{ required: true, message: "名称必填" }] },
                             {
                                 title: "结束时间",
                                 dataIndex: "endTime",
@@ -782,12 +782,6 @@ const soDutColumn = ref([
         formType: "select",
         dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true },
         rules: [{ required: true, message: "单位必选" }]
-    },
-    {
-        title: "发布时间",
-        dataIndex: "date",
-        rules: [{ required: true, message: "时间必填" }],
-        formType: "date"
     },
     {
         title: "空行",
@@ -1102,6 +1096,10 @@ const problemRoundRef = ref(null)
 }
 .myhcalc {
     height: calc(100% - 60px);
+}
+// 这里容易出错注意
+.my-custom {
+    width: calc(100% - 300px);
 }
 .my-arco-wrap-class :deep(.arco-tree-node-title-text) {
     white-space: nowrap;
