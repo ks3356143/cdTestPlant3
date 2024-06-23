@@ -313,41 +313,35 @@ const crudColumns = ref([
         search: true,
         dataIndex: "operation",
         formType: "editor",
-        addDefaultValue: ""
     },
     {
         title: "问题影响",
         hide: true,
         dataIndex: "result",
-        formType: "editor",
-        addDefaultValue: ""
+        formType: "textarea",
     },
     {
         title: "原因分析",
         hide: true,
         dataIndex: "analysis",
-        formType: "editor",
-        addDefaultValue: ""
+        formType: "textarea",
     },
     {
         title: "影响域分析",
         hide: true,
         dataIndex: "effect_scope",
-        formType: "editor",
-        addDefaultValue: ""
+        formType: "textarea",
     },
     {
         title: "改正措施",
         hide: true,
         dataIndex: "solve",
-        addDefaultValue: "",
         formType: "textarea"
     },
     {
         title: "回归结果",
         hide: true,
         dataIndex: "verify_result",
-        addDefaultValue: "",
         formType: "editor"
     },
     {

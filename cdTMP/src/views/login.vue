@@ -18,9 +18,12 @@
                     <a-form-item
                         field="username"
                         :hide-label="true"
-                        :rules="[{ required: true, message: '用户名不能为空' }]"
+                        :rules="[
+                            { required: true, message: '用户名不能为空' },
+                            { maxLength: 30, message: '用户名不能超过30个字符' }
+                        ]"
                     >
-                        <a-input v-model="form.username" class="w-full" size="large" placeholder="用户名" allow-clear>
+                        <a-input v-model="form.username" class="w-full" size="large" placeholder="用户名" allow-clear :max-length="30">
                             <template #prefix><icon-user /></template>
                         </a-input>
                     </a-form-item>
@@ -28,9 +31,12 @@
                     <a-form-item
                         field="password"
                         :hide-label="true"
-                        :rules="[{ required: true, message: '密码不能为空' }]"
+                        :rules="[
+                            { required: true, message: '密码不能为空' },
+                            { maxLength: 30, message: '密码不超过30字符' }
+                        ]"
                     >
-                        <a-input-password v-model="form.password" placeholder="请输入密码" size="large" allow-clear>
+                        <a-input-password v-model="form.password" placeholder="请输入密码" size="large" allow-clear :max-length="30">
                             <template #prefix><icon-lock /></template>
                         </a-input-password>
                     </a-form-item>
@@ -46,7 +52,7 @@
                             }
                         ]"
                     >
-                        <a-input v-model="form.code" placeholder="请输入验证码" size="large" allow-clear>
+                        <a-input v-model="form.code" placeholder="请输入验证码" size="large" allow-clear :max-length="4">
                             <template #prefix><icon-safe /></template>
                             <template #append>
                                 <verify-code ref="Verify" />
@@ -83,8 +89,8 @@ const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 // 绑定登录form的数据
-// const form = reactive({ username: "superAdmin", password: "admin123", code: "" })
-const form = reactive({ username: "", password: "", code: "" })
+const form = reactive({ username: "superAdmin", password: "admin123", code: "" })
+// const form = reactive({ username: "", password: "", code: "" })
 // 获取验证码dom && arco表单loading
 const Verify = ref(null)
 const loading = ref(null)
