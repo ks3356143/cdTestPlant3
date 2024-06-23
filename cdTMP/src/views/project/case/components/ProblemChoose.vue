@@ -353,7 +353,7 @@ const columns = ref([
         title: "问题影响",
         hide: true,
         dataIndex: "result",
-        formType: "editor",
+        formType: "textarea",
     },
     {
         title: "原因分析",
@@ -365,7 +365,7 @@ const columns = ref([
         title: "影响域分析",
         hide: true,
         dataIndex: "effect_scope",
-        formType: "editor",
+        formType: "textarea",
     },
     {
         title: "改正措施",
