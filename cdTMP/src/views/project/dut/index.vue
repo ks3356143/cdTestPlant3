@@ -132,7 +132,7 @@ const crudColumns = ref([
         search: true,
         validateTrigger: "blur",
         placeholder: "请输入文档中设计需求的标识",
-        help:'若不知道则填"无"或不填'
+        help: '若不知道则填"无"或不填'
     },
     {
         title: "设需名称",
@@ -149,7 +149,7 @@ const crudColumns = ref([
         width: 150,
         dataIndex: "chapter",
         search: true,
-        help:'若为隐含需求则填"/"'
+        help: '若为隐含需求则填"/"'
     },
     {
         title: "需求类型",
@@ -161,7 +161,62 @@ const crudColumns = ref([
         search: true,
         dict: { name: "demandType", props: { label: "title", value: "key" }, translation: true },
         commonRules: [{ required: true, message: "需求类型是必填" }],
-        validateTrigger: "blur"
+        validateTrigger: "blur",
+        // 主要为了添加“接口”的4个字段
+        control: (value) => {
+            if (value === "3") {
+                return {
+                    source: { display: true },
+                    to: { display: true },
+                    type: { display: true },
+                    protocal: { display: true }
+                }
+            } else {
+                return {
+                    source: { display: false },
+                    to: { display: false },
+                    type: { display: false },
+                    protocal: { display: false }
+                }
+            }
+        }
+    },
+    {
+        formType: "grid-tailwind",
+        customClass: [],
+        colNumber: 2,
+        cols: [
+            {
+                formList: [
+                    {
+                        title: "接口来源",
+                        dataIndex: "source",
+                        hide: true,
+                        extra: "接口独有四个字段，决定大纲的接口列表信息"
+                    },
+                    {
+                        title: "目的地",
+                        dataIndex: "to",
+                        hide: true
+                    }
+                ]
+            },
+            {
+                formList: [
+                    {
+                        title: "接口类型",
+                        dataIndex: "type",
+                        hide: true,
+                        extra: "接口类型例如：网络"
+                    },
+                    {
+                        title: "接口协议",
+                        dataIndex: "protocal",
+                        hide: true
+                    }
+                ]
+            }
+        ]
     },
     {
         title: "需求描述",

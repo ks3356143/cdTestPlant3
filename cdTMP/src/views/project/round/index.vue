@@ -110,7 +110,7 @@ const crudColumns = ref([
             translation: true,
             tagColors: { XQ: "blue", SO: "green", SJ: "orangered", XY: "pinkpurple", YZ: "red" }
         },
-        control: (value, data) => {
+        control: (value) => {
             if (value === "SO") {
                 return {
                     black_line: { display: true },
