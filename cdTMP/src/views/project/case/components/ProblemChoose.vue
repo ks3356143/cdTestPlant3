@@ -42,7 +42,9 @@ import problemSingleApi from "@/api/project/singleProblem"
 import { Message, Notification } from "@arco-design/web-vue"
 import { useRoute, useRouter } from "vue-router"
 import CaseModal from "./CaseModal.vue"
+import useTreeStore from "@/store/project/treeData"
 const route = useRoute()
+const treeStore = useTreeStore()
 // 定义props
 const props = defineProps({
     hasRelated: {
@@ -82,6 +84,8 @@ const handleRelatedChange = async (record) => {
         }
     }
     loading.value = false
+    // 更新树状目录中，case显示“<”“@”“X”的更新
+    treeStore.updateCaseTreeData(res.data, route.query.id)
     emits("relatedOrunrelated")
 }
 
@@ -347,25 +351,25 @@ const columns = ref([
         hide: true,
         search: true,
         dataIndex: "operation",
-        formType: "editor",
+        formType: "editor"
     },
     {
         title: "问题影响",
         hide: true,
         dataIndex: "result",
-        formType: "textarea",
+        formType: "textarea"
     },
     {
         title: "原因分析",
         hide: true,
         dataIndex: "analysis",
-        formType: "editor",
+        formType: "editor"
     },
     {
         title: "影响域分析",
         hide: true,
         dataIndex: "effect_scope",
-        formType: "textarea",
+        formType: "textarea"
     },
     {
         title: "改正措施",
