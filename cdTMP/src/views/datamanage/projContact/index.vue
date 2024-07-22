@@ -30,21 +30,28 @@ const crudOptions = ref({
 })
 const crudColumns = ref([
     { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },
-    { title: "公司编号", align: "center", dataIndex: "key", search: true, width: 220, formType: "input-number" },
+    { title: "公司编号", align: "center", dataIndex: "key", search: true, width: 70, formType: "input-number" },
     {
         title: "名称",
         align: "center",
         dataIndex: "name",
         search: true,
-        width: 220,
+        width: 150,
         commonRules: [{ required: true, message: "名称必填" }]
+    },
+    {
+        title: "简称",
+        align: "center",
+        dataIndex: "refer_name",
+        search: true,
+        commonRules: [{ required: true, message: "简称必填" }]
     },
     {
         title: "法人",
         align: "center",
         dataIndex: "entrust_person",
         search: true,
-        width: 220,
+        width: 90,
         commonRules: [{ required: true, message: "法人必填" }]
     },
     {
@@ -52,7 +59,7 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "addr",
         search: true,
-        width: 200,
+        width: 150,
         commonRules: [{ required: true, message: "公司地址必填" }]
     }
 ])

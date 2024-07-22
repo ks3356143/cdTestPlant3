@@ -15,6 +15,8 @@
                         关联测试项
                     </a-button>
                 </template>
+                <!-- 版本字段的插槽 -->
+                <template #inputPrepend-ident> XQ_XX_ </template>
             </ma-crud>
         </div>
         <!-- 关联的modal组件 -->
@@ -41,7 +43,7 @@
 
 <script setup>
 import { ref, computed } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { useRoute } from "vue-router"
 import testDemandApi from "@/api/project/testDemand"
 import { useTreeDataStore } from "@/store"
 import commonApi from "@/api/common"
@@ -50,7 +52,6 @@ import { Message } from "@arco-design/web-vue"
 
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
-const router = useRouter()
 const crudRef = ref()
 // 根据传参获取key，分别为轮次、设计需求的key
 const roundNumber = route.query.key.split("-")[0]
@@ -197,6 +198,7 @@ const crudOptions = ref({
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,
+    operationColumnAlign:'center',
     formOption: {
         width: 1200
     }
@@ -205,7 +207,7 @@ const crudColumns = ref([
     {
         title: "ID",
         align: "center",
-        width: 50,
+        hide: true,
         dataIndex: "id"
     },
     {
@@ -217,7 +219,8 @@ const crudColumns = ref([
         search: true,
         validateTrigger: "blur",
         placeholder: "请填写测试项的标识，注意标识不能重复",
-        commonRules: [{ required: true, message: "测试项标识必填" }]
+        commonRules: [{ required: true, message: "测试项标识必填" }],
+        openPrepend: true
     },
     {
         title: "名称",
@@ -262,7 +265,7 @@ const crudColumns = ref([
                     return true
                 }
             }
-        },
+        }
     },
     {
         title: "测试手段",
@@ -339,6 +342,10 @@ const refreshCrudTable = () => {
     crudRef.value.refresh()
 }
 defineExpose({ refreshCrudTable })
+
+defineOptions({
+    name: "designDemand"
+})
 </script>
 
 <style lang="less" scoped>

@@ -84,7 +84,6 @@ const handleRelatedChange = async (record) => {
         }
     }
     loading.value = false
-    // 更新树状目录中，case显示“<”“@”“X”的更新
     treeStore.updateCaseTreeData(res.data, route.query.id)
     emits("relatedOrunrelated")
 }
@@ -349,7 +348,7 @@ const columns = ref([
     {
         title: "问题描述",
         hide: true,
-        search: true,
+        search: false,
         dataIndex: "operation",
         formType: "editor"
     },
@@ -391,14 +390,26 @@ const columns = ref([
         hide: true,
         formType: "select",
         commonRules: [{ required: true, message: "测试人员必填" }],
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
+        dict: {
+            url: "system/user/list",
+            params: { project_id: route.query.id },
+            translation: true,
+            props: { label: "name", value: "name" }
+        }
     },
     {
         title: "悬挂状态",
         dataIndex: "hang",
-        search: false,
+        search: true,
+        formType: "select",
         addDisplay: false,
         editDisplay: false,
+        dict: {
+            data: [
+                { label: "悬挂", value: "1" },
+                { label: "已有关联", value: "2" }
+            ]
+        },
         align: "center",
         customRender: ({ record }) => {
             // 判断是否为悬挂状态record.hang[Boolean]
@@ -452,7 +463,12 @@ const columns = ref([
         dataIndex: "verifyPerson",
         formType: "select",
         commonRules: [{ required: true, message: "回归人" }],
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
+        dict: {
+            url: "system/user/list",
+            params: { project_id: route.query.id },
+            translation: true,
+            props: { label: "name", value: "name" }
+        }
     },
     {
         title: "回归日期",

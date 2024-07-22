@@ -2,7 +2,7 @@ import { DEFAULT_LAYOUT } from "../base"
 
 const DATAMANAGE = {
     path: "/datamanage",
-    name: "Datamanage",
+    name: "datamanage",
     component: DEFAULT_LAYOUT, // () => import("@/layout/default-layout.vue")
     meta: {
         requiresAuth: true,
@@ -14,7 +14,7 @@ const DATAMANAGE = {
     children: [
         {
             path: "dictmanage",
-            name: "Dictmanage",
+            name: "dictmanage",
             component: () => import("@/views/datamanage/dictmanage/index.vue"),
             meta: {
                 requiresAuth: true,
@@ -26,7 +26,7 @@ const DATAMANAGE = {
         },
         {
             path: "projContact",
-            name: "ProjContact",
+            name: "projContact",
             component: () => import("@/views/datamanage/projContact/index.vue"),
             meta: {
                 requiresAuth: true,

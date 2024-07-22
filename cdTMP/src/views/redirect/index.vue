@@ -8,6 +8,10 @@ const router = useRouter()
 const route = useRoute()
 const gotoPath = route.params.path as string
 router.replace({ path: gotoPath })
+
+defineOptions({
+    name: "redirect"
+})
 </script>
 
 <style lang="less" scoped></style>

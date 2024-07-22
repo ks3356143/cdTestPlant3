@@ -4,7 +4,11 @@
             label="旧密码"
             field="oldPassword"
             label-col-flex="80px"
-            :rules="[{ required: true, message: '旧密码必填' }]"
+            :rules="[
+                { required: true, message: '旧密码必填' },
+                { minLength: 6, message: '密码长度至少6位' },
+                { maxLength: 18, message: '密码最长18位' }
+            ]"
         >
             <a-input-password v-model="password.oldPassword" allow-clear autocomplete="off" />
         </a-form-item>
@@ -12,7 +16,11 @@
             label="新密码"
             field="newPassword"
             label-col-flex="80px"
-            :rules="[{ required: true, message: '新密码必填' }]"
+            :rules="[
+                { required: true, message: '新密码必填' },
+                { minLength: 6, message: '密码长度至少6位' },
+                { maxLength: 18, message: '密码最长18位' }
+            ]"
         >
             <a-input-password
                 v-model="password.newPassword"
@@ -69,14 +77,13 @@ const modifyPassword = async (data) => {
             Message.error("确认密码与新密码不一致")
             return
         }
-        Message.error("由于采用LDAP认证，请联系内网管理员修改!")
-        // const response = await user.modifyPassword(data.values)
-        // if (response.success) {
-        //     tool.local.clear()
-        //     visible.value = true
-        // } else {
-        //     Message.error(response.message)
-        // }
+        const response = await user.modifyPassword(data.values)
+        if (response.success) {
+            tool.local.clear()
+            visible.value = true
+        } else {
+            Message.error(response.message)
+        }
     }
 }
 

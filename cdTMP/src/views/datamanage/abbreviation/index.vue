@@ -46,6 +46,10 @@ const crudColumns = ref([
         commonRules: [{ required: true, message: "全称和描述必填" }]
     }
 ])
+
+defineOptions({
+    name: "abbreviation"
+})
 </script>
 
 <style lang="less" scoped></style>

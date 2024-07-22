@@ -8,6 +8,7 @@
         "jsx": "preserve",
         "allowJs": true,
         "strictFunctionTypes": false,
+        "strictNullChecks": true,
         "allowSyntheticDefaultImports": true,
         "forceConsistentCasingInFileNames": true,
         "inlineSources": false,
@@ -21,6 +22,7 @@
         "resolveJsonModule": true,
         "removeComments": true,
         "noImplicitAny": false,
+        "noImplicitThis": true,
         "experimentalDecorators": true,
         "target": "esnext",
         "module": "esnext",
@@ -47,14 +49,13 @@
     },
     "include": [
         "src/**/*",
-        "mock",
         "vite.config.ts",
-        "node_modules",
-        "dist",
-        "build"
     ],
     "exclude": [
         "node_modules",
-        "build/**/*"
+        "mock",
+        "build/**/*",
+        "dist",
+        "build"
     ]
 }

@@ -798,6 +798,10 @@ const crudColumns = ref([
         }
     }
 ])
+
+defineOptions({
+    name: "projmanage"
+})
 </script>
 
 <style lang="less" scoped>

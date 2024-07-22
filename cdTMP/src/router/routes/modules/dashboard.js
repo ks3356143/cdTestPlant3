@@ -14,7 +14,7 @@ const DASHBOARD = {
     children: [
         {
             path: "workplace",
-            name: "Workplace",
+            name: "workplace",
             component: () => import("@/views/dashboard/workplace/index.vue"),
             meta: {
                 requiresAuth: true,
@@ -26,9 +26,10 @@ const DASHBOARD = {
         },
         {
             path: "usercenter",
-            name: "Usercenter",
+            name: "usercenter",
             component: () => import("@/views/dashboard/usercenter/index.vue"),
             meta: {
+                ignoreCache: false,
                 requiresAuth: true,
                 roles: ["*"],
                 locale: "用户中心",
@@ -38,7 +39,7 @@ const DASHBOARD = {
         },
         {
             path: "usermanage",
-            name: "Usermanage",
+            name: "usermanage",
             component: () => import("@/views/dashboard/usermanage/index.vue"),
             meta: {
                 requiresAuth: true,

@@ -25,20 +25,46 @@
                 </a-timeline-item>
                 <div class="info">
                     <a-alert>测试人员填写的项目开始时间、结束时间、轮次时间均会影响生成文档的时间!</a-alert>
+                    <a-button type="primary" @click="handleModalVisible">展示目前文档生成的日期</a-button>
                 </div>
             </a-timeline>
         </div>
+        <!-- a-modal组件，展示生成文档的全部信息 -->
+        <a-modal v-model:visible="visible" hide-cancel :closable="false" width="auto">
+            <template #title> 生成文档时间一览表 </template>
+            <a-card
+                :style="{ width: '600px' }"
+                :title="item.title"
+                hoverable
+                v-for="(item, index) in timeList"
+                :key="item.title"
+            >
+                <p v-for="(value, key, idx) in item" class="flex">
+                    <template v-if="key !== 'title'">
+                        <span class="font-bold w-[300px]">{{ key }}</span>
+                        <span class="">{{ value }}</span>
+                    </template>
+                </p>
+            </a-card>
+        </a-modal>
     </div>
 </template>
 
 <script setup>
+import { useDocTimeShow } from "./useDocTimeShow"
+// 在一开始就请求接口
 // 1.定义props
 const props = defineProps({
     pInfo: {
         type: Object,
         required: true
+    },
+    projectId: {
+        type: String,
+        required: true
     }
 })
+const { visible, handleModalVisible, timeList } = useDocTimeShow(props.projectId)
 </script>
 
 <style lang="less" scoped>
@@ -56,6 +82,10 @@ const props = defineProps({
         position: absolute;
         right: 30px;
         top: 1rem;
+        button {
+            width: 180px;
+            border-radius: 0;
+        }
     }
 }
 .a-col-title {

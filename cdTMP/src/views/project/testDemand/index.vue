@@ -8,15 +8,18 @@
                 </template>
             </ma-crud>
         </div>
+        <problem-form ref="problemFormRef" :title="title"></problem-form>
     </div>
 </template>
 
 <script setup lang="jsx">
 import { ref } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { useRoute } from "vue-router"
 import caseApi from "@/api/project/case"
-import dictApi from "@/api/system/dict"
 import { useTreeDataStore } from "@/store"
+import ProblemForm from "@/views/project/case/components/ProblemForm.vue"
+const problemFormRef = ref(null)
+const title = ref("问题单表单")
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
 const roundNumber = route.query.key.split("-")[0]
@@ -37,7 +40,8 @@ const crudOptions = ref({
     add: { show: true, api: caseApi.save, text: "新增用例" },
     edit: { show: true, api: caseApi.update, text: "修改用例" },
     delete: { show: true, api: caseApi.delete },
-    operationColumnAlign:'center',
+    operationColumnAlign: "center",
+    isDbClickEdit: false, // 关闭双击编辑
     // 处理新增删除后树状图显示
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")
@@ -142,6 +146,7 @@ const crudColumns = ref([
         title: "ID",
         width: 60,
         align: "center",
+        hide: true,
         dataIndex: "id",
         fixed: "left"
     },
@@ -152,8 +157,8 @@ const crudColumns = ref([
         width: 140,
         align: "center",
         addDisabled: true,
-        addDefaultValue: route.query.key,
-        editDefaultValue: route.query.key,
+        addDefaultValue: "用例标识自动生成，结构为YL_IO_XXXX_001",
+        editDefaultValue: "用例标识自动生成，结构为YL_IO_XXXX_001",
         editDisabled: true,
         search: true,
         validateTrigger: "blur"
@@ -243,15 +248,20 @@ const crudColumns = ref([
             }
         }
     },
-
     {
         title: "设计人员",
         width: 80,
         dataIndex: "designPerson",
         align: "center",
+        hide: true,
         search: true,
         formType: "select",
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
+        dict: {
+            url: "system/user/list",
+            params: { project_id: route.query.id },
+            translation: true,
+            props: { label: "name", value: "name" }
+        }
     },
     {
         title: "执行人员",
@@ -260,7 +270,12 @@ const crudColumns = ref([
         align: "center",
         search: true,
         formType: "select",
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
+        dict: {
+            url: "system/user/list",
+            params: { project_id: route.query.id },
+            translation: true,
+            props: { label: "name", value: "name" }
+        }
     },
     {
         title: "审核人员",
@@ -269,7 +284,12 @@ const crudColumns = ref([
         align: "center",
         hide: true,
         formType: "select",
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
+        dict: {
+            url: "system/user/list",
+            params: { project_id: route.query.id },
+            translation: true,
+            props: { label: "name", value: "name" }
+        }
     },
     {
         title: "用例综述",
@@ -345,6 +365,28 @@ const crudColumns = ref([
                 commonRules: [{ required: true, message: "执行状态必填" }]
             }
         ]
+    },
+    {
+        title: "关联问题",
+        dataIndex: "problem",
+        width: 120,
+        addDisplay: false,
+        editDisplay: false,
+        align: "center",
+        customRender: ({ record }) => {
+            if (record.problem) {
+                return (
+                    <a-link
+                        onClick={() => {
+                            title.value = `PT_${route.query.ident}_${record.problem.ident.padStart(3, 0)}`
+                            problemFormRef.value.open(record.problem)
+                        }}
+                    >{`PT_${route.query.ident}_${record.problem.ident.padStart(3, 0)}`}</a-link>
+                )
+            } else {
+                return "无问题单"
+            }
+        }
     }
 ])
 // 暴露刷新表格方法给外部
@@ -352,6 +394,10 @@ const refreshCrudTable = () => {
     crudRef.value.refresh()
 }
 defineExpose({ refreshCrudTable })
+
+defineOptions({
+    name: "testDemand"
+})
 </script>
 
 <style lang="less" scoped></style>

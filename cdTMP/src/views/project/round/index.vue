@@ -2,7 +2,10 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef"></ma-crud>
+            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
+                <!-- 版本字段的插槽 -->
+                <template #inputPrepend-version> V </template>
+            </ma-crud>
         </div>
     </div>
 </template>
@@ -81,6 +84,7 @@ const crudColumns = ref([
         title: "ID",
         width: 50,
         align: "center",
+        hide: true,
         dataIndex: "id",
         commonRules: [{ required: true, message: "ID是必填" }],
         validateTrigger: "blur"
@@ -152,7 +156,9 @@ const crudColumns = ref([
         dataIndex: "version",
         search: true,
         commonRules: [{ required: true, message: "版本必填" }],
-        validateTrigger: "blur"
+        validateTrigger: "blur",
+        help: "填写不带V字符",
+        openPrepend: true
     },
     {
         title: "用户标识",
@@ -271,6 +277,10 @@ const crudColumns = ref([
         }
     }
 ])
+
+defineOptions({
+    name: "round"
+})
 </script>
 
 <style lang="less" scoped></style>

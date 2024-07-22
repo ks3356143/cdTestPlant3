@@ -83,5 +83,18 @@ export default {
                 id: projectId
             }
         })
+    },
+    /**
+     * 根据项目id查询项目->查看全部时间
+     * @returns 返回看板所有信息
+     */
+    getDocumentTimeShow(projectId) {
+        return request({
+            url: `/testmanage/project/document_time_show`,
+            method: "get",
+            params: {
+                id: projectId
+            }
+        })
     }
 }

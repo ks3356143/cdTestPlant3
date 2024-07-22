@@ -5,7 +5,7 @@
             <div class="mt-2">页面未找到，请返回</div>
         </div>
         <div class="mt-5">
-            <a-button type="primary" @click="$router.push({ name: 'Workplace' })">返回第一个有权限页面</a-button>
+            <a-button type="primary" @click="$router.push({ name: 'workplace' })">返回第一个有权限页面</a-button>
         </div>
     </div>
 </template>

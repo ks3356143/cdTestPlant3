@@ -9,9 +9,6 @@
         <a-form-item label="手机" label-col-flex="80px">
             <a-input v-model="userInfo.phone" allow-clear />
         </a-form-item>
-        <a-form-item label="邮箱" label-col-flex="80px">
-            <a-input v-model="userInfo.email" allow-clear />
-        </a-form-item>
         <a-form-item label="个人签名" label-col-flex="80px">
             <a-textarea v-model="userInfo.introduction" :max-length="255" class="h-28" show-word-limit allow-clear />
         </a-form-item>
@@ -21,7 +18,7 @@
     </a-form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive } from "vue"
 import { useUserStore } from "@/store"
 import { Message } from "@arco-design/web-vue"
@@ -32,9 +29,7 @@ const userInfo = reactive({
     ...userStore.$state
 })
 
-const modifyInfo = async (data) => {
-    // 注意要用values
-    console.log(data.values)
-    Message.error("由于采用LDAP登录无法修改!")
+const modifyInfo = async (data: any) => {
+    Message.warning("请联系内网管理员进行修改")
 }
 </script>

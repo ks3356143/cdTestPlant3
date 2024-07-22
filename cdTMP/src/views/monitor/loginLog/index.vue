@@ -81,6 +81,10 @@ const crudColumns = ref([
         editDisplay: false
     }
 ])
+
+defineOptions({
+    name: "loginLog"
+})
 </script>
 
 <style lang="less" scoped></style>

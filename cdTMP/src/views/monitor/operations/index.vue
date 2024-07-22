@@ -85,6 +85,10 @@ const crudColumns = ref([
     { title: "请求参数", dataIndex: "request_body", hide: true, formType: "textarea" },
     { title: "返回信息", dataIndex: "json_result", hide: true, formType: "textarea" }
 ])
+
+defineOptions({
+    name: "operations"
+})
 </script>
 
 <style lang="less" scoped></style>

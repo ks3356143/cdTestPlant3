@@ -20,18 +20,12 @@
                     @change="handleUploadChange"
                 ></a-upload>
             </div>
-            <a-alert :style="{ margin: '10px 0' }" type="warning"
-                >上传录入提示信息：硬性要求，本辅助程序根据GJB438C文档结构进行解析，要求：1.功能需求章节必须包含<span
+            <a-alert :style="{ margin: '10px 0' }" type="warning">
+                请去除需求规格说明文件中不必要的部分再来此处解析，注意：本系统不支持word中emf格式图片，如果使用了visio等图片请<span
                     class="important-text"
-                    >“CSCI功能需求”</span
-                >或<span class="important-text">“CSCI能力需求”</span>文字,且章节级别必须为<span class="important-text"
-                    >2级</span
-                >; 2.外部接口章节必须包含<span class="important-text">“CSCI外部接口需求”</span
-                >文字,且章节级别必须为<span class="important-text">2级</span
-                >。暂时只能解析这两个章节，如果章节号有标识则使用<span class="important-text"
-                    >“（RQGN01-UART-ZRZL）”</span
-                >或<span class="important-text">“(RQGN01-UART-XBRCV)”</span>包含在里面。</a-alert
-            >
+                    >在word变为普通图片上传</span
+                >
+            </a-alert>
             <div class="operation-container">
                 <span :style="{ marginRight: '10px', fontWeight: 700 }">操作按钮:</span>
                 <a-space>
@@ -39,7 +33,7 @@
                     <a-button type="outline" status="warning" @click="handleResetData">重置数据</a-button>
                 </a-space>
             </div>
-            <a-spin :loading="loading" tip="解析word完成，需要时间渲染HTML元素..." :style="{ width: '100%' }">
+            <a-spin :loading="loading" tip="解析word完成，正在渲染界面..." :style="{ width: '100%' }">
                 <div class="demand-container">
                     <a-list :data="htmlData" :pagination-props="{ defaultPageSize: 15, total: htmlData.length }">
                         <template #item="{ item, index }">
@@ -117,6 +111,7 @@ import dictApi from "@/api/system/dict"
 import demandApi from "@/api/project/designDemand"
 import { useRoute, useRouter } from "vue-router"
 import { parseHtmlStringByDemandDut } from "@/views/project/dut/tools/parseHtmlString"
+import { HtmlParser } from "@/views/project/dut/tools/parser"
 import { useTreeDataStore } from "@/store"
 // 其他初始化数据
 const route = useRoute()
@@ -169,8 +164,8 @@ const handleRquest = function (options) {
                 // 已经上传到浏览器了，需要解析为列表
                 onSuccess(1)
                 const rawHtml = res.value
-                const finalData = parseHtmlStringByDemandDut(rawHtml)
-                // 将finalData赋值给响应式数据ref变量：htmlData
+                const parser = new HtmlParser(rawHtml)
+                const finalData = parser.parseToArray()
                 htmlData.value = finalData
                 // ~~~~使用nextTick：等待DOM更新完成~~~~
                 nextTick(() => {

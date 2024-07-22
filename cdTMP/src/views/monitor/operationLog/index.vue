@@ -50,6 +50,10 @@ const handleDeleteAllLogButton = async () => {
     crudRef.value.refresh()
     Message.success(res.message)
 }
+
+defineOptions({
+    name: "operationLog"
+})
 </script>
 
 <style lang="less" scoped></style>

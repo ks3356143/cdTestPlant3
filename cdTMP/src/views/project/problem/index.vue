@@ -50,6 +50,10 @@ const fetchProblemData = async (
     }
 }
 fetchProblemData()
+
+defineOptions({
+    name: "problem"
+})
 </script>
 
 <style lang="less" scoped></style>

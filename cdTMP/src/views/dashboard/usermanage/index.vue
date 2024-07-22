@@ -6,8 +6,8 @@
                 <template #status="{ record }">
                     <a-switch
                         :checked-value="1"
-                        unchecked-value="2"
-                        @change="changeStatus($event, record.id)"
+                        :unchecked-value="2"
+                        :before-change="changeStatusWrapper(record)"
                         :default-checked="record.status == 1"
                     ></a-switch>
                 </template>
@@ -22,10 +22,12 @@ import userApi from "@/api/system/user"
 import user from "@/api/system/user"
 import { Message } from "@arco-design/web-vue"
 // 切换状态按钮
-const changeStatus = async (e, id) => {
-    const res = await userApi.changeUserStatus({ user_status: e, userId: id })
-    if (res.data) {
-        Message.success(res.data === "1" ? "启用成功" : "禁用成功")
+const changeStatusWrapper = (record) => {
+    return async function (newVal) {
+        const res = await userApi.changeUserStatus({ user_status: newVal, userId: record.id })
+        if (res.data) {
+            Message.success(res.data === "1" ? "启用成功" : "禁用成功")
+        }
     }
 }
 // crud组件
@@ -105,13 +107,6 @@ const crudColumns = reactive([
         commonRules: [{ match: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: "请输入正确的手机号码" }]
     },
     {
-        title: "邮箱",
-        align: "center",
-        dataIndex: "email",
-        width: 100,
-        commonRules: [{ type: "email", message: "请输入正确的邮箱" }]
-    },
-    {
         title: "密码",
         dataIndex: "password",
         hide: true,
@@ -145,6 +140,10 @@ const crudColumns = reactive([
         formType: "range"
     }
 ])
+
+defineOptions({
+    name: "usermanage"
+})
 </script>
 
 <style lang="less" scoped></style>

@@ -60,7 +60,7 @@ const crudOptions = ref({
     delete: { show: true, api: problemApi.delete },
     operationColumnAlign: "center", // 操作列居中
     // 列表选项卡配置
-    tabs:{},
+    tabs: {},
     beforeOpenAdd: function () {
         // 先判断是否已经有个问题单了，如果有则不让用户创建
         if (crudRef.value.getTableData().length >= 1) {
@@ -108,7 +108,7 @@ const crudOptions = ref({
     },
     showIndex: false,
     showTools: false,
-    operationColumnAlign:'center',
+    operationColumnAlign: "center",
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,
     tablePagination: false,
@@ -311,36 +311,42 @@ const crudColumns = ref([
         title: "问题描述",
         hide: true,
         search: true,
+        align: "center",
         dataIndex: "operation",
-        formType: "editor",
+        formType: "editor"
     },
     {
         title: "问题影响",
         hide: true,
+        align: "center",
         dataIndex: "result",
-        formType: "textarea",
+        formType: "textarea"
     },
     {
         title: "原因分析",
         hide: true,
+        align: "center",
         dataIndex: "analysis",
-        formType: "editor",
+        formType: "editor"
     },
     {
         title: "影响域分析",
         hide: true,
+        align: "center",
         dataIndex: "effect_scope",
-        formType: "textarea",
+        formType: "textarea"
     },
     {
         title: "改正措施",
         hide: true,
+        align: "center",
         dataIndex: "solve",
         formType: "textarea"
     },
     {
         title: "回归结果",
         hide: true,
+        align: "center",
         dataIndex: "verify_result",
         formType: "editor"
     },
@@ -348,9 +354,15 @@ const crudColumns = ref([
         title: "测试人员",
         dataIndex: "postPerson",
         search: true,
+        align: "center",
         formType: "select",
         commonRules: [{ required: true, message: "测试人员必填" }],
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
+        dict: {
+            url: "system/user/list",
+            params: { project_id: route.query.id },
+            translation: true,
+            props: { label: "name", value: "name" }
+        }
     },
     {
         title: "测试日期",
@@ -377,7 +389,12 @@ const crudColumns = ref([
         dataIndex: "verifyPerson",
         formType: "select",
         commonRules: [{ required: true, message: "提单人必填" }],
-        dict: { url: "system/user/list", translation: true, props: { label: "name", value: "name" } }
+        dict: {
+            url: "system/user/list",
+            params: { project_id: route.query.id },
+            translation: true,
+            props: { label: "name", value: "name" }
+        }
     },
     {
         title: "回归日期",
@@ -386,6 +403,10 @@ const crudColumns = ref([
         formType: "date"
     }
 ])
+
+defineOptions({
+    name: "case"
+})
 </script>
 
 <style lang="less" scoped></style>

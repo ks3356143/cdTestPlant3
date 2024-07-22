@@ -87,13 +87,13 @@
                             </a-space>
                         </a-doption>
                         <a-doption>
-                            <a-space @click="$router.push({ name: 'Usercenter' })">
+                            <a-space @click="$router.push({ name: 'usercenter' })">
                                 <icon-user />
                                 <span> 用户中心 </span>
                             </a-space>
                         </a-doption>
                         <a-doption>
-                            <a-space @click="$router.push({ name: 'Usercenter' })">
+                            <a-space @click="$router.push({ name: 'usercenter' })">
                                 <icon-settings />
                                 <span> 用户设置 </span>
                             </a-space>
@@ -169,7 +169,7 @@ const handleLogout = () => {
 const toggleDrawerMenu = inject("toggleDrawerMenu")
 // 点击图标返回首页
 const handleClickLogo = () => {
-    router.push({ name: "Workplace" })
+    router.push({ name: "workplace" })
 }
 
 // 测试生成文档-测试项和方法

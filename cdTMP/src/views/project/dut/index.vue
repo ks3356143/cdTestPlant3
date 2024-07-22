@@ -14,6 +14,9 @@
                         上传需求规格说明快捷录入
                     </a-button>
                 </template>
+                <!-- 字段的前缀后缀的插槽 -->
+                <!-- 版本字段的插槽 -->
+                <template #inputPrepend-ident> SJ-XX- </template>
             </ma-crud>
         </div>
         <file-input-modal ref="fileInputRef"></file-input-modal>
@@ -119,6 +122,7 @@ const crudColumns = ref([
         title: "ID",
         align: "center",
         width: 50,
+        hide: true,
         dataIndex: "id",
         commonRules: [{ required: true, message: "ID必填" }],
         validateTrigger: "blur"
@@ -132,7 +136,8 @@ const crudColumns = ref([
         search: true,
         validateTrigger: "blur",
         placeholder: "请输入文档中设计需求的标识",
-        help: '若不知道则填"无"或不填'
+        help: '若不知道则填"无"或不填',
+        openPrepend: true
     },
     {
         title: "设需名称",
@@ -191,8 +196,7 @@ const crudColumns = ref([
                     {
                         title: "接口来源",
                         dataIndex: "source",
-                        hide: true,
-                        extra: "接口独有四个字段，决定大纲的接口列表信息"
+                        hide: true
                     },
                     {
                         title: "目的地",
@@ -206,11 +210,10 @@ const crudColumns = ref([
                     {
                         title: "接口类型",
                         dataIndex: "type",
-                        hide: true,
-                        extra: "接口类型例如：网络"
+                        hide: true
                     },
                     {
-                        title: "接口协议",
+                        title: "接口内容",
                         dataIndex: "protocal",
                         hide: true
                     }
@@ -232,6 +235,10 @@ const fileInputRef = ref(null)
 const handleAddFileInputDemand = () => {
     fileInputRef.value.open()
 }
+
+defineOptions({
+    name: "dut"
+})
 </script>
 
 <style lang="less" scoped></style>

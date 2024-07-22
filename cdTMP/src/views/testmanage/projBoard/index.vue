@@ -4,7 +4,7 @@
             <!-- 返回前面一页的按钮，以及项目整体情况 -->
             <Title :pInfo="loadingData"></Title>
             <!-- 时间线显示项目情况 -->
-            <time-line :pInfo="loadingData"></time-line>
+            <time-line :pInfo="loadingData" :projectId="route.params.projectId"></time-line>
             <!-- 以轮次为合集展示需求下面的测试项数、用例数，测试类型下面测试项和用例数量 -->
             <round-info v-for="item in loadingData.statistics" :data="item"></round-info>
         </a-layout-content>
@@ -24,6 +24,10 @@ const fetchData = async () => {
     return projectApi.getBoardInfo(route.params.projectId)
 }
 const { loadingData, isDataLoading } = useFetchData({}, fetchData)
+
+defineOptions({
+    name: "projBoard"
+})
 </script>
 
 <style lang="less" scoped>

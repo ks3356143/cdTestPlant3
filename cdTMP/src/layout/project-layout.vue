@@ -310,7 +310,7 @@ const handleCopyNode = async () => {
 /// 进度条变量
 const visible = ref(false)
 const isComplete = ref(false)
-const ptext = ref("第二轮数据")
+const ptext = ref("轮次数据")
 const handleModalConfirmClick = () => {
     visible.value = false
 }
@@ -367,7 +367,7 @@ const handleSoDutSubmit = async (data) => {
 // ~~~~定义弹出a-form-modal的cancel方法-返回false则无法关闭弹窗~~~~
 const handleSoDutCancel = () => {
     Notification.error("必须按要求添加源代码信息，返回项目列表页面!")
-    router.replace({ name: "Projmanage" })
+    router.replace({ name: "projmanage" })
 }
 // 初始化树状数据
 // so_dut弹窗ref对象
@@ -766,7 +766,8 @@ const soDutColumn = ref([
         title: "代码版本",
         dataIndex: "version",
         placeholder: "请输入代码版本，注意不要带V",
-        rules: [{ required: true, message: "代码版本必填" }]
+        rules: [{ required: true, message: "代码版本必填" }],
+        openPrepend: true
     },
     {
         title: "用户标识",

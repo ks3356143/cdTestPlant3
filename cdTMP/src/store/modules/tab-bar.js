@@ -14,6 +14,7 @@ const formatTag = (route) => {
 const BAN_LIST = [REDIRECT_ROUTE_NAME]
 const useTabBarStore = defineStore("tabBar", {
     state: () => ({
+        // 修改：添加"用户中心到缓存"
         cacheTabList: new Set([DEFAULT_ROUTE_NAME]),
         tagList: [DEFAULT_ROUTE]
     }),

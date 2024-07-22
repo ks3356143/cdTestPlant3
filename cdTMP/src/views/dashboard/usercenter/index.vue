@@ -82,6 +82,11 @@ const operationLogList = computed(() => {
         return item
     })
 })
+
+// 组件命名
+defineOptions({
+    name: "usercenter"
+})
 </script>
 
 <style scoped>

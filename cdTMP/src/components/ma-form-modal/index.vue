@@ -13,12 +13,9 @@
             {{ prop.title }}
         </template>
         <slot name="body"></slot>
-        <ma-form
-            ref="maFormRef"
-            :columns="prop.column"
-            v-model="form"
-            :options="{ ...options, showButtons: false }"
-        ></ma-form>
+        <ma-form ref="maFormRef" :columns="prop.column" v-model="form" :options="{ ...options, showButtons: false }">
+            <template #[`inputPrepend-version`]>V </template>
+        </ma-form>
     </a-modal>
 </template>
 

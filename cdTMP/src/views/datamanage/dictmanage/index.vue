@@ -61,7 +61,7 @@ const crudOptions = ref({
     searchColNumber: 4,
     tablePagination: false,
     operationColumn: true,
-    showTools:false,
+    showTools: false
 })
 
 const crudColumns = ref([
@@ -108,8 +108,12 @@ const crudColumns = ref([
         search: true,
         formType: "range",
         width: 180
-    },
+    }
 ])
+
+defineOptions({
+    name: "dictmanage"
+})
 </script>
 
 <style lang="less" scoped></style>

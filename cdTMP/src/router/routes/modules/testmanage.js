@@ -2,7 +2,7 @@ import { DEFAULT_LAYOUT } from "../base"
 
 const TESTMANAGE = {
     path: "/testmanage",
-    name: "Testmanage",
+    name: "testmanage",
     component: DEFAULT_LAYOUT, // () => import("@/layout/default-layout.vue")
     meta: {
         requiresAuth: true,
@@ -14,7 +14,7 @@ const TESTMANAGE = {
     children: [
         {
             path: "projmanage",
-            name: "Projmanage",
+            name: "projmanage",
             component: () => import("@/views/testmanage/projmanage/index.vue"),
             meta: {
                 requiresAuth: true,

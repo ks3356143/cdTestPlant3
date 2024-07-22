@@ -6,6 +6,10 @@
 
 <script setup>
 import Statistics from "./components/statistics.vue"
+
+defineOptions({
+    name: "workplace"
+})
 </script>
 
 <style lang="less" scoped></style>

@@ -2,7 +2,7 @@ import { DEFAULT_LAYOUT } from "../base"
 
 const TESTMANAGE = {
     path: "/monitor",
-    name: "Monitor",
+    name: "monitor",
     component: DEFAULT_LAYOUT, // () => import("@/layout/default-layout.vue")
     meta: {
         requiresAuth: true,
