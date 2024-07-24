@@ -39,6 +39,20 @@ const TESTMANAGE = {
                 noAffix: true,
                 title: "项目看板"
             }
+        },
+        // 二级路由：单独显示项目所属的文档片段
+        {
+            path: "/projFragment/:projectId",
+            name: "projFragment",
+            component: () => import("@/views/testmanage/projFragment/index.vue"),
+            meta: {
+                locale: "项目文档片段",
+                icon: "icon-copy",
+                hideInMenu: true,
+                ignoreCache: false,
+                noAffix: true,
+                title: "项目文档片段"
+            }
         }
     ]
 }

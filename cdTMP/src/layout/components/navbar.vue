@@ -37,16 +37,6 @@
                 </a-tooltip>
             </li>
             <li>
-                <a-tooltip content="语言-暂无">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'">
-                        <template #icon>
-                            <icon-language />
-                        </template>
-                    </a-button>
-                </a-tooltip>
-                <!-- 这里有个下拉列表 -->
-            </li>
-            <li>
                 <a-tooltip content="切换主题">
                     <a-button @click="handleChangeTheme" class="nav-btn" type="outline" :shape="'circle'">
                         <template #icon>
@@ -61,15 +51,6 @@
                         <template #icon>
                             <icon-fullscreen-exit v-if="isFullscreen" />
                             <icon-fullscreen v-else />
-                        </template>
-                    </a-button>
-                </a-tooltip>
-            </li>
-            <li>
-                <a-tooltip content="设置">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'" @click="setVisible">
-                        <template #icon>
-                            <icon-settings />
                         </template>
                     </a-button>
                 </a-tooltip>
@@ -112,9 +93,6 @@
 </template>
 
 <script setup>
-// 测试接口导入
-import dgGenerateApi from "@/api/generate/dgGenerate"
-// ~~~~~~~~~
 import { computed, inject } from "vue"
 import { useAppStore } from "@/store"
 import { useFullscreen } from "@vueuse/core"
@@ -170,12 +148,6 @@ const toggleDrawerMenu = inject("toggleDrawerMenu")
 // 点击图标返回首页
 const handleClickLogo = () => {
     router.push({ name: "workplace" })
-}
-
-// 测试生成文档-测试项和方法
-const testCreate = async () => {
-    const st = await dgGenerateApi.createTestDemand()
-    Message.success(st.message)
 }
 </script>
 

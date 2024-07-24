@@ -93,6 +93,7 @@
                         工作区
                     </a-button>
                     <a-link @click="previewRef.open(record)"><icon-eye />预览</a-link>
+                    <a-link @click="handleFragmentClick(record)"><icon-file />片段</a-link>
                     <a-link @click="handleBoardClick(record)"><icon-dashboard />项目看板</a-link>
                 </template>
             </ma-crud>
@@ -338,6 +339,15 @@ const handleBoardClick = (record) => {
         }
     })
 }
+// 2.跳转到项目所属文档片段
+const handleFragmentClick = (record) => {
+    router.push({
+        name: "projFragment",
+        params: {
+            projectId: record.id
+        }
+    })
+}
 
 // CRUD-OPTIONS
 const crudRef = ref()
@@ -482,6 +492,7 @@ const crudOptions = ref({
 const crudColumns = ref([
     {
         title: "项目标识",
+        align: "center",
         width: 90,
         sortable: { sortDirections: ["ascend"] },
         dataIndex: "ident",
@@ -492,6 +503,7 @@ const crudColumns = ref([
     {
         title: "项目名称",
         width: 110,
+        align: "center",
         dataIndex: "name",
         search: true,
         commonRules: [{ required: true, message: "名称是必填" }]
@@ -503,11 +515,13 @@ const crudColumns = ref([
     {
         title: "开始日期",
         dataIndex: "beginTime",
+        align: "center",
         commonRules: [{ required: true, message: "开始时间必填" }],
         formType: "date"
     },
     {
         title: "结束时间",
+        align: "center",
         dataIndex: "endTime",
         formType: "date",
         extra: "注意：结束时间需要晚于最后一轮结束时间",
@@ -537,6 +551,7 @@ const crudColumns = ref([
     },
     {
         title: "责任人",
+        align: "center",
         width: 70,
         dataIndex: "duty_person",
         search: true,
@@ -651,6 +666,7 @@ const crudColumns = ref([
     {
         title: "报告类型",
         dataIndex: "report_type",
+        align: "center",
         addDefaultValue: "9",
         search: true,
         commonRules: [{ required: true, message: "报告类型必填" }],
@@ -785,6 +801,7 @@ const crudColumns = ref([
     },
     {
         title: "状态",
+        align: "center",
         dataIndex: "step",
         search: true,
         formType: "radio",

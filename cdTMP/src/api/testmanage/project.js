@@ -12,6 +12,16 @@ export default {
         })
     },
     /**
+     * 获取单个项目信息
+     * @returns 单个项目信息
+     */
+    getProjectById(id) {
+        return request({
+            url: "testmanage/project/findOneById/" + id,
+            method: "get"
+        })
+    },
+    /**
      * 添加项目
      * @returns
      */
@@ -43,5 +53,5 @@ export default {
             method: "delete",
             data
         })
-    },
+    }
 }
