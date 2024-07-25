@@ -69,6 +69,9 @@ const crudOptions = ref({
     add: { show: true, api: designDemandApi.save, text: "新增设计需求" },
     edit: { show: true, api: designDemandApi.editDesignDemand, text: "编辑设计需求" },
     delete: { show: true, api: designDemandApi.delete },
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    },
     // 处理添加后函数
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")

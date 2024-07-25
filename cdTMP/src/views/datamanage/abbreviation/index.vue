@@ -25,7 +25,10 @@ const crudOptions = ref({
     showIndex: false,
     searchColNumber: 3,
     tablePagination: false,
-    rowSelection: { showCheckedAll: true }
+    rowSelection: { showCheckedAll: true },
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    }
 })
 const crudColumns = ref([
     { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },

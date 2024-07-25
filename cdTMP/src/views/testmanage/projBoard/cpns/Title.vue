@@ -1,25 +1,14 @@
 <template>
     <div class="title-container">
         <div class="ma-content-block rounded-sm flex-col justify-between w-full p-3 bg-color">
-            <a-page-header
-                @back="handleBackClick"
-                :style="{ background: 'var(--color-bg-2)' }"
-                :title="props.pInfo.ident"
-            >
-                <template #subtitle>
-                    <a-space>
-                        <span>{{ props.pInfo.name }}</span>
-                        <a-tag color="red" size="small">{{ props.pInfo.step }}</a-tag>
-                    </a-space>
-                </template>
-            </a-page-header>
+            <page-header :data="headerData"></page-header>
             <div class="title">基本信息</div>
             <div class="item-container">
                 <a-card
                     class="item"
                     v-for="(val, key) in pInfo.title_info"
                     :style="{ width: '360px' }"
-                    :title="key"
+                    :title="key.toString()"
                     :key="key"
                     hoverable
                 >
@@ -35,19 +24,23 @@
     </div>
 </template>
 
-<script setup>
-import { useRoute, useRouter } from "vue-router"
-const router = useRouter()
-
-// 1.头部-点击返回
-const handleBackClick = () => {
-    router.go(-1)
-}
-// 2.定义props
+<script setup lang="ts">
+import { computed, ComputedRef } from "vue"
+import type { IPageHeaderProps } from "../../components/PageHeader/types"
+import PageHeader from "@/views/testmanage/components/PageHeader/index.vue"
+// 定义props
 const props = defineProps({
     pInfo: {
         type: Object,
         required: true
+    }
+})
+// 给头部组件的计算属性
+const headerData: ComputedRef<IPageHeaderProps> = computed(() => {
+    return {
+        title: props.pInfo.ident as string,
+        name: props.pInfo.name as string,
+        step: props.pInfo.step
     }
 })
 </script>

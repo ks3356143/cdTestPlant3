@@ -32,6 +32,9 @@ let beiceType = [
 const crudOptions = ref({
     api: dutApi.getDutList,
     add: { show: true, api: dutApi.save, text: "新增被测件" },
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    },
     // 处理添加后函数
     beforeOpenAdd: function () {
         let round_str = parseInt(route.query.key) + 1

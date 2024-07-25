@@ -106,6 +106,9 @@ const crudOptions = ref({
         testDemand: testDemandNumber,
         case: caseNumber
     },
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    },
     showIndex: false,
     showTools: false,
     operationColumnAlign: "center",

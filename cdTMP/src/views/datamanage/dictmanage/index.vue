@@ -61,7 +61,10 @@ const crudOptions = ref({
     searchColNumber: 4,
     tablePagination: false,
     operationColumn: true,
-    showTools: false
+    showTools: false,
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    }
 })
 
 const crudColumns = ref([

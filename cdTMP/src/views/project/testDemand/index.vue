@@ -42,6 +42,9 @@ const crudOptions = ref({
     delete: { show: true, api: caseApi.delete },
     operationColumnAlign: "center",
     isDbClickEdit: false, // 关闭双击编辑
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    },
     // 处理新增删除后树状图显示
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")

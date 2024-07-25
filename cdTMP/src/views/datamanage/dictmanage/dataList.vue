@@ -99,7 +99,10 @@ const crudOptions = ref({
     },
     add: { show: true, api: dictApi.saveDictItem },
     edit: { show: true, api: dictApi.updateDictItemData },
-    delete: { show: true, api: dictApi.realDeleteItem }
+    delete: { show: true, api: dictApi.realDeleteItem },
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    }
 })
 
 // crudColumns

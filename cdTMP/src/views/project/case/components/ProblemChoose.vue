@@ -125,6 +125,9 @@ const crudOptions = ref({
     showTools: false, // 不显示工具栏
     operationColumn: true,
     operationColumnAlign: "center", // 操作列居中
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    },
     isDbClickEdit: false, // 双击不编辑当前列
     contextMenu: {
         enabled: true,

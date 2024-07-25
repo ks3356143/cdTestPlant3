@@ -153,6 +153,9 @@ const crudOptions = ref({
     add: { show: true, api: testDemandApi.save, text: "新增测试项" },
     edit: { show: true, api: testDemandApi.update, text: "修改测试项" },
     delete: { show: true, api: testDemandApi.delete },
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    },
     showTools: false,
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")
@@ -198,7 +201,7 @@ const crudOptions = ref({
     searchColNumber: 3,
     tablePagination: false,
     operationColumn: true,
-    operationColumnAlign:'center',
+    operationColumnAlign: "center",
     formOption: {
         width: 1200
     }

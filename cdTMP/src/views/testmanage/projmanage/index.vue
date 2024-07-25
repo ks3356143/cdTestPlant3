@@ -365,6 +365,9 @@ const crudOptions = ref({
     showTools: false,
     operationColumnWidth: 280, // 操作列宽度
     operationColumnAlign: "center", // 操作列对齐方式
+    afterDelete(response) {
+        crudRef.value.setSelecteds([])
+    },
     // 处理弹窗的title
     beforeOpenAdd: function () {
         crudRef.value.crudFormRef.actionTitle = "项目"

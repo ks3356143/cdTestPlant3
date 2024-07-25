@@ -17,6 +17,13 @@ export enum FragBelongDoc {
 export interface IFragSearchCondition {
     belongDocName?: FragBelongDoc
     name?: string
-    isMain?: boolean
-    projectId?: number
+    is_main?: boolean
+    projectId?: string
+}
+
+/**
+ * 接口：更新文档片段的对象
+ */
+export interface IFragUpdateObject extends IFragSearchCondition {
+    field_seq?: string
 }
