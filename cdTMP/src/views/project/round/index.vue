@@ -168,7 +168,7 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "ref",
         search: true,
-        commonRules: [{ required: true, message: "用户标识或编号必填" }],
+        commonRules: [{ required: true, message: "用户标识必填" }],
         validateTrigger: "blur",
         help: "客户使用的标识"
     },

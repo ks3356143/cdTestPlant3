@@ -123,6 +123,7 @@ import wtdGenerateApi from "@/api/generate/wtdGenerate"
 import { Message } from "@arco-design/web-vue"
 import Progress from "./cpns/progress.vue"
 import hoosk from "@/views/testmanage/projmanage/hooks.js"
+import { validateBlank } from "@/utils/extensions/arcoValidator"
 const router = useRouter()
 // 定义预览组件的Ref
 const previewRef = ref()
@@ -500,7 +501,10 @@ const crudColumns = ref([
         sortable: { sortDirections: ["ascend"] },
         dataIndex: "ident",
         search: true,
-        commonRules: [{ required: true, message: "标识是必填" }],
+        commonRules: [
+            { required: true, message: "标识是必填" },
+            { validator: validateBlank, message: "标识格式不正确" }
+        ],
         validateTrigger: "blur"
     },
     {
@@ -536,7 +540,7 @@ const crudColumns = ref([
             {
                 validator: (value, validationCallbackFunction) => {
                     let beginTime = crudRef.value.getFormData().beginTime
-                    value < beginTime ? validationCallbackFunction("开始时间必须小于结束时间") : null
+                    value < beginTime ? validationCallbackFunction("开始时间必须小于等于结束时间") : null
                 }
             }
         ]

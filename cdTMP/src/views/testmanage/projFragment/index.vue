@@ -52,7 +52,7 @@ const headerData: ComputedRef<IPageHeaderProps> = computed(() => {
         name: loadingData.value.name as string
     }
 })
-// 切换is_main
+// 在表格切换is_main属性
 const beforeSwitchChange = (record: any) => {
     return async function (newVal: boolean) {
         await FragApi.update(record.id, {

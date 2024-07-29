@@ -330,7 +330,7 @@ const crudColumns = ref([
         hide: true,
         align: "center",
         dataIndex: "analysis",
-        formType: "editor"
+        formType: "textarea"
     },
     {
         title: "影响域分析",

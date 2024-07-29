@@ -5,9 +5,10 @@
         :custom-field="props.customField"
     >
         <slot :name="`form-${props.component.dataIndex}`" v-bind="props.component">
+            <!-- chen.xiugai-warning -->
             <component
                 :is="getComponentName()"
-                v-model="value"
+                v-model.trim="value"
                 :size="props.component.size"
                 :allow-clear="props.component.allowClear ?? true"
                 :disabled="props.component.disabled"

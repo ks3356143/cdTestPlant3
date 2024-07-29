@@ -365,7 +365,7 @@ const columns = ref([
         title: "原因分析",
         hide: true,
         dataIndex: "analysis",
-        formType: "editor"
+        formType: "textarea"
     },
     {
         title: "影响域分析",

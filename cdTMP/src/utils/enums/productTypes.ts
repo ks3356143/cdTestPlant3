@@ -1,3 +1,6 @@
+/**
+ * 文档片段所属的enum
+ */
 export enum ProductFileEnum {
     dg = "测评大纲",
     sm = "测试说明",

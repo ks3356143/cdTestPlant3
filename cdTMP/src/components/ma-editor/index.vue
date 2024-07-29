@@ -43,7 +43,10 @@ const appStore = useAppStore()
 const props = defineProps({
     modelValue: { type: String },
     height: { type: Number, default: 200 },
-    id: { type: String, default: () => "tinymce" + new Date().getTime().toString() },
+    id: {
+        type: String,
+        default: () => "tinymce" + new Date().getTime().toString() + "-" + Math.random().toString(16).substring(2,10)
+    },
     plugins: {
         type: [String, Array],
         default: "searchreplace visualchars code table nonbreaking lists autosave"
@@ -129,7 +132,7 @@ const initConfig = reactive({
     skeletonScreen: true,
     branding: false,
     content_css: "/tinymce/skins/content/default/content.css",
-    selector: "#textarea1", // 下面自定义样式选中的区域为编辑区
+    // selector: "#textarea1", // 下面自定义样式选中的区域为编辑区
     content_style: "body {line-height:1.5;font-size:14px;} p {margin:2px 0px;}", // 这里可以设置自定义样式
     // paste_as_text: false, // 粘贴文字只能是纯文本
     // 1.自定义粘贴过滤器函数，args.content就是粘贴内容

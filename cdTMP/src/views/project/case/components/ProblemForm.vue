@@ -130,7 +130,7 @@ const columnsOptions = reactive([
     {
         title: "原因分析",
         dataIndex: "analysis",
-        formType: "editor"
+        formType: "textarea"
     },
     {
         title: "影响域分析",
