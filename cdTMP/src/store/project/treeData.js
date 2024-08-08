@@ -83,6 +83,9 @@ const useTreeDataStore = defineStore("treeDataStore", {
             this.treeData[roundKey].children[dutKey].children[designKey].children = res.data
         },
         // 新增删除case后tree显示
+        /**
+         * 第一个参数格式：data.key，data为用例数据，里面必须有key属性
+         */
         async updateCaseTreeData(data, projrctId) {
             let temp = data.key.split("-")
             temp.pop(-1)

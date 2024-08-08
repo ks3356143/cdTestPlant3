@@ -21,7 +21,8 @@ const DASHBOARD = {
                 roles: ["*"],
                 locale: "工作台",
                 icon: "icon-dashboard",
-                title: "工作台"
+                title: "工作台",
+                ignoreCache: true,
             }
         },
         {
@@ -29,7 +30,6 @@ const DASHBOARD = {
             name: "usercenter",
             component: () => import("@/views/dashboard/usercenter/index.vue"),
             meta: {
-                ignoreCache: false,
                 requiresAuth: true,
                 roles: ["*"],
                 locale: "用户中心",

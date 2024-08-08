@@ -109,6 +109,11 @@ const crudOptions = ref({
     afterDelete(response) {
         crudRef.value.setSelecteds([])
     },
+    // 请求后置处理-用于新增/删除更新树状的用例关联问题单状态
+    afterRequest(datas) {
+        const caseQuery = { key: route.query.key }
+        treeDataStore.updateCaseTreeData(caseQuery, route.query.id)
+    },
     showIndex: false,
     showTools: false,
     operationColumnAlign: "center",
@@ -270,9 +275,9 @@ const crudColumns = ref([
     {
         title: "闭环方式",
         align: "center",
-        width: 150,
+        width: 160,
         dataIndex: "closeMethod",
-        addDefaultValue: ["2"],
+        addDefaultValue: [],
         search: true,
         formType: "checkbox",
         dict: {
@@ -281,12 +286,13 @@ const crudColumns = ref([
             props: { label: "title", value: "key" }
         },
         customRender: ({ record }) => {
+            console.log(record.closeMethod)
             // 判断是否具有1：修改文档
             if (!record.closeMethod.hasOwnProperty("0")) {
                 if (!record.closeMethod.hasOwnProperty("1")) {
                     return (
                         <a-tag size="small" bordered color="magenta">
-                            还未闭环
+                            未选择闭环
                         </a-tag>
                     )
                 }
@@ -305,8 +311,15 @@ const crudColumns = ref([
                             修改程序
                         </a-tag>
                     )
+                } else if (record.closeMethod[item] === "3") {
+                    tagObj.push(
+                        <a-tag size="small" bordered color="red">
+                            其他方式闭环
+                        </a-tag>
+                    )
                 }
             }
+            // 如果用户选择其他闭环方式
             return <a-space size="mini">{tagObj}</a-space>
         }
     },
@@ -378,7 +391,6 @@ const crudColumns = ref([
         hide: true,
         dataIndex: "designerPerson",
         formType: "input",
-        commonRules: [{ required: true, message: "开发人员必填" }]
     },
     {
         title: "开发方日期",
@@ -391,7 +403,6 @@ const crudColumns = ref([
         hide: true,
         dataIndex: "verifyPerson",
         formType: "select",
-        commonRules: [{ required: true, message: "提单人必填" }],
         dict: {
             url: "system/user/list",
             params: { project_id: route.query.id },

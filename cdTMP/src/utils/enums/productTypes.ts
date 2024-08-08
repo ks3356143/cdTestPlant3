@@ -10,3 +10,12 @@ export enum ProductFileEnum {
     bg = "测评报告",
     wtd = "问题单"
 }
+
+/**
+ * 常规tag颜色
+ */
+export enum TagColorEnum {
+    normal = "green",
+    warn = "orange",
+    sub = "magenta"
+}

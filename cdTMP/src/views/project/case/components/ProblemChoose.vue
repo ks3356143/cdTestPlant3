@@ -84,7 +84,6 @@ const handleRelatedChange = async (record) => {
         }
     }
     loading.value = false
-    treeStore.updateCaseTreeData(res.data, route.query.id)
     emits("relatedOrunrelated")
 }
 
@@ -324,7 +323,7 @@ const columns = ref([
                 if (!record.closeMethod.hasOwnProperty("1")) {
                     return (
                         <a-tag size="small" bordered color="magenta">
-                            还未闭环
+                            未选择闭环
                         </a-tag>
                     )
                 }
@@ -341,6 +340,12 @@ const columns = ref([
                     tagObj.push(
                         <a-tag size="small" bordered color="green">
                             修改程序
+                        </a-tag>
+                    )
+                } else if (record.closeMethod[item] === "3") {
+                    tagObj.push(
+                        <a-tag size="small" bordered color="red">
+                            其他方式闭环
                         </a-tag>
                     )
                 }

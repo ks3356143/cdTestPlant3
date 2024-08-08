@@ -92,7 +92,7 @@ const crudOptions = reactive({
     }
 })
 const crudColumns = reactive([
-    { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: false },
+    { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },
     {
         title: "名称",
         align: "center",
