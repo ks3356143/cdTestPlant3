@@ -42,9 +42,6 @@ const crudOptions = ref({
     delete: { show: true, api: caseApi.delete },
     operationColumnAlign: "center",
     isDbClickEdit: false, // 关闭双击编辑
-    afterDelete(response) {
-        crudRef.value.setSelecteds([])
-    },
     // 处理新增删除后树状图显示
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")
@@ -87,6 +84,8 @@ const crudOptions = ref({
             record = { key: route.query.key + "-X" }
         }
         treeDataStore.updateCaseTreeData(record, id)
+        // 被删除还是在选择里面
+        crudRef.value.tableRef.selectAll(false)
     },
     parameters: {
         projectId: route.query.id,

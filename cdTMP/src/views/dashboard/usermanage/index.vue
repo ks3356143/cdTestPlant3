@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from "vue"
+import { reactive, ref, onMounted, readonly } from "vue"
 import userApi from "@/api/system/user"
 import user from "@/api/system/user"
 import { Message } from "@arco-design/web-vue"
@@ -44,7 +44,7 @@ const crudOptions = reactive({
         showCheckedAll: true
     },
     afterDelete(response) {
-        crudRef.value.setSelecteds([])
+        crudRef.value.tableRef.selectAll(false)
     },
     // 是否显示操作列
     operationColumn: true,

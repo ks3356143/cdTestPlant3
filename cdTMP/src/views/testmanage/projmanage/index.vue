@@ -124,6 +124,8 @@ import { Message } from "@arco-design/web-vue"
 import Progress from "./cpns/progress.vue"
 import hoosk from "@/views/testmanage/projmanage/hooks.js"
 import { validateBlank } from "@/utils/extensions/arcoValidator"
+// addDefault、editDefault信息导入
+import textInfo from "@/config/textInfo"
 const router = useRouter()
 // 定义预览组件的Ref
 const previewRef = ref()
@@ -350,7 +352,6 @@ const handleFragmentClick = (record) => {
     })
 }
 
-// CRUD-OPTIONS
 const crudRef = ref()
 const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
@@ -367,7 +368,7 @@ const crudOptions = ref({
     operationColumnWidth: 280, // 操作列宽度
     operationColumnAlign: "center", // 操作列对齐方式
     afterDelete(response) {
-        crudRef.value.setSelecteds([])
+        crudRef.value.tableRef.selectAll(false)
     },
     // 处理弹窗的title
     beforeOpenAdd: function () {
@@ -775,6 +776,7 @@ const crudColumns = ref([
         title: "单位",
         dataIndex: "test_unit",
         hide: true,
+        addDefaultValue: textInfo.testUnitAddDefaultText,
         commonRules: [{ required: true, message: "单位必选" }],
         formType: "select",
         dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true }
@@ -783,6 +785,7 @@ const crudColumns = ref([
         formType: "input",
         title: "联系人",
         dataIndex: "test_contact",
+        addDefaultValue: textInfo.testUnitContactPersonName,
         hide: true,
         commonRules: [{ required: true, message: "联系人必填" }]
     },
@@ -790,6 +793,7 @@ const crudColumns = ref([
         formType: "input",
         title: "联系电话",
         dataIndex: "test_contact_phone",
+        addDefaultValue: textInfo.testUnintContactPhoneNumber,
         hide: true,
         maxLength: 11,
         commonRules: [

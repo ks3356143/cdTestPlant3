@@ -31,7 +31,10 @@ const crudOptions = reactive({
     pageLayout: "fixed",
     showTools: false,
     tablePagination: false,
-    bordered: { wrapper: true, cell: true }
+    bordered: { wrapper: true, cell: true },
+    afterDelete(response) {
+        crudRef.value.tableRef.selectAll(false)
+    }
 })
 const crudColumns = reactive([
     { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },

@@ -73,7 +73,7 @@ const crudOptions = ref<object>({
         params.projectId = route.params.projectId as string
     },
     afterDelete(response: any) {
-        crudRef.value.setSelecteds([])
+        crudRef.value.tableRef.selectAll(false)
     },
     showTools: false,
     operationColumn: true,

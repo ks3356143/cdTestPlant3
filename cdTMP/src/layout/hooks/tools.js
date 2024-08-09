@@ -1,3 +1,6 @@
+/**
+ * 获取a-tree右键的元素信息
+ */
 export function getContextNodeInfo(element) {
     const pElement = element.parentElement
     if (pElement.dataset.key) {

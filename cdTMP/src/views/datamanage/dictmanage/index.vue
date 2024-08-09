@@ -63,7 +63,7 @@ const crudOptions = ref({
     operationColumn: true,
     showTools: false,
     afterDelete(response) {
-        crudRef.value.setSelecteds([])
+        crudRef.value.tableRef.selectAll(false)
     }
 })
 

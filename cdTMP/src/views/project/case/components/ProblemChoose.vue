@@ -124,9 +124,6 @@ const crudOptions = ref({
     showTools: false, // 不显示工具栏
     operationColumn: true,
     operationColumnAlign: "center", // 操作列居中
-    afterDelete(response) {
-        crudRef.value.setSelecteds([])
-    },
     isDbClickEdit: false, // 双击不编辑当前列
     contextMenu: {
         enabled: true,
@@ -233,6 +230,7 @@ const crudOptions = ref({
     // 添加删除后置处理方法：让父组件知道我删除了，你必须刷新表格
     afterDelete(response, record) {
         emits("deleted")
+        crudRef.value.tableRef.selectAll(false)
     }
 })
 

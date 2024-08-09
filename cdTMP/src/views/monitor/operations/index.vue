@@ -63,6 +63,9 @@ const crudOptions = ref({
     formOption: {
         viewType: "drawer",
         width: 600
+    },
+    afterDelete(response) {
+        crudRef.value.tableRef.selectAll(false)
     }
 })
 const crudColumns = ref([

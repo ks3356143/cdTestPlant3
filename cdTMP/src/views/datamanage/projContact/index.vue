@@ -28,7 +28,7 @@ const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     showTools: false,
     afterDelete(response) {
-        crudRef.value.setSelecteds([])
+        crudRef.value.tableRef.selectAll(false)
     }
 })
 const crudColumns = ref([

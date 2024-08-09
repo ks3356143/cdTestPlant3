@@ -27,6 +27,7 @@ const router = createRouter({
             component: PROJECT_LAYOUT,
             meta: {
                 requiresAuth: true,
+                ignoreCache: true, // 忽略缓存
                 roles: ["*"],
                 order: 0,
                 locale: "项目工作区",

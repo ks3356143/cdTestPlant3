@@ -31,7 +31,7 @@
                 <div class="flex justify-between h-full">
                     <div class="en-title bg-red-600">NA</div>
                     <div class="w-full ml-3.5 flex justify-between items-center">
-                        进行项目统计
+                        进行中项目数
                         <a-space size="large" class="mr-3">
                             <div class="text-right">
                                 <div>总数</div>
@@ -71,7 +71,7 @@
                 <div class="flex justify-between h-full">
                     <div class="en-title bg-green-600">OC</div>
                     <div class="w-full ml-3.5 flex justify-between items-center">
-                        完成项目总数
+                        完成的项目数
                         <a-space size="large" class="mr-3">
                             <div class="text-right">
                                 <div>总数</div>

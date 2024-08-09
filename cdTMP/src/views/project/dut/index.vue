@@ -69,9 +69,6 @@ const crudOptions = ref({
     add: { show: true, api: designDemandApi.save, text: "新增设计需求" },
     edit: { show: true, api: designDemandApi.editDesignDemand, text: "编辑设计需求" },
     delete: { show: true, api: designDemandApi.delete },
-    afterDelete(response) {
-        crudRef.value.setSelecteds([])
-    },
     // 处理添加后函数
     beforeOpenAdd: function () {
         let key_split = route.query.key.split("-")
@@ -103,7 +100,10 @@ const crudOptions = ref({
             record = { key: route.query.key + "-X" }
         }
         treeDataStore.updateDesignDemandTreeData(record, id)
+        // 删除后情况行选择器
+        crudRef.value.tableRef.selectAll(false)
     },
+
     parameters: {
         projectId: route.query.id,
         round: roundNumber,

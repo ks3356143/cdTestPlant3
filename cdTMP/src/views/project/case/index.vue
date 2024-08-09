@@ -107,7 +107,7 @@ const crudOptions = ref({
         case: caseNumber
     },
     afterDelete(response) {
-        crudRef.value.setSelecteds([])
+        crudRef.value.tableRef.selectAll(false)
     },
     // 请求后置处理-用于新增/删除更新树状的用例关联问题单状态
     afterRequest(datas) {

@@ -11,6 +11,7 @@
                 >
                     测试管理平台
                 </a-typography-title>
+                <a-typography-title :heading="6" class="version">V0.0.1</a-typography-title>
                 <icon-menu-fold
                     v-if="!topMenu && appStore.device === 'mobile'"
                     style="font-size: 22px; cursor: pointer"
@@ -207,6 +208,10 @@ const handleClickLogo = () => {
         margin-left: 14px;
     }
 }
+.version {
+    color: #666;
+    user-select: none;
+}
 
 .title {
     cursor: pointer;
@@ -222,10 +227,18 @@ const handleClickLogo = () => {
 }
 @keyframes neon6 {
     from {
-        text-shadow: 0 0 10px #fff, 0 0 20px #2563eb, 0 0 30px #2563eb, 0 0 40px #2563eb;
+        text-shadow:
+            0 0 10px #fff,
+            0 0 20px #2563eb,
+            0 0 30px #2563eb,
+            0 0 40px #2563eb;
     }
     to {
-        text-shadow: 0 0 5px #fff, 0 0 10px #2563eb, 0 0 15px #2563eb, 0 0 20px #2563eb;
+        text-shadow:
+            0 0 5px #fff,
+            0 0 10px #2563eb,
+            0 0 15px #2563eb,
+            0 0 20px #2563eb;
     }
 }
 </style>

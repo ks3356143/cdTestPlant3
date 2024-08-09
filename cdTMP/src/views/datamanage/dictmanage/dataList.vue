@@ -101,7 +101,7 @@ const crudOptions = ref({
     edit: { show: true, api: dictApi.updateDictItemData },
     delete: { show: true, api: dictApi.realDeleteItem },
     afterDelete(response) {
-        crudRef.value.setSelecteds([])
+        crudRef.value.tableRef.selectAll(false)
     }
 })
 
