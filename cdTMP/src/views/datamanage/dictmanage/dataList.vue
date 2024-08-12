@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" fullscreen :footer="false">
+    <a-modal v-model:visible="visible" width="auto" draggable :footer="false">
         <template #title>维护数据字典 →【{{ currentRow.name }}】</template>
         <!-- crud组件 -->
         <div class="lg:w-full w-full lg:mt-0">
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from "vue"
+import { ref } from "vue"
 import dictApi from "@/api/system/dict"
 import { Message } from "@arco-design/web-vue"
 
@@ -40,9 +40,8 @@ const currentRow = ref({ id: undefined, name: undefined })
 // 改变dictItem的sort字段
 const changeSort = async (value, id) => {
     const response = await dictApi.numberOperation({ id, numberName: "sort", numberValue: value })
-    if (response.success) {
-        Message.success(response.message)
-    }
+    response.success && Message.success(response.message)
+    crudRef.value.refresh()
 }
 // 改变dictItem状态
 const changeStatus = async (status, id) => {
@@ -84,7 +83,7 @@ const open = (row) => {
         columnService.get("source").setAttr("editDisplay", false)
     }
 }
-// crudOptions
+// crud选项
 const crudOptions = ref({
     autoRequest: false,
     api: dictApi.getDictItemAll,

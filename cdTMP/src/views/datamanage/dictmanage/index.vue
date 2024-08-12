@@ -27,7 +27,7 @@
             </ma-crud>
         </div>
 
-        <data-list ref="datalist"></data-list>
+        <data-list ref="datalistRef"></data-list>
     </div>
 </template>
 
@@ -38,11 +38,11 @@ import { Message } from "@arco-design/web-vue"
 import DataList from "./dataList.vue"
 
 const crudRef = ref()
-const datalist = ref()
+const datalistRef = ref()
 
 // 打开datalist页面
 const openDictList = async (row) => {
-    datalist.value.open(row)
+    datalistRef.value.open(row)
 }
 
 // 点击切换status

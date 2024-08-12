@@ -36,6 +36,7 @@ import "tinymce/plugins/searchreplace" // 查找替换
 import "tinymce/plugins/table" // 表格
 // import "tinymce/plugins/visualblocks" //显示元素范围
 import "tinymce/plugins/visualchars" // 显示不可见字符
+import { storeToRefs } from "pinia"
 // import "tinymce/plugins/wordcount" // 字数统计
 
 const appStore = useAppStore()
@@ -45,7 +46,7 @@ const props = defineProps({
     height: { type: Number, default: 200 },
     id: {
         type: String,
-        default: () => "tinymce" + new Date().getTime().toString() + "-" + Math.random().toString(16).substring(2,10)
+        default: () => "tinymce" + new Date().getTime().toString() + "-" + Math.random().toString(16).substring(2, 10)
     },
     plugins: {
         type: [String, Array],
@@ -73,7 +74,9 @@ let content = computed({
 
 const list = ref([])
 
-// 辅助函数：遍历元素和子元素的style样式
+/**
+ * 辅助函数：遍历元素和子元素的style样式
+ */
 function cleanStyles(element) {
     element.removeAttribute("style") // 移除元素自身的style属性
     element.removeAttribute("class") // 移除元素自身的class属性
@@ -84,7 +87,9 @@ function cleanStyles(element) {
     }
 }
 
-// 辅助函数：将元素中span变为text节点
+/**
+ * 辅助函数：将元素中span变为text节点
+ */
 function removeUnwantedSpansAndMore(element) {
     // 所有span变为字符串
     const spans = element.querySelectorAll("span")
@@ -106,7 +111,9 @@ function removeUnwantedSpansAndMore(element) {
     }
 }
 
-// 辅助函数：去掉注释节点
+/**
+ * 辅助函数：去掉注释节点
+ */
 function removeCommentNodes(node) {
     const childNodes = node.childNodes
     // 遍历子节点
@@ -120,18 +127,24 @@ function removeCommentNodes(node) {
     }
 }
 
+// 解构pinia中app仓库中的主题响应式数据
+const { theme } = storeToRefs(appStore)
+
 const initConfig = reactive({
     menubar: false, // 菜单栏显隐
     language_url: "/tinymce/i18n/zh_CN.js",
     language: "zh_CN",
-    skin_url: "/tinymce/skins/ui/tinymce-5",
+    skin_url: "/tinymce/skins/ui/tinymce-5" + (theme.value === "dark" ? "-dark" : ""),
     height: props.height,
     toolbar_mode: "wrap",
     plugins: props.plugins,
     toolbar: props.toolbar,
     skeletonScreen: true,
     branding: false,
-    content_css: "/tinymce/skins/content/default/content.css",
+    content_css:
+        theme.value === "dark"
+            ? "/tinymce/skins/content/dark/content.css"
+            : "/tinymce/skins/content/default/content.css",
     // selector: "#textarea1", // 下面自定义样式选中的区域为编辑区
     content_style: "body {line-height:1.5;font-size:14px;} p {margin:2px 0px;}", // 这里可以设置自定义样式
     // paste_as_text: false, // 粘贴文字只能是纯文本
@@ -175,7 +188,9 @@ watch(
 )
 watch(
     () => content.value,
-    (vl) => emit("change", vl)
+    (vl) => {
+        emit("change", vl)
+    }
 )
 </script>
 <style lang="less"></style>

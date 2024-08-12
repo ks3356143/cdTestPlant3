@@ -1,7 +1,7 @@
 import { ref } from "vue"
 
 /**
- * 该hook传入一个远程数据储存默认值，以及请求远程数据的函数
+ * 该hook传入一个远程数据储存默认值以及请求服务器的异步函数，以及请求远程数据的函数
  */
 const useFetchData = (defaultValue = {}, fetDataFunc) => {
     const loadingData = ref(defaultValue) // 远程请求的数据

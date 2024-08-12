@@ -23,13 +23,14 @@ const useAppStore = defineStore("app", {
             this.$patch(partial)
         },
         // 改变主题
-        toggleTheme(dark) {
-            if (dark) {
-                this.theme = "dark"
-                document.body.setAttribute("arco-theme", "dark")
-            } else {
+        toggleTheme() {
+            const currentTheme = document.body.getAttribute("arco-theme")
+            if (currentTheme === "dark") {
                 this.theme = "light"
                 document.body.setAttribute("arco-theme", "light")
+            } else {
+                this.theme = "dark"
+                document.body.setAttribute("arco-theme", "dark")
             }
         },
         // 切换用户设备

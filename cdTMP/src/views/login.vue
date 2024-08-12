@@ -23,7 +23,14 @@
                             { maxLength: 30, message: '用户名不能超过30个字符' }
                         ]"
                     >
-                        <a-input v-model="form.username" class="w-full" size="large" placeholder="用户名" allow-clear :max-length="30">
+                        <a-input
+                            v-model="form.username"
+                            class="w-full"
+                            size="large"
+                            placeholder="用户名"
+                            allow-clear
+                            :max-length="30"
+                        >
                             <template #prefix><icon-user /></template>
                         </a-input>
                     </a-form-item>
@@ -36,7 +43,13 @@
                             { maxLength: 30, message: '密码不超过30字符' }
                         ]"
                     >
-                        <a-input-password v-model="form.password" placeholder="请输入密码" size="large" allow-clear :max-length="30">
+                        <a-input-password
+                            v-model="form.password"
+                            placeholder="请输入密码"
+                            size="large"
+                            allow-clear
+                            :max-length="30"
+                        >
                             <template #prefix><icon-lock /></template>
                         </a-input-password>
                     </a-form-item>
@@ -52,7 +65,13 @@
                             }
                         ]"
                     >
-                        <a-input v-model="form.code" placeholder="请输入验证码" size="large" allow-clear :max-length="4">
+                        <a-input
+                            v-model="form.code"
+                            placeholder="请输入验证码"
+                            size="large"
+                            allow-clear
+                            :max-length="4"
+                        >
                             <template #prefix><icon-safe /></template>
                             <template #append>
                                 <verify-code ref="Verify" />

@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted, readonly } from "vue"
+import { reactive, ref } from "vue"
 import userApi from "@/api/system/user"
 import user from "@/api/system/user"
 import { Message } from "@arco-design/web-vue"
@@ -99,9 +99,22 @@ const crudColumns = reactive([
         dataIndex: "name",
         search: true,
         width: 80,
-        commonRules: [{ required: true, message: "名称必填" }]
+        commonRules: [
+            { required: true, message: "名称必填" },
+            { maxLength: 50, message: "名称不能超过50个字符" }
+        ]
     },
-    { title: "用户名", dataIndex: "username", search: true, align: "center" },
+    {
+        title: "用户名",
+        dataIndex: "username",
+        search: true,
+        align: "center",
+        commonRules: [
+            { required: true, message: "用户名必填" },
+            { maxLength: 18, message: "用户名不能超过18个字符" },
+            { minLength: 5, message: "用户名不能少于5个字符" }
+        ]
+    },
     {
         title: "电话",
         align: "center",

@@ -22,7 +22,9 @@
         <div class="center-side flex items-center justify-center font-bold text-lg">
             <template v-if="title">
                 <a-typography-title :style="{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }" :heading="4">
-                    项目名称：{{ $route.query.ident }}-{{ title }}
+                    项目名称：{{ $route.query.ident }}-{{ title }}- key的值为：{{
+                        route.query.key ? route.query.key : "无key值"
+                    }}
                 </a-typography-title>
             </template>
             <Menu v-if="topMenu"></Menu>
@@ -101,14 +103,13 @@ import { useFullscreen } from "@vueuse/core"
 import useUser from "@/hooks/logout"
 import { Message } from "@arco-design/web-vue"
 import Menu from "@/layout/components/menu.vue"
-import { useRouter } from "vue-router"
+import { useRouter, useRoute } from "vue-router"
 const router = useRouter()
+const route = useRoute()
 const appStore = useAppStore()
 // 切换暗黑主题
 const handleChangeTheme = () => {
-    document.body.hasAttribute("arco-theme")
-        ? document.body.removeAttribute("arco-theme")
-        : document.body.setAttribute("arco-theme", "dark")
+    appStore.toggleTheme()
 }
 // title管理-默认在后台
 const props = defineProps({
