@@ -11,7 +11,7 @@
                 >
                     测试管理平台
                 </a-typography-title>
-                <a-typography-title :heading="6" class="version">V0.0.1</a-typography-title>
+                <a-typography-title :heading="6" class="version">V0.0.2</a-typography-title>
                 <icon-menu-fold
                     v-if="!topMenu && appStore.device === 'mobile'"
                     style="font-size: 22px; cursor: pointer"
@@ -22,9 +22,7 @@
         <div class="center-side flex items-center justify-center font-bold text-lg">
             <template v-if="title">
                 <a-typography-title :style="{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }" :heading="4">
-                    项目名称：{{ $route.query.ident }}-{{ title }}- key的值为：{{
-                        route.query.key ? route.query.key : "无key值"
-                    }}
+                    项目名称：{{ $route.query.ident }}-{{ title }}
                 </a-typography-title>
             </template>
             <Menu v-if="topMenu"></Menu>

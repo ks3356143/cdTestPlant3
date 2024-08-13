@@ -6,7 +6,7 @@ import qs, { stringify } from "qs"
 import { h } from "vue"
 import { IconFaceFrownFill } from "@arco-design/web-vue/dist/arco-vue-icon"
 
-// createService
+// 创建axios实例，添加请求和响应拦截器，返回该axios实例
 function createService() {
     // 创建axios实例
     const service = axios.create()
@@ -21,7 +21,6 @@ function createService() {
     // 实例的response响应拦截器
     service.interceptors.response.use(
         (res) => {
-            // 如果发现响应头有文件传输扩展，或者响应头为application/json，或者直接status=200
             if (
                 (res.headers["content-disposition"] || !/^application\/json/.test(res.headers["content-type"])) &&
                 res.status === 200
@@ -33,17 +32,15 @@ function createService() {
                 res.data.message = "服务器内部错误"
                 res.data.success = false
             } else if (res.data.code && res.data.code !== 200) {
+                // 如果data里面code字段不为200
                 Message.error({
                     content: res.data.message,
-                    // 注意奇怪的用法
                     icon: () => h(IconFaceFrownFill)
                 })
             }
             return res.data
         },
         (error) => {
-            // 其实基本逻辑是有message写message
-            // 没用message再去找默认的response的status
             const err = (text) => {
                 Message.error({
                     content:
@@ -79,6 +76,7 @@ function createService() {
                         break
                     default:
                         err("未知错误！")
+                        break
                 }
             } else {
                 err("请求超时，服务器无响应！")
@@ -96,7 +94,6 @@ function createService() {
 function createRequest(service) {
     return function (config) {
         const env = import.meta.env
-        // localStorage获取token信息
         const token = tool.local.get(env.VITE_APP_TOKEN_PREFIX)
         const configDefault = {
             headers: {
@@ -108,12 +105,7 @@ function createRequest(service) {
             baseURL: env.VITE_APP_OPEN_PROXY === "true" ? env.VITE_APP_PROXY_PREFIX : env.VITE_APP_BASE_URL,
             data: {}
         }
-        // option是configDefault和传入的config合并
         const option = Object.assign(configDefault, config)
-        // lodash的isEmpty函数可以判断对象属性是否为空/数组是否为空->为空则返回true
-        // qs中stringfy作用是urlencode
-        // { c: 'b', a: 'd' } -> 'c=b&a=d'
-        // 如果有params就转为urlencode样子
         if (!isEmpty(option.params)) {
             option.url = option.url + "?" + stringify(option.params)
             option.params = {}
@@ -122,7 +114,5 @@ function createRequest(service) {
     }
 }
 
-// 上面两个函数一个为增加实例拦截器，一个是传入实例后请求
 export const service = createService()
-// 返回的是一个函数，这个函数传入config然后添加上默认config然后发出实例的请求
 export const request = createRequest(service)

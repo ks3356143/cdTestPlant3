@@ -40,6 +40,7 @@ const router = createRouter({
                     component: () => import("@/views/project/round/index.vue"),
                     meta: {
                         requiresAuth: true,
+                        ignoreCache: true,
                         roles: ["*"],
                         locale: "轮次信息",
                         icon: "icon-arrow-right"
@@ -51,6 +52,7 @@ const router = createRouter({
                     component: () => import("@/views/project/dut/index.vue"),
                     meta: {
                         requiresAuth: true,
+                        ignoreCache: true,
                         roles: ["*"],
                         locale: "被测件信息",
                         icon: "icon-arrow-right"
@@ -62,6 +64,7 @@ const router = createRouter({
                     component: () => import("@/views/project/design-demand/index.vue"),
                     meta: {
                         requiresAuth: true,
+                        ignoreCache: true,
                         roles: ["*"],
                         locale: "设计需求",
                         icon: "icon-arrow-right"
@@ -73,6 +76,7 @@ const router = createRouter({
                     component: () => import("@/views/project/testDemand/index.vue"),
                     meta: {
                         requiresAuth: true,
+                        ignoreCache: true,
                         roles: ["*"],
                         locale: "测试需求",
                         icon: "icon-arrow-right"
@@ -84,6 +88,7 @@ const router = createRouter({
                     component: () => import("@/views/project/case/index.vue"),
                     meta: {
                         requiresAuth: true,
+                        ignoreCache: true,
                         roles: ["*"],
                         locale: "测试用例",
                         icon: "icon-arrow-right"
@@ -95,6 +100,7 @@ const router = createRouter({
                     component: () => import("@/views/project/problem/index.vue"),
                     meta: {
                         requiresAuth: true,
+                        ignoreCache: true,
                         roles: ["*"],
                         locale: "问题单详情",
                         icon: "icon-arrow-right"

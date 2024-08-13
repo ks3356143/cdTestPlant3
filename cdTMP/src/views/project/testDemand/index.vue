@@ -2,7 +2,7 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
+            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef" @beforeCancel="handleBeforeCancel">
                 <template #ident="{ record }">
                     {{ showType(record) }}
                 </template>
@@ -13,11 +13,12 @@
 </template>
 
 <script setup lang="jsx">
-import { ref } from "vue"
+import { ref, getCurrentInstance } from "vue"
 import { useRoute } from "vue-router"
 import caseApi from "@/api/project/case"
 import { useTreeDataStore } from "@/store"
 import ProblemForm from "@/views/project/case/components/ProblemForm.vue"
+import { isEqual, cloneDeep } from "lodash"
 const problemFormRef = ref(null)
 const title = ref("问题单表单")
 const treeDataStore = useTreeDataStore()
@@ -34,7 +35,29 @@ const showType = (record) => {
     return "YL-" + record.testType + "-" + record.ident + "-" + key_string.toString().padStart(3, "0")
 }
 
-// crud设置
+// crud设置以及是否保留step数据事件函数
+const app = getCurrentInstance().appContext.config.globalProperties
+let beforeFormStep = undefined
+const handleBeforeCancel = () => {
+    if (!beforeFormStep) {
+        return
+    }
+    console.log(beforeFormStep)
+    crudRef.value.getFormData().testStep
+    const iuEqualValue = isEqual(crudRef.value.getFormData().testStep, beforeFormStep)
+    !iuEqualValue &&
+        app.$modal.confirm({
+            title: "测试项步骤内容你已改动，是否保留您编写的测试项/测试用例步骤数据？",
+            content: "",
+            okText: "保留",
+            cancelText: "恢复原数据",
+            simple: true,
+            onOk: () => null,
+            onCancel: () => {
+                crudRef.value.refresh()
+            }
+        })
+}
 const crudOptions = ref({
     api: caseApi.getCaseList,
     add: { show: true, api: caseApi.save, text: "新增用例" },
@@ -44,6 +67,9 @@ const crudOptions = ref({
     isDbClickEdit: false, // 关闭双击编辑
     // 处理新增删除后树状图显示
     beforeOpenAdd: function () {
+        // 1.新增则将form的content数据变为undifined以便判断
+        beforeFormStep = undefined
+        // 2.标识处理
         let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]
@@ -57,6 +83,9 @@ const crudOptions = ref({
         return true
     },
     beforeOpenEdit: function (record) {
+        // 1.储存打开前form的content数据到ref中，以便后续比较
+        beforeFormStep = cloneDeep(record.testStep)
+        // 2.标识处理
         let key_split = route.query.key.split("-")
         let round_key = key_split[0]
         let dut_key = key_split[1]

@@ -1,8 +1,10 @@
 <template>
+    <!-- add：on-before-cancel -->
     <component
         :is="componentName"
         v-model:visible="dataVisible"
         :on-before-ok="submit"
+        :on-before-cancel="beforeCancel"
         @cancel="close"
         ok-text="保存"
         cancel-text="关闭"
@@ -46,7 +48,7 @@ const dataVisible = ref(false)
 const form = ref({})
 const actionTitle = ref("")
 const dataLoading = ref(true)
-const emit = defineEmits(["success", "error"])
+const emit = defineEmits(["success", "error", "beforeCancel"])
 
 provide("form", toRaw(form))
 
@@ -133,6 +135,11 @@ const open = () => {
         componentName.value = options.formOption.viewType === "drawer" ? "a-drawer" : "a-modal"
         dataVisible.value = true
     }
+}
+// ~~~~addMethod~~~~
+const beforeCancel = () => {
+    emit("beforeCancel")
+    return true
 }
 const close = () => {
     dataVisible.value = false

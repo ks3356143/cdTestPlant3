@@ -140,7 +140,7 @@
                                 class="ma-crud-table-tr"
                                 :class="
                                     isFunction(options.rowCustomClass)
-                                        ? options.rowCustomClass(record, rowIndex) ?? []
+                                        ? (options.rowCustomClass(record, rowIndex) ?? [])
                                         : options.rowCustomClass
                                 "
                                 @contextmenu.prevent="openContextMenu($event, record)"
@@ -215,7 +215,7 @@
 
         <ma-setting ref="crudSettingRef" />
 
-        <ma-form ref="crudFormRef" @success="requestSuccess">
+        <ma-form ref="crudFormRef" @success="requestSuccess" v-bind="$attrs">
             <template v-for="slot in Object.keys($slots)" #[slot]="component">
                 <slot :name="slot" v-bind="component" />
             </template>
