@@ -27,6 +27,8 @@ const changeStatusWrapper = (record) => {
         const res = await userApi.changeUserStatus({ user_status: newVal, userId: record.id })
         if (res.data) {
             Message.success(res.data === "1" ? "启用成功" : "禁用成功")
+            // 重新刷新页面保持数据一致性
+            crudRef.value.refresh()
         }
     }
 }

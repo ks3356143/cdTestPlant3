@@ -42,7 +42,6 @@ const handleBeforeCancel = () => {
     if (!beforeFormStep) {
         return
     }
-    console.log(beforeFormStep)
     crudRef.value.getFormData().testStep
     const iuEqualValue = isEqual(crudRef.value.getFormData().testStep, beforeFormStep)
     !iuEqualValue &&

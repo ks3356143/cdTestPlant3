@@ -5,6 +5,7 @@ export default function setupUserLoginInfoGuard(router) {
     router.beforeEach(async (to, from) => {
         NProgress.start()
         const userStore = useUserStore()
+        // 如果用户已经登录
         if (userStore.isLogin()) {
             if (userStore.role) {
                 return

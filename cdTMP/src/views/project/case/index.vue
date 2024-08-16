@@ -286,7 +286,6 @@ const crudColumns = ref([
             props: { label: "title", value: "key" }
         },
         customRender: ({ record }) => {
-            console.log(record.closeMethod)
             // 判断是否具有1：修改文档
             if (!record.closeMethod.hasOwnProperty("0")) {
                 if (!record.closeMethod.hasOwnProperty("1")) {

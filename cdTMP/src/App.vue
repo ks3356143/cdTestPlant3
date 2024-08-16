@@ -10,7 +10,10 @@ const storageEvent = function (e: StorageEvent) {
     if (e.key === "token") {
         Modal.warning({
             title: "警告消息",
-            content: "登录用户在其他窗口发生改变，正在刷新浏览器"
+            content: "登录用户在其他窗口发生改变，正在刷新浏览器",
+            onOk: () => {
+                location.reload()
+            }
         })
     }
 }

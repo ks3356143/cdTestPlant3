@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+// 本组件是在：测试项页面 -> 显示用例关联的问题单
 import { ref, reactive } from "vue"
 import { IProps } from "./problemFormTypes"
 import { useRoute } from "vue-router"
@@ -178,13 +179,11 @@ const columnsOptions = reactive([
                         title: "开发人员",
                         dataIndex: "designerPerson",
                         formType: "input",
-                        rules: [{ required: true, message: "开发人员必填" }]
                     },
                     {
                         title: "回归人员",
                         dataIndex: "verifyPerson",
                         formType: "select",
-                        rules: [{ required: true, message: "回归人" }],
                         dict: {
                             url: "system/user/list",
                             translation: true,

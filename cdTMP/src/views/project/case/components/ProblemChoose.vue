@@ -36,11 +36,12 @@
 </template>
 
 <script setup lang="jsx">
+// 本组件位置：1.在右键轮次问题单 2.用例界面关联问题单
 import { ref } from "vue"
 import problemApi from "@/api/project/problem"
 import problemSingleApi from "@/api/project/singleProblem"
-import { Message, Notification } from "@arco-design/web-vue"
-import { useRoute, useRouter } from "vue-router"
+import { Notification } from "@arco-design/web-vue"
+import { useRoute } from "vue-router"
 import CaseModal from "./CaseModal.vue"
 import useTreeStore from "@/store/project/treeData"
 const route = useRoute()
@@ -455,7 +456,6 @@ const columns = ref([
         hide: true,
         dataIndex: "designerPerson",
         formType: "input",
-        commonRules: [{ required: true, message: "开发人员必填" }]
     },
     {
         title: "开发方日期",
@@ -468,7 +468,6 @@ const columns = ref([
         hide: true,
         dataIndex: "verifyPerson",
         formType: "select",
-        commonRules: [{ required: true, message: "回归人" }],
         dict: {
             url: "system/user/list",
             params: { project_id: route.query.id },

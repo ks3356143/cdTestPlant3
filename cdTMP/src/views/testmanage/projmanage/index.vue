@@ -28,27 +28,27 @@
                             </p>
                             <p>
                                 <a-link :disabled="isGenerating" :loading="isJlloading" @click="createJLItem(record)">
-                                    记录二级文档
+                                    记录二段文档
                                 </a-link>
                             </p>
                             <p>
                                 <a-link :disabled="isGenerating" :loading="isBgLoading" @click="createBgItem(record)">
-                                    报告二级文档
+                                    报告二段文档
                                 </a-link>
                             </p>
                             <p>
                                 <a-link :disabled="isGenerating" :loading="ishsmLoading" @click="createHsmItem(record)">
-                                    回归说明二级文档
+                                    回归说明二段文档
                                 </a-link>
                             </p>
                             <p>
                                 <a-link :disabled="isGenerating" :loading="ishjlLoading" @click="createHjlItem(record)">
-                                    回归记录二级文档
+                                    回归记录二段文档
                                 </a-link>
                             </p>
                             <p>
                                 <a-link :disabled="isGenerating" :loading="isWtdLoading" @click="createWtdItem(record)">
-                                    问题单二级文档
+                                    问题单二段文档
                                 </a-link>
                             </p>
                             <p>
