@@ -1,0 +1,181 @@
+import { ref } from "vue"
+import dgGenerateApi from "@/api/generate/dgGenerate"
+import smGenerateApi from "@/api/generate/smGenerate"
+import jlGenerateApi from "@/api/generate/jlGenerate"
+import bgGenerateApi from "@/api/generate/bgGenerate"
+import hsmGenerateApi from "@/api/generate/hsmGenerate"
+import hjlGenerateApi from "@/api/generate/hjlGenerate"
+import wtdGenerateApi from "@/api/generate/wtdGenerate"
+import { Message } from "@arco-design/web-vue"
+
+const useGenerateSecond = function () {
+    // refs
+    const isGenerating = ref(false) // 在二级文档生成过程中禁用按钮点击
+    // 用于显示是否正在加载（全部按钮各一个）
+    const isDgLoading = ref(false)
+    const isSmLoading = ref(false)
+    const isBgLoading = ref(false)
+    const isJlloading = ref(false)
+    const ishsmLoading = ref(false)
+    const ishjlLoading = ref(false)
+    const isWtdLoading = ref(false)
+    // events
+    // 记录生成二级文档
+    const createJLItem = async (record: any) => {
+        isGenerating.value = true
+        isJlloading.value = true
+        await jlGenerateApi.createJLcaserecord({ id: record.id }).finally(() => {
+            isGenerating.value = false
+            isJlloading.value = false
+        })
+        Message.success("记录-片段库生成成功，请查看output/jl文件夹")
+    }
+    // 说明生成二级文档
+    const createSmItem = async (record: any) => {
+        isGenerating.value = true
+        isSmLoading.value = true
+        const id = record.id
+        await Promise.all([
+            dgGenerateApi.createSoftComposition({ id }), // 生成测评对象 - 和大纲一样
+            dgGenerateApi.createFuncList({ id }), // 生成被测软件功能 - 和大纲重复
+            dgGenerateApi.createInterface({ id }), // 生成被测软件接口 - 和大纲重复 - 可能会删除
+            dgGenerateApi.createPerformance({ id }), // 生成被测软件性能 - 和大纲重复 - 可能会删除
+            dgGenerateApi.createBaseInformation({ id }), // 生成被测软件基本信息 - 和大纲重复 - 可能会删除
+            dgGenerateApi.createYiju({ id }), // 生成标准类引用文档 - 和大纲重复 - 可能会删除
+            smGenerateApi.createSMTechyiju({ id }), // 生成技术类引用文档列表 -> 在大纲基础上添加《测评大纲》
+            dgGenerateApi.createEnvironment({ id }), // 生成软硬件环境（注意标题级别不一样，这个在最后处理）
+            smGenerateApi.createSMCaseList({ id }), // 生成用例全
+            smGenerateApi.createSMCaseBreifList({ id }), // 生成用例列表-那个表格
+            smGenerateApi.createSMTrack({ id }) // 生成说明追踪
+        ]).finally(() => {
+            isGenerating.value = false
+            isSmLoading.value = false
+        })
+        Message.success("说明-片段库生成成功，请查看output/sm文件夹")
+    }
+    // 大纲生成二级文档
+    const createDgItem = async (e: any, record: any) => {
+        isGenerating.value = true
+        isDgLoading.value = true
+        const id = record.id
+        await Promise.all([
+            dgGenerateApi.createTestDemand({ id }), // 生成第一轮测试项
+            dgGenerateApi.createYiju({ id }), // 生成依据文件
+            dgGenerateApi.createTechYiju({ id }), // 技术依据文件
+            dgGenerateApi.createContact({ id }), // 生成联系人和方式
+            dgGenerateApi.createTimeaddress({ id }), // 生成测评时间和地点
+            dgGenerateApi.createFuncList({ id }), // 生成被测软件功能列表
+            dgGenerateApi.createSoftComposition({ id }), // 生成测评对象-软件组成
+            dgGenerateApi.createAdequacyEffectiveness({ id }), // 生成测试充分性（adequancy）和有效性（effectiveness）说明
+            dgGenerateApi.createGroup({ id }), // 生成测评组织及分工
+            dgGenerateApi.createGuarantee({ id }), // 生成测评保障
+            dgGenerateApi.createAbbreviation({ id }), // 生成缩略语
+            dgGenerateApi.createInterface({ id }), // 生成-被测软件接口
+            dgGenerateApi.createPerformance({ id }), // 生成-被测软件性能
+            dgGenerateApi.createBaseInformation({ id }), // 生成-被测软件基本信息
+            dgGenerateApi.createRequirement({ id }), // 生成-测试总体要求
+            dgGenerateApi.createYzComparison({ id }), // 生成-研总-测试项对照表
+            dgGenerateApi.createXqComparison({ id }), // 生成-需求规格说明-测试项对照表
+            dgGenerateApi.createFanXqComparison({ id }), // 生成-反向测试项-需求规格说明对照表
+            dgGenerateApi.createCodeQuality({ id }), // 生成-代码质量度量分析表
+            dgGenerateApi.createEnvironment({ id }), // 生成-软硬件环境
+            dgGenerateApi.createMainTech({ id }) // 生成-主要战技指标
+        ]).finally(() => {
+            isGenerating.value = false
+            isDgLoading.value = false
+        })
+        Message.success("大纲-片段库文档生成成功，请查看output/dg文件夹")
+    }
+    // 报告生成二级文档
+    const createBgItem = async (record: any) => {
+        isGenerating.value = true
+        isBgLoading.value = true
+        const id = record.id
+        await Promise.all([
+            bgGenerateApi.deleteBGFiles({ id }), // 删除output/bg文件夹下文件
+            bgGenerateApi.createBgTechYiju({ id }),
+            bgGenerateApi.createBgTimeaddress({ id }),
+            bgGenerateApi.createBgBaseInformation({ id }),
+            bgGenerateApi.createBgCompletionstatus({ id }),
+            bgGenerateApi.createBgSummary({ id }),
+            bgGenerateApi.createBgContentandresults1({ id }),
+            bgGenerateApi.createBgContentandresults2({ id }),
+            bgGenerateApi.createBgEffectAndAdquacy({ id }),
+            bgGenerateApi.createBgDemandEffective({ id }),
+            bgGenerateApi.createBgQualityEvaluate({ id }),
+            bgGenerateApi.createBgEntire({ id }),
+            bgGenerateApi.createBgYzxqTrack({ id }),
+            bgGenerateApi.createBgProblemsSummary({ id })
+        ]).finally(() => {
+            isGenerating.value = false
+            isBgLoading.value = false
+        })
+        Message.success("报告-片段库文档生成成功，请查看output/bg文件夹")
+    }
+    // 回归测试说明二级文档
+    const createHsmItem = async (record: any) => {
+        const id = record.id
+        isGenerating.value = true
+        ishsmLoading.value = true
+        await Promise.all([
+            hsmGenerateApi.deleteHSMFiles({ id }), // 先删除以前文件
+            hsmGenerateApi.createBasicInfo({ id }),
+            hsmGenerateApi.createDocSummary({ id }),
+            hsmGenerateApi.createJstech({ id }),
+            hsmGenerateApi.createChangePart({ id }),
+            hsmGenerateApi.createHdemand({ id }),
+            hsmGenerateApi.createCaseListDesc({ id }),
+            hsmGenerateApi.createCaseList({ id }),
+            hsmGenerateApi.createTrack({ id })
+        ]).finally(() => {
+            isGenerating.value = false
+            ishsmLoading.value = false
+        })
+        Message.success("回归说明-片段库文档生成成功，请查看output/hsm文件夹")
+    }
+    // 回归测试记录二级文档
+    const createHjlItem = async (record: any) => {
+        const id = record.id
+        isGenerating.value = true
+        ishjlLoading.value = true
+        await Promise.all([
+            hjlGenerateApi.deleteHJLFiles({ id }), // 先调用删除文件夹里面文件
+            hjlGenerateApi.createBasicInfo({ id }),
+            hjlGenerateApi.createCaseinfo({ id })
+        ]).finally(() => {
+            isGenerating.value = false
+            ishjlLoading.value = false
+        })
+        Message.success("回归记录-片段库文档生成成功，请查看output/hjl文件夹")
+    }
+    // 问题单二级文档
+    const createWtdItem = async (record: any) => {
+        isGenerating.value = true
+        isWtdLoading.value = true
+        await wtdGenerateApi.createWtdTable({ id: record.id }).finally(() => {
+            isGenerating.value = false
+            isWtdLoading.value = false
+        })
+        Message.success("问题单-片段库文档生成成功，请查看output/wtd文件夹")
+    }
+
+    return {
+        isGenerating,
+        isDgLoading,
+        isSmLoading,
+        isBgLoading,
+        isJlloading,
+        ishsmLoading,
+        ishjlLoading,
+        isWtdLoading,
+        createJLItem,
+        createSmItem,
+        createDgItem,
+        createBgItem,
+        createHsmItem,
+        createHjlItem,
+        createWtdItem
+    }
+}
+
+export default useGenerateSecond

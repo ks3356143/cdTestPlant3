@@ -1,4 +1,5 @@
 import { DEFAULT_ROUTE, DEFAULT_ROUTE_NAME, REDIRECT_ROUTE_NAME } from "@/router/constants"
+import { WORK_AREA_NAME } from "@/router"
 import { defineStore } from "pinia"
 import { isString } from "@/utils/is"
 const formatTag = (route) => {
@@ -11,7 +12,8 @@ const formatTag = (route) => {
         ignoreCache: meta.ignoreCache
     }
 }
-const BAN_LIST = [REDIRECT_ROUTE_NAME]
+// 去除的页面名称，这里去除项目工作区页面
+const BAN_LIST = [REDIRECT_ROUTE_NAME, WORK_AREA_NAME]
 const useTabBarStore = defineStore("tabBar", {
     state: () => ({
         // 修改：添加"用户中心到缓存"

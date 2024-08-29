@@ -1,3 +1,6 @@
+/**
+ * 该文件定义默认响应data数据的结构
+ */
 export default {
     // 响应返回解析
     parseResponseData: (res) => {

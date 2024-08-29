@@ -131,6 +131,7 @@ function removeCommentNodes(node) {
 const { theme } = storeToRefs(appStore)
 
 const initConfig = reactive({
+    api_key: "ae9bz8l50ymnme8mtw1vp6prbj8n6ow59evb1nthdivzlk8s",
     menubar: false, // 菜单栏显隐
     language_url: "/tinymce/i18n/zh_CN.js",
     language: "zh_CN",

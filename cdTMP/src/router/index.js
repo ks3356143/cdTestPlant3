@@ -5,6 +5,10 @@ import { appRoutes } from "./routes"
 import { REDIRECT_MAIN, NOT_FOUND_ROUTE, PROJECT_LAYOUT } from "./routes/base"
 import createRouteGuard from "@/router/guard/index"
 
+
+// 定义工作区路由名称，为了不写死
+export const WORK_AREA_NAME = "project"
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -31,7 +35,8 @@ const router = createRouter({
                 roles: ["*"],
                 order: 0,
                 locale: "项目工作区",
-                icon: "icon-home"
+                icon: "icon-home",
+                hideInMenu: true
             },
             children: [
                 {
