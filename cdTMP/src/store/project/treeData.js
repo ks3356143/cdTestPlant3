@@ -10,10 +10,12 @@ const useTreeDataStore = defineStore("treeDataStore", {
             isInit: false
         }
     },
+    /**
+     * 注意action不能使用箭头函数，不能绑定this
+     */
     actions: {
-        // 不能使用箭头函数，无法绑定this
         async initTreeData(projectId) {
-            // 先判断储存的pid是否存在
+            // 判读是否有项目tree储存：pid为项目后端id
             const pid = localStorage.getItem("pid")
             // 如果不存在，则请求后台树状数据
             if (!pid) {

@@ -86,6 +86,8 @@ const handleRelatedChange = async (record) => {
     }
     loading.value = false
     emits("relatedOrunrelated")
+    // 重新刷新表格请求
+    crudRef.value.refresh()
 }
 
 // 数据定义
@@ -455,7 +457,7 @@ const columns = ref([
         title: "开发人员",
         hide: true,
         dataIndex: "designerPerson",
-        formType: "input",
+        formType: "input"
     },
     {
         title: "开发方日期",

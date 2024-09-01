@@ -12,7 +12,7 @@
                         <template #icon>
                             <icon-plus-circle />
                         </template>
-                        关联添加问题单
+                        添加关联问题单
                     </a-button>
                 </template>
             </ma-crud>

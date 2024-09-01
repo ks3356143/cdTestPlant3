@@ -76,5 +76,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 请求：取消生成文档标志设置为True
+     * @returns 返回是否取消成功
+     */
+    cancel(params = {}) {
+        return request({
+            url: `/create/cancel`,
+            method: "get",
+            params
+        })
     }
 }

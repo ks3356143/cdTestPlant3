@@ -6,7 +6,7 @@
             hide-cancel
             :mask-closable="false"
             :on-before-ok="handleClickConfirmButton"
-            @cancel="handleClickConfirmButton"
+            :on-before-cancel="handleClickConfirmButton"
         >
             <template #title>正在生成{{ text }}</template>
             <div><a-progress :percent="percent" size="large" /></div>
@@ -17,6 +17,7 @@
 <script setup>
 import { ref, watch, onUnmounted } from "vue"
 import { Notification } from "@arco-design/web-vue"
+import seitaiGenerateApi from "@/api/generate/seitaiGenerate"
 const emits = defineEmits(["clickConfirm"])
 const props = defineProps({
     visible: {
@@ -34,7 +35,7 @@ const props = defineProps({
 })
 const percent = ref(0)
 // 点击确定或关闭按钮判断是否完成，未完成则无法关闭进度条modal
-const handleClickConfirmButton = () => {
+const handleClickConfirmButton = async () => {
     if (props.isComplete) {
         emits("clickConfirm")
         return true
