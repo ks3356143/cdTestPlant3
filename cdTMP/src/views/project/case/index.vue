@@ -32,8 +32,12 @@ import problemApi from "@/api/project/problem"
 import { useTreeDataStore } from "@/store"
 import ProblemChoose from "./components/ProblemChoose.vue"
 import { Message } from "@arco-design/web-vue"
+import getCaseInfoHook from "@/hooks/workarea/currentCasePage"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
+// hook-获取当前用例信息
+const { tempCaseInfo, caseIsNotPassedOrNotExe } = getCaseInfoHook()
+
 // const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
@@ -46,7 +50,7 @@ const problemchoose = ref()
 // ~~~~关联问题单逻辑~~~~
 //// 点击关联按钮
 const handleRelatedProblem = () => {
-    problemchoose.value.open()
+    problemchoose.value.open(tempCaseInfo.value)
 }
 //// 当关联a-modal删除一个问题单时，通知我刷新表格
 const related_reload = () => {
@@ -62,7 +66,12 @@ const crudOptions = ref({
     // 列表选项卡配置
     tabs: {},
     beforeOpenAdd: function () {
-        // 先判断是否已经有个问题单了，如果有则不让用户创建
+        // 0.判断当前用例的是否为未通过/未执行
+        if (!caseIsNotPassedOrNotExe()) {
+            Message.error("该用例没有缓存或无未通过步骤，请切换页面或设置未通过步骤后添加问题单!")
+            return false
+        }
+        // 1.先判断是否已经有个问题单了，如果有则不让用户创建问题单
         if (crudRef.value.getTableData().length >= 1) {
             Message.error("该用例已经存在问题单了，可在轮次树节点右键添加无关联问题单")
             return false
@@ -389,7 +398,7 @@ const crudColumns = ref([
         title: "开发人员",
         hide: true,
         dataIndex: "designerPerson",
-        formType: "input",
+        formType: "input"
     },
     {
         title: "开发方日期",

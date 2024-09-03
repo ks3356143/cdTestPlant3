@@ -36,6 +36,7 @@ import "tinymce/plugins/searchreplace" // 查找替换
 import "tinymce/plugins/table" // 表格
 // import "tinymce/plugins/visualblocks" //显示元素范围
 import "tinymce/plugins/visualchars" // 显示不可见字符
+import "tinymce/plugins/autoresize" // 自动调整高度
 import { storeToRefs } from "pinia"
 // import "tinymce/plugins/wordcount" // 字数统计
 
@@ -50,7 +51,7 @@ const props = defineProps({
     },
     plugins: {
         type: [String, Array],
-        default: "searchreplace visualchars code table nonbreaking lists autosave"
+        default: "searchreplace visualchars code table nonbreaking lists autosave autoresize"
     },
     toolbar: {
         type: [String, Array],
@@ -142,6 +143,11 @@ const initConfig = reactive({
     toolbar: props.toolbar,
     skeletonScreen: true,
     branding: false,
+    // autoresize插件和resize配置
+    resize: true,
+    min_height: 100,
+    max_height: 600,
+    autoresize_bottom_margin: 10,
     content_css:
         theme.value === "dark"
             ? "/tinymce/skins/content/dark/content.css"

@@ -132,7 +132,7 @@ const handleSubmit = async ({ values, errors }) => {
                         ...otherQuery // 将退出时的查询参数放入，这样就不会错误
                     }
                 })
-                // 暂时加载LDAP数据
+                // 加载LDAP数据/内网/暂定
                 await userApi.loadLDAPUsers()
             } else {
                 return

@@ -1,5 +1,6 @@
 import role from "./role"
-
+// 该文件规定如何role不为对应值则删除dom
+// 用法：vue的指令 -> v-role="['admin']"即只允许userStore里面role属性为admin才能看见
 const checkRole = (el, binding) => {
     const { value } = binding
 

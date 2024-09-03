@@ -5,25 +5,38 @@
             <div>
                 <a-list>
                     <a-list-item v-for="(item, index) in transformData" :key="index">
-                        <a-descriptions :data="item.showData" :title="'用例名称：' + item.case" bordered :column="1" />
+                        <div class="text-base mb-2 flex items-center">
+                            <div class="flex-auto">用例名称：{{ item.case }}</div>
+                            <a-space>
+                                <div>
+                                    <a-button type="primary" shape="round" @click="handleEditClick(item)"
+                                        >修改用例</a-button
+                                    >
+                                </div>
+                            </a-space>
+                        </div>
+                        <a-descriptions :data="item.showData" bordered :column="1" />
                     </a-list-item>
                 </a-list>
             </div>
+            <case-form ref="caseFormRef" @caseUpdate="handleCaseUpdate"></case-form>
         </a-modal>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue"
+import CaseForm from "./CaseForm/index.vue"
+import { type IRelatedCaseItem } from "./types"
 
 const visible = ref(false)
 // 数据储存在这里
-const data = ref([])
+const data = ref<IRelatedCaseItem[]>([])
 // 转换为描述数据
 const transformData = computed(() => {
     return data.value.map((item) => {
         // 数组的每一项都要转为{ case:'xxx',showData:[{label:'xxx',value:'xxx2'}] }
-        const showData = []
+        const showData: { label: any; value: any }[] = []
         for (let key in item) {
             let showKey = key
             if (key === "case") continue
@@ -42,18 +55,43 @@ const transformData = computed(() => {
             if (key === "demand_ident") {
                 showKey = "测试项标识"
             }
-            showData.push({
-                label: showKey,
-                value: item[key]
-            })
+            if (key !== "id") {
+                showData.push({
+                    label: showKey,
+                    value: item[key]
+                })
+            }
         }
         return {
+            id: item.id,
             case: item.case,
             showData
         }
     })
 })
-function open(caseList) {
+
+// caseForm相关方法
+const caseFormRef = ref<InstanceType<typeof CaseForm> | null>(null)
+const handleEditClick = (item: any): void => {
+    caseFormRef.value!.open(item)
+}
+
+// 处理caseForm子组件的case信息更变事件
+const handleCaseUpdate = (successFormData: any) => {
+    // 更新列表林的数据
+    data.value = data.value.map((it) => {
+        if (it.id === successFormData.id) {
+            return {
+                ...it,
+                case: successFormData.name
+            }
+        }
+        return it
+    })
+}
+
+// 暴露方法
+function open(caseList: IRelatedCaseItem[]) {
     visible.value = true
     data.value = caseList
 }

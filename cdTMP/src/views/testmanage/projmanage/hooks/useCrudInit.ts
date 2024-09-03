@@ -156,7 +156,7 @@ const useCrudInit = function () {
             search: true,
             commonRules: [
                 { required: true, message: "标识是必填" },
-                { validator: validateBlank, message: "标识格式不正确" },
+                { validator: validateBlank, message: "标识格式不正确" }
                 // { validator: validateWindowFileNameInput }
             ],
             validateTrigger: "blur"
@@ -243,7 +243,7 @@ const useCrudInit = function () {
             title: "软件类型",
             dataIndex: "soft_type",
             hide: true,
-            search: true,
+            search: false,
             formType: "select",
             dict: {
                 data: [
@@ -476,6 +476,21 @@ const useCrudInit = function () {
                 translation: true,
                 props: { label: "title", value: "key" },
                 tagColors: { 1: "green", 2: "blue", 3: "red", 4: "yellow" }
+            }
+        },
+        {
+            title: "密级",
+            align: "center",
+            dataIndex: "secret",
+            search: true,
+            hide: true,
+            formType: "radio",
+            addDefaultValue: "1",
+            addDisabled: true,
+            dict: {
+                name: "secret",
+                translation: true,
+                props: { label: "title", value: "key" }
             }
         }
     ])

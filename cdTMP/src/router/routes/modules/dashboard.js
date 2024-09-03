@@ -22,7 +22,7 @@ const DASHBOARD = {
                 locale: "工作台",
                 icon: "icon-dashboard",
                 title: "工作台",
-                ignoreCache: true,
+                ignoreCache: true
             }
         },
         {
@@ -43,7 +43,7 @@ const DASHBOARD = {
             component: () => import("@/views/dashboard/usermanage/index.vue"),
             meta: {
                 requiresAuth: true,
-                roles: ["*"],
+                roles: ["admin"], // 只有管理员admin才看得到
                 locale: "用户管理",
                 icon: "icon-user-group",
                 title: "用户管理"

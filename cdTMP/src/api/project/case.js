@@ -76,5 +76,17 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 请求单个case信息
+     * @params 传入case完整的key
+     * @params 项目id
+     */
+    getCaseOne(params = {}) {
+        return request({
+            url: "/project/getCaseOne",
+            method: "get",
+            params
+        })
     }
 }

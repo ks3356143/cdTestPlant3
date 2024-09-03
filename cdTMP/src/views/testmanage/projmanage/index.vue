@@ -110,12 +110,14 @@
 
 <script lang="jsx" setup>
 import { ref } from "vue"
+import { useRouter } from "vue-router"
 import preview from "./cpns/preview.vue"
 import Progress from "./cpns/progress.vue"
 import useEnterWorkPlant from "./hooks/useEnterWorkPlant"
 import useSeitaiModal from "./hooks/useSeitaiModal"
 import useGenerateSecond from "./hooks/useGenerateSecond"
 import useCrudInit from "./hooks/useCrudInit"
+const router = useRouter()
 // crud配置和字段信息定义
 const { crudRef, crudOptions, crudColumns } = useCrudInit()
 // 点击进入工作区函数 - 每次点击后都清除localStorage中树状目录数据

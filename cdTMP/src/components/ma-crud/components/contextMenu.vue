@@ -100,11 +100,7 @@ const openContextMenu = async (ev, record) => {
     currentRow.value = record
     await nextTick(() => {
         const domHeight = document.querySelector(".ma-crud-contextmenu").offsetHeight
-        if (document.body.offsetHeight - ev.pageY < domHeight) {
-            top.value = ev.clientY - domHeight
-        } else {
-            top.value = ev.clientY
-        }
+        top.value = ev.clientY - domHeight
         left.value = ev.clientX
     })
 }
@@ -145,7 +141,7 @@ defineExpose({
     background: var(--color-bg-2);
     border: 1px solid var(--color-border-2);
     padding: 7px 0;
-    border-radius: 1px;
+    border-radius: 4px;
     li .context-menu-item {
         cursor: pointer;
         padding: 5px 10px;

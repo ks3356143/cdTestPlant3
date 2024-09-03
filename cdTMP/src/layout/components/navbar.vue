@@ -11,7 +11,7 @@
                 >
                     测试管理平台
                 </a-typography-title>
-                <a-typography-title :heading="6" class="version">V0.0.2</a-typography-title>
+                <a-typography-title :heading="6" class="version">V0.0.3</a-typography-title>
                 <icon-menu-fold
                     v-if="!topMenu && appStore.device === 'mobile'"
                     style="font-size: 22px; cursor: pointer"
@@ -30,7 +30,7 @@
         <ul class="right-side">
             <li>
                 <a-tooltip content="搜索-暂无">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'">
+                    <a-button class="nav-btn" type="outline" :shape="'circle'" @click="handleTestBtn">
                         <template #icon>
                             <icon-search />
                         </template>
@@ -105,6 +105,15 @@ import { useRouter, useRoute } from "vue-router"
 const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
+// ~~~测试开始~~~
+import { useUserStore } from "@/store"
+const userStore = useUserStore()
+const handleTestBtn = () => {
+    console.log(userStore.$state)
+}
+
+// ~~~测试结束~~~
+
 // 切换暗黑主题
 const handleChangeTheme = () => {
     appStore.toggleTheme()

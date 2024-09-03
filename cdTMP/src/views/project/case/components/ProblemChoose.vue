@@ -40,10 +40,11 @@
 import { ref } from "vue"
 import problemApi from "@/api/project/problem"
 import problemSingleApi from "@/api/project/singleProblem"
-import { Notification } from "@arco-design/web-vue"
+import { Message, Notification } from "@arco-design/web-vue"
 import { useRoute } from "vue-router"
 import CaseModal from "./CaseModal.vue"
 import useTreeStore from "@/store/project/treeData"
+import { caseIsPassed } from "@/hooks/workarea/currentCasePage"
 const route = useRoute()
 const treeStore = useTreeStore()
 // 定义props
@@ -63,9 +64,19 @@ const emits = defineEmits(["deleted", "relatedOrunrelated"])
 // ~~~定义关联的switch-值改变处理~~~ 该函数返回false或返回Promise[reject]则停止切换
 /// 定义个switch的加载loading属性
 const loading = ref(false)
+/// 储存打开时赋值的caseInfo
+const caseInfo = ref(null)
 const handleRelatedChange = async (record) => {
     // 因为switch绑定了record.related所以可以动态改变
     loading.value = true
+    // 判断该用例是否是未通过，如果未执行或已通过则不允许关联问题单
+    if (!caseIsPassed(caseInfo.value)) {
+        Message.error("该用例没有缓存或无未通过步骤，请切换页面或设置未通过步骤后添加问题单!")
+        loading.value = false
+        record.related = !record.related
+        crudRef.value.refresh()
+        return false
+    }
     const res = await problemApi
         .relateProblem({
             case_key: route.query.key,
@@ -107,6 +118,8 @@ const open = (row) => {
     if (props.hasRelated === "relatedProblem") {
         crudRef.value.requestData() // 手动请求数据
         visible.value = true
+        // 打开时赋值caseInfo
+        caseInfo.value = row
     }
 }
 // crudOptions设置

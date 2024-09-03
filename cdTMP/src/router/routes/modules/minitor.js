@@ -9,7 +9,8 @@ const TESTMANAGE = {
         icon: "icon-desktop",
         order: 1,
         locale: "日志监控",
-        title: "日志监控"
+        title: "日志监控",
+        roles: ["admin"] // 只有role=admin的用户才看到该页面
     },
     children: [
         {
@@ -18,7 +19,6 @@ const TESTMANAGE = {
             component: () => import("@/views/monitor/operationLog/index.vue"),
             meta: {
                 requiresAuth: true,
-                roles: ["*"],
                 locale: "数据操作日志",
                 icon: "icon-file",
                 title: "数据操作日志"
