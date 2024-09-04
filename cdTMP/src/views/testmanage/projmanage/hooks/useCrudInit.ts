@@ -156,8 +156,8 @@ const useCrudInit = function () {
             search: true,
             commonRules: [
                 { required: true, message: "标识是必填" },
-                { validator: validateBlank, message: "标识格式不正确" }
-                // { validator: validateWindowFileNameInput }
+                { validator: validateBlank, message: "标识格式不正确" },
+                { validator: validateWindowFileNameInput }
             ],
             validateTrigger: "blur"
         },

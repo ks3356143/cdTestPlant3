@@ -1,4 +1,5 @@
 import NProgress from "nprogress" // progress bar
+import "nprogress/nprogress.css"
 
 import usePermission from "@/hooks/permission"
 import { useUserStore, useAppStore } from "@/store"

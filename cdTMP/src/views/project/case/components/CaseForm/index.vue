@@ -135,13 +135,6 @@ const columnsOptions = reactive([
                 formType: "radio",
                 dict: { name: "passType", props: { label: "title", value: "key" } },
                 rules: [{ required: true, message: "是否通过必填" }]
-            },
-            {
-                title: "执行状态",
-                dataIndex: "status",
-                formType: "radio",
-                dict: { name: "execType", props: { label: "title", value: "key" } },
-                rules: [{ required: true, message: "执行状态必填" }]
             }
         ]
     }

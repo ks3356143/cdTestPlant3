@@ -1,5 +1,6 @@
 <template>
-    <div class="ma-content-block p-3 lg:h-full block lg:border-0 lg:flex justify-between">
+    <div class="ma-content-block p-3 block lg:border-0 lg:flex justify-between">
+        <!-- 注意修复 上面dom删除 -> lg:h-full -->
         <div class="h-full w-full lg:ml-3 lg:mr-2 pt-2">
             <!-- ma-crud组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">

@@ -2,13 +2,21 @@ import { defineConfig, loadEnv } from "vite"
 import vue from "@vitejs/plugin-vue"
 import { resolve } from "path"
 import vueJsx from "@vitejs/plugin-vue-jsx"
+import { visualizer } from "rollup-plugin-visualizer"
 export default ({ mode }) => {
     const env = loadEnv(mode, process.cwd())
     console.log("当前环境为：", mode)
     const proxyPrefix = env.VITE_APP_PROXY_PREFIX
     return defineConfig({
         base: env.VITE_APP_BASE,
-        plugins: [vue(), vueJsx()],
+        plugins: [
+            vue(),
+            vueJsx(),
+            visualizer({
+                open: true,
+                filename: "visualizer.html" //分析图生成的文件名
+            })
+        ],
         resolve: {
             alias: {
                 "@": resolve(__dirname, "src"),
@@ -22,8 +30,17 @@ export default ({ mode }) => {
             __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
         },
         build: {
-            chunkSizeWarningLimit: 3000
+            chunkSizeWarningLimit: 3000,
             // assetsPublicPath: "./"
+            rollupOptions: {
+                output: {
+                    manualChunks: (id) => {
+                        if (id.includes("echarts")) return "echarts"
+                        if (id.includes("tinymce")) return "tinymce"
+                        return null
+                    }
+                }
+            }
         },
         server: {
             host: "0.0.0.0",

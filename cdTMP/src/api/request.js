@@ -1,7 +1,7 @@
 import axios from "axios"
 import { Message } from "@arco-design/web-vue"
 import tool from "@/utils/tool"
-import { get, isEmpty } from "lodash"
+import { get, isEmpty } from "lodash-es"
 import qs, { stringify } from "qs"
 import { h } from "vue"
 import { IconFaceFrownFill } from "@arco-design/web-vue/dist/arco-vue-icon"

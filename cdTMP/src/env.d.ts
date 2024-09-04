@@ -5,3 +5,5 @@ declare module "*.vue" {
     const component: DefineComponent<{}, {}, any>
     export default component
 }
+// 声明tinymce的min
+declare module "tinymce/tinymce.min.js"

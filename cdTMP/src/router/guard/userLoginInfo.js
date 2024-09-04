@@ -1,4 +1,5 @@
 import NProgress from "nprogress" // progress bar
+import "nprogress/nprogress.css"
 import { useUserStore } from "@/store"
 // userInfo守卫
 export default function setupUserLoginInfoGuard(router) {

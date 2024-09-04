@@ -3,7 +3,7 @@ import PinYinMatch from "pinyin-match"
 import { useTreeDataStore } from "@/store"
 import { useRoute } from "vue-router"
 import testDemandApi from "@/api/project/testDemand"
-import { isEqual, cloneDeep } from "lodash"
+import { isEqual, cloneDeep } from "lodash-es"
 interface ITestContent {
     subName: string
     subDesc: string

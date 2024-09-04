@@ -18,7 +18,7 @@ import { useRoute } from "vue-router"
 import caseApi from "@/api/project/case"
 import { useTreeDataStore } from "@/store"
 import ProblemForm from "@/views/project/case/components/ProblemForm.vue"
-import { isEqual, cloneDeep } from "lodash"
+import { isEqual, cloneDeep } from "lodash-es"
 const problemFormRef = ref(null)
 const title = ref("问题单表单")
 const treeDataStore = useTreeDataStore()
@@ -38,6 +38,7 @@ const showType = (record) => {
 // crud设置以及是否保留step数据事件函数
 const app = getCurrentInstance().appContext.config.globalProperties
 let beforeFormStep = undefined
+// 注意只保留测试步骤!!!
 const handleBeforeCancel = () => {
     if (!beforeFormStep) {
         return
@@ -203,42 +204,6 @@ const crudColumns = ref([
         validateTrigger: "blur"
     },
     {
-        title: "执行情况",
-        align: "center",
-        display: false,
-        addDisplay: false,
-        editDisplay: false,
-        customRender: ({ record }) => {
-            // 执行情况逻辑，查看所有步骤的执行情况 - 暂时硬编码
-            let completeCount = 0
-            let stepCount = record.testStep.length
-            record.testStep.forEach((item) => {
-                if (item.status === "1") {
-                    completeCount++
-                }
-            })
-            if (completeCount === stepCount) {
-                return (
-                    <a-tag bordered color="green">
-                        已执行
-                    </a-tag>
-                )
-            } else if (completeCount > 0 && completeCount < stepCount) {
-                return (
-                    <a-tag bordered color="orange">
-                        部分执行
-                    </a-tag>
-                )
-            } else {
-                return (
-                    <a-tag bordered color="red">
-                        未执行
-                    </a-tag>
-                )
-            }
-        }
-    },
-    {
         title: "是否通过",
         align: "center",
         display: false,
@@ -356,8 +321,7 @@ const crudColumns = ref([
                 operation: "",
                 expect: "",
                 result: "",
-                passed: "3",
-                status: "3"
+                passed: "3"
             }
         ],
         formType: "children-form",
@@ -386,13 +350,6 @@ const crudColumns = ref([
                 formType: "radio",
                 dict: { name: "passType", props: { label: "title", value: "key" } },
                 commonRules: [{ required: true, message: "是否通过必填" }]
-            },
-            {
-                title: "执行状态",
-                dataIndex: "status",
-                formType: "radio",
-                dict: { name: "execType", props: { label: "title", value: "key" } },
-                commonRules: [{ required: true, message: "执行状态必填" }]
             }
         ]
     },
