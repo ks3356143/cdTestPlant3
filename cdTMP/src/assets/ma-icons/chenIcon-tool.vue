@@ -1,11 +1,6 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
     <svg viewBox="0 0 1024 1024" class="icon" xmlns="http://www.w3.org/2000/svg">

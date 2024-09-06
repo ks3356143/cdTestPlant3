@@ -1,112 +1,114 @@
+<!--
+ - @Author XXX
+ - @Link XXX
+-->
 <template>
-    <div class="flex flex-col w-full h-full">
-        <a-input-group class="mb-2 w-full flex items-center" size="mini">
-            <a-input
-                :placeholder="props?.searchPlaceholder"
-                allow-clear
-                @input="changeKeyword"
-                @clear="resetData"
-                style="height: 100%"
-            />
-            <a-button
-                @click="
-                    () => {
-                        isExpand ? maTree.expandAll(false) : maTree.expandAll(true)
-                        isExpand = !isExpand
-                    }
-                "
-                >{{ isExpand ? "折叠" : "展开" }}</a-button
-            >
-        </a-input-group>
-        <a-tree
-            blockNode
-            :data="treeData"
-            class="h-full w-full"
-            @select="handlerSelect"
-            :field-names="props.fieldNames"
-            v-model:selected-keys="selectedKeys"
-            ref="maTree"
-            v-bind="$attrs"
-        >
-            <template #icon v-if="props.icon"><component :is="props.icon" /></template>
-        </a-tree>
-    </div>
+  <div class="flex flex-col w-full h-full">
+    <a-input-group class="mb-2 w-full" size="mini">
+      <a-input
+        :placeholder="props?.searchPlaceholder"
+        allow-clear
+        @input="changeKeyword"
+        @clear="resetData"
+      />
+      <a-button
+        @click="() => {
+          isExpand ? maTree.expandAll(false) : maTree.expandAll(true)
+          isExpand = ! isExpand
+        }"
+      >{{ isExpand ? '折叠' : '展开' }}</a-button>
+    </a-input-group>
+    <a-tree
+      blockNode
+      ref="maTree"
+      :data="treeData"
+      class="h-full w-full"
+      @select="handlerSelect"
+      :field-names="props.fieldNames"
+      v-model:selected-keys="modelValue"
+      v-bind="$attrs"
+    >
+      <template #icon v-if="props.icon"><component :is="props.icon" /></template>
+    </a-tree>
+  </div>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue"
+  import { ref, watch, computed } from 'vue'
 
-const treeData = ref([])
-const selectedKeys = ref([])
-const maTree = ref()
-const isExpand = ref(false)
+  const treeData = ref([])
+  const maTree = ref()
+  const isExpand = ref(false)
 
-const emit = defineEmits(["click"])
+  const emit = defineEmits(['update:modelValue', 'click'])
 
-const props = defineProps({
+  const props = defineProps({
     modelValue: { type: Array },
+    data: { type: Array },
     searchPlaceholder: { type: String },
-    selectedKeys: { type: Array },
-    fieldNames: {
-        type: Object,
-        default: () => {
-            return { title: "label", value: "code" }
-        }
+    fieldNames: { type: Object, default: () => { return { title: 'label', key: 'value' } } },
+    icon: { type: String, default: undefined },
+  })
+
+  const modelValue = computed({
+    get() {
+      return props.modelValue
     },
-    icon: { type: String, default: undefined }
-})
-
-onMounted(() => (selectedKeys.value = props.selectedKeys))
-
-watch(
-    () => props.modelValue,
-    (val) => {
-        treeData.value = val
+    set(newVal) {
+      emit('update:modelValue', newVal)
     }
-)
+  })
 
-const handlerSelect = (item, data) => {
-    selectedKeys.value = [item]
-    emit("click", ...[item, data])
-}
+  watch(
+    () => props.data,
+    val => {
+      treeData.value = val
+    },
+    { immediate: true, deep: true }
+  )
 
-const resetData = () => (treeData.value = props.modelValue)
+  const handlerSelect = (item, data) => {
+    modelValue.value = [ item ]
+    emit('click', ...[item, data])
+  }
 
-const changeKeyword = (keyword) => {
-    if (!keyword || keyword === "") {
-        treeData.value = Object.assign(props.modelValue, [])
-        return false
+  const resetData = () => treeData.value = props.data
+
+  const changeKeyword = (keyword) => {
+    if (!keyword || keyword === '') {
+      treeData.value = Object.assign(props.data, [])
+      return false
     }
     treeData.value = searchNode(keyword)
-}
+  }
 
-const searchNode = (keyword) => {
+  const searchNode = (keyword) => {
     const loop = (data) => {
-        let tree = []
-        data.map((item) => {
-            if (item.children && item.children.length > 0) {
-                const temp = loop(item.children)
-                tree.push(...temp)
-            } else if (item[props.fieldNames["title"]].indexOf(keyword) !== -1) {
-                tree.push(item)
-            }
-            return tree
-        })
-
+      let tree = []
+      data.map(item => {
+        if (item.children && item.children.length > 0) {
+          const temp = loop(item.children)
+          tree.push(...temp)
+        } else if (item[props.fieldNames['title']].indexOf(keyword) !== -1) {
+          tree.push(item)
+        }
         return tree
-    }
-    return loop(props.modelValue)
-}
+      })
 
-defineExpose({ maTree })
+      return tree
+    }
+    return loop(treeData.value)
+  }
+
+  defineExpose({ maTree })
 </script>
 
 <style scoped lang="less">
 :deep(.arco-tree-node:hover) {
-    background-color: var(--color-fill-2);
-    border-radius: 2px;
+  background-color: var(--color-fill-2);
+  border-radius: 3px;
 }
 :deep(.arco-tree-node-switcher) {
-    margin-left: 2px;
+  margin-left: 2px;
 }
 </style>

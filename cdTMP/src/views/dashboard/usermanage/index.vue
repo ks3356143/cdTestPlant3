@@ -100,7 +100,7 @@ const crudColumns = reactive([
         align: "center",
         dataIndex: "name",
         search: true,
-        width: 80,
+        width: 180,
         commonRules: [
             { required: true, message: "名称必填" },
             { maxLength: 50, message: "名称不能超过50个字符" }
@@ -120,6 +120,7 @@ const crudColumns = reactive([
     {
         title: "电话",
         align: "center",
+        width: 150,
         dataIndex: "phone",
         search: true,
         commonRules: [{ match: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: "请输入正确的手机号码" }]

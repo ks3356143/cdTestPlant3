@@ -1,3 +1,7 @@
+<!--
+ - @Author XXX
+ - @Link XXX
+-->
 <template>
     <v-charts v-if="renderChart" :option="options" :autoresize="autoresize" :style="{ width, height }" />
 </template>

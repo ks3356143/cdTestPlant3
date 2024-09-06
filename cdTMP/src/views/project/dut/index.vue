@@ -24,8 +24,8 @@
 </template>
 
 <script setup lang="jsx">
-import { ref, computed } from "vue"
-import { useRoute, useRouter } from "vue-router"
+import { ref } from "vue"
+import { useRoute } from "vue-router"
 import designDemandApi from "@/api/project/designDemand"
 import dutApi from "@/api/project/dut"
 import commonApi from "@/api/common"
@@ -33,7 +33,6 @@ import { useTreeDataStore } from "@/store"
 import FileInputModal from "./components/FileInputModal/index.vue"
 const treeDataStore = useTreeDataStore()
 const route = useRoute()
-const router = useRouter()
 const crudRef = ref()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
@@ -103,7 +102,6 @@ const crudOptions = ref({
         // 删除后情况行选择器
         crudRef.value.tableRef.selectAll(false)
     },
-
     parameters: {
         projectId: route.query.id,
         round: roundNumber,
@@ -113,6 +111,7 @@ const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     searchColNumber: 4,
     tablePagination: false,
+    operationColumnWidth: 250,
     operationColumn: true,
     operationColumnAlign: "center",
     formOption: {
@@ -134,7 +133,7 @@ const crudColumns = ref([
         title: "设需标识",
         align: "center",
         sortable: { sortDirections: ["ascend"] },
-        width: 120,
+        width: 180,
         dataIndex: "ident",
         search: true,
         validateTrigger: "blur",
@@ -145,7 +144,7 @@ const crudColumns = ref([
     {
         title: "设需名称",
         align: "center",
-        width: 150,
+        width: 200,
         dataIndex: "name",
         search: true,
         commonRules: [{ required: true, message: "设计需求名称是必填" }],
@@ -171,7 +170,7 @@ const crudColumns = ref([
         commonRules: [{ required: true, message: "需求类型是必填" }],
         validateTrigger: "blur",
         // 主要为了添加“接口”的4个字段
-        control: (value) => {
+        onControl: (value) => {
             if (value === "3") {
                 return {
                     source: { display: true },

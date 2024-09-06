@@ -6,7 +6,7 @@
     >
         <slot :name="`form-${props.component.dataIndex}`" v-bind="props.component">
             <a-input-number
-                v-model="value"
+                v-model.trim="value"
                 :size="props.component.size"
                 :allow-clear="props.component.allowClear ?? true"
                 :disabled="props.component.disabled"
@@ -21,12 +21,18 @@
                 :formatter="props.component.formatter"
                 :parser="props.component.parser"
                 :model-event="props.component.modelEvent"
-                @input="maEvent.handleInputEvent(props.component, $event)"
-                @change="maEvent.handleChangeEvent(props.component, $event)"
-                @clear="maEvent.handleCommonEvent(props.component, 'onClear')"
-                @focus="maEvent.handleCommonEvent(props.component, 'onFocus')"
-                @blur="maEvent.handleCommonEvent(props.component, 'onBlur')"
+                @input="rv('onInput', $event)"
+                @change="rv('onChange', $event)"
+                @clear="rv('onClear')"
+                @focus="rv('onFocus')"
+                @blur="rv('onBlur')"
             >
+                <template #prepend v-if="props.component.openPrepend">
+                    <slot :name="`inputPrepend-${props.component.dataIndex}`" />
+                </template>
+                <template #append v-if="props.component.openAppend">
+                    <slot :name="`inputAppend-${props.component.dataIndex}`" />
+                </template>
                 <template #suffix v-if="props.component.openSuffix">
                     <slot :name="`inputSuffix-${props.component.dataIndex}`" />
                 </template>
@@ -40,17 +46,24 @@
 
 <script setup>
 import { ref, inject, onMounted, watch } from "vue"
-import { get, set, toNumber, isNaN } from "lodash"
+import { get, set, toNumber, isNaN } from "lodash-es"
 import MaFormItem from "./form-item.vue"
-import { maEvent } from "../js/formItemMixin.js"
+import { runEvent } from "../js/event.js"
 const props = defineProps({
     component: Object,
     customField: { type: String, default: undefined }
 })
 
 const formModel = inject("formModel")
+const getColumnService = inject("getColumnService")
+const columns = inject("columns")
 const index = props.customField ?? props.component.dataIndex
 const value = ref(toNumber(get(formModel.value, index)))
+
+const rv = async (ev, value = undefined) => {
+    if (ev === "onChange") set(formModel.value, index, value)
+    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
+}
 
 watch(
     () => get(formModel.value, index),
@@ -65,8 +78,6 @@ watch(
     }
 )
 
-maEvent.handleCommonEvent(props.component, "onCreated")
-onMounted(() => {
-    maEvent.handleCommonEvent(props.component, "onMounted")
-})
+rv("onCreated")
+onMounted(() => rv("onMounted"))
 </script>

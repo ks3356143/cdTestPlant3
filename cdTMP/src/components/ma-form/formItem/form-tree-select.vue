@@ -1,11 +1,6 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
     <ma-form-item
@@ -48,10 +43,10 @@
                 :fallback-option="props.component.fallbackOption"
                 :selectable="props.component.selectable"
                 :scrollbar="props.component.scrollbar"
-                @change="maEvent.handleChangeEvent(props.component, $event)"
-                @popup-visible-change="maEvent.customeEvent(props.component, $event, 'onPopupVisibleChange')"
-                @clear="maEvent.handleCommonEvent(props.component, 'onClear')"
-                @search="maEvent.customeEvent(props.component, $event, 'onSearch')"
+                @change="rv('onChange', $event)"
+                @popup-visible-change="rv('onPopupVisibleChange', $event)"
+                @clear="rv('onClear')"
+                @search="rv('onSearch', $event)"
             >
             </a-tree-select>
         </slot>
@@ -60,9 +55,9 @@
 
 <script setup>
 import { ref, inject, onMounted, watch } from "vue"
-import { get, set } from "lodash"
+import { get, set } from "lodash-es"
 import MaFormItem from "./form-item.vue"
-import { maEvent } from "../js/formItemMixin.js"
+import { runEvent } from "../js/event.js"
 import { handlerCascader } from "../js/networkRequest.js"
 
 const props = defineProps({
@@ -71,12 +66,16 @@ const props = defineProps({
 })
 
 const formModel = inject("formModel")
+const getColumnService = inject("getColumnService")
+const columns = inject("columns")
 const dictList = inject("dictList")
+const rv = async (ev, value = undefined) =>
+    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 const index = props.customField ?? props.component.dataIndex
 const dictIndex = index.match(/^(\w+\.)\d+\./)
     ? index.match(/^(\w+\.)\d+\./)[1] + props.component.dataIndex
     : props.component.dataIndex
-const value = ref(get(formModel.value, index))
+const value = ref(get(formModel.value, index) ?? "")
 
 watch(
     () => get(formModel.value, index),
@@ -94,8 +93,6 @@ if (props.component.dict && (props.component.dict.name || props.component.dict.d
     value.value = value.value + ""
 }
 
-maEvent.handleCommonEvent(props.component, "onCreated")
-onMounted(() => {
-    maEvent.handleCommonEvent(props.component, "onMounted")
-})
+rv("onCreated")
+onMounted(() => rv("onMounted"))
 </script>

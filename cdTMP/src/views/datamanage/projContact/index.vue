@@ -9,7 +9,6 @@
 
 <script setup>
 import { ref } from "vue"
-import { Message } from "@arco-design/web-vue"
 import contactApi from "@/api/system/contact"
 
 const crudRef = ref()
@@ -27,7 +26,7 @@ const crudOptions = ref({
     tablePagination: false,
     rowSelection: { showCheckedAll: true },
     showTools: false,
-    afterDelete(response) {
+    afterDelete() {
         crudRef.value.tableRef.selectAll(false)
     }
 })
@@ -39,13 +38,13 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "name",
         search: true,
-        width: 150,
         commonRules: [{ required: true, message: "名称必填" }]
     },
     {
         title: "简称",
         align: "center",
         dataIndex: "refer_name",
+        width: 200,
         search: true,
         commonRules: [{ required: true, message: "简称必填" }]
     },
@@ -62,7 +61,6 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "addr",
         search: true,
-        width: 150,
         commonRules: [{ required: true, message: "公司地址必填" }]
     }
 ])

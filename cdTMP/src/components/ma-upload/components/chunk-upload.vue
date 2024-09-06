@@ -18,9 +18,9 @@
                     <div>
                         <icon-upload class="text-5xl text-gray-400" />
                         <div class="text-red-600 font-bold">
-                            {{ config.title === "buttonText" ? '本地上传' : config.title }}
+                            {{ config.title === "buttonText" ? $t("upload.buttonText") : config.title }}
                         </div>
-                        将文件拖到此处，或<span style="color: #3370ff">点击上传</span>
+                        {{ $t("upload.uploadDesc") }}<span style="color: #3370ff">{{ $t("upload.clickUpload") }}</span>
                     </div>
                 </div>
             </slot>
@@ -35,17 +35,26 @@
             animation
             type="circle"
             size="mini"
+            show-text
             class="progress"
         />
-        <a-button class="delete" @click="removeSignFile()" v-if="currentItem.percent === 100">
-            <template #icon><icon-delete /></template>
+        <span v-if="currentItem.percent < 100">上传中...</span>
+
+        <a-tooltip content="点击文件名预览/下载" position="tr">
+            <a
+                :href="currentItem.url"
+                v-if="currentItem?.url && currentItem.percent === 100 && currentItem?.status === 'complete'"
+                class="file-name"
+                target="_blank"
+                >{{ currentItem.name }}</a
+            >
+        </a-tooltip>
+
+        <a-button type="text" size="small" @click="removeSignFile()" v-if="currentItem.percent === 100">
+            <template #icon>
+                <icon-delete />
+            </template>
         </a-button>
-        <div
-            v-if="currentItem?.url && currentItem.percent === 100 && currentItem?.status === 'complete'"
-            class="file-item"
-        >
-            {{ currentItem.url }}
-        </div>
     </div>
 
     <!-- 多文件 -->
@@ -58,26 +67,39 @@
             size="mini"
             class="progress"
         />
-        <a-button class="delete" @click="removeFile(idx)" v-if="file.percent === 100">
-            <template #icon><icon-delete /></template>
+        <span v-if="file.percent < 100">上传中...</span>
+
+        <a-tooltip content="点击文件名预览/下载" position="tr">
+            <a
+                :href="file.url"
+                v-if="file?.url && file.percent === 100 && file?.status === 'complete'"
+                class="file-name"
+                target="_blank"
+                >{{ file.name }}</a
+            >
+        </a-tooltip>
+
+        <a-button type="text" size="small" @click="removeFile(idx)" v-if="file.percent === 100">
+            <template #icon>
+                <icon-delete />
+            </template>
         </a-button>
-        <div v-if="file?.url && file.percent === 100 && file?.status === 'complete'" class="file-item">
-            {{ file.url }}
-        </div>
     </div>
 </template>
 <script setup>
 import { ref, inject, watch } from "vue"
 import commonApi from "@/api/common"
 import tool from "@/utils/tool"
-import { isArray } from "lodash"
+import { isArray, throttle } from "lodash"
 import { getFileUrl } from "../js/utils"
 import { Message } from "@arco-design/web-vue"
 import file2md5 from "file2md5"
 
-
 const props = defineProps({
-    modelValue: { type: [String, Number, Array], default: () => {} }
+    modelValue: {
+        type: [String, Number, Array],
+        default: () => {}
+    }
 })
 const emit = defineEmits(["update:modelValue"])
 const config = inject("config")
@@ -123,6 +145,7 @@ const chunkUpload = async (options) => {
             if (res.data && res.data.hash) {
                 res.data.url = tool.attachUrl(res.data.url, storageMode[res.data.storage_mode])
                 if (config.multiple) {
+                    showFileList.value[idx].name = res.data.origin_name
                     showFileList.value[idx].percent = 100
                     showFileList.value[idx].status = "complete"
                     showFileList.value[idx].url = res.data.url
@@ -145,7 +168,7 @@ const chunkUpload = async (options) => {
                 return
             }
             if (res.data && res.data.code && res.data.code === 201) {
-                const percent = parseFloat((1 / chunks).toFixed(2))
+                const percent = Math.floor((1 / chunks) * 10000) / 10000
                 if (config.multiple) {
                     showFileList.value[idx].percent += percent
                 } else {
@@ -175,32 +198,49 @@ const removeFile = (idx) => {
     emit("update:modelValue", files)
 }
 
-const init = async () => {
+const init = throttle(async () => {
     if (config.multiple) {
         if (isArray(props.modelValue) && props.modelValue.length > 0) {
             const result = await props.modelValue.map(async (item) => {
                 return await getFileUrl(config.returnType, item, storageMode)
             })
-            const results = await Promise.all(result)
-            showFileList.value = results.map((item) => {
-                return {
-                    ...item,
-                    percent: 100,
-                    status: "complete"
-                }
-            })
+            const data = await Promise.all(result)
+
+            let fileItemObj = { percent: 100, status: "complete" }
+            if (config.returnType === "url") {
+                showFileList.value = data.map((url) => {
+                    return { url, name: url.substring(url.lastIndexOf("/") + 1), ...fileItemObj }
+                })
+            } else {
+                showFileList.value = data.map((item) => {
+                    return {
+                        name: item.origin_name,
+                        [config.returnType]: item[config.returnType],
+                        url: item.url,
+                        ...fileItemObj
+                    }
+                })
+            }
         } else {
             showFileList.value = []
         }
     } else if (props.modelValue) {
-        signFile.value = props.modelValue
-        getFileUrl(config.returnType, props.modelValue, storageMode).then((item) => (currentItem.value.url = item))
+        if (config.returnType === "url") {
+            signFile.value = props.modelValue
+            currentItem.value.url = props.modelValue
+            currentItem.value.name = props.modelValue?.substring((props.modelValue?.lastIndexOf("/") || 0) + 1)
+        } else {
+            const result = await getFileUrl(config.returnType, props.modelValue, storageMode)
+            signFile.value = result.url
+            currentItem.value.url = result.url
+            currentItem.value.name = result.origin_name
+        }
         currentItem.value.percent = 100
         currentItem.value.status = "complete"
     } else {
         removeSignFile()
     }
-}
+}, 1000)
 
 watch(
     () => props.modelValue,
@@ -215,25 +255,21 @@ watch(
 </script>
 <style lang="less" scoped>
 .file-list {
-    position: relative;
     background-color: var(--color-primary-light-1);
-    border-radius: 2px;
+    border-radius: 4px;
     height: 36px;
-    line-height: 36px;
-    padding: 0 10px;
+    padding: 0 5px;
     width: 100%;
-    .delete {
-        position: absolute;
-        z-index: 99;
-        right: 2px;
-        top: 2px;
-    }
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 
-    .progress {
-        position: absolute;
-        left: 30px;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
+    .file-name {
+        max-width: 90%;
+        margin: 0 5px;
+        overflow: hidden;
+        color: #165dff;
     }
 }
 </style>

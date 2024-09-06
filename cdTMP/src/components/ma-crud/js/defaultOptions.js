@@ -46,7 +46,7 @@ export default {
     // 是否显示总结行
     showSummary: false,
     // 自定义总结行，要传入函数
-    customerSummary: false,
+    customerSummary: undefined,
     // 是否显示工具栏
     showTools: true,
     // 表头是否吸顶
@@ -54,7 +54,8 @@ export default {
     // 页面布局方式，支持 normal（标准）和 fixed（固定）两种
     pageLayout: "normal",
     // 默认统一设置列宽度
-    columnWidth: 100,
+    columnWidth: 0, // 列宽更新为最小列宽(此处设置为 0 时候,默认最小列宽生效)
+    columnMinWidth: 100,
     // 搜索标签对齐方式
     searchLabelAlign: "right",
     // 全局搜索标签宽度
@@ -159,7 +160,13 @@ export default {
         // 按钮文案
         text: "编辑",
         // 是否显示
-        show: false
+        show: false,
+        // 数据来源：table(表格行数据) | api(通过接口获取数据)
+        dataSource: "table",
+        // 数据源API接口
+        dataSourceApi: undefined,
+        // 是否禁用，仅表格行内按钮有效
+        disabled: false
     },
     delete: {
         // 删除api
@@ -170,6 +177,8 @@ export default {
         role: [],
         // 按钮文案
         text: "删除",
+        // 是否禁用，仅表格行内按钮有效
+        disabled: false,
 
         // 真实删除api
         realApi: undefined,
@@ -179,9 +188,13 @@ export default {
         realRole: [],
         // 真实按钮文案
         realText: "删除",
+        // 真实删除是否禁用，仅表格行内按钮有效
+        realDisabled: false,
 
         // 是否显示
-        show: false
+        show: false,
+        // 是否显示批量处理按钮
+        batch: true
     },
     recovery: {
         // 恢复api
@@ -193,18 +206,26 @@ export default {
         // 按钮文案
         text: "恢复",
         // 是否显示
-        show: false
+        show: false,
+        // 是否显示批量处理按钮
+        batch: true
     },
-    // see: {
-    //   // 显示查看按钮的权限
-    //   auth: [],
-    //   // 显示查看按钮的角色
-    //   role: [],
-    //   // 按钮文案
-    //   text: '查看',
-    //   // 是否显示
-    //   show: false,
-    // },
+    see: {
+        // 显示查看按钮的权限
+        auth: [],
+        // 显示查看按钮的角色
+        role: [],
+        // 按钮文案
+        text: "查看",
+        // 是否显示
+        show: false,
+        // 数据来源：table(表格行数据) | api(通过接口获取数据)
+        dataSource: "table",
+        // 数据源API接口
+        dataSourceApi: undefined,
+        // 是否禁用，仅表格行内按钮有效
+        disabled: false
+    },
     import: {
         // 导入url
         url: undefined,

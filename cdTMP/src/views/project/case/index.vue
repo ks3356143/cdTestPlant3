@@ -63,8 +63,6 @@ const crudOptions = ref({
     edit: { show: true, api: problemApi.update },
     delete: { show: true, api: problemApi.delete },
     operationColumnAlign: "center", // 操作列居中
-    // 列表选项卡配置
-    tabs: {},
     beforeOpenAdd: function () {
         // 0.判断当前用例的是否为未通过/未执行
         if (!caseIsNotPassedOrNotExe()) {
@@ -119,9 +117,11 @@ const crudOptions = ref({
         crudRef.value.tableRef.selectAll(false)
     },
     // 请求后置处理-用于新增/删除更新树状的用例关联问题单状态
-    afterRequest(datas) {
+    afterRequest(tableData) {
         const caseQuery = { key: route.query.key }
         treeDataStore.updateCaseTreeData(caseQuery, route.query.id)
+        // 新版本mime必须返回
+        return tableData
     },
     showIndex: false,
     showTools: false,
@@ -162,29 +162,34 @@ const crudOptions = ref({
                 formType: "divider"
             },
             {
-                dataIndex: "operation"
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "operation" }] }]
             },
             {
-                dataIndex: "result"
-            },
-            {
-                formType: "divider",
-                title: "开发方回填"
-            },
-            {
-                dataIndex: "analysis"
-            },
-            {
-                dataIndex: "effect_scope"
-            },
-            {
-                dataIndex: "solve"
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "result" }] }]
             },
             {
                 formType: "divider"
             },
             {
-                dataIndex: "verify_result"
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "analysis" }] }]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "effect_scope" }] }]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "solve" }] }]
+            },
+            {
+                formType: "divider"
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "verify_result" }] }]
             },
             {
                 formType: "divider",

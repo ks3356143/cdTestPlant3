@@ -105,6 +105,7 @@ export default function useCrudRef() {
         rowSelection: { showCheckedAll: true },
         searchColNumber: 3,
         tablePagination: false,
+        operationColumnWidth:200,
         operationColumn: true,
         operationColumnAlign: "center",
         formOption: {
@@ -184,7 +185,7 @@ export default function useCrudRef() {
             maxLength: 200,
             commonRules: [{ required: true, message: "测试类型必选" }],
             dict: { name: "testType", translation: true, props: { label: "title", value: "key" } },
-            extra: "请保证测试类型选择正确",
+            extra: "支持拼音搜索，例如：gn可以搜索出功能测试",
             // 这是arco的属性，所以在ma-crud和ma-form可以直接使用arco属性和事件（事件+onXXX）
             filterOption: function (inputValue, selectedOption) {
                 if (inputValue) {

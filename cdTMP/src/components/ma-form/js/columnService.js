@@ -2,6 +2,8 @@ import { loadDict } from "@cps/ma-form/js/networkRequest"
 
 /**
  * columnService 列服务处理类
+ * 首先感谢 @NEKGod 提交的PR，此功能原本写在了 Ma-Crud 组件，我特意摘出来，封装成类通过引用来调用
+ * @author NEKGod, X.Mo <root@imoi.cn>
  */
 
 const objectService = function (item) {
@@ -24,17 +26,68 @@ const objectService = function (item) {
     }
 }
 
+/**
+ * dict项服务类
+ * @param dataIndex
+ * @param dictData
+ * @constructor
+ */
+const dictService = function (dataIndex, dictData, dicts, columns) {
+    this.columns = columns
+    this.dicts = dicts
+    this.dictData = dictData
+    this.dataIndex = dataIndex
+
+    /**
+     * 返回原DictData对象
+     * @returns {*}
+     */
+    this.getRawDictData = () => {
+        return this.dictData
+    }
+    /**
+     * 追加
+     * @param label
+     * @param value
+     * @param extend
+     */
+    this.append = (label, value, extend = {}) => {
+        this.getRawDictData().push(
+            Object.assign(
+                {
+                    label: label,
+                    value: value
+                },
+                extend
+            )
+        )
+    }
+    /**
+     * 重新加载dict
+     * @param dictConfig
+     * @returns {Promise<void>}
+     */
+    this.loadDict = async (dictConfig) => {
+        this.columns.setAttr("dict", dictConfig)
+        await loadDict(this.dicts, { formType: "select", dict: dictConfig, dataIndex: this.dataIndex })
+    }
+}
+
 class ColumnService {
     /**
      * @type {Map<string, Object>}
      */
     columnMap = new Map()
 
+    dictMap = new Map()
+
     columns
 
     cascaders
 
     dicts
+
+    refs
 
     strictMode
 
@@ -46,11 +99,24 @@ class ColumnService {
         this.columns = data.columns
         this.cascaders = data.cascaders
         this.dicts = data.dicts
+        this.refs = data?.refs ?? {}
         this.strictMode = strictMode
 
         this.columns.forEach((item) => {
             this.columnMap.set(item.dataIndex, new objectService(item))
         })
+
+        for (const [dataIndex, dictData] of Object.entries(this.dicts)) {
+            this.dictMap.set(dataIndex, new dictService(dataIndex, dictData, this.dicts, this.columnMap.get(dataIndex)))
+        }
+    }
+
+    getDialogRefs(refName = undefined) {
+        return refName ? this.refs[refName] : this.refs
+    }
+
+    getDictService(dataIndex) {
+        return this.dictMap.get(dataIndex)
     }
 
     get(dataIndex) {

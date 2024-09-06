@@ -1,11 +1,6 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
     <a-modal v-model:visible="visible" :footer="false" @cancel="close" draggable>
@@ -37,6 +32,7 @@ import { Message } from "@arco-design/web-vue"
 const visible = ref(false)
 
 const options = inject("options")
+const emit = defineEmits(["success"])
 
 const open = () => (visible.value = true)
 const close = () => (visible.value = false)
@@ -46,8 +42,9 @@ const upload = (fileOption) => {
 
     const dataForm = new FormData()
     dataForm.append("file", fileOption.fileItem.file)
-    commonApi.importExcel(options.import.url, dataForm).then((res) => {
+    commonApi.importExcel(options.import.url, dataForm).then(async (res) => {
         res.success && Message.success(res.message || "导入成功")
+        emit("success")
         close()
     })
 }

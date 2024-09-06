@@ -1,14 +1,9 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
-    <a-drawer :visible="visible" unmountOnClose :footer="false" :width="900" @cancel="onCancel">
+    <a-drawer :visible="visible" unmountOnClose :footer="false" :width="950" @cancel="onCancel">
         <template #title>设置</template>
 
         <a-space class="mt-3">
@@ -59,7 +54,12 @@
                         <span v-else> / </span>
                     </template>
                 </a-table-column>
-                <a-table-column title="隐藏" data-index="hide" align="center">
+                <a-table-column title="搜索隐藏" data-index="hide" align="center">
+                    <template #cell="{ record }"
+                        ><a-checkbox v-model="record.search" @change="changeColumn($event, 'search', record.dataIndex)"
+                    /></template>
+                </a-table-column>
+                <a-table-column title="表格隐藏" data-index="hide" align="center">
                     <template #cell="{ record }"
                         ><a-checkbox v-model="record.hide" @change="changeColumn($event, 'hide', record.dataIndex)"
                     /></template>
@@ -123,16 +123,22 @@
 import { ref, inject } from "vue"
 
 const options = inject("options")
-let columns = inject("columns")
+const columns = inject("columns")
+const allowShowColumns = ref([])
 
-const allowShowColumns = columns.filter((item) => {
-    return !(item?.settingHide ?? false)
-})
+const emit = defineEmits(["onChangeSearchHide", "onChangeColumnHide"])
+
+const setShowColumns = () => {
+    allowShowColumns.value = columns.value.filter((item) => {
+        return !(item?.settingHide ?? false)
+    })
+}
 
 const visible = ref(false)
 const bordered = ref("column")
 
 const open = () => {
+    setShowColumns()
     visible.value = true
 }
 
@@ -141,7 +147,7 @@ const onCancel = () => {
 }
 
 const changeColumn = (ev, type, name) => {
-    const column = columns.find((item) => item.dataIndex === name)
+    const column = columns.value.find((item) => item.dataIndex === name)
     switch (type) {
         case "order":
             if (ev === "page") {
@@ -151,6 +157,12 @@ const changeColumn = (ev, type, name) => {
             } else {
                 column.sortable = undefined
             }
+            break
+        case "hide":
+            emit("onChangeColumnHide")
+            break
+        case "search":
+            emit("onChangeSearchHide")
             break
     }
 }
@@ -171,7 +183,8 @@ const changeBordered = (v) => {
 }
 
 const onTableChange = (_data) => {
-    columns = _data
+    columns.value = _data
+    setShowColumns()
 }
 
 defineExpose({ open })

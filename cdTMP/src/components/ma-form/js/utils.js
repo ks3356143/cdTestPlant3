@@ -1,15 +1,30 @@
-import { isEmpty, isFunction, get, set } from "lodash"
+import { isEmpty, isFunction, get, set } from "lodash-es"
 
 export const containerItems = ["tabs", "table", "card", "grid", "grid-tailwind", "children-form"]
 export const inputType = ["input", "input-password", "input-search"]
 export const pickerType = ["date", "month", "year", "week", "quarter", "range", "time"]
 
-export const interactiveControl = (form, columns) => {
+export const interactiveControl = (form, columns, maFormObject) => {
     const obj = []
+    const names = []
+    const keys = Object.keys(form)
+    if (keys && keys.length > 0) {
+        keys.map((item) => {
+            if (form[item] && typeof form[item] === "object") {
+                for (let name in form[item]) {
+                    names.push(`${item}.${name}`)
+                }
+            }
+        })
+    }
     for (let name in form) {
         columns.map((item) => {
-            if (item.dataIndex === name && item.control && isFunction(item.control)) {
-                obj.push(item.control(get(form, name), form))
+            if (
+                (item.dataIndex === name || names.includes(item.dataIndex)) &&
+                item.onControl &&
+                isFunction(item.onControl)
+            ) {
+                obj.push(item.onControl(get(form, item.dataIndex), maFormObject))
             }
         })
     }
@@ -56,7 +71,7 @@ export const getComponentName = (formType) => {
     return `MaForm${toHump(formType)}`
 }
 
-export const handleFlatteningColumns = (data, columns, isChildrenForm = undefined) => {
+export const handleFlatteningColumns = (data, columns) => {
     for (let key in data) {
         const item = data[key]
         if (containerItems.includes(item.formType)) {
@@ -90,15 +105,42 @@ export const handleFlatteningColumns = (data, columns, isChildrenForm = undefine
                         })
                     }
                     break
-                // case 'children-form':
-                //   item.formList && handleFlatteningColumns(item.formList, columns, item.dataIndex, true)
-                //   break
+                case "children-form":
+                    item.formList.map((list) => (list.parentDataIndex = item.dataIndex))
+                    item.formList && handleFlatteningColumns(item.formList, columns)
+                    break
             }
         } else {
-            // if (isChildrenForm) {
-            //   item['isChildrenForm'] = true
-            // }
             columns.push(item)
         }
     }
+}
+
+export const insertGlobalCssToHead = (cssCode) => {
+    const head = document.getElementsByTagName("head")[0]
+    const oldStyle = document.getElementById("mineadmin-global-css")
+    oldStyle && head.removeChild(oldStyle)
+
+    const newStyle = document.createElement("style")
+    newStyle.rel = "stylesheet"
+    newStyle.id = "mineadmin-global-css"
+    try {
+        newStyle.appendChild(document.createTextNode(cssCode))
+    } catch (ex) {
+        newStyle.styleSheet.cssText = cssCode
+    }
+
+    head.appendChild(newStyle)
+}
+
+export const insertGlobalFunctionsToHtml = (functionsCode) => {
+    const bodyEle = document.getElementsByTagName("body")[0]
+    const oldScriptEle = document.getElementById("mineadmin-global-functions")
+    oldScriptEle && bodyEle.removeChild(oldScriptEle)
+
+    const newScriptEle = document.createElement("script")
+    newScriptEle.id = "mineadmin-global-functions"
+    newScriptEle.type = "text/javascript"
+    newScriptEle.innerHTML = functionsCode
+    bodyEle.appendChild(newScriptEle)
 }

@@ -5,9 +5,9 @@
         </template>
         <transition name="ma-slide-down" mode="out-in" appear>
             <!-- 这里主要在路由定义是否缓存页面 -->
-            <component :is="Component" v-if="route.meta.ignoreCache" :key="route.fullPath" />
+            <component :is="Component" v-if="route.meta.ignoreCache" ref="viewChildRef" :key="route.fullPath" />
             <keep-alive v-else :include="cacheList">
-                <component :is="Component" ref="viewChild" :key="route.fullPath"></component>
+                <component :is="Component" ref="viewChildRef" :key="route.fullPath"></component>
             </keep-alive>
         </transition>
     </router-view>
@@ -21,10 +21,10 @@ import Empty from "@/components/Empty/index.vue"
 const tabBarStore = useTabBarStore()
 const cacheList = computed(() => tabBarStore.getCacheList)
 // 调用router-view组件的刷新方法
-const viewChild = ref()
+const viewChildRef = ref()
 const refresh = () => {
     try {
-        viewChild.value.refreshCrudTable()
+        viewChildRef.value.refreshCrudTable()
     } catch (err) {
         console.log("无法找到router-view动态组件的刷新函数")
     } finally {

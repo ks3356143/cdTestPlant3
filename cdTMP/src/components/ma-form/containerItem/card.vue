@@ -1,15 +1,13 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
     <a-card
-        v-show="typeof props.component?.display == 'undefined' || props.component?.display === true"
+        v-if="
+            (typeof props.component?.display == 'undefined' || props.component?.display === true) &&
+            (hasDisplayTrue(props.component?.formList ?? []) || props.component?.forceShow)
+        "
         :class="[props.component?.customClass]"
         :extra="props.component?.extra"
         :bordered="props.component?.bordered"
@@ -42,13 +40,22 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue"
+import { onMounted, inject } from "vue"
 import { getComponentName } from "../js/utils.js"
-import { maEvent } from "../js/formItemMixin.js"
+import { runEvent } from "../js/event.js"
 const props = defineProps({ component: Object })
 
-maEvent.handleCommonEvent(props.component, "onCreated")
-onMounted(() => {
-    maEvent.handleCommonEvent(props.component, "onMounted")
-})
+const formModel = inject("formModel")
+const getColumnService = inject("getColumnService")
+const columns = inject("columns")
+
+const hasDisplayTrue = (list) => {
+    return list.some((item) => item.display ?? true)
+}
+
+const rv = async (ev, value = undefined) =>
+    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
+
+rv("onCreated")
+onMounted(() => rv("onMounted"))
 </script>

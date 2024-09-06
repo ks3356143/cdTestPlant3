@@ -1,63 +1,79 @@
 <template>
     <div class="upload-image flex">
         <!-- 单图 -->
-        <div
-            :class="'image-list ' + (config.rounded ? 'rounded-full' : '')"
-            v-if="!config.multiple && currentItem?.url && config.showList"
-        >
-            <a-button class="delete" @click="removeSignImage()">
-                <template #icon><icon-delete /></template>
-            </a-button>
-            <a-image width="130" height="130" :class="config.rounded ? 'rounded-full' : ''" :src="currentItem.url" />
-        </div>
-        <!-- 多图显示 -->
-        <a-space v-else-if="config.multiple && config.showList" :class="showImgList.length > 0 ? 'mr-2' : ''" wrap>
+        <a-space wrap>
             <div
                 :class="'image-list ' + (config.rounded ? 'rounded-full' : '')"
-                v-for="(image, idx) in showImgList"
-                :key="idx"
+                v-if="!config.multiple && currentItem?.url && config.showList"
             >
-                <a-button class="delete" @click="removeImage(idx)">
-                    <template #icon><icon-delete /></template>
+                <a-button class="delete" @click="removeSignImage()">
+                    <template #icon>
+                        <icon-delete />
+                    </template>
                 </a-button>
-                <a-image width="130" height="130" :class="config.rounded ? 'rounded-full' : ''" :src="image.url" />
+                <a-image
+                    width="130"
+                    height="130"
+                    :class="config.rounded ? 'rounded-full' : ''"
+                    :src="currentItem.url"
+                />
             </div>
-        </a-space>
-
-        <a-upload
-            :custom-request="uploadImageHandler"
-            :show-file-list="false"
-            :multiple="config.multiple"
-            :accept="config.accept ?? '.jpg,jpeg,.gif,.png,.svg,.bpm'"
-            :disabled="config.disabled"
-            :tip="config.tip"
-            :limit="config.limit"
-        >
-            <template #upload-button>
-                <slot name="customer">
-                    <div
-                        :class="'upload-skin ' + (config.rounded ? 'rounded-full' : 'rounded-sm')"
-                        v-if="!props.modelValue || config.multiple"
-                    >
-                        <div class="icon text-3xl"><component :is="config.icon" /></div>
-                        <div class="title">
-                            {{ config.title === "buttonText" ? "本地上传" : config.title }}
-                        </div>
-                    </div>
-                </slot>
+            <!-- 多图显示 -->
+            <template v-else-if="config.multiple && config.showList">
+                <div
+                    :class="'image-list ' + (config.rounded ? 'rounded-full' : '')"
+                    v-for="(image, idx) in showImgList"
+                    :key="idx"
+                >
+                    <a-button class="delete" @click="removeImage(idx)">
+                        <template #icon>
+                            <icon-delete />
+                        </template>
+                    </a-button>
+                    <a-image width="130" height="130" :class="config.rounded ? 'rounded-full' : ''" :src="image.url" />
+                </div>
             </template>
-        </a-upload>
+
+            <a-upload
+                :custom-request="uploadImageHandler"
+                :show-file-list="false"
+                :multiple="config.multiple"
+                :accept="config.accept ?? '.jpg,jpeg,.gif,.png,.svg,.bpm'"
+                :disabled="config.disabled"
+                :tip="config.tip"
+                :limit="config.limit"
+            >
+                <template #upload-button>
+                    <slot name="customer">
+                        <div
+                            :class="'upload-skin ' + (config.rounded ? 'rounded-full' : 'rounded-sm')"
+                            v-if="!props.modelValue || config.multiple"
+                        >
+                            <div class="icon text-3xl">
+                                <component :is="config.icon" />
+                            </div>
+                            <div class="title">
+                                {{ config.title === "buttonText" ? $t("upload.buttonText") : config.title }}
+                            </div>
+                        </div>
+                    </slot>
+                </template>
+            </a-upload>
+        </a-space>
     </div>
 </template>
 <script setup>
 import { ref, inject, watch } from "vue"
 import tool from "@/utils/tool"
-import { isArray } from "lodash"
+import { isArray, throttle } from "lodash-es"
 import { getFileUrl, uploadRequest } from "../js/utils"
 import { Message } from "@arco-design/web-vue"
 
 const props = defineProps({
-    modelValue: { type: [String, Number, Array], default: () => {} }
+    modelValue: {
+        type: [String, Number, Array],
+        default: () => {}
+    }
 })
 const emit = defineEmits(["update:modelValue"])
 const config = inject("config")
@@ -73,7 +89,7 @@ const uploadImageHandler = async (options) => {
     }
     const file = options.fileItem.file
     if (file.size > config.size) {
-        Message.warning(file.name + " " + "文件大小超过了限制")
+        Message.warning(file.name + " " + t("upload.sizeLimit"))
         currentItem.value = {}
         return
     }
@@ -111,25 +127,40 @@ const removeImage = (idx) => {
     emit("update:modelValue", files)
 }
 
-const init = async () => {
+const init = throttle(async () => {
     if (config.multiple) {
         if (isArray(props.modelValue) && props.modelValue.length > 0) {
             const result = await props.modelValue.map(async (item) => {
                 return await getFileUrl(config.returnType, item, storageMode)
             })
-            showImgList.value = await Promise.all(result)
+            const data = await Promise.all(result)
+            if (config.returnType === "url") {
+                showImgList.value = data.map((url) => {
+                    return { url }
+                })
+            } else {
+                showImgList.value = data.map((item) => {
+                    return { url: item.url, [config.returnType]: item[config.returnType] }
+                })
+            }
         } else {
             showImgList.value = []
         }
     } else if (props.modelValue) {
-        signImage.value = props.modelValue
-        getFileUrl(config.returnType, props.modelValue, storageMode).then((item) => (currentItem.value.url = item))
+        if (config.returnType === "url") {
+            signImage.value = props.modelValue
+            currentItem.value.url = props.modelValue
+        } else {
+            const result = await getFileUrl(config.returnType, props.modelValue, storageMode)
+            signImage.value = result.url
+            currentItem.value.url = result.url
+        }
         currentItem.value.percent = 100
         currentItem.value.status = "complete"
     } else {
         removeSignImage()
     }
-}
+}, 1000)
 
 watch(
     () => props.modelValue,
@@ -153,6 +184,7 @@ watch(
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     .icon,
     .title {
         color: var(--color-text-3);
@@ -165,6 +197,7 @@ watch(
     background-color: var(--color-fill-2);
     width: 130px;
     height: 130px;
+
     .delete {
         position: absolute;
         z-index: 99;
@@ -186,6 +219,7 @@ watch(
         display: block;
     }
 }
+
 .upload-skin:hover {
     border: 1px dashed rgb(var(--primary-6));
 }

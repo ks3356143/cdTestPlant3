@@ -32,6 +32,8 @@ let beiceType = [
 const crudOptions = ref({
     api: dutApi.getDutList,
     add: { show: true, api: dutApi.save, text: "新增被测件" },
+    edit: { show: true, api: dutApi.update, text: "编辑被测件" },
+    delete: { show: true, api: dutApi.delete },
     // 处理添加后函数
     beforeOpenAdd: function () {
         let round_str = parseInt(route.query.key) + 1
@@ -60,8 +62,8 @@ const crudOptions = ref({
         // 清空行选择器
         crudRef.value.tableRef.selectAll(false)
     },
-    edit: { show: true, api: dutApi.update, text: "编辑被测件" },
-    delete: { show: true, api: dutApi.delete },
+
+    // 新增、编辑、删除均携带下面
     parameters: {
         projectId: route.query.id,
         round: roundNumber
@@ -72,6 +74,7 @@ const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,
     tablePagination: false,
+    operationColumnWidth: 200, // 操作列宽度
     operationColumn: true,
     operationColumnAlign: "center",
     formOption: {
@@ -80,6 +83,14 @@ const crudOptions = ref({
         mask: false
     }
 })
+
+// 1.计算注释率函数 -> 用于字段交互
+const calcPercent = () => {
+    const formData = crudRef.value.getFormData()
+    const total_line = +formData.black_line + +formData.code_line + +formData.comment_line + +formData.mix_line
+    const comment_total = +formData.comment_line + +formData.mix_line
+    formData.comment_percent = `${(comment_total / total_line).toFixed(2).toString()}%`
+}
 
 const crudColumns = ref([
     {
@@ -116,7 +127,7 @@ const crudColumns = ref([
             translation: true,
             tagColors: { XQ: "blue", SO: "green", SJ: "orangered", XY: "pinkpurple", YZ: "red" }
         },
-        control: (value) => {
+        onControl: (value) => {
             if (value === "SO") {
                 return {
                     black_line: { display: true },
@@ -194,7 +205,10 @@ const crudColumns = ref([
         dataIndex: "black_line",
         formType: "input-number",
         commonRules: [{ required: true, message: "空行数必填" }],
-        min: 0
+        min: 0,
+        onControl: () => {
+            calcPercent()
+        }
     },
     {
         title: "纯代码行",
@@ -203,7 +217,10 @@ const crudColumns = ref([
         dataIndex: "code_line",
         formType: "input-number",
         commonRules: [{ required: true, message: "纯代码行数必填" }],
-        min: 0
+        min: 0,
+        onControl: () => {
+            calcPercent()
+        }
     },
     {
         title: "纯注释行",
@@ -212,7 +229,10 @@ const crudColumns = ref([
         dataIndex: "comment_line",
         formType: "input-number",
         commonRules: [{ required: true, message: "纯注释行数必填" }],
-        min: 0
+        min: 0,
+        onControl: () => {
+            calcPercent()
+        }
     },
     {
         title: "混合行",
@@ -222,61 +242,19 @@ const crudColumns = ref([
         formType: "input-number",
         help: "混合行是指：代码中一行即包含代码也包含注释",
         commonRules: [{ required: true, message: "混合行数必填" }],
-        min: 0
+        min: 0,
+        onControl: () => {
+            calcPercent()
+        }
     },
     {
         title: "注释率 %",
         align: "center",
         dataIndex: "comment_percent",
+        placeholder: "计算注释率",
         hide: true,
         addDisabled: true,
-        editDisabled: true,
-        customRender: ({ record }) => {
-            const sum_line =
-                parseFloat(record.comment_line) +
-                parseFloat(record.mix_line) +
-                parseFloat(record.black_line) +
-                parseFloat(record.code_line)
-            if (record.comment_line && record.mix_line && record.black_line && record.code_line) {
-                if (
-                    isNaN(parseFloat(record.comment_line)) ||
-                    isNaN(parseFloat(record.mix_line)) ||
-                    isNaN(parseFloat(record.black_line)) ||
-                    isNaN(parseFloat(record.code_line))
-                ) {
-                    return "数值错误"
-                }
-                if (
-                    parseFloat(record.comment_line) <= 0 ||
-                    parseFloat(record.mix_line) <= 0 ||
-                    parseFloat(record.black_line) <= 0 ||
-                    parseFloat(record.code_line) <= 0
-                ) {
-                    return "不能为负数"
-                }
-                return (
-                    <a-statistic
-                        animation-duration={parseInt(1000)}
-                        precision={2}
-                        animation
-                        value-style={{ color: "lightblue" }}
-                        value={(parseFloat(record.comment_line) + parseFloat(record.mix_line)) / sum_line}
-                    ></a-statistic>
-                )
-            }
-        },
-        // 字段交互控制
-        control(value, data) {
-            data.comment_percent = (
-                (parseFloat(data.comment_line) + parseFloat(data.mix_line)) /
-                (parseFloat(data.comment_line) +
-                    parseFloat(data.mix_line) +
-                    parseFloat(data.black_line) +
-                    parseFloat(data.code_line))
-            )
-                .toFixed(2)
-                .toString()
-        }
+        editDisabled: true
     }
 ])
 

@@ -30,7 +30,7 @@
         <ul class="right-side">
             <li>
                 <a-tooltip content="搜索-暂无">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'" @click="handleTestBtn">
+                    <a-button class="nav-btn" type="outline" :shape="'circle'">
                         <template #icon>
                             <icon-search />
                         </template>
@@ -105,14 +105,6 @@ import { useRouter, useRoute } from "vue-router"
 const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
-// ~~~测试开始~~~
-import { useUserStore } from "@/store"
-const userStore = useUserStore()
-const handleTestBtn = () => {
-    console.log(userStore.$state)
-}
-
-// ~~~测试结束~~~
 
 // 切换暗黑主题
 const handleChangeTheme = () => {

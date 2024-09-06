@@ -1,3 +1,7 @@
+<!--
+ - @Author XXX
+ - @Link XXX
+-->
 <template>
     <a-cascader
         v-if="props.type === 'cascader'"
@@ -70,7 +74,7 @@
 <script setup>
 import jsonData from "./lib/city.json"
 import { ref, watch } from "vue"
-import { isObject } from "lodash"
+import { isObject } from "lodash-es"
 
 const val = ref()
 const selectData = ref({ province: [], city: [], area: [] })
@@ -139,7 +143,7 @@ val.value = props.modelValue
 
 watch(
     () => props.modelValue,
-    (vl) => () => {
+    (vl) => {
         val.value = vl
         setSelectData()
     },

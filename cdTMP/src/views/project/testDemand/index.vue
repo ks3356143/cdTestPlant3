@@ -128,6 +128,7 @@ const crudOptions = ref({
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,
     tablePagination: false,
+    operationColumnWidth: 180,
     operationColumn: true,
     formOption: {
         width: 1200,
@@ -185,7 +186,7 @@ const crudColumns = ref([
         title: "用例标识",
         dataIndex: "ident",
         sortable: { sortDirections: ["ascend"] },
-        width: 140,
+        width: 180,
         align: "center",
         addDisabled: true,
         addDefaultValue: "用例标识自动生成，结构为YL_IO_XXXX_001",
@@ -197,7 +198,6 @@ const crudColumns = ref([
     {
         title: "名称",
         dataIndex: "name",
-        width: 120,
         align: "center",
         search: true,
         commonRules: [{ required: true, message: "名称是必填" }],
@@ -261,7 +261,7 @@ const crudColumns = ref([
     {
         title: "执行人员",
         dataIndex: "testPerson",
-        width: 80,
+        width: 120,
         align: "center",
         search: true,
         formType: "select",
@@ -356,7 +356,7 @@ const crudColumns = ref([
     {
         title: "关联问题",
         dataIndex: "problem",
-        width: 120,
+        width: 150,
         addDisplay: false,
         editDisplay: false,
         align: "center",

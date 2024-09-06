@@ -35,6 +35,7 @@ const crudColumns = ref([
     {
         title: "缩略语",
         align: "center",
+        width: 200,
         dataIndex: "title",
         search: true,
         commonRules: [{ required: true, message: "缩略语必填" }]
@@ -44,7 +45,6 @@ const crudColumns = ref([
         align: "center",
         dataIndex: "des",
         search: true,
-        width: 500,
         ellipsis: true,
         commonRules: [{ required: true, message: "全称和描述必填" }]
     }

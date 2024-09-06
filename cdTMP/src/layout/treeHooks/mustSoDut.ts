@@ -113,7 +113,7 @@ export default function useMustSoDut(projectId: Ref<string>) {
         return false
     }
     /**
-     * 用户点击源代码被测件取消按钮
+     * 用户点击源代码被测件取消按钮 -> 返回项目管理页面
      */
     const handleSoDutCancel = () => {
         Notification.error("必须按要求添加源代码信息，返回项目列表页面!")

@@ -132,7 +132,7 @@
         :title="title"
         :column="roundColumn"
         :options="roundOption"
-        width="800px"
+        :width="800"
         :submit="handleRoundSubmit"
     >
     </ma-form-modal>
@@ -141,14 +141,16 @@
         ref="soDutFormRef"
         :title="soDutModalTitle"
         :column="soDutColumn"
-        width="800px"
+        :width="800"
         :submit="handleSoDutSubmit"
-        :custom-cancel="handleSoDutCancel"
+        @cancel="handleSoDutCancel"
         cancelText="返回项目页面"
         :cancel-button-props="{ status: 'warning' }"
         :closable="false"
         :mask-closable="false"
     >
+        <!-- 添加input前缀 -->
+        <template #inputPrepend-version> V </template>
     </ma-form-modal>
     <Progress
         :visible="visible"
@@ -185,7 +187,7 @@
     </a-dropdown>
     <!-- 复制modal组件 -->
     <!-- 关联的modal组件 -->
-    <a-modal v-model:visible="modalVisible" width="700px" draggable :on-before-ok="handleCopyDemand">
+    <a-modal v-model:visible="modalVisible" :width="700" draggable :on-before-ok="handleCopyDemand">
         <template #title>复制到设计需求</template>
         <div class="pb-3">选择复制到的节点:</div>
         <a-cascader

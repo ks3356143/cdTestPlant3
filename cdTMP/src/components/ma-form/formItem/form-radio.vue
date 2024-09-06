@@ -1,11 +1,6 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
     <ma-form-item
@@ -33,8 +28,8 @@
 <script setup>
 import { ref, inject, onMounted, nextTick, watch } from "vue"
 import MaFormItem from "./form-item.vue"
-import { get, set, isUndefined } from "lodash"
-import { maEvent } from "../js/formItemMixin.js"
+import { get, set, isUndefined } from "lodash-es"
+import { runEvent } from "../js/event.js"
 import { handlerCascader } from "../js/networkRequest.js"
 
 const props = defineProps({
@@ -45,7 +40,10 @@ const props = defineProps({
 const formModel = inject("formModel")
 const dictList = inject("dictList")
 const formLoading = inject("formLoading")
+const getColumnService = inject("getColumnService")
 const columns = inject("columns")
+const rv = async (ev, value = undefined) =>
+    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 
 const index = props.customField ?? props.component.dataIndex
 const dictIndex = index.match(/^(\w+\.)\d+\./)
@@ -80,7 +78,7 @@ const handleCascaderChangeEvent = async (value) => {
     const component = props.component
     // 执行自定义事件
     if (component.onChange) {
-        maEvent.handleChangeEvent(component, value)
+        rv("onChange", value)
     }
 
     // 处理联动
@@ -90,8 +88,6 @@ const handleCascaderChangeEvent = async (value) => {
     nextTick(() => (formLoading.value = false))
 }
 
-maEvent.handleCommonEvent(props.component, "onCreated")
-onMounted(() => {
-    maEvent.handleCommonEvent(props.component, "onMounted")
-})
+rv("onCreated")
+onMounted(() => rv("onMounted"))
 </script>

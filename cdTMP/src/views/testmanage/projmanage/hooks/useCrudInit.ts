@@ -9,7 +9,7 @@ const useCrudInit = function () {
         rowSelection: { showCheckedAll: true },
         api: projectApi.getPageList,
         add: { show: true, api: projectApi.save, text: "新增项目" },
-        edit: { show: true, api: projectApi.update, text: "编辑项目" },
+        edit: { show: true, api: projectApi.update, text: "编辑项目" }, // auth未空数组则所有都可以
         delete: { show: true, api: projectApi.delete },
         searchColNumber: 3,
         tablePagination: false,

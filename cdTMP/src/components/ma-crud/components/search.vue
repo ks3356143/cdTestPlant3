@@ -1,11 +1,6 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
     <a-spin :loading="searchLoading" :tip="options.searchLoadingText" v-if="showSearch">
@@ -25,7 +20,10 @@
                         :label-col-style="{ width: component.searchLabelWidth ?? options.searchLabelWidth }"
                     >
                         <slot :name="`${component.dataIndex}`" v-bind="{ searchForm, component }">
-                            <component :is="getComponentName(component.formType)" :component="component" />
+                            <component
+                                :is="getComponentName(component.searchFormType ?? component.formType)"
+                                :component="component"
+                            />
                         </slot>
                     </a-form-item>
                 </template>
@@ -57,7 +55,7 @@ import MaFormPicker from "./searchFormItem/form-picker.vue"
 import MaFormSelect from "./searchFormItem/form-select.vue"
 import MaFormCascader from "./searchFormItem/form-cascader.vue"
 import MaFormTreeSelect from "./searchFormItem/form-tree-select.vue"
-import { cloneDeep, isFunction } from "lodash"
+import { cloneDeep, isFunction } from "lodash-es"
 
 const options = inject("options")
 const columns = inject("columns")
@@ -73,14 +71,30 @@ const searchColumns = ref([])
 const searchForm = ref({})
 
 provide("searchForm", searchForm)
-provide("columns", columns)
 
 const emit = defineEmits(["search"])
 
-if (columns.length > 0) {
-    searchColumns.value = cloneDeep(
-        columns.filter((item) => item.search === true && options.tabs?.dataIndex != item.dataIndex)
-    )
+const getSearchAllColumns = (cls = []) => {
+    let sls = []
+    cls.map((item) => {
+        if (item.children && item.children.length > 0) {
+            let tmp = getSearchAllColumns(item.children)
+            sls.push(...tmp)
+        } else if (item.dataIndex && item.search && item.search === true) {
+            sls.push(item)
+        }
+    })
+    return sls
+}
+
+const initSearchColumns = () => {
+    if (columns.value.length > 0) {
+        searchColumns.value = cloneDeep(
+            getSearchAllColumns(columns.value).filter(
+                (item) => item.search === true && options.tabs?.dataIndex != item.dataIndex
+            )
+        )
+    }
 }
 
 const handlerSearch = () => {
@@ -89,6 +103,13 @@ const handlerSearch = () => {
 
 const resetSearch = async () => {
     searchRef.value.resetFields()
+    Object.keys(searchForm.value).map((item) => {
+        let temp = item.match(/^(.+)Min$/)
+        if (temp) {
+            searchForm.value[temp[1] + "Min"] = undefined
+            searchForm.value[temp[1] + "Max"] = undefined
+        }
+    })
     if (options.resetSearch && isFunction(options.resetSearch)) {
         await options.resetSearch(searchForm.value)
     }
@@ -117,6 +138,8 @@ const getComponentName = (formType) => {
     }
 }
 
+initSearchColumns()
+
 const setSearchHidden = () => (showSearch.value = false)
 const setSearchDisplay = () => (showSearch.value = true)
 const setSearchLoading = () => (searchLoading.value = true)
@@ -125,9 +148,11 @@ const getSearchFormRef = () => searchRef.value
 const getSearchColumns = () => searchColumns.value
 
 defineExpose({
+    initSearchColumns,
     getSearchFormRef,
     getSearchColumns,
     showSearch,
+    resetSearch,
     setSearchHidden,
     setSearchDisplay,
     setSearchLoading,

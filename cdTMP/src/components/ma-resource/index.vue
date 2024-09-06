@@ -1,18 +1,22 @@
+<!--
+ - @Author XXX
+ - @Link XXX
+-->
 <template>
     <div class="w-full p-2 resource-container h-full lg:flex lg:justify-between rounded-sm">
-        <a-modal v-model:visible="openNetworkModal" ok-text="保存" :on-before-ok="saveNetworkImg" draggable>
-            <template #title>保存网络图片</template>
-            <a-input v-model="networkImg" class="mb-3" placeholder="请粘贴网络图片地址" allow-clear />
-            <a-image :src="networkImg" width="100%" style="min-height: 150px" />
+        <a-modal v-model:visible="openNetworkModal" :ok-text="$t('sys.save')" :on-before-ok="saveNetworkImg" draggable>
+            <template #title>{{ $t("maResource.saveNetworkImage") }}</template>
+            <a-input v-model="networkImg" class="mb-3" :placeholder="$t('maResource.networkImageNotice')" allow-clear />
+            <a-image :src="networkImg ?? ''" width="100%" style="min-height: 150px" />
         </a-modal>
         <div class="lg:w-1/5 w-full p-2 shadow">
             <ma-tree-slider
-                v-model="sliderData"
-                search-placeholder="搜索资源类型"
+                :data="sliderData"
+                :search-placeholder="$t('maResource.searchResource')"
                 :field-names="{ title: 'title', key: 'key' }"
                 @click="handlerClick"
                 icon="icon-folder"
-                :selected-keys="['all']"
+                v-model="defaultKey"
             />
         </div>
         <div class="w-full lg:ml-3 mt-3 lg:mt-2 flex flex-col">
@@ -20,17 +24,17 @@
                 <div class="flex">
                     <ma-upload v-model="uploadFile" multiple :show-list="false" type="chunk" :resource="false" />
                     <a-button class="ml-3" @click="openNetworkModal = true">
-                        <icon-image /> 保存网络图片
+                        <icon-image /> {{ $t("maResource.saveNetworkImage") }}
                     </a-button>
                 </div>
                 <a-input
                     v-model="filename"
                     class="input-search lg:mt-0 mt-2"
-                    placeholder="文件名搜索"
+                    :placeholder="$t('maResource.searchFileNotice')"
                     @press-enter="searchFile"
                 />
             </div>
-            <a-spin :loading="resourceLoading" tip="数据加载中..." class="h-full">
+            <a-spin :loading="resourceLoading" :tip="$t('maResource.loadingText')" class="h-full">
                 <div class="resource-list mt-2" ref="rl" v-if="attachmentList && attachmentList.length > 0">
                     <div
                         class="item rounded-sm"
@@ -72,7 +76,9 @@
                     v-model:page-size="pageSize"
                     @change="changePage"
                 />
-                <a-button type="primary" @click="selectComplete" class="mt-3 lg:mt-0">选择完成</a-button>
+                <a-button type="primary" @click="selectComplete" class="mt-3 lg:mt-0">{{
+                    $t("maResource.ok")
+                }}</a-button>
             </div>
         </div>
     </div>
@@ -84,10 +90,13 @@ import MaUpload from "@cps/ma-upload/index.vue"
 import uploadConfig from "@/config/upload"
 import MaTreeSlider from "@cps/ma-treeSlider/index.vue"
 import commonApi from "@/api/common"
+import { xor } from "lodash"
 import tool from "@/utils/tool"
 import { Message } from "@arco-design/web-vue"
 
+const { t } = useI18n()
 const sliderData = ref([])
+const defaultKey = ref(["all"])
 const uploadFile = ref()
 const attachmentList = ref([])
 const openNetworkModal = ref(false)
@@ -108,7 +117,7 @@ const props = defineProps({
     modelValue: { type: [String, Array] },
     multiple: { type: Boolean, default: true },
     onlyData: { type: Boolean, default: true },
-    returnType: { type: String, default: "url" }
+    returnType: { type: String, default: "hash" }
 })
 
 onMounted(async () => {
@@ -140,6 +149,7 @@ const handlerItemClick = (e) => {
 }
 
 const handlerClick = async (item) => {
+    defaultKey.value = item
     const type = item[0] === "all" ? undefined : item[0]
     await getAttachmentList({ mime_type: type })
 }
@@ -149,13 +159,9 @@ const searchFile = async () => {
 }
 
 const selectFile = (item, index) => {
-    if (!props.multiple && selecteds.value) {
-        if (props.onlyData && item.url != selecteds.value) return
-        if (!props.onlyData && item.id != selecteds.value.id) return
-    }
-
     const children = rl.value.children
     const className = "item rounded-sm"
+
     if (!/^(http|https)/g.test(item.url)) {
         item.url = tool.attachUrl(item.url, getStoreMode(item.storage_mode))
     }
@@ -163,18 +169,20 @@ const selectFile = (item, index) => {
         children[index].className = className
         if (props.multiple) {
             selecteds.value.map((file, idx) => {
-                if (props.onlyData && file == item.url) selecteds.value.splice(idx, 1)
-                if (!props.onlyData && file.id == item.id) selecteds.value.splice(idx, 1)
+                selecteds.value.splice(idx, 1)
             })
         } else {
             selecteds.value = ""
         }
     } else {
-        children[index].className = className + " active"
         if (props.multiple) {
+            children[index].className = className + " active"
             selecteds.value.push(props.onlyData ? item[props.returnType] : item)
         } else {
-            selecteds.value = props.onlyData ? item[props.returnType] : item
+            if (document.querySelectorAll(".item.active").length < 1) {
+                children[index].className = className + " active"
+                selecteds.value = props.onlyData ? item[props.returnType] : item
+            }
         }
     }
 }
@@ -204,7 +212,7 @@ const changePage = async (page) => {
 
 const saveNetworkImg = async (done) => {
     if (!networkImg.value) {
-        Message.error("请粘贴网络图片地址")
+        Message.error(t("maResource.networkImageNotice"))
         done(false)
         return
     }

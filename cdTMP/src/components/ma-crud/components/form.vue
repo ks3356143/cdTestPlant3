@@ -1,5 +1,6 @@
 <template>
-    <!-- add：on-before-cancel -->
+    <!-- 修改源码：添加mask-closable属性 -->
+    <!-- 修改源码：添加on-before-cancel属性 -->
     <component
         :is="componentName"
         v-model:visible="dataVisible"
@@ -16,7 +17,7 @@
     >
         <template #title>{{ actionTitle }}</template>
         <a-spin :loading="dataLoading" tip="加载中..." class="w-full">
-            <ma-form v-model="form" :columns="formColumns" :options="{ showButtons: false }" ref="maFormRef">
+            <ma-form v-model="form" :columns="formColumns" :options="formOptions" ref="maFormRef">
                 <template v-for="slot in Object.keys($slots)" #[slot]="component">
                     <slot :name="slot" v-bind="component" />
                 </template>
@@ -26,43 +27,53 @@
 </template>
 
 <script setup>
-import { ref, toRaw, getCurrentInstance, inject, provide } from "vue"
+import { ref, toRaw, inject, provide, nextTick } from "vue" // 这里多了nextTick
 import { Message } from "@arco-design/web-vue"
 import { containerItems } from "@cps/ma-form/js/utils"
-import { isArray, isFunction, get, cloneDeep, isUndefined } from "lodash"
+import { isArray, isFunction, get, cloneDeep, isUndefined } from "lodash-es"
 import { useRouter } from "vue-router"
 import tool from "@/utils/tool"
 import { useFormStore } from "@/store/index"
 
 const formStore = useFormStore()
 const router = useRouter()
-const app = getCurrentInstance().appContext.app
+const formOptions = ref({ showButtons: false })
 const maFormRef = ref()
 const componentName = ref("a-modal")
-const columns = inject("columns")
 const layoutColumns = ref(new Map())
-const options = inject("options")
 const formColumns = ref([])
 const currentAction = ref("")
 const dataVisible = ref(false)
 const form = ref({})
 const actionTitle = ref("")
 const dataLoading = ref(true)
+
+const columns = inject("columns")
+const options = inject("options")
+// 修改源码：新增事件beforeCancel和处理函数beforeCancel
 const emit = defineEmits(["success", "error", "beforeCancel"])
+const beforeCancel = () => {
+    emit("beforeCancel")
+    return true
+}
 
 provide("form", toRaw(form))
+if (window.screen.width < 768) {
+    options.formOption.width = window.screen.width
+    options.formOption.isFull = true
+}
 
 const submit = async () => {
     const formData = maFormRef.value.getFormData()
     if (await maFormRef.value.validateForm()) {
         return false
     }
-
     let response
-    // 在这里添加我们自定义的parameters，注意判断options中是否有parameters-key
     if (currentAction.value === "add") {
-        isFunction(options.beforeAdd) && (await options.beforeAdd(formData))
-        // 首先判断是否options.parameters存在
+        if (isFunction(options.beforeAdd) && !(await options.beforeAdd(formData))) {
+            return false
+        }
+        // 修改源码添加parameters参数
         if (!options.parameters) {
             response = await options.add.api(formData)
         } else {
@@ -70,8 +81,9 @@ const submit = async () => {
         }
         isFunction(options.afterAdd) && (await options.afterAdd(response, formData))
     } else {
-        isFunction(options.beforeEdit) && (await options.beforeEdit(formData))
-        // 编辑也需要更新
+        if (isFunction(options.beforeEdit) && !(await options.beforeEdit(formData))) {
+            return false
+        }
         if (!options.parameters) {
             response = await options.edit.api(formData[options.pk], formData)
         } else {
@@ -84,6 +96,7 @@ const submit = async () => {
         emit("success", response)
         return true
     } else if (response.success === false && (typeof response.code === "undefined" || response.code !== 200)) {
+        Message.clear()
         Message.error(response.message || `${actionTitle.value}失败！`)
         return false
     }
@@ -92,7 +105,7 @@ const open = () => {
     formColumns.value = []
     layoutColumns.value = new Map()
     init()
-    if (options.formOption.viewType === "tag") {
+    if (options.formOption.viewType === "tag" && currentAction.value !== "see") {
         if (!options.formOption.tagId) {
             Message.info("未配置 tagId")
             return
@@ -103,6 +116,7 @@ const open = () => {
         }
         const config = {
             options,
+            sourceColumns: columns.value,
             formColumns: formColumns.value
         }
 
@@ -128,7 +142,6 @@ const open = () => {
         } else {
             formStore.formList[options.formOption.tagId].editData[queryParams.key] = cloneDeep(form.value)
         }
-
         form.value = {}
         router.push(`/openForm/${options.formOption.tagId}` + tool.httpBuild(queryParams, true))
     } else {
@@ -136,17 +149,13 @@ const open = () => {
         dataVisible.value = true
     }
 }
-// ~~~~addMethod~~~~
-const beforeCancel = () => {
-    emit("beforeCancel")
-    return true
-}
 const close = () => {
     dataVisible.value = false
     formColumns.value = []
     form.value = {}
 }
-const add = () => {
+const add = async () => {
+    // 修改源码：开始
     const strArr = ["新增编辑", "编辑新增", "新增新增", "编辑编辑", "编辑", "新增"]
     if (!actionTitle.value) {
         actionTitle.value = "新增"
@@ -155,11 +164,15 @@ const add = () => {
     } else {
         actionTitle.value += "新增"
     }
+    // 修改源码：结束
     currentAction.value = "add"
+    formOptions.value["disabled"] = false
     form.value = {}
     open()
+    await nextTick(() => maFormRef.value && maFormRef.value.updateOptions())
 }
-const edit = (data) => {
+const edit = async (data) => {
+    // 修改源码：开始
     const strArr = ["新增编辑", "编辑新增", "新增新增", "编辑编辑", "编辑", "新增"]
     if (!actionTitle.value) {
         actionTitle.value = "编辑"
@@ -168,32 +181,66 @@ const edit = (data) => {
     } else {
         actionTitle.value += "编辑"
     }
-
+    // 修改源码：结束
     currentAction.value = "edit"
+    formOptions.value["disabled"] = false
     form.value = {}
-    for (let i in data) form.value[i] = data[i]
-    open(data)
+    if (options.edit.dataSource && options.edit.dataSource === "api") {
+        const response = await options.edit.dataSourceApi(data[options.pk])
+        if (response.success) {
+            form.value = response.data
+            open(response.data)
+        }
+    } else {
+        for (let i in data) form.value[i] = data[i]
+        open(data)
+    }
+    await nextTick(() => maFormRef.value && maFormRef.value.updateOptions())
+}
+const see = async (data) => {
+    actionTitle.value = options.see.title ?? "查看"
+    currentAction.value = "see"
+    formOptions.value["disabled"] = true
+    form.value = {}
+    if (options.see.dataSource && options.see.dataSource === "api") {
+        const response = await options.see.dataSourceApi(data[options.pk])
+        if (response.success) {
+            form.value = response.data
+            open(response.data)
+        }
+    } else {
+        for (let i in data) form.value[i] = data[i]
+        open(data)
+    }
+    await nextTick(() => maFormRef.value && maFormRef.value.updateOptions())
 }
 
-const init = () => {
+const init = async () => {
     dataLoading.value = true
     const layout = JSON.parse(JSON.stringify(options?.formOption?.layout ?? []))
-    // const layout = options?.formOption?.layout ?? []
-    columns.map(async (item) => {
-        await columnItemHandle(item)
-    })
+
+    await Promise.all(
+        columns.value.map(async (item) => {
+            if (item.children && item.children.length > 0) {
+                await item.children.map(async (childItem) => {
+                    await columnItemHandle(childItem)
+                })
+            } else {
+                await columnItemHandle(item)
+            }
+        })
+    )
     // 设置表单布局
     settingFormLayout(layout)
     if (isArray(layout) && layout.length > 0) {
         formColumns.value = layout
         const excludeColumns = ["__index", "__operation"]
-        columns.map((item) => {
+        columns.value.map((item) => {
             if (options.formExcludePk) excludeColumns.push(options.pk)
             if (excludeColumns.includes(item.dataIndex)) return
             !item.__formLayoutSetting && formColumns.value.push(item)
         })
     }
-
     dataLoading.value = false
 }
 
@@ -207,28 +254,33 @@ const columnItemHandle = async (item) => {
     layoutColumns.value.set(item.dataIndex, item)
     formColumns.value.push(item)
 
-    // 针对带点的数据处理
-    if (item.dataIndex && item.dataIndex.indexOf(".") > -1) {
-        form.value[item.dataIndex] = get(form.value, item.dataIndex)
-    }
+    if (options.formOption.viewType !== "tag") {
+        // 针对带点的数据处理
+        if (item.dataIndex && item.dataIndex.indexOf(".") > -1) {
+            form.value[item.dataIndex] = get(form.value, item.dataIndex)
+        }
 
-    // add 默认值处理
-    if (currentAction.value === "add") {
-        if (item.addDefaultValue && isFunction(item.addDefaultValue)) {
-            form.value[item.dataIndex] = await item.addDefaultValue(form.value)
-        } else if (typeof item.addDefaultValue != "undefined") {
-            form.value[item.dataIndex] = item.addDefaultValue
+        // add 默认值处理
+        if (currentAction.value === "add") {
+            if (item.addDefaultValue && isFunction(item.addDefaultValue)) {
+                form.value[item.dataIndex] = await item.addDefaultValue(form.value)
+            } else if (typeof item.addDefaultValue != "undefined") {
+                form.value[item.dataIndex] = item.addDefaultValue
+            }
+        }
+        // edit 和 see 默认值处理
+        if (currentAction.value === "edit" || currentAction.value === "see") {
+            if (item.editDefaultValue && isFunction(item.editDefaultValue)) {
+                form.value[item.dataIndex] = await item.editDefaultValue(form.value)
+            } else if (typeof item.editDefaultValue != "undefined") {
+                form.value[item.dataIndex] = item.editDefaultValue
+            }
         }
     }
-    // edit 默认值处理
-    if (currentAction.value === "edit") {
-        if (item.editDefaultValue && isFunction(item.editDefaultValue)) {
-            form.value[item.dataIndex] = await item.editDefaultValue(form.value)
-        } else if (typeof item.editDefaultValue != "undefined") {
-            form.value[item.dataIndex] = item.editDefaultValue
-        }
-    }
 
+    item.disabled = undefined
+    item.readonly = undefined
+    await nextTick()
     // 其他处理
     item.display = formItemShow(item)
     item.disabled = formItemDisabled(item)
@@ -236,6 +288,7 @@ const columnItemHandle = async (item) => {
     item.labelWidth = formItemLabelWidth(item)
     item.rules = getRules(item)
 }
+
 const settingFormLayout = (layout) => {
     if (!isArray(layout)) {
         return
@@ -306,19 +359,22 @@ const settingFormLayout = (layout) => {
 
 const formItemShow = (item) => {
     if (currentAction.value === "add") {
-        return item.addDisplay !== false
+        return isFunction(item.addDisplay) ? item.addDisplay() !== false : item.addDisplay !== false
     }
-    if (currentAction.value === "edit") {
-        return item.editDisplay !== false
+    if (currentAction.value === "edit" || currentAction.value === "see") {
+        return isFunction(item.editDisplay) ? item.editDisplay(form.value) !== false : item.editDisplay !== false
     }
     return item.display !== false
 }
 const formItemDisabled = (item) => {
     if (currentAction.value === "add" && !isUndefined(item.addDisabled)) {
-        return item.addDisabled
+        return isFunction(item.addDisabled) ? item.addDisabled() : item.addDisabled
     }
     if (currentAction.value === "edit" && !isUndefined(item.editDisabled)) {
-        return item.editDisabled
+        return isFunction(item.editDisabled) ? item.editDisabled(form.value) : item.editDisabled
+    }
+    if (currentAction.value === "see") {
+        return true
     }
     if (!isUndefined(item.disabled)) {
         return item.disabled
@@ -327,10 +383,13 @@ const formItemDisabled = (item) => {
 }
 const formItemReadonly = (item) => {
     if (currentAction.value === "add" && !isUndefined(item.addReadonly)) {
-        return item.addReadonly
+        return isFunction(item.addReadonly) ? item.addReadonly() : item.addReadonly
     }
     if (currentAction.value === "edit" && !isUndefined(item.editReadonly)) {
-        return item.editReadonly
+        return isFunction(item.editReadonly) ? item.editReadonly(form.value) : item.editReadonly
+    }
+    if (currentAction.value === "see") {
+        return true
     }
     if (!isUndefined(item.readonly)) {
         return item.readonly
@@ -371,5 +430,6 @@ const getFormColumns = async (type = "add") => {
     await init()
     return formColumns.value
 }
-defineExpose({ add, edit, currentAction, form, getFormColumns, actionTitle })
+// 修改源码，暴露actionTitle
+defineExpose({ add, edit, see, currentAction, form, getFormColumns, maFormRef, actionTitle })
 </script>

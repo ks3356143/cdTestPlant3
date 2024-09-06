@@ -47,5 +47,13 @@ export default {
     // 自定义标题样式css
     formTitleStyle: "",
     // 自定义标题样式class
-    formTitleClass: []
+    formTitleClass: [],
+
+    // 数据源列表，配合表单设计器使用，单独无法使用
+    sourceList: [],
+
+    // 全局CSS class
+    globalCss: "",
+    // 全局function
+    globalFunction: ""
 }

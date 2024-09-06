@@ -46,7 +46,7 @@
 <script setup>
 import { ref, inject, watch, nextTick } from "vue"
 import checkAuth from "@/directives/auth/auth"
-import { isArray } from "lodash"
+import { isArray } from "lodash-es"
 
 const left = ref(0)
 const top = ref(0)
@@ -100,7 +100,11 @@ const openContextMenu = async (ev, record) => {
     currentRow.value = record
     await nextTick(() => {
         const domHeight = document.querySelector(".ma-crud-contextmenu").offsetHeight
-        top.value = ev.clientY - domHeight
+        if (document.body.offsetHeight - ev.pageY < domHeight) {
+            top.value = ev.clientY - domHeight
+        } else {
+            top.value = ev.clientY
+        }
         left.value = ev.clientX
     })
 }

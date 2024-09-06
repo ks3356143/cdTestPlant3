@@ -8,14 +8,22 @@
                 :type="options.tabs.type"
                 :hide-content="true"
                 @change="tabChange"
-                @tab-click="maEvent.customeEvent(options.tabs, $event, 'onClick')"
+                @tab-click="runEvent(options.tabs, 'onClick', undefined, $event)"
                 class="ma-tabs mb-5"
             >
                 <template #extra><slot name="tabExtra"></slot></template>
-                <a-tab-pane :key="item.value" :title="item.label" v-for="item in options.tabs.data"></a-tab-pane>
+                <a-tab-pane :key="item.value" :title="item.label" v-for="item in options.tabs.data">
+                    <template #title
+                        ><slot :name="'tabTitle-' + item.label">{{ item.label }}</slot></template
+                    >
+                </a-tab-pane>
             </a-tabs>
             <ma-search @search="searchSubmitHandler" class="__search-panel" ref="crudSearchRef">
-                <template v-for="(slot, slotIndex) in searchSlots" :key="slotIndex" #[slot]="{ searchForm, component }">
+                <template
+                    v-for="(slot, slotIndex) in getSearchSlot()"
+                    :key="slotIndex"
+                    #[slot]="{ searchForm, component }"
+                >
                     <slot :name="`search-${slot}`" v-bind="{ searchForm, component }" />
                 </template>
                 <template #searchBeforeButtons>
@@ -28,6 +36,7 @@
                     <slot name="searchAfterButtons"></slot>
                 </template>
             </ma-search>
+            <div v-if="$slots.middleContent" class="mb-2"><slot name="middleContent"></slot></div>
         </div>
         <div class="_crud-content">
             <div class="operation-tools lg:flex justify-between mb-3" ref="crudOperationRef">
@@ -36,6 +45,8 @@
                     <slot name="tableButtons">
                         <a-button
                             v-if="options.add.show"
+                            v-auth="options.add.auth || []"
+                            v-role="options.add.role || []"
                             @click="addAction"
                             type="primary"
                             class="w-full lg:w-auto mt-2 lg:mt-0"
@@ -43,9 +54,15 @@
                             <template #icon><icon-plus /></template>{{ options.add.text || "新增" }}
                         </a-button>
 
-                        <a-popconfirm content="确定要删除数据吗?" position="bottom" @ok="deletesMultipleAction">
+                        <a-popconfirm
+                            content="确定要删除数据吗?"
+                            position="bottom"
+                            @ok="deletesMultipleAction"
+                            v-if="options.delete.show && isBatch(options.delete) && options.rowSelection"
+                        >
                             <a-button
-                                v-if="options.delete.show"
+                                v-auth="options.delete.auth || []"
+                                v-role="options.delete.role || []"
                                 type="primary"
                                 status="danger"
                                 class="w-full lg:w-auto mt-2 lg:mt-0"
@@ -55,9 +72,15 @@
                             </a-button>
                         </a-popconfirm>
 
-                        <a-popconfirm content="确定要恢复数据吗?" position="bottom" @ok="recoverysMultipleAction">
+                        <a-popconfirm
+                            content="确定要恢复数据吗?"
+                            position="bottom"
+                            @ok="recoverysMultipleAction"
+                            v-if="options.recovery.show && isRecovery && isBatch(options.delete)"
+                        >
                             <a-button
-                                v-if="options.recovery.show && isRecovery"
+                                v-auth="options.recovery.auth || []"
+                                v-role="options.recovery.role || []"
                                 type="primary"
                                 status="success"
                                 class="w-full lg:w-auto mt-2 lg:mt-0"
@@ -66,11 +89,21 @@
                             >
                         </a-popconfirm>
 
-                        <a-button v-if="options.import.show" @click="importAction" class="w-full lg:w-auto mt-2 lg:mt-0"
+                        <a-button
+                            v-if="options.import.show"
+                            v-auth="options.import.auth || []"
+                            v-role="options.import.role || []"
+                            @click="importAction"
+                            class="w-full lg:w-auto mt-2 lg:mt-0"
                             ><template #icon><icon-upload /></template>{{ options.import.text || "导入" }}</a-button
                         >
 
-                        <a-button v-if="options.export.show" @click="exportAction" class="w-full lg:w-auto mt-2 lg:mt-0"
+                        <a-button
+                            v-if="options.export.show"
+                            v-auth="options.export.auth || []"
+                            v-role="options.export.role || []"
+                            @click="exportAction"
+                            class="w-full lg:w-auto mt-2 lg:mt-0"
                             ><template #icon><icon-download /></template>{{ options.export.text || "导出" }}</a-button
                         >
 
@@ -112,8 +145,9 @@
                 </a-space>
             </div>
             <div ref="crudContentRef">
-                <slot name="content" v-bind="tableData">
+                <slot name="crudContent" v-bind="tableData">
                     <a-table
+                        v-if="tableIsShow"
                         v-bind="$attrs"
                         ref="tableRef"
                         :key="options.pk"
@@ -123,7 +157,7 @@
                         :pagination="options.tablePagination"
                         :stripe="options.stripe"
                         :bordered="options.bordered"
-                        :rowSelection="options.rowSelection || undefined"
+                        :rowSelection="options.rowSelection ?? undefined"
                         :row-key="options?.rowSelection?.key ?? options.pk"
                         :scroll="options.scroll"
                         :column-resizable="options.resizable"
@@ -131,8 +165,8 @@
                         :row-class="options.rowClass"
                         :hide-expand-button-on-empty="options.hideExpandButtonOnEmpty"
                         :default-expand-all-rows="options.expandAllRows"
-                        :summary="options.customerSummary || __summary || options.showSummary"
-                        @selection-change="setSelecteds"
+                        :summary="(options.customerSummary || options.showSummary) && __summary"
+                        v-model:selectedKeys="selecteds"
                         @sorter-change="handlerSort"
                     >
                         <template #tr="{ record }">
@@ -155,7 +189,7 @@
                             <ma-column
                                 ref="crudColumnRef"
                                 v-if="reloadColumn"
-                                :columns="props.columns"
+                                :columns="columns"
                                 :isRecovery="isRecovery"
                                 :crudFormRef="crudFormRef"
                                 @refresh="() => refresh()"
@@ -174,7 +208,15 @@
                                 </template>
 
                                 <template
-                                    v-for="(slot, slotIndex) in slots"
+                                    v-for="(slot, index) in getTitleSlot(columns)"
+                                    #[slot]="{ column }"
+                                    :key="index"
+                                >
+                                    <slot :name="`${slot}`" v-bind="{ column }" />
+                                </template>
+
+                                <template
+                                    v-for="(slot, slotIndex) in getSlot(columns)"
                                     :key="slotIndex"
                                     #[slot]="{ record, column, rowIndex }"
                                 >
@@ -213,19 +255,24 @@
             />
         </div>
 
-        <ma-setting ref="crudSettingRef" />
-
+        <ma-setting ref="crudSettingRef" @onChangeSearchHide="initSearchColumns()" @onChangeColumnHide="changeColumn" />
+        <!-- 修改源码：透传ma-crud属性给ma-form -->
         <ma-form ref="crudFormRef" @success="requestSuccess" v-bind="$attrs">
-            <template v-for="slot in Object.keys($slots)" #[slot]="component">
+            <template v-for="(slot, index) in Object.keys($slots)" #[slot]="component" :key="index">
                 <slot :name="slot" v-bind="component" />
             </template>
         </ma-form>
 
-        <ma-import ref="crudImportRef" />
+        <ma-import ref="crudImportRef" @success="refresh" />
 
         <ma-context-menu ref="crudContextMenuRef" @execCommand="execContextMenuCommand" />
 
-        <a-image-preview :src="imgUrl" v-model:visible="imgVisible" />
+        <a-image-preview-group
+            :srcList="imgUrl"
+            v-model:visible="imgVisible"
+            v-if="typeof imgUrl === 'object' && imgUrl !== null"
+        />
+        <a-image-preview :src="imgUrl" v-model:visible="imgVisible" v-else />
     </a-layout-content>
 </template>
 
@@ -234,7 +281,7 @@ import config from "@/config/crud"
 import { ref, watch, provide, nextTick, onMounted, onUnmounted } from "vue"
 import defaultOptions from "./js/defaultOptions"
 import { loadDict } from "@cps/ma-form/js/networkRequest.js"
-import ColumnService from "./js/columnService"
+import ColumnService from "@cps/ma-form/js/columnService"
 
 import MaSearch from "./components/search.vue"
 import MaForm from "./components/form.vue"
@@ -242,12 +289,14 @@ import MaSetting from "./components/setting.vue"
 import MaImport from "./components/import.vue"
 import MaColumn from "./components/column.vue"
 import MaContextMenu from "./components/contextMenu.vue"
+import checkAuth from "@/directives/auth/auth"
+import checkRole from "@/directives/role/role"
 import { Message } from "@arco-design/web-vue"
 import { request } from "@/utils/request"
 import tool from "@/utils/tool"
 import Print from "@/utils/print"
-import { isArray, isFunction, isObject, isUndefined } from "lodash"
-import { maEvent } from "@cps/ma-form/js/formItemMixin.js"
+import { isArray, isFunction, isObject, isUndefined } from "lodash-es"
+import { runEvent } from "@cps/ma-form/js/event.js"
 import globalColumn from "@/config/column.js"
 import { useFormStore } from "@/store/index"
 
@@ -267,6 +316,7 @@ const dicts = ref({})
 const cascaders = ref([])
 
 const reloadColumn = ref(true)
+const tableIsShow = ref(true)
 const openPagination = ref(false)
 const imgVisible = ref(false)
 const imgUrl = ref(import.meta.env.VITE_APP_BASE + "not-image.png")
@@ -305,19 +355,21 @@ const init = async () => {
     }
 
     // 收集数据
-    props.columns.map((item) => {
+    columns.value.map((item) => {
         if (item.cascaderItem && item.cascaderItem.length > 0) {
             cascaders.value.push(...item.cascaderItem)
         }
     })
 
-    await props.columns.map(async (item) => {
+    await columns.value.map(async (item) => {
         // 字典
         if (!cascaders.value.includes(item.dataIndex) && item.dict) {
             await loadDict(dicts.value, item)
         }
     })
-    await tabsHandler()
+    setTimeout(async () => {
+        await tabsHandler()
+    }, 500)
 }
 
 const dictTrans = (dataIndex, value) => {
@@ -343,14 +395,14 @@ columns.value.map((item, index) => {
         item = columns.value[index]
     }
     !item.width && (item.width = options.value.columnWidth)
+    !item.minWidth && (item.minWidth = options.value.columnMinWidth)
 })
 
 provide("options", options.value)
-provide("columns", props.columns)
-provide("layout", props.layout)
-provide("dicts", dicts.value)
-provide("dictColors", dictColors.value)
 provide("requestParams", requestParams.value)
+provide("columns", columns)
+provide("dicts", dicts)
+provide("layout", props.layout)
 provide("dictTrans", dictTrans)
 provide("dictColors", dictColors)
 provide("isRecovery", isRecovery)
@@ -365,10 +417,7 @@ watch(
     (vl) => (options.value.api = vl)
 )
 
-watch(
-    () => openPagination.value,
-    () => options.value.pageLayout === "fixed" && settingFixedPage()
-)
+watch([() => openPagination.value, () => total.value], () => options.value.pageLayout === "fixed" && settingFixedPage())
 
 watch(
     () => formStore.crudList[options.value.id],
@@ -377,6 +426,11 @@ watch(
         formStore.crudList[options.value.id] = false
     }
 )
+
+const showImage = (url) => {
+    imgUrl.value = url
+    imgVisible.value = true
+}
 
 const getSlot = (cls = []) => {
     let sls = []
@@ -391,23 +445,28 @@ const getSlot = (cls = []) => {
     return sls
 }
 
-const showImage = (url) => {
-    imgUrl.value = url
-    imgVisible.value = true
+const getTitleSlot = (cls = []) => {
+    let sls = []
+    cls.map((item) => {
+        if (item.children && item.children.length > 0) {
+            let tmp = getTitleSlot(item.children)
+            sls.push(...tmp)
+        } else if (item.dataIndex) {
+            sls.push(`tableTitle-${item.dataIndex}`)
+        }
+    })
+    return sls
 }
 
 const getSearchSlot = () => {
     let sls = []
-    props.columns.map((item) => {
+    columns.value.map((item) => {
         if (item.search && item.search === true) {
             sls.push(item.dataIndex)
         }
     })
     return sls
 }
-
-slots.value = getSlot(props.columns)
-searchSlots.value = getSearchSlot(props.columns)
 
 const requestData = async () => {
     await init()
@@ -456,6 +515,7 @@ const requestHandle = async () => {
     loading.value = true
     isFunction(options.value.beforeRequest) && options.value.beforeRequest(requestParams.value)
     if (isFunction(currentApi.value)) {
+        // 修改源码：添加options.prameters参数
         if (options.value.parameters) {
             requestParams.value = { ...requestParams.value, ...options.value.parameters }
         }
@@ -463,7 +523,6 @@ const requestHandle = async () => {
         if (response.rows) {
             tableData.value = response.rows
             if (response.pageInfo) {
-                // 这里去找total字段
                 total.value = response.pageInfo.total
                 openPagination.value = true
             } else {
@@ -473,9 +532,9 @@ const requestHandle = async () => {
             tableData.value = response
         }
     } else {
-        console.error(`ma-crud error：crud.api 不是一个 Function.`)
+        console.error(`ma-crud error：您传递的api属性不是一个函数.`)
     }
-    isFunction(options.value.afterRequest) && options.value.afterRequest(tableData.value)
+    isFunction(options.value.afterRequest) && (tableData.value = options.value.afterRequest(tableData.value))
     loading.value = false
 }
 
@@ -497,6 +556,8 @@ const refresh = async () => {
                 : options.value.api
         await requestHandle()
     }
+    selecteds.value = []
+    tableRef.value.selectAll(false)
 }
 
 const searchSubmitHandler = async (formData) => {
@@ -544,7 +605,11 @@ const toggleSearch = async () => {
 
 const settingFixedPage = () => {
     const workAreaHeight = document.querySelector(".work-area").offsetHeight
-    const tableHeight = workAreaHeight - headerHeight.value - (openPagination.value ? 152 : 108)
+    const tableHeight =
+        workAreaHeight -
+        headerHeight.value -
+        (openPagination.value ? 160 : 116) +
+        (total.value === 0 && !loading.value ? 44 : 0)
     crudContentRef.value.style.height = tableHeight + "px"
 }
 
@@ -592,9 +657,17 @@ const dbClickOpenEdit = (record) => {
             Message.error("回收站数据不可编辑")
             return
         }
+        if (isArray(options.value.edit.auth) || options.value.edit.auth === undefined) {
+            for (let index in options.value.edit.auth) {
+                if (!checkAuth(options.value.edit.auth[index])) {
+                    Message.error("没有编辑数据的权限")
+                    return
+                }
+            }
 
-        if (options.value.edit.api && isFunction(options.value.edit.api)) {
-            editAction(record)
+            if (options.value.edit.api && options.value.edit.show && isFunction(options.value.edit.api)) {
+                editAction(record)
+            }
         }
     }
 }
@@ -630,6 +703,7 @@ const deletesMultipleAction = async () => {
             options.value.afterDelete(response)
         }
         response.success && Message.success(response.message || `删除成功！`)
+        selecteds.value = []
         await refresh()
     } else {
         Message.error("至少选择一条数据")
@@ -640,6 +714,7 @@ const recoverysMultipleAction = async () => {
     if (selecteds.value && selecteds.value.length > 0) {
         const response = await options.value.recovery.api({ ids: selecteds.value })
         response.success && Message.success(response.message || `恢复成功！`)
+        selecteds.value = []
         await refresh()
     } else {
         Message.error("至少选择一条数据")
@@ -690,24 +765,30 @@ const __summary = ({ data }) => {
         let summarySuffixText = {}
         let length = data.length || 0
         summary.map((item) => {
-            summaryData[item.dataIndex] = 0
-            summaryPrefixText[item.dataIndex] = item?.prefixText ?? ""
-            summarySuffixText[item.dataIndex] = item?.suffixText ?? ""
-            data.map((record) => {
-                if (record[item.dataIndex]) {
-                    if (item.action && item.action === "sum") {
-                        summaryData[item.dataIndex] += parseFloat(record[item.dataIndex])
+            if (item.action && item.action === "text") {
+                summaryData[item.dataIndex] = item.content
+            } else {
+                summaryData[item.dataIndex] = 0
+                summaryPrefixText[item.dataIndex] = item?.prefixText ?? ""
+                summarySuffixText[item.dataIndex] = item?.suffixText ?? ""
+                data.map((record) => {
+                    if (record[item.dataIndex]) {
+                        if (item.action && item.action === "sum") {
+                            summaryData[item.dataIndex] += parseFloat(record[item.dataIndex])
+                        }
+                        if (item.action && item.action === "avg") {
+                            summaryData[item.dataIndex] += parseFloat(record[item.dataIndex]) / length
+                        }
                     }
-                    if (item.action && item.action === "avg") {
-                        summaryData[item.dataIndex] += parseFloat(record[item.dataIndex]) / length
-                    }
-                }
-            })
+                })
+            }
         })
 
         for (let i in summaryData) {
-            summaryData[i] =
-                summaryPrefixText[i] + tool.groupSeparator(summaryData[i].toFixed(2)) + summarySuffixText[i]
+            if (/^\d+(\.\d+)?$/.test(summaryData[i])) {
+                summaryData[i] =
+                    summaryPrefixText[i] + tool.groupSeparator(summaryData[i].toFixed(2)) + summarySuffixText[i]
+            }
         }
 
         return [summaryData]
@@ -724,7 +805,7 @@ const tabChange = async (value) => {
     const params = {}
     params[searchKey] = value
     requestParams.value = Object.assign(requestParams.value, params)
-    await maEvent.customeEvent(options.value.tabs, value, "onChange")
+    await runEvent(options.value.tabs, "onChange", undefined, value)
     await refresh()
 }
 
@@ -756,7 +837,7 @@ const execContextMenuCommand = async (args) => {
             crudColumnRef.value.deleteAction(record)
             break
         default:
-            await maEvent.customeEvent(item, args, "onCommand")
+            await runEvent(item, "onCommand", undefined, args)
             break
     }
 }
@@ -767,26 +848,33 @@ const tabsHandler = async () => {
     if (isFunction(tabs.data) || isArray(tabs.data)) {
         tabs.data = isFunction(tabs.data) ? await tabs.data() : tabs.data
     } else if (!isUndefined(tabs.dataIndex)) {
-        const col = props.columns.find((item) => item.dataIndex === tabs.dataIndex)
+        const col = columns.value.find((item) => item.dataIndex === tabs.dataIndex)
         if (col.search === true && isObject(col.dict)) {
             tabs.data = dicts.value[tabs.dataIndex]
         }
     }
 }
 
-onMounted(async () => {
-    if (typeof options.value.autoRequest == "undefined" || options.value.autoRequest) {
-        await requestData()
-    }
+const isBatch = (obj) => (isUndefined(obj) ? true : (obj?.batch ?? true))
 
+const changeColumn = async () => {
+    tableIsShow.value = false
+    await nextTick(() => (tableIsShow.value = true))
+}
+
+onMounted(async () => {
     if (!options.value.expandSearch && crudSearchRef.value) {
         crudSearchRef.value.setSearchHidden()
     }
-
     if (options.value.pageLayout === "fixed") {
-        window.addEventListener("resize", resizeHandler, false)
-        headerHeight.value = crudHeaderRef.value.offsetHeight
-        settingFixedPage()
+        await nextTick(() => {
+            window.addEventListener("resize", resizeHandler, false)
+            headerHeight.value = crudHeaderRef.value.offsetHeight
+            settingFixedPage()
+        })
+    }
+    if (typeof options.value.autoRequest == "undefined" || options.value.autoRequest) {
+        await requestData()
     }
 })
 
@@ -803,6 +891,11 @@ const getFormColumns = async (type = "add") => {
     return await crudFormRef.value.getFormColumns(type)
 }
 
+const getCurrentPage = () => requestParams.value[config.request.page]
+const getPageSize = () => requestParams.value[config.request.pageSize]
+const getTotal = () => total.value
+const initSearchColumns = () => crudSearchRef.value.initSearchColumns()
+
 /**
  * 获取column属性服务类
  * @returns ColumnService
@@ -810,7 +903,7 @@ const getFormColumns = async (type = "add") => {
 const getColumnService = (strictMode = true) => {
     return new ColumnService({ columns: columns.value, cascaders: cascaders.value, dicts: dicts.value }, strictMode)
 }
-
+const setTableData = (data = []) => (tableData.value = data)
 defineExpose({
     refresh,
     requestData,
@@ -822,13 +915,18 @@ defineExpose({
     getFormData,
     getFormColumns,
     getColumnService,
+    getCurrentPage,
+    getPageSize,
+    getTotal,
     requestParams,
     isRecovery,
     tableRef,
+    initSearchColumns,
     crudFormRef,
     crudSearchRef,
     crudImportRef,
-    crudSettingRef
+    crudSettingRef,
+    setTableData
 })
 </script>
 
@@ -840,6 +938,5 @@ defineExpose({
 }
 ._crud-footer {
     z-index: 10;
-    height: 80px;
 }
 </style>

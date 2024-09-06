@@ -1,3 +1,7 @@
+<!--
+ - @Author XXX
+ - @Link XXX
+-->
 <template>
     <ma-form-item
         v-if="typeof props.component.display == 'undefined' || props.component.display === true"
@@ -19,13 +23,13 @@
                 :format-tag="props.component.formatTag"
                 :unique-value="props.component.uniqueValue"
                 :field-names="props.component.fieldNames"
-                @input-value-change="maEvent.customeEvent(props.component, $event, 'onInputValueChange')"
-                @change="maEvent.handleChangeEvent(props.component, $event)"
-                @remove="maEvent.customeEvent(props.component, $event, 'onRemove')"
-                @press-enter="maEvent.customeEvent(props.component, $event, 'onPressEnter')"
-                @clear="maEvent.handleCommonEvent(props.component, 'onClear')"
-                @focus="maEvent.handleCommonEvent(props.component, 'onFocus')"
-                @blur="maEvent.handleCommonEvent(props.component, 'onBlur')"
+                @input-value-change="rv('onInputValueChange', $event)"
+                @change="rv('onChange', $event)"
+                @remove="rv('onRemove', $event)"
+                @press-enter="rv('onPressEnter', $event)"
+                @clear="rv('onClear')"
+                @focus="rv('onFocus')"
+                @blur="rv('onBlur')"
             >
                 <template #suffix v-if="props.component.openSuffix">
                     <slot :name="`inputSuffix-${props.component.dataIndex}`" />
@@ -40,15 +44,19 @@
 
 <script setup>
 import { ref, inject, onMounted, watch } from "vue"
-import { get, set } from "lodash"
+import { get, set } from "lodash-es"
 import MaFormItem from "./form-item.vue"
-import { maEvent } from "../js/formItemMixin.js"
+import { runEvent } from "../js/event.js"
 const props = defineProps({
     component: Object,
     customField: { type: String, default: undefined }
 })
 
 const formModel = inject("formModel")
+const getColumnService = inject("getColumnService")
+const columns = inject("columns")
+const rv = async (ev, value = undefined) =>
+    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 const index = props.customField ?? props.component.dataIndex
 const value = ref(get(formModel.value, index))
 
@@ -64,8 +72,6 @@ watch(
     }
 )
 
-maEvent.handleCommonEvent(props.component, "onCreated")
-onMounted(() => {
-    maEvent.handleCommonEvent(props.component, "onMounted")
-})
+rv("onCreated")
+onMounted(() => rv("onMounted"))
 </script>

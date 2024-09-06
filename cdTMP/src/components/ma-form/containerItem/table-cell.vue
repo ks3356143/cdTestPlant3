@@ -1,6 +1,10 @@
+<!--
+ - @Author XXX
+ - @Link XXX
+-->
 <template>
     <td
-        v-show="typeof props.component?.display == 'undefined' || props.component?.display === true"
+        v-if="typeof props.component?.display == 'undefined' || props.component?.display === true"
         :class="['table-cell', props.component?.customClass]"
         :style="props.component?.style"
         :colspan="props.component.colSpan"

@@ -192,29 +192,34 @@ const crudOptions = ref({
                 formType: "divider"
             },
             {
-                dataIndex: "operation"
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "operation" }] }]
             },
             {
-                dataIndex: "result"
-            },
-            {
-                title: "开发方回填",
-                formType: "divider"
-            },
-            {
-                dataIndex: "analysis"
-            },
-            {
-                dataIndex: "effect_scope"
-            },
-            {
-                dataIndex: "solve"
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "result" }] }]
             },
             {
                 formType: "divider"
             },
             {
-                dataIndex: "verify_result"
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "analysis" }] }]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "effect_scope" }] }]
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "solve" }] }]
+            },
+            {
+                formType: "divider"
+            },
+            {
+                formType: "grid",
+                cols: [{ span: 24, formList: [{ dataIndex: "verify_result" }] }]
             },
             {
                 formType: "divider",

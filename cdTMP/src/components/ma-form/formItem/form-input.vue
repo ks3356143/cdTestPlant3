@@ -1,3 +1,7 @@
+<!--
+ - @Author XXX
+ - @Link XXX
+-->
 <template>
     <ma-form-item
         v-if="typeof props.component.display == 'undefined' || props.component.display === true"
@@ -5,7 +9,6 @@
         :custom-field="props.customField"
     >
         <slot :name="`form-${props.component.dataIndex}`" v-bind="props.component">
-            <!-- chen.xiugai-warning -->
             <component
                 :is="getComponentName()"
                 v-model.trim="value"
@@ -24,13 +27,13 @@
                 :search-button="props.component.searchButton"
                 :loading="props.component.invisibleButton"
                 :button-text="props.component.buttonText"
-                @input="maEvent.handleInputEvent(props.component, $event)"
-                @change="maEvent.handleChangeEvent(props.component, $event)"
-                @press-enter="maEvent.handleCommonEvent(props.component, 'onPressEnter')"
-                @clear="maEvent.handleCommonEvent(props.component, 'onClear')"
-                @focus="maEvent.handleCommonEvent(props.component, 'onFocus')"
-                @blur="maEvent.handleCommonEvent(props.component, 'onBlur')"
-                @search="maEvent.handleInputSearchEvent(props.component, $event)"
+                @input="rv('onInput', $event)"
+                @change="rv('onChange', $event)"
+                @press-enter="rv('onPressEnter')"
+                @clear="rv('onClear')"
+                @focus="rv('onFocus')"
+                @blur="rv('onBlur')"
+                @search="rv('onSearch', $event)"
             >
                 <template #prepend v-if="props.component.openPrepend">
                     <slot :name="`inputPrepend-${props.component.dataIndex}`" />
@@ -51,17 +54,26 @@
 
 <script setup>
 import { ref, inject, onMounted, watch } from "vue"
-import { get, set } from "lodash"
+import { get, set } from "lodash-es"
 import MaFormItem from "./form-item.vue"
-import { maEvent } from "../js/formItemMixin.js"
+import { runEvent } from "../js/event.js"
 const props = defineProps({
     component: Object,
     customField: { type: String, default: undefined }
 })
 
 const formModel = inject("formModel")
+const getColumnService = inject("getColumnService")
+const columns = inject("columns")
+const rv = async (ev, value = undefined) =>
+    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 const index = props.customField ?? props.component.dataIndex
-const value = ref(get(formModel.value, index))
+//后端传入数字类型导致报错 Invalid prop: type check failed for prop "modelValue". Expected String with value "0", got Number with value 0
+const toVal = ref(`${get(formModel.value, index)}`)
+const value = ref()
+if (toVal.value != "undefined") {
+    value.value = toVal.value
+}
 
 watch(
     () => get(formModel.value, index),
@@ -87,8 +99,6 @@ const getComponentName = () => {
     }
 }
 
-maEvent.handleCommonEvent(props.component, "onCreated")
-onMounted(() => {
-    maEvent.handleCommonEvent(props.component, "onMounted")
-})
+rv("onCreated")
+onMounted(() => rv("onMounted"))
 </script>

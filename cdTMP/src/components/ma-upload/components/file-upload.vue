@@ -19,7 +19,7 @@
                         <div>
                             <icon-upload class="text-5xl text-gray-400" />
                             <div class="text-red-600 font-bold">
-                                {{ config.title === "buttonText" ? "本地上传" : config.title }}
+                                {{ config.title === "buttonText" ? $t("upload.buttonText") : config.title }}
                             </div>
                             将文件拖到此处，或<span style="color: #3370ff">点击上传</span>
                         </div>
@@ -30,33 +30,48 @@
     </div>
     <!-- 单文件 -->
     <div class="file-list mt-2" v-if="!config.multiple && currentItem?.url && config.showList">
-        <a-button class="delete" @click="removeSignFile()">
-            <template #icon><icon-delete /></template>
+        <a-tooltip content="点击文件名预览/下载" position="tr">
+            <a
+                :href="currentItem.url"
+                v-if="currentItem?.url && currentItem.percent === 100 && currentItem?.status === 'complete'"
+                class="file-name"
+                target="_blank"
+                >{{ currentItem.name }}</a
+            >
+        </a-tooltip>
+
+        <a-button type="text" size="small" @click="removeSignFile()" v-if="currentItem.percent === 100">
+            <template #icon>
+                <icon-delete />
+            </template>
         </a-button>
-        <div class="file-item">
-            {{ currentItem.url }}
-        </div>
     </div>
 
     <!-- 多文件 -->
     <div v-if="config.showList" class="file-list mt-2" v-for="(file, idx) in showFileList" :key="idx">
-        <a-button class="delete" @click="removeFile(idx)">
-            <template #icon><icon-delete /></template>
+        <a-tooltip content="点击文件名预览/下载" position="tr">
+            <a :href="file.url" v-if="file?.url" class="file-name" target="_blank">{{ file.name }}</a>
+        </a-tooltip>
+
+        <a-button type="text" size="small" @click="removeFile(idx)">
+            <template #icon>
+                <icon-delete />
+            </template>
         </a-button>
-        <div class="file-item">
-            {{ file.url }}
-        </div>
     </div>
 </template>
 <script setup>
 import { ref, inject, watch } from "vue"
 import tool from "@/utils/tool"
-import { isArray } from "lodash"
+import { isArray, throttle } from "lodash-es"
 import { getFileUrl, uploadRequest } from "../js/utils"
 import { Message } from "@arco-design/web-vue"
 
 const props = defineProps({
-    modelValue: { type: [String, Number, Array], default: () => {} }
+    modelValue: {
+        type: [String, Number, Array],
+        default: () => {}
+    }
 })
 const emit = defineEmits(["update:modelValue"])
 const config = inject("config")
@@ -72,7 +87,7 @@ const uploadFileHandler = async (options) => {
     }
     const file = options.fileItem.file
     if (file.size > config.size) {
-        Message.warning(file.name + " " + "文件大小超过了限制")
+        Message.warning(file.name + " " + t("upload.sizeLimit"))
         currentItem.value = {}
         return
     }
@@ -111,25 +126,45 @@ const removeFile = (idx) => {
     emit("update:modelValue", files)
 }
 
-const init = async () => {
+const init = throttle(async () => {
     if (config.multiple) {
         if (isArray(props.modelValue) && props.modelValue.length > 0) {
             const result = await props.modelValue.map(async (item) => {
                 return await getFileUrl(config.returnType, item, storageMode)
             })
-            showFileList.value = await Promise.all(result)
+            const data = await Promise.all(result)
+            if (config.returnType === "url") {
+                showFileList.value = data.map((url) => {
+                    return { url, name: url.substring(url.lastIndexOf("/") + 1) }
+                })
+            } else {
+                showFileList.value = data.map((item) => {
+                    return {
+                        url: item.url,
+                        [config.returnType]: item[config.returnType],
+                        name: item.origin_name
+                    }
+                })
+            }
         } else {
             showFileList.value = []
         }
     } else if (props.modelValue) {
-        signFile.value = props.modelValue
-        getFileUrl(config.returnType, props.modelValue, storageMode).then((item) => (currentItem.value.url = item))
+        if (config.returnType === "url") {
+            signFile.value = props.modelValue
+            currentItem.value.url = props.modelValue
+        } else {
+            const result = await getFileUrl(config.returnType, props.modelValue, storageMode)
+            signFile.value = result.url
+            currentItem.value.url = result.url
+            currentItem.value.name = result.origin_name
+        }
         currentItem.value.percent = 100
         currentItem.value.status = "complete"
     } else {
         removeSignFile()
     }
-}
+}, 1000)
 
 watch(
     () => props.modelValue,
@@ -145,25 +180,21 @@ watch(
 
 <style lang="less" scoped>
 .file-list {
-    position: relative;
     background-color: var(--color-primary-light-1);
-    border-radius: 2px;
+    border-radius: 4px;
     height: 36px;
-    line-height: 36px;
-    padding: 0 10px;
+    padding: 0 5px;
     width: 100%;
-    .delete {
-        position: absolute;
-        z-index: 99;
-        right: 2px;
-        top: 2px;
-    }
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 
-    .progress {
-        position: absolute;
-        left: 30px;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
+    .file-name {
+        max-width: 90%;
+        margin: 0 5px;
+        overflow: hidden;
+        color: #165dff;
     }
 }
 </style>

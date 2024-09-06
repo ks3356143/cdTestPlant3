@@ -1,14 +1,6 @@
-<template>
-    <a-tooltip content="点击切换验证码">
-        <canvas ref="verfiyCanvas" class="canvas" :width="props.width" :height="props.height" @click="refresh" />
-    </a-tooltip>
-</template>
-
 <script setup>
 import { ref, onMounted } from "vue"
 import { Message } from "@arco-design/web-vue"
-
-
 const codeText = ref("")
 const verfiyCanvas = ref(null)
 const props = defineProps({
@@ -21,12 +13,12 @@ const props = defineProps({
 
 const checkResult = (verifyCode) => {
     if (!verifyCode || verifyCode.length === 0) {
-        props.showError && Message.error("请输入验证码")
+        props.showError && Message.error(t("sys.verifyCode.notice"))
         return false
     }
 
     if (verifyCode.toLowerCase() !== codeText.value.toLowerCase()) {
-        props.showError && Message.error("验证码错误，请重新输入")
+        props.showError && Message.error(t("sys.verifyCode.error"))
         generateCode()
         return false
     } else {
@@ -94,7 +86,13 @@ const refresh = () => {
 defineExpose({ checkResult, refresh })
 </script>
 
-<style lang="less" scoped>
+<template>
+    <a-tooltip :content="'请输入验证码'">
+        <canvas ref="verfiyCanvas" class="canvas" :width="props.width" :height="props.height" @click="refresh" />
+    </a-tooltip>
+</template>
+
+<style scoped lang="less">
 :deep(.arco-input-append) {
     padding: 0 !important;
 }

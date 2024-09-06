@@ -1,15 +1,10 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
     <table
-        v-show="typeof props.component?.display == 'undefined' || props.component?.display === true"
+        v-if="typeof props.component?.display == 'undefined' || props.component?.display === true"
         :class="['table-container', props.component?.customClass]"
         :style="props.component?.style"
     >
@@ -33,15 +28,19 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue"
+import { onMounted, inject } from "vue"
 import MaTableCell from "./table-cell.vue"
-import { maEvent } from "../js/formItemMixin.js"
+import { runEvent } from "../js/event.js"
 const props = defineProps({ component: Object })
 
-maEvent.handleCommonEvent(props.component, "onCreated")
-onMounted(() => {
-    maEvent.handleCommonEvent(props.component, "onMounted")
-})
+const formModel = inject("formModel")
+const getColumnService = inject("getColumnService")
+const columns = inject("columns")
+const rv = async (ev, value = undefined) =>
+    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
+
+rv("onCreated")
+onMounted(() => rv("onMounted"))
 </script>
 
 <style lang="less">

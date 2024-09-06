@@ -1,11 +1,6 @@
 <!--
- - MineAdmin is committed to providing solutions for quickly building web applications
- - Please view the LICENSE file that was distributed with this source code,
- - For the full copyright and license information.
- - Thank you very much for using MineAdmin.
- -
- - @Author X.Mo<root@imoi.cn>
- - @Link   https://gitee.com/xmo/mineadmin-vue
+ - @Author XXX
+ - @Link XXX
 -->
 <template>
     <component
@@ -18,6 +13,7 @@
         "
         :time-picker-props="props.component.formType == 'range' ? { defaultValue: ['00:00:00', '23:59:59'] } : {}"
         :show-time="props.component.showTime"
+        :type="props.component.range ? (props.component.formType === 'time' ? 'time-range' : 'range') : ''"
         :format="props.component.format || ''"
         :mode="props.component.mode"
         allow-clear
@@ -26,12 +22,13 @@
 </template>
 
 <script setup>
-import { ref, inject, watch } from "vue"
-import { get, set } from "lodash"
+import { inject, computed } from "vue"
+import { get, set } from "lodash-es"
 const props = defineProps({
     component: Object
 })
 const searchForm = inject("searchForm")
+const emit = defineEmits(["update:modelValue"])
 
 const getComponentName = () => {
     if (["date", "month", "year", "week", "quarter", "range", "time"].includes(props.component.formType)) {
@@ -39,23 +36,30 @@ const getComponentName = () => {
     }
 }
 
-let defaultValue
+const value = computed({
+    get() {
+        let val = get(searchForm.value, props.component.dataIndex)
+        if (val === undefined) {
+            if (props.component.formType === "range") {
+                val = props.component.searchDefaultValue ?? []
+            } else {
+                val = props.component.searchDefaultValue ?? ""
+            }
+        }
 
-if (props.component.formType === "range") {
-    defaultValue = props.component.searchDefaultValue ?? []
-} else {
-    defaultValue = props.component.searchDefaultValue ?? ""
-}
+        return val
+    },
+    set(newVal) {
+        if (newVal === undefined) {
+            if (props.component.formType === "range") {
+                newVal = []
+            } else {
+                newVal = ""
+            }
+        }
 
-const value = ref(get(searchForm.value, props.component.dataIndex, defaultValue))
-set(searchForm.value, props.component.dataIndex, value.value)
-
-watch(
-    () => get(searchForm.value, props.component.dataIndex),
-    (vl) => (value.value = vl)
-)
-watch(
-    () => value.value,
-    (v) => set(searchForm.value, props.component.dataIndex, v)
-)
+        emit("update:modelValue", newVal)
+        set(searchForm.value, props.component.dataIndex, newVal)
+    }
+})
 </script>

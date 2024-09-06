@@ -9,8 +9,8 @@ const useFormStore = defineStore("form", {
     state: () => ({ ...defaultConfig }),
 
     getters: {
-        appCurrentConfig(state) {
-            return { ...state }
+        getState() {
+            return { ...this.$state }
         }
     },
 

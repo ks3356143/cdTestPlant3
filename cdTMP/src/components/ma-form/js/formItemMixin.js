@@ -1,4 +1,4 @@
-import { isString, isFunction } from "lodash"
+import { isString, isFunction } from "lodash-es"
 export const maEvent = {
     customeEvent: async (component, value, evName) => {
         if (component[evName]) {
