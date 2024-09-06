@@ -90,7 +90,7 @@
 import { ref, inject, watch } from "vue"
 import commonApi from "@/api/common"
 import tool from "@/utils/tool"
-import { isArray, throttle } from "lodash"
+import { isArray, throttle } from "lodash-es"
 import { getFileUrl } from "../js/utils"
 import { Message } from "@arco-design/web-vue"
 import file2md5 from "file2md5"

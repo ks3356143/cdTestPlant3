@@ -90,7 +90,7 @@ import MaUpload from "@cps/ma-upload/index.vue"
 import uploadConfig from "@/config/upload"
 import MaTreeSlider from "@cps/ma-treeSlider/index.vue"
 import commonApi from "@/api/common"
-import { xor } from "lodash"
+import { xor } from "lodash-es"
 import tool from "@/utils/tool"
 import { Message } from "@arco-design/web-vue"
 

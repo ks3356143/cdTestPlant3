@@ -9,11 +9,11 @@ import { reactive, ref, watch, computed } from "vue"
 import { useAppStore } from "@/store"
 
 import Editor from "@tinymce/tinymce-vue"
-import tinymce from "tinymce/tinymce"
+import tinymce from "tinymce/tinymce.min.js"
 
-import "tinymce/icons/default"
-import "tinymce/models/dom"
-import "tinymce/themes/silver"
+import "tinymce/icons/default/icons.min.js"
+import "tinymce/models/dom/model.min.js"
+import "tinymce/themes/silver/theme.min.js"
 
 // import "tinymce/plugins/advlist" // 高级列表
 // import "tinymce/plugins/anchor" // 锚点

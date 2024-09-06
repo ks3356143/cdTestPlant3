@@ -20,7 +20,7 @@ import MaUser from "./ma-user/index.vue"
 import MaEditor from "./ma-editor/index.vue"
 import MaIcon from "./ma-icon/index.vue"
 import MaUserInfo from "./ma-userInfo/index.vue"
-import MaCityLinkage from "./ma-cityLinkage/index.vue"
+import "echarts/dist/echarts.esm.min.mjs"
 // 后续增加的全局组件
 import Empty from "./Empty/index.vue"
 
@@ -51,7 +51,6 @@ export default {
         Vue.component("MaEditor", MaEditor)
         Vue.component("MaIcon", MaIcon)
         Vue.component("MaUserInfo", MaUserInfo)
-        Vue.component("MaCityLinkage", MaCityLinkage)
         // 后续增加的组件
         Vue.component("Empty", Empty)
     }

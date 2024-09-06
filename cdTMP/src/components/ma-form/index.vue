@@ -73,7 +73,7 @@
 
 <script setup>
 import { ref, watch, provide, onMounted, nextTick, getCurrentInstance } from "vue"
-import { isNil, set, get, cloneDeep } from "lodash"
+import { isNil, set, get, cloneDeep } from "lodash-es"
 import defaultOptions from "./js/defaultOptions.js"
 import {
     getComponentName,

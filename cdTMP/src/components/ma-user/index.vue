@@ -30,7 +30,7 @@
   import { onMounted, ref, watch } from 'vue'
   import commonApi from '@/api/common'
   import { Message } from '@arco-design/web-vue'
-  import { isArray, isEmpty } from 'lodash'
+  import { isArray, isEmpty } from 'lodash-es'
 
   const props = defineProps({
     modelValue: { type: Array },
