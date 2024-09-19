@@ -6,14 +6,14 @@
             class="my-custom-class"
             :columns="props.columns"
             :data="previewRecord"
-            :column="1"
+            :column="3"
             size="mini"
         ></ma-info>
     </a-modal>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue"
+import { ref } from "vue"
 import MaInfo from "@/components/ma-info/index.vue"
 // 提供open方法给外界，并获取整行数据
 const visible = ref(false)

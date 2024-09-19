@@ -38,6 +38,17 @@
             >
                 <template #extra>
                     <a-space>
+                        <a-tooltip content="复制该项添加" v-if="!(props.component.hideAdd ?? false)">
+                            <a-button
+                                @click.stop="addItem(item)"
+                                type="primary"
+                                size="small"
+                                shape="round"
+                                status="warning"
+                            >
+                                <template #icon><icon-copy /></template>
+                            </a-button>
+                        </a-tooltip>
                         <a-tooltip content="添加新子项" v-if="!(props.component.hideAdd ?? false)">
                             <a-button @click.stop="addItem()" type="primary" size="small" shape="round">
                                 <template #icon><icon-plus /></template>

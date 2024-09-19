@@ -64,7 +64,7 @@ export interface BasicCrud {
     isFull?: boolean;
   };
   //新增确定之前修改form值
-  beforeAdd?: (form) => void;
+  beforeAdd?: (form) => boolean;
   //新增确定之后调用,返回接口response和form值
   afterAdd?: (response, form) => void;
   //编辑确定之前修改form值
@@ -113,7 +113,7 @@ export interface BasicCrud {
     realRole?: string[];
     // 真实按钮文案
     realText?: string;
-    
+
     // 是否显示
     show?: boolean;
   };

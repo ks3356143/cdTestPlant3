@@ -5,7 +5,6 @@ import globalComponents from "@/components"
 import App from "./App.vue"
 import router from "./router"
 import pinia from "@/store"
-// import directive from './directive'
 // arcodesign的样式全局引入
 import "@arco-design/web-vue/dist/arco.css"
 
@@ -24,15 +23,18 @@ app.use(ArcoVueIcon)
 app.use(router)
 app.use(pinia)
 app.use(globalComponents)
+// 使用服务端请求数据管理库
+import { VueQueryPlugin } from "@tanstack/vue-query"
+app.use(VueQueryPlugin)
 import directives from "@/directives"
 app.use(directives)
 
 // 注册ma-icon图标
 const modules = import.meta.glob("./assets/ma-icons/*.vue", { eager: true })
 for (const path in modules) {
-    const name = path.match(/([A-Za-z0-9_-]+)/g)[2]
+    const name = path.match(/([A-Za-z0-9_-]+)/g)![2]
     const componentName = `MaIcon${name}`
-    app.component(componentName, modules[path].default)
+    app.component(componentName, (modules[path] as any).default)
 }
 
 // 全局注册变量和工具

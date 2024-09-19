@@ -289,7 +289,7 @@ const crudColumns = ref([
     {
         title: "闭环方式",
         align: "center",
-        width: 160,
+        width: 200,
         dataIndex: "closeMethod",
         addDefaultValue: [],
         search: true,

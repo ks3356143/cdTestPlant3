@@ -17,11 +17,12 @@ export default function useCrudRef(currentRow: Ref<{ id: number | string; name: 
         showTools: false,
         beforeAdd: (form: any) => {
             form.id = currentRow.value?.id
+            return true
         },
         add: { show: true, api: dictApi.saveDictItem },
         edit: { show: true, api: dictApi.updateDictItemData },
         delete: { show: true, api: dictApi.realDeleteItem },
-        afterDelete(response) {
+        afterDelete() {
             crudRef.value.tableRef.selectAll(false)
         }
     })

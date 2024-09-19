@@ -199,7 +199,6 @@ const useCrudInit = function () {
                 }
             ]
         },
-        // 这是只为了搜索的字段
         {
             title: "时间范围",
             hide: true,
@@ -261,6 +260,7 @@ const useCrudInit = function () {
             hide: true,
             search: false,
             formType: "select",
+            allowCreate: true,
             dict: { name: "devplant", props: { label: "title", value: "key" } }
         },
         {
