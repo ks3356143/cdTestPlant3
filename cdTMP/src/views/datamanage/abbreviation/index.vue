@@ -9,7 +9,6 @@
 
 <script lang="jsx" setup>
 import { ref } from "vue"
-import { Message } from "@arco-design/web-vue"
 import abbreviationApi from "@/api/system/abbreviation"
 
 const crudRef = ref()

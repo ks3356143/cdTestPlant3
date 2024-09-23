@@ -13,6 +13,17 @@ export class FragApi {
         })
     }
     /**
+     * 根据用户填写新增文档片段
+     * @returns 新增是否成功
+     */
+    static add(data: IFragUpdateObject) {
+        return request({
+            url: "system/userField/add",
+            method: "post",
+            data
+        })
+    }
+    /**
      * 根据fragment的对象更新数据库
      * @returns 是否更新成功
      */

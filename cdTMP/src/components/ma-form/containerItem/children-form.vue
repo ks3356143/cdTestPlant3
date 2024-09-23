@@ -38,6 +38,7 @@
             >
                 <template #extra>
                     <a-space>
+                        <!-- 修改源码：新增复制该项新增 -->
                         <a-tooltip content="复制该项添加" v-if="!(props.component.hideAdd ?? false)">
                             <a-button
                                 @click.stop="addItem(item)"
@@ -218,10 +219,12 @@ if (props.component.type == "table") {
 }
 
 const addItem = async (data = {}) => {
+    // 修改源码：深度复制
+    let newData = cloneDeep(data)
     let index = formModel.value[props.component.dataIndex].length
     viewFormList.value[index] = cloneDeep(formList)
-    rv("onAdd", { formList: viewFormList.value[index], data, index })
-    formModel.value[props.component.dataIndex].push(data)
+    rv("onAdd", { formList: viewFormList.value[index], newData, index }) // 修改源码：深度复制data->newData
+    formModel.value[props.component.dataIndex].push(newData) // 修改源码：深度复制data->newData
 }
 
 const deleteItem = async (index) => {
