@@ -105,7 +105,7 @@ export default function useCrudRef() {
         rowSelection: { showCheckedAll: true },
         searchColNumber: 3,
         tablePagination: false,
-        operationColumnWidth:200,
+        operationColumnWidth: 200,
         operationColumn: true,
         operationColumnAlign: "center",
         formOption: {
@@ -239,27 +239,32 @@ export default function useCrudRef() {
                 {
                     title: "子项描述",
                     dataIndex: "subDesc",
+                    formType: "textarea",
                     placeholder: "对应大纲测试项表格的测试项描述",
                     rules: [{ required: true, message: "测试子项描述必填" }]
                 },
                 {
                     title: "条件",
                     dataIndex: "condition",
+                    formType: "textarea",
                     placeholder: "在什么环境和前置条件下"
                 },
                 {
                     title: "操作",
                     dataIndex: "operation",
+                    formType: "textarea",
                     placeholder: "通过xxx操作"
                 },
                 {
                     title: "观察",
                     dataIndex: "observe",
+                    formType: "textarea",
                     placeholder: "查看xxx内容"
                 },
                 {
                     title: "期望",
                     dataIndex: "expect",
+                    formType: "textarea",
                     placeholder: "xxx结果正确"
                 }
             ]
