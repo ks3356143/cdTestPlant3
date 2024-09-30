@@ -29,7 +29,7 @@
         "postcss-import": "^16.1.0",
         "qs": "^6.13.0",
         "tinymce": "^7.3.0",
-        "vue": "^3.5.9",
+        "vue": "^3.5.10",
         "vue-clipboard3": "^2.0.0",
         "vue-color-kit": "^1.0.6",
         "vue-echarts": "^7.0.3",
@@ -38,7 +38,7 @@
     },
     "devDependencies": {
         "@types/lodash-es": "^4.17.12",
-        "@types/node": "^22.7.3",
+        "@types/node": "^22.7.4",
         "@types/nprogress": "^0.2.3",
         "@types/qs": "^6.9.16",
         "@vitejs/plugin-vue": "^5.1.4",
