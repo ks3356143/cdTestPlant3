@@ -2,7 +2,9 @@
     <div class="navbar">
         <div class="left-side">
             <a-space>
-                <img src="@/assets/img/wxwx-logo.svg" class="logo" alt="logo" @click="handleClickLogo" />
+                <div class="logo-container">
+                    <img src="@/assets/img/wxwx-logo.svg" class="logo" alt="logo" @click="handleClickLogo" />
+                </div>
                 <a-typography-title
                     class="title"
                     @click="handleClickLogo"
@@ -153,10 +155,20 @@ const handleClickLogo = () => {
 </script>
 
 <style scoped lang="less">
-.logo {
-    width: 35px;
-    height: 35px;
-    cursor: pointer;
+.logo-container {
+    perspective: 1000px;
+    .logo {
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+}
+
+.logo-container:hover {
+    .logo {
+        transform: rotateX(-25deg) rotateY(1440deg);
+    }
 }
 
 .navbar {

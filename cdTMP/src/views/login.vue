@@ -195,6 +195,7 @@ const handleSubmit = async ({ values, errors }) => {
         display: flex;
         margin-top: 20px;
         color: #333;
+        perspective: 100px;
         span {
             font-size: 28px;
             margin-left: 15px;

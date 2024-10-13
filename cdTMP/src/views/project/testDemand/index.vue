@@ -64,7 +64,7 @@ const crudOptions = ref({
     edit: { show: true, api: caseApi.update, text: "修改用例" },
     delete: { show: true, api: caseApi.delete },
     operationColumnAlign: "center",
-    isDbClickEdit: false, // 关闭双击编辑
+    isDbClickEdit: true, // 关闭双击编辑
     // 处理新增删除后树状图显示
     beforeOpenAdd: function () {
         // 1.新增则将form的content数据变为undifined以便判断
