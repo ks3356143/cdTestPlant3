@@ -35,7 +35,11 @@
             </div>
             <a-spin :loading="loading" tip="解析word完成，正在渲染界面..." :style="{ width: '100%' }">
                 <div class="demand-container">
-                    <a-list :data="htmlData" :pagination-props="{ defaultPageSize: 15, total: htmlData.length }">
+                    <a-list
+                        @page-change="handlePageChange"
+                        :data="htmlData"
+                        :pagination-props="{ defaultPageSize: 15, total: htmlData.length }"
+                    >
                         <template #item="{ item, index }">
                             <a-list-item>
                                 <div class="item-container">
@@ -193,9 +197,15 @@ const handledownCreate = (index) => {
     const newDemand = JSON.parse(JSON.stringify(templateDemandObj))
     htmlData.value.splice(index + 1, 0, newDemand)
 }
-// 点击单条右侧按钮：删除
+// 因为a-list限制必须知道当前页码和页容量
+const currentPage = ref(1)
+const handlePageChange = (page) => {
+    currentPage.value = page
+}
+// 点击单条右侧按钮：删除 - 需要根据currentPage动态觉得因为a-list每页都是这样计算的
 const handleDelete = (index) => {
-    htmlData.value.splice(index, 1)
+    const currentIndex = index + (currentPage.value - 1) * 15
+    htmlData.value.splice(currentIndex, 1)
 }
 // 打开弹窗并初始化form数据
 const open = function () {
