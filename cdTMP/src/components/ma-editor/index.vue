@@ -158,6 +158,8 @@ const initConfig = reactive({
     // 1.自定义粘贴过滤器函数，args.content就是粘贴内容
     paste_preprocess: function (plugin, args) {
         let content = args.content
+        // 去掉<span **></span>这个地方修改比较大注意
+        content = content.replace(/<span[^>]*>/g, "").replace(/<\/span>/g, "")
         const parser = new DOMParser()
         const doc = parser.parseFromString(content, "text/html")
         // 遍历一级元素
