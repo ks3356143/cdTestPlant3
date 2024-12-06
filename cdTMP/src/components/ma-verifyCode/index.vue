@@ -13,12 +13,12 @@ const props = defineProps({
 
 const checkResult = (verifyCode) => {
     if (!verifyCode || verifyCode.length === 0) {
-        props.showError && Message.error(t("sys.verifyCode.notice"))
+        props.showError && Message.error("请输入验证码")
         return false
     }
 
     if (verifyCode.toLowerCase() !== codeText.value.toLowerCase()) {
-        props.showError && Message.error(t("sys.verifyCode.error"))
+        props.showError && Message.error("验证码错误，请刷新后重试")
         generateCode()
         return false
     } else {

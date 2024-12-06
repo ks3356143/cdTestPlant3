@@ -43,7 +43,16 @@ const useGenerateSecond = function () {
             dgGenerateApi.createBaseInformation({ id }), // 生成被测软件基本信息 - 和大纲重复 - 可能会删除
             dgGenerateApi.createYiju({ id }), // 生成标准类引用文档 - 和大纲重复 - 可能会删除
             smGenerateApi.createSMTechyiju({ id }), // 生成技术类引用文档列表 -> 在大纲基础上添加《测评大纲》
-            dgGenerateApi.createEnvironment({ id }), // 生成软硬件环境（注意标题级别不一样，这个在最后处理）
+            // 拆分软硬件环境
+            dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
+            dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
+            dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
+            dgGenerateApi.createDynamicEnv({ id }), // 生成-动态测试环境说明
+            dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
+            dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
+            dgGenerateApi.createTestData({ id }), // 生成-测评数据
+            dgGenerateApi.createEnvDiff({ id }), // 生成-环境差异性分析
+            // ~~~
             smGenerateApi.createSMCaseList({ id }), // 生成用例全
             smGenerateApi.createSMCaseBreifList({ id }), // 生成用例列表-那个表格
             smGenerateApi.createSMTrack({ id }) // 生成说明追踪
@@ -78,7 +87,16 @@ const useGenerateSecond = function () {
             dgGenerateApi.createXqComparison({ id }), // 生成-需求规格说明-测试项对照表
             dgGenerateApi.createFanXqComparison({ id }), // 生成-反向测试项-需求规格说明对照表
             dgGenerateApi.createCodeQuality({ id }), // 生成-代码质量度量分析表
-            dgGenerateApi.createEnvironment({ id }), // 生成-软硬件环境
+            // 新增拆分接口
+            dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
+            dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
+            dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
+            dgGenerateApi.createDynamicEnv({ id }), // 生成-动态测试环境说明
+            dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
+            dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
+            dgGenerateApi.createTestData({ id }), // 生成-测评数据
+            dgGenerateApi.createEnvDiff({ id }), // 生成-环境差异性分析
+            // ~~~~~~~~~
             dgGenerateApi.createMainTech({ id }) // 生成-主要战技指标
         ]).finally(() => {
             isGenerating.value = false
@@ -105,7 +123,16 @@ const useGenerateSecond = function () {
             bgGenerateApi.createBgQualityEvaluate({ id }),
             bgGenerateApi.createBgEntire({ id }),
             bgGenerateApi.createBgYzxqTrack({ id }),
-            bgGenerateApi.createBgProblemsSummary({ id })
+            bgGenerateApi.createBgProblemsSummary({ id }),
+            // 拆分软硬件环境
+            dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
+            dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
+            dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
+            dgGenerateApi.createDynamicEnv({ id }), // 生成-动态测试环境说明
+            dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
+            dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
+            dgGenerateApi.createTestData({ id }), // 生成-测评数据
+            dgGenerateApi.createEnvDiff({ id }) // 生成-环境差异性分析
         ]).finally(() => {
             isGenerating.value = false
             isBgLoading.value = false
@@ -126,7 +153,16 @@ const useGenerateSecond = function () {
             hsmGenerateApi.createHdemand({ id }),
             hsmGenerateApi.createCaseListDesc({ id }),
             hsmGenerateApi.createCaseList({ id }),
-            hsmGenerateApi.createTrack({ id })
+            hsmGenerateApi.createTrack({ id }),
+            // 拆分大纲软硬件环境
+            dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
+            dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
+            dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
+            dgGenerateApi.createDynamicEnv({ id }), // 生成-动态测试环境说明
+            dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
+            dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
+            dgGenerateApi.createTestData({ id }), // 生成-测评数据
+            dgGenerateApi.createEnvDiff({ id }) // 生成-环境差异性分析
         ]).finally(() => {
             isGenerating.value = false
             ishsmLoading.value = false

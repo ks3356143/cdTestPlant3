@@ -112,11 +112,88 @@ export default {
     },
     /**
      *
-     * @returns 生成软硬件环境output_dir
+     * @returns 生成-静态测试环境说明
      */
-    createEnvironment(params = {}) {
+    createStaticEnvironment(params = {}) {
         return request({
-            url: `/generate/create/environment`,
+            url: `/generate/create/static_env`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-静态软件项文档片段
+     */
+    createStaticSoft(params = {}) {
+        return request({
+            url: `/generate/create/static_soft`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-静态硬件和固件项
+     */
+    createStaticHard(params = {}) {
+        return request({
+            url: `/generate/create/static_hard`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-动态测试环境说明
+     */
+    createDynamicEnv(params = {}) {
+        return request({
+            url: `/generate/create/dynamic_env`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-动态软件项
+     */
+    createDynamicSoft(params = {}) {
+        return request({
+            url: `/generate/create/dynamic_soft`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-动态硬件项
+     */
+    createDynamicHard(params = {}) {
+        return request({
+            url: `/generate/create/dynamic_hard`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-测试数据
+     */
+    createTestData(params = {}) {
+        return request({
+            url: `/generate/create/test_data`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-环境差异性分析
+     */
+    createEnvDiff(params = {}) {
+        return request({
+            url: `/generate/create/env_diff`,
             method: "get",
             params
         })

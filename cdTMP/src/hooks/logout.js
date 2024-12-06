@@ -10,6 +10,7 @@ export default function useUser() {
         await userStore.logout()
         const currentRoute = router.currentRoute.value
         Message.success('登出成功')
+        document.body.setAttribute("arco-theme", "light")
         router.push({
             name: logoutTo && typeof logoutTo === 'string' ? logoutTo : 'login',
             query: {
