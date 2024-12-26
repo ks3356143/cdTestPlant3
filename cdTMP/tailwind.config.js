@@ -1,27 +1,25 @@
-const colors = require("tailwindcss/colors")
-module.exports = {
-    content: ["./src/**/*.{js,jxs,vue}"],
-    darkMode: "media", // or 'media' or 'class'
-    theme: {
-        fontFamily: {
-            sans: ["Graphik", "sans-serif"],
-            serif: ["Merriweather", "serif"]
+import colors from "tailwindcss/colors"
+export const content = ["./src/**/*.{js,jxs,vue}"]
+export const darkMode = "media"
+export const theme = {
+    fontFamily: {
+        sans: ["Graphik", "sans-serif"],
+        serif: ["Merriweather", "serif"]
+    },
+    extend: {
+        spacing: {
+            128: "32rem",
+            144: "36rem"
         },
-        extend: {
-            spacing: {
-                128: "32rem",
-                144: "36rem"
-            },
-            borderRadius: {
-                "4xl": "2rem"
-            }
+        borderRadius: {
+            "4xl": "2rem"
         }
-    },
-    variants: {
-        extend: {
-            borderColor: ["focus-visible"],
-            opacity: ["disabled"]
-        }
-    },
-    plugins: []
+    }
 }
+export const variants = {
+    extend: {
+        borderColor: ["focus-visible"],
+        opacity: ["disabled"]
+    }
+}
+export const plugins = []

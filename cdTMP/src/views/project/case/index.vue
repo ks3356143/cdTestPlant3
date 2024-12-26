@@ -431,6 +431,13 @@ const crudColumns = ref([
     }
 ])
 
+// 暴露给route-view的刷新表格函数
+const refreshCrudTable = () => {
+    crudRef.value.refresh()
+}
+
+defineExpose({ refreshCrudTable })
+
 defineOptions({
     name: "case"
 })

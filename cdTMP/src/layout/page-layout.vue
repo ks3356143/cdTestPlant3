@@ -20,14 +20,13 @@ import Empty from "@/components/Empty/index.vue"
 // 获取缓存列表
 const tabBarStore = useTabBarStore()
 const cacheList = computed(() => tabBarStore.getCacheList)
-// 调用router-view组件的刷新方法
-const viewChildRef = ref()
+// 调用router-view组件的刷新方法 - 并暴露给子节点
+const viewChildRef = ref(null)
 const refresh = () => {
     try {
         viewChildRef.value.refreshCrudTable()
     } catch (err) {
         console.log("无法找到router-view动态组件的刷新函数")
-    } finally {
     }
 }
 defineExpose({ refresh })

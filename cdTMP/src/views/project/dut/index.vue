@@ -238,6 +238,11 @@ const handleAddFileInputDemand = () => {
     fileInputRef.value.open()
 }
 
+const refreshCrudTable = () => {
+    crudRef.value.refresh()
+}
+defineExpose({ refreshCrudTable })
+
 defineOptions({
     name: "dut"
 })

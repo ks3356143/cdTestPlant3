@@ -180,7 +180,7 @@ const handleSubmit = async ({ values, errors }) => {
         position: relative;
         top: 50%;
         margin-top: -255px;
-        border-radius: 2px;
+        border-radius: var(--border-radius-small);
     }
 
     .left-panel {

@@ -59,7 +59,7 @@ export default function useTreeDrag(projectId, routeViewRef) {
             }
         }
     }
-    // a-tree是否运行拖拽
+    // a-tree是否允许拖拽节点
     const allowdrop = (options) => {
         if (options.dropNode.level === "4" || options.dropNode.level === "3") {
             return true

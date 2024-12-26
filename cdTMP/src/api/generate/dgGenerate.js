@@ -200,11 +200,22 @@ export default {
     },
     /**
      *
-     * @returns 生成测评大纲-测试总体要求
+     * @returns 生成测评大纲-测试级别和测试类型
      */
-    createRequirement(params = {}) {
+    createLevelAndType(params = {}) {
         return request({
-            url: `/generate/create/requirement`,
+            url: `/generate/create/levelAndType`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成测评大纲-测试策略
+     */
+    createStrategy(params = {}) {
+        return request({
+            url: `/generate/create/strategy`,
             method: "get",
             params
         })

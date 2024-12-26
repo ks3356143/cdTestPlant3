@@ -1,20 +1,13 @@
 import { useRoute } from "vue-router"
 import { ref } from "vue"
 import { FragApi } from "@/api/system/fragment"
-import { ProductFileEnum } from "@/utils/enums/productTypes"
-import type { IDictData } from "@/utils/types/CommonType"
 import { IFragSearchCondition } from "@/api/system/types/fragmentTypes"
 
 const useCrudOption = () => {
     // global
     const route = useRoute()
     const crudRef = ref()
-    // 产品文档类型写死7种
-    const productFileType: IDictData<ProductFileEnum>[] = Object.keys(ProductFileEnum).map((it, index) => ({
-        label: ProductFileEnum[it],
-        value: index + 1
-    }))
-    // crud-option
+    // crud-options
     const crudOptions = ref<object>({
         api: FragApi.getFragList,
         add: { show: true, api: FragApi.add },
@@ -45,10 +38,7 @@ const useCrudOption = () => {
             layout: [
                 {
                     formType: "grid",
-                    cols: [
-                        { span: 12, formList: [{ dataIndex: "name" }] },
-                        { span: 12, formList: [{ dataIndex: "belong_doc" }] }
-                    ]
+                    cols: [{ span: 12, formList: [{ dataIndex: "name" }] }]
                 }
             ]
         }
@@ -71,16 +61,6 @@ const useCrudOption = () => {
             search: true,
             commonRules: [{ required: true, message: "片段名称必填" }],
             validateTrigger: "blur"
-        },
-        {
-            title: "所属文档",
-            align: "center",
-            width: 100,
-            dataIndex: "belong_doc",
-            formType: "select",
-            search: true,
-            commonRules: [{ required: true, message: "所属文档必选" }],
-            dict: { data: productFileType, translation: true }
         },
         {
             title: "替换片段",

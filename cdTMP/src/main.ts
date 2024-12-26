@@ -5,18 +5,19 @@ import globalComponents from "@/components"
 import App from "./App.vue"
 import router from "./router"
 import pinia from "@/store"
-// arcodesign的样式全局引入
-import "@arco-design/web-vue/dist/arco.css"
 
 // 导入全局样式
 import "@/style/skin.less"
 import "@/style/index.css"
 import "@/style/global.less"
+// 导入vue-data-ui样式
+import "vue-data-ui/style.css"
 
 // 读取package.json打印个软件名称和版本
 import tool from "@/utils/tool"
 import packageJson from "../package.json"
-// 启动app之前
+
+// Before App Started
 const app = createApp(App)
 app.use(ArcoVue, {})
 app.use(ArcoVueIcon)
@@ -29,7 +30,7 @@ app.use(VueQueryPlugin)
 import directives from "@/directives"
 app.use(directives)
 
-// 注册ma-icon图标
+// 注册ma图标
 const modules = import.meta.glob("./assets/ma-icons/*.vue", { eager: true })
 for (const path in modules) {
     const name = path.match(/([A-Za-z0-9_-]+)/g)![2]
@@ -43,5 +44,5 @@ app.config.globalProperties.$title = import.meta.env.VITE_APP_TITLE
 app.config.globalProperties.$url = import.meta.env.VITE_APP_BASE
 app.mount("#app")
 
-// 无用的东西：下面就打印一个东西
+// show version tag in console
 tool.capsule("TestManagePlant", `v${packageJson.version} debug`)

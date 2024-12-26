@@ -14,7 +14,7 @@ export default ({ mode }) => {
             vueJsx(),
             visualizer({
                 open: true,
-                filename: "visualizer.html" //分析图生成的文件名
+                filename: "visualizer.html" // 分析图生成的文件名
             })
         ],
         resolve: {
@@ -35,7 +35,6 @@ export default ({ mode }) => {
             rollupOptions: {
                 output: {
                     manualChunks: (id) => {
-                        if (id.includes("echarts")) return "echarts"
                         if (id.includes("tinymce")) return "tinymce"
                         return null
                     }

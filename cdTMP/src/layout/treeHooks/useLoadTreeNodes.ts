@@ -5,7 +5,6 @@ export default function useLoadTreeNode() {
     // global
     const route = useRoute()
     const projectInfo = ref({ ...route.query })
-
     // Events
     const loadMore = (nodeData) => {
         if (nodeData.level == "0") {

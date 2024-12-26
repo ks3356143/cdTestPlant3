@@ -82,7 +82,8 @@ const useGenerateSecond = function () {
             dgGenerateApi.createInterface({ id }), // 生成-被测软件接口
             dgGenerateApi.createPerformance({ id }), // 生成-被测软件性能
             dgGenerateApi.createBaseInformation({ id }), // 生成-被测软件基本信息
-            dgGenerateApi.createRequirement({ id }), // 生成-测试总体要求
+            dgGenerateApi.createLevelAndType({ id }), // 生成-测试级别和测试类型 -【修改】
+            dgGenerateApi.createStrategy({ id }), // 生成-测试级别和测试类型 -【新增】
             dgGenerateApi.createYzComparison({ id }), // 生成-研总-测试项对照表
             dgGenerateApi.createXqComparison({ id }), // 生成-需求规格说明-测试项对照表
             dgGenerateApi.createFanXqComparison({ id }), // 生成-反向测试项-需求规格说明对照表

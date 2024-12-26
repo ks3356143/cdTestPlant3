@@ -4,6 +4,8 @@ import { useRoute } from "vue-router"
 import { useTreeDataStore } from "@/store"
 import { storeToRefs } from "pinia"
 import { useRouter } from "vue-router"
+// 导入组件用于类型
+import type { DutSubFormInstance } from "@/views/project/round/DutSubForm"
 export default function useNodeClick(expandedKeys: Ref<string[]>) {
     // global
     const route = useRoute()
@@ -17,8 +19,10 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
     // refs
     const selectedKeys = ref<any>([]) // 中间变量用于判断
     const previousKey = ref<any>() // 上一次点击
-    // 点击事件
-    const pointNode = (value, data) => {
+    // SubFormRefs
+    const dutSubFormRef = ref<DutSubFormInstance | null>(null)
+    // 点击节点事件
+    const pointNode = (value: any, data: any) => {
         // 获取处理单击不选中，双击选中的变量
         let catch_selected_key = selectedKeys.value
         selectedKeys.value = previousKey.value
@@ -39,28 +43,12 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
                     })
                 }
                 if (data.node.level == "1") {
-                    projectApi.getDemandInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
-                        data.node.children = res.data
-                        if (!expandedKeys.value.includes(value[0])) {
-                            expandedKeys.value.push(value[0])
-                        }
-                    })
+                    // 打开弹窗
+                    dutSubFormRef.value!.open(data.node)
                 }
                 if (data.node.level == "2") {
-                    projectApi.getTestInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
-                        data.node.children = res.data
-                        if (!expandedKeys.value.includes(value[0])) {
-                            expandedKeys.value.push(value[0])
-                        }
-                    })
                 }
                 if (data.node.level == "3") {
-                    projectApi.getCaseInfo(projectInfo.value.id, data.node.key, data.node.level).then((res) => {
-                        data.node.children = res.data
-                        if (!expandedKeys.value.includes(value[0])) {
-                            expandedKeys.value.push(value[0])
-                        }
-                    })
                 }
                 count = 0
                 if (timerId) clearTimeout(timerId)
@@ -98,6 +86,7 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
     }
     return {
         selectedKeys,
-        pointNode
+        pointNode,
+        dutSubFormRef
     }
 }

@@ -60,4 +60,16 @@ tool.local = {
     }
 }
 
+/**
+ * 辅助函数，删除旧属性，生成新属性 crudColumn -> formColumn
+ */
+const renameKeyInArray = (arr, oldKey, newKey) => {
+    return arr.map((obj) => {
+        let { [oldKey]: value, ...rest } = obj
+        return { ...rest, [newKey]: value }
+    })
+}
+
+tool.renameKeyInArray = renameKeyInArray
+
 export default tool

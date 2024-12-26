@@ -231,6 +231,8 @@
     ></roundRight>
     <!-- w2:轮次的问题单ma-crud，这里要传参2个，首先是请求另外一个接口，然后取消是否关联字段 -->
     <problem-choose ref="problemRoundRef" hasRelated="roundProblem" :title="problemTitle"></problem-choose>
+    <!-- 下面都是对应被测件、设计需求、测试项、测试用例、问题单的SubForm -->
+    <DutSubForm ref="dutSubFormRef"></DutSubForm>
 </template>
 
 <script setup>
@@ -246,6 +248,8 @@ import { useRoute } from "vue-router"
 import { useTreeDataStore } from "@/store"
 import { storeToRefs } from "pinia"
 import Progress from "@/views/testmanage/projmanage/cpns/progress.vue"
+// 导入单独节点类型单独对应的Modal组件
+import DutSubForm from "@/views/project/round/DutSubForm"
 // hooks模块化
 import useTreeDrag from "@/layout/treeHooks/treeDrag.js"
 import { useRightClick } from "./treeHooks/rightClick"
@@ -258,6 +262,7 @@ import useLoadTreeNode from "./treeHooks/useLoadTreeNodes"
 import useRoundMaForm from "./treeHooks/useRoundMaForm"
 // router-view里面组件的ref -> 多个hook使用
 const routeViewRef = ref()
+provide("rightViewRef", routeViewRef)
 const treeDataStore = useTreeDataStore()
 const { treeData, currentNode } = storeToRefs(treeDataStore)
 const route = useRoute()
@@ -291,7 +296,7 @@ const {
 const { expandedKeys, toggleExpanded } = useNodeExpand()
 
 //~~~~~~大功能：单击/双击节点逻辑~~~~~~
-const { selectedKeys, pointNode } = useNodeClick(expandedKeys)
+const { selectedKeys, pointNode, dutSubFormRef } = useNodeClick(expandedKeys)
 
 //~~~~~~大功能：动态加载a-tree节点函数~~~~~~
 const { loadMore } = useLoadTreeNode()

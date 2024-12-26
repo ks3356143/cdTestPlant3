@@ -1,6 +1,8 @@
+// 先导入arco的样式-里面有变量
+@import "@arco-design/web-vue/dist/arco.css";
 @import "dark.less";
 @import "animation.less";
-// 导入自己的样式覆盖
+// 导入自己的样式覆盖原有的变量
 @import "warp.less";
 
 
@@ -8,6 +10,7 @@ html,
 body {
     height: 100%;
 }
+
 .arco-layout-sider-children {
     overflow-x: hidden;
 }
@@ -15,6 +18,7 @@ body {
 .arco-switch {
     background-color: var(--color-fill-4);
 }
+
 .arco-switch-checked {
     background-color: rgb(var(--primary-6));
 }
@@ -51,6 +55,7 @@ body {
 .layout-columns-right-panel {
     width: 100%;
     background-color: var(--color-neutral-2);
+
     .layout-header {
         background-color: var(--color-bg-2);
         width: 100%;
@@ -62,6 +67,7 @@ body {
     height: 52px;
     border-bottom: 1px solid var(--color-border-1);
     background-color: var(--color-bg-2);
+
     .logo {
         width: 220px;
         padding-bottom: 1px;
@@ -87,12 +93,14 @@ body {
     .banner-menus li:hover {
         background-color: var(--color-neutral-2);
     }
+
     .banner-menus li.active {
         background-color: rgb(var(--primary-4));
         color: var(--color-white);
         fill: var(--color-white);
     }
 }
+
 .layout-banner-content {
     .tags {
         border-top: 0;
@@ -102,6 +110,7 @@ body {
 .layout-classic-sider {
     box-shadow: none;
 }
+
 .layout-classic-header {
     .layout-classic-header-container {
         background-color: var(--color-bg-2);
@@ -113,7 +122,8 @@ body {
 .backend-setting .arco-drawer-body::-webkit-scrollbar,
 .arco-list::-webkit-scrollbar,
 .customer-scrollbar::-webkit-scrollbar {
-    width: 6px; /*高宽分别对应横竖滚动条的尺寸*/
+    width: 6px;
+    /*高宽分别对应横竖滚动条的尺寸*/
     height: 7px;
 }
 
@@ -124,6 +134,7 @@ body {
     border-radius: 2px;
     background: var(--color-text-4);
 }
+
 .ma-menu .arco-menu-inner::-webkit-scrollbar-thumb:hover,
 .backend-setting .arco-drawer-body::-webkit-scrollbar-thumb:hover,
 .arco-list::-webkit-scrollbar-thumb:hover,
@@ -131,6 +142,7 @@ body {
     border-radius: 2px;
     background: var(--color-text-3);
 }
+
 .ma-menu .arco-menu-inner::-webkit-scrollbar-track,
 .backend-setting .arco-drawer-body::-webkit-scrollbar-track,
 .arco-list::-webkit-scrollbar-track,
@@ -142,6 +154,7 @@ body {
 .tags-container {
     background-color: var(--color-bg-2);
     border-top: 1px solid var(--color-border-1);
+
     .tags {
         border-bottom: 1px solid var(--color-border-1);
         background-color: var(--color-bg-2);
@@ -151,6 +164,7 @@ body {
         display: flex;
         overflow: hidden;
         width: 100%;
+
         a {
             background: var(--color-fill-3);
             color: var(--color-text-2);
@@ -185,9 +199,11 @@ body {
         a.active {
             background: rgb(var(--primary-6));
             color: var(--color-white);
+
             .tag-icon {
                 color: var(--color-white);
             }
+
             .tag-icon:hover {
                 color: rgb(var(--primary-4));
                 background-color: var(--color-bg-2);
@@ -217,10 +233,12 @@ body {
             color: var(--color-text-2);
             font-size: 13px;
         }
+
         li:hover {
             background-color: rgb(var(--primary-1));
             cursor: pointer;
         }
+
         li.disabled {
             color: var(--color-text-4);
             cursor: no-drop;
@@ -233,6 +251,7 @@ body {
     color: var(--color-text-2);
     height: 100%;
     overflow-y: auto;
+
     .content-block-title {
         color: var(--color-text-1);
         font-size: 1.3em;
@@ -249,6 +268,7 @@ body {
     bottom: 30px;
     left: 20px;
     z-index: 100;
+
     .button-trigger {
         display: flex;
         align-items: center;
@@ -260,13 +280,16 @@ body {
         border-radius: 50%;
         cursor: pointer;
         transition: all 0.1s;
+
         :deep(.icon) {
             margin-left: 1px !important;
         }
     }
+
     .button-trigger:nth-child(1) {
         background-color: var(--color-primary-light-4);
     }
+
     .button-trigger:nth-child(1).button-trigger-active {
         background-color: rgb(var(--primary-6));
     }
@@ -276,6 +299,7 @@ body {
     .max-size-exit {
         display: block;
     }
+
     .ma-ui-slider,
     .ma-ui-header,
     .ma-ui-menu,
@@ -303,6 +327,7 @@ body {
         background: rgba(0, 0, 0, 0.2);
         transition: all 0.3s;
     }
+
     .max-size-exit:hover {
         top: 0px;
     }

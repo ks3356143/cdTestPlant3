@@ -60,7 +60,7 @@ const useTreeDataStore = defineStore("treeDataStore", {
             temp.pop(-1)
             let roundKey = temp[0]
             const nodeKey = temp.join("-")
-            const res = await projectApi.getDutInfo(projrctId, nodeKey, "0")
+            const res = await projectApi.getDutInfo(projrctId, nodeKey, "0") // nodeKey:'0'
             this.treeData[roundKey].children = res.data
         },
         // 新增删除designDemand后tree显示-注意传的是测试项的key

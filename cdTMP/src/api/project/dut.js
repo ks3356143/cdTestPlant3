@@ -13,6 +13,17 @@ export default {
         })
     },
     /**
+     * 根据项目id、round信息，请求dut
+     * @returns dut数据
+     */
+    getDutOne(params = {}) {
+        return request({
+            url: `/project/getDutOne`,
+            method: "get",
+            params
+        })
+    },
+    /**
      * 添加被测件
      * @returns
      */
