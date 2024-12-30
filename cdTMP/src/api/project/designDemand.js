@@ -13,6 +13,17 @@ export default {
         })
     },
     /**
+     * 查询单个设计需求
+     * @returns 单个设计需求数据
+     */
+    getDesignDemandOne(params = {}) {
+        return request({
+            url: `project/getDesignOne`,
+            method: "get",
+            params
+        })
+    },
+    /**
      * 编辑设计需求
      * @returns 成功编辑或失败
      */
@@ -51,7 +62,7 @@ export default {
      */
     update(id, data = {}) {
         return request({
-            url: "/project/designDemand/update/" + id,
+            url: `project/editDesignDemand/` + id,
             method: "put",
             data
         })

@@ -12,6 +12,18 @@ export default {
         })
     },
     /**
+     * 请求单个case信息
+     * @params 传入case完整的key
+     * @params 项目id
+     */
+    getCaseOne(params = {}) {
+        return request({
+            url: "/project/getCaseOne",
+            method: "get",
+            params
+        })
+    },
+    /**
      * 添加测试用例
      * @returns
      */
@@ -73,18 +85,6 @@ export default {
     copyOrMoveCaseByCase(params = {}) {
         return request({
             url: "/project/case/copy_or_move_by_case",
-            method: "get",
-            params
-        })
-    },
-    /**
-     * 请求单个case信息
-     * @params 传入case完整的key
-     * @params 项目id
-     */
-    getCaseOne(params = {}) {
-        return request({
-            url: "/project/getCaseOne",
             method: "get",
             params
         })

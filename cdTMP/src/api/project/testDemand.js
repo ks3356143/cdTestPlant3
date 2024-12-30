@@ -12,6 +12,17 @@ export default {
         })
     },
     /**
+     * 获取单个测试项信息
+     * @returns 单个测试项信息
+     */
+    getTestDemandOne(params = {}) {
+        return request({
+            url: `project/getTestDemandOne`,
+            method: "get",
+            params
+        })
+    },
+    /**
      * 添加被测件
      * @returns
      */

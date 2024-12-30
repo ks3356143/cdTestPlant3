@@ -6,6 +6,9 @@ import { storeToRefs } from "pinia"
 import { useRouter } from "vue-router"
 // 导入组件用于类型
 import type { DutSubFormInstance } from "@/views/project/round/DutSubForm"
+import type { DesignSubFormInstance } from "@/views/project/dut/DesignSubForm"
+import type { DemandSubFormInstance } from "@/views/project/design-demand/DemandSubForm"
+import type { CaseSubFormInstance } from "@/views/project/testDemand/CaseSubForm"
 export default function useNodeClick(expandedKeys: Ref<string[]>) {
     // global
     const route = useRoute()
@@ -21,6 +24,9 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
     const previousKey = ref<any>() // 上一次点击
     // SubFormRefs
     const dutSubFormRef = ref<DutSubFormInstance | null>(null)
+    const designSubFormRef = ref<DesignSubFormInstance | null>(null)
+    const testDemandSubFormRef = ref<DemandSubFormInstance | null>(null)
+    const caseSubFormRef = ref<CaseSubFormInstance | null>(null)
     // 点击节点事件
     const pointNode = (value: any, data: any) => {
         // 获取处理单击不选中，双击选中的变量
@@ -47,8 +53,13 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
                     dutSubFormRef.value!.open(data.node)
                 }
                 if (data.node.level == "2") {
+                    designSubFormRef.value!.open(data.node)
                 }
                 if (data.node.level == "3") {
+                    testDemandSubFormRef.value!.open(data.node)
+                }
+                if (data.node.level == "4") {
+                    caseSubFormRef.value!.open(data.node)
                 }
                 count = 0
                 if (timerId) clearTimeout(timerId)
@@ -87,6 +98,9 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
     return {
         selectedKeys,
         pointNode,
-        dutSubFormRef
+        dutSubFormRef,
+        designSubFormRef,
+        testDemandSubFormRef,
+        caseSubFormRef
     }
 }

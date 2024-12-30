@@ -45,11 +45,14 @@
 import { ref } from "vue"
 import commonApi from "@/api/common"
 // hooks
-import useCrudRef from "./hooks/useCrudRef"
+import useCrudOpMore from "./hooks/useCrudOpMore"
+import useColumn from "./hooks/useColumns"
 import useRalateDemand from "./hooks/useRalateDemand"
-
+// refs
+const crudRef = ref(null)
 // 根据传参获取key，分别为轮次、设计需求的key
-const { projectId, crudRef, crudOptions, crudColumns, handleBeforeCancel } = useCrudRef()
+const { projectId, crudOptions, handleBeforeCancel } = useCrudOpMore(crudRef)
+const crudColumns = useColumn(crudRef)
 // 关联弹窗、关联的事件处理
 const { visible, relatedData, options, cascaderLoading, computedRelatedData, handleOpenRelationCSX, handleRelatedOk } =
     useRalateDemand(projectId)

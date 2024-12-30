@@ -1,91 +1,18 @@
 import { ref } from "vue"
-import dutApi from "@/api/project/dut"
 import { useRoute } from "vue-router"
-import { useTreeDataStore } from "@/store"
 import beiceType from "@/views/project/round/beiceType"
-/**
- * 传入组件Ref返回其options和columnOptions
- * @param crudRef crud组件的Ref，注意不存在传递undefined
- * @param formRef ma-form组件Ref
- * @returns
- */
-export default function useCrudRef(crudRef?, formRef?) {
-    // globals
+
+export default function (crudOrFormRef: any) {
+    // global
     const route = useRoute()
-    const projectId = ref(route.query.id)
-    const treeDataStore = useTreeDataStore()
-    const roundNumber = (route.query.key as any).split("-")[0]
     // 计算注释率计算crud/form的数据，判断
     const calcPercent = () => {
-        if (crudRef) {
-            const formData = crudRef.value.getFormData()
-            const total_line = +formData.black_line + +formData.code_line + +formData.comment_line + +formData.mix_line
-            const comment_total = +formData.comment_line + +formData.mix_line
-            formData.comment_percent = `${(comment_total / total_line).toFixed(2).toString()}%`
-        } else if (formRef) {
-            const formData = formRef.value.getFormData()
-            const { code_line, comment_line, mix_line, black_line } = formData
-            const total_line = +black_line + +code_line + +comment_line + +mix_line
-            const comment_total = +comment_line + +mix_line
-            formData.comment_percent = `${(comment_total / total_line).toFixed(2).toString()}%`
-        }
+        const formData = crudOrFormRef.value.getFormData()
+        const { code_line, comment_line, mix_line, black_line } = formData
+        const total_line = +black_line + +code_line + +comment_line + +mix_line
+        const comment_total = +comment_line + +mix_line
+        formData.comment_percent = `${(comment_total / total_line).toFixed(2).toString()}%`
     }
-    // refs
-    const crudOptions = ref({
-        api: dutApi.getDutList,
-        add: { show: true, api: dutApi.save, text: "新增被测件" },
-        edit: { show: true, api: dutApi.update, text: "编辑被测件" },
-        delete: { show: true, api: dutApi.delete },
-        // 处理添加后函数
-        beforeOpenAdd: function () {
-            let round_str = parseInt(route.query.key as any) + 1
-            crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${round_str}轮>被测件-`
-            return true
-        },
-        beforeOpenEdit: function (record) {
-            let round_str = parseInt(route.query.key as any) + 1
-            crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${round_str}轮>被测件[${record.name}]-`
-            return true
-        },
-        afterAdd: (res) => {
-            let id = projectId.value
-            treeDataStore.updateDutTreeData(res.data, id)
-        },
-        afterEdit: (res) => {
-            let id = projectId.value
-            treeDataStore.updateDutTreeData(res.data, id)
-        },
-        afterDelete: (res, record) => {
-            let id = projectId.value
-            if (!record) {
-                record = { key: route.query.key + "-X" }
-            }
-            treeDataStore.updateDutTreeData(record, id)
-            // 清空行选择器
-            crudRef.value.tableRef.selectAll(false)
-        },
-
-        // 新增、编辑、删除均携带下面
-        parameters: {
-            projectId: route.query.id,
-            round: roundNumber
-        },
-        operationWidth: 500,
-        showIndex: false,
-        showTools: false,
-        rowSelection: { showCheckedAll: true },
-        searchColNumber: 3,
-        tablePagination: false,
-        operationColumnWidth: 200, // 操作列宽度
-        operationColumn: true,
-        operationColumnAlign: "center",
-        formOption: {
-            viewType: "drawer",
-            width: 600,
-            mask: false
-        }
-    })
-
     const crudColumns = ref([
         {
             title: "ID",
@@ -251,11 +178,9 @@ export default function useCrudRef(crudRef?, formRef?) {
             placeholder: "计算注释率",
             hide: true,
             addDisabled: true,
-            editDisabled: true
+            editDisabled: true,
+            disabled: true
         }
     ])
-    return {
-        crudOptions,
-        crudColumns
-    }
+    return crudColumns
 }

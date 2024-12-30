@@ -12,10 +12,12 @@
 
 <script setup lang="jsx">
 import { ref } from "vue"
-import useCrudRef from "@/views/project/round/hooks/useCrudRef"
+import useCrudOptions from "@/views/project/round/hooks/useCrudOptions"
+import useColumn from "@/views/project/round/hooks/useColumn"
 const crudRef = ref()
 // crud组件
-const { crudOptions, crudColumns } = useCrudRef(crudRef)
+const crudOptions = useCrudOptions(crudRef)
+const crudColumns = useColumn(crudRef)
 
 const refreshCrudTable = () => {
     crudRef.value.refresh()

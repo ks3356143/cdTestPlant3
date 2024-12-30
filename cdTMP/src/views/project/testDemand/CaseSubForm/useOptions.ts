@@ -2,6 +2,7 @@ import { ref, computed } from "vue"
 import tool from "@/utils/tool"
 import useColumn from "../hooks/useColumn"
 
+// Case用例在这里设置不同ma-form选项
 export default function useOptions(formRef: any) {
     const options = ref({
         showButtons: false,
