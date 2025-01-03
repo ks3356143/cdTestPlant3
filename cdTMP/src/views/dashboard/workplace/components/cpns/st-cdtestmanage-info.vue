@@ -18,8 +18,8 @@
                 </a>
             </a-card>
             <a-card type="rounded-sm text-center" class="w-full" :body-style="{ padding: 0 }" :bordered="false">
-                <a href="https://doc.mineadmin.com/guide/" target="_blank">
-                    <a-button type="outline" class="w-full">感谢:MineAdmin</a-button>
+                <a href="https://doc.mineadmin.com/" target="_blank">
+                    <a-button type="outline" class="w-full">感谢MineAdmin</a-button>
                 </a>
             </a-card>
             <div class="mt-2">管理平台版本</div>

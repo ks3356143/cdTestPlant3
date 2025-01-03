@@ -18,7 +18,8 @@
 <script setup lang="ts">
 import { PropType } from "vue"
 import { useRouter } from "vue-router"
-import type { IPageHeaderProps } from "./types"
+import { type IPageHeaderProps } from "./types"
+import { isBlankObj } from "@/utils/extensions/JsTools"
 // 组件属性
 const props = defineProps({
     data: {
@@ -26,9 +27,6 @@ const props = defineProps({
         required: true
     }
 })
-const isBlankObj = (data: IPageHeaderProps) => {
-    return Object.keys(data).length > 0
-}
 const router = useRouter()
 // 返回上个页面
 const handleBackClick = () => {

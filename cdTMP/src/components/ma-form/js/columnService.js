@@ -2,8 +2,6 @@ import { loadDict } from "@cps/ma-form/js/networkRequest"
 
 /**
  * columnService 列服务处理类
- * 首先感谢 @NEKGod 提交的PR，此功能原本写在了 Ma-Crud 组件，我特意摘出来，封装成类通过引用来调用
- * @author NEKGod, X.Mo <root@imoi.cn>
  */
 
 const objectService = function (item) {
