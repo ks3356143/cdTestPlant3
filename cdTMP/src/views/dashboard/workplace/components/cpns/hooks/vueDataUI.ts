@@ -1,5 +1,4 @@
-import { Ref, ref, watch, computed } from "vue"
-import { VueUiXyConfig, VueUiXyDatasetItem } from "vue-data-ui"
+import { Ref, computed } from "vue"
 
 // 单个每月项目数量对象格式
 interface IData {
@@ -167,7 +166,7 @@ function useVueDataUI(data: Ref<ResData>) {
     const chartConfig = computed(() => {
         if (data.value) {
             const countData = data.value.data.map((it) => it.count)
-            initialConfig.chart.grid.labels.yAxis.scaleMax = Math.max(...countData)
+            initialConfig.chart.grid.labels.yAxis.scaleMax = Math.max(...countData) ? Math.max(...countData) : 10
         }
         return initialConfig
     })
