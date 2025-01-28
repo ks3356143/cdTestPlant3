@@ -1,5 +1,5 @@
 import colors from "tailwindcss/colors"
-export const content = ["./src/**/*.{js,jxs,vue}"]
+export const content = ["./src/**/*.{js,ts,jsx,tsx,vue}"]
 export const darkMode = "media"
 export const theme = {
     fontFamily: {
