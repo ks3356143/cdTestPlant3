@@ -31,6 +31,6 @@ const { chartData, chartConfig } = useVueDataUI(data)
 <style lang="less" scoped>
 .chartContainer {
     width: 100%;
-    height: 300px;
+    // height: 300px;
 }
 </style>

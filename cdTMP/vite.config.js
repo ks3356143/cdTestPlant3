@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue"
 import { resolve } from "path"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 import { visualizer } from "rollup-plugin-visualizer"
+
 export default ({ mode }) => {
     const env = loadEnv(mode, process.cwd())
     console.log("当前环境为：", mode)

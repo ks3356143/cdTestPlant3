@@ -22,8 +22,12 @@
                     <a-button type="outline" class="w-full">感谢MineAdmin</a-button>
                 </a>
             </a-card>
-            <div class="mt-2">管理平台版本</div>
-            <a-tag class="mt-2 w-fit" color="#0fc6c2">TestPlant V0.0.4</a-tag>
+            <div class="mt-2">
+                <div class="text-center leading-[32px]">管理平台版本:</div>
+            </div>
+            <div class="mt-2 leading-[32px]">
+                <a-tag class="w-fit h-[32px]" color="#0fc6c2">TestPlant V0.0.4</a-tag>
+            </div>
         </div>
     </div>
 </template>

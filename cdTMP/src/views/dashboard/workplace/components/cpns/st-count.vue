@@ -1,6 +1,6 @@
 <template>
     <div class="w-full mx-auto">
-        <div class="block lg:grid lg:grid-cols-4 lg:gap-1">
+        <div class="lg:grid lg:grid-cols-4 lg:gap-1">
             <a-card
                 style="height: 65px"
                 class="rounded-sm mt-3"
