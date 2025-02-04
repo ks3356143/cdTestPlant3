@@ -1,6 +1,6 @@
 <template>
     <div class="round-info-container">
-        <div class="ma-content-block rounded-sm flex-column justify-between w-full p-3 bg-color">
+        <div class="ma-content-block rounded-xs flex-column justify-between w-full p-3 bg-color">
             <div class="title">{{ props.data.name }}信息</div>
             <div class="info-list">
                 <a-list :gridProps="{ gutter: 0, span: 6 }" class="list-container">

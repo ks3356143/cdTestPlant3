@@ -3,13 +3,13 @@
  - @Link XXX
 -->
 <template>
-    <div class="w-full p-2 resource-container h-full lg:flex lg:justify-between rounded-sm">
+    <div class="w-full p-2 resource-container h-full lg:flex lg:justify-between rounded-xs">
         <a-modal v-model:visible="openNetworkModal" :ok-text="$t('sys.save')" :on-before-ok="saveNetworkImg" draggable>
             <template #title>{{ $t("maResource.saveNetworkImage") }}</template>
             <a-input v-model="networkImg" class="mb-3" :placeholder="$t('maResource.networkImageNotice')" allow-clear />
             <a-image :src="networkImg ?? ''" width="100%" style="min-height: 150px" />
         </a-modal>
-        <div class="lg:w-1/5 w-full p-2 shadow">
+        <div class="lg:w-1/5 w-full p-2 shadow-sm">
             <ma-tree-slider
                 :data="sliderData"
                 :search-placeholder="$t('maResource.searchResource')"
@@ -37,7 +37,7 @@
             <a-spin :loading="resourceLoading" :tip="$t('maResource.loadingText')" class="h-full">
                 <div class="resource-list mt-2" ref="rl" v-if="attachmentList && attachmentList.length > 0">
                     <div
-                        class="item rounded-sm"
+                        class="item rounded-xs"
                         v-for="(item, index) in attachmentList"
                         :key="item.hash"
                         @click="selectFile(item, index)"
@@ -160,7 +160,7 @@ const searchFile = async () => {
 
 const selectFile = (item, index) => {
     const children = rl.value.children
-    const className = "item rounded-sm"
+    const className = "item rounded-xs"
 
     if (!/^(http|https)/g.test(item.url)) {
         item.url = tool.attachUrl(item.url, getStoreMode(item.storage_mode))
@@ -191,7 +191,7 @@ const clearSelecteds = () => {
     if (rl.value && rl.value.children) {
         const children = rl.value.children
         for (let i = 0; i < children.length; i++) {
-            children[i].className = "item rounded-sm"
+            children[i].className = "item rounded-xs"
         }
     }
     if (props.multiple) {

@@ -3,7 +3,7 @@
         <div class="lg:grid lg:grid-cols-4 lg:gap-1">
             <a-card
                 style="height: 65px"
-                class="rounded-sm mt-3"
+                class="rounded-xs mt-3"
                 :body-style="{ padding: 0, height: '65px' }"
                 :bordered="false"
                 hoverable
@@ -23,7 +23,7 @@
             </a-card>
             <a-card
                 style="height: 65px"
-                class="rounded-sm mt-3 lg:ml-2"
+                class="rounded-xs mt-3 lg:ml-2"
                 :body-style="{ padding: 0, height: '65px' }"
                 :bordered="false"
                 hoverable
@@ -43,7 +43,7 @@
             </a-card>
             <a-card
                 style="height: 65px"
-                class="rounded-sm mt-3 lg:ml-2"
+                class="rounded-xs mt-3 lg:ml-2"
                 :body-style="{ padding: 0, height: '65px' }"
                 :bordered="false"
                 hoverable
@@ -63,7 +63,7 @@
             </a-card>
             <a-card
                 style="height: 65px"
-                class="rounded-sm mt-3 lg:ml-2"
+                class="rounded-xs mt-3 lg:ml-2"
                 :body-style="{ padding: 0, height: '65px' }"
                 :bordered="false"
                 hoverable

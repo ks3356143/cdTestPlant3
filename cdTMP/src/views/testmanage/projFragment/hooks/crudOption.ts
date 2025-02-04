@@ -51,7 +51,7 @@ const useCrudOption = () => {
             hide: true,
             dataIndex: "id",
             commonRules: [{ required: true, message: "ID必填" }],
-            validateTrigger: "blur"
+            validateTrigger: "blur-sm"
         },
         {
             title: "片段名称",
@@ -60,7 +60,7 @@ const useCrudOption = () => {
             dataIndex: "name",
             search: true,
             commonRules: [{ required: true, message: "片段名称必填" }],
-            validateTrigger: "blur"
+            validateTrigger: "blur-sm"
         },
         {
             title: "替换片段",

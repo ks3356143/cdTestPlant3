@@ -21,7 +21,7 @@ export default function (crudOrFormRef: any) {
             hide: true,
             dataIndex: "id",
             commonRules: [{ required: true, message: "ID是必填" }],
-            validateTrigger: "blur",
+            validateTrigger: "blur-sm",
             display: false
         },
         {
@@ -35,7 +35,7 @@ export default function (crudOrFormRef: any) {
             addDefaultValue: route.query.ident + "-R" + (parseInt(route.query.key as any) + 1) + "-UT",
             addDisabled: true,
             editDisabled: true,
-            validateTrigger: "blur",
+            validateTrigger: "blur-sm",
             disabled: true,
             placeholder: "被测件标识未空，请检查"
         },
@@ -85,7 +85,7 @@ export default function (crudOrFormRef: any) {
             dataIndex: "name",
             search: true,
             commonRules: [{ required: true, message: "被测件名称必填" }],
-            validateTrigger: "blur"
+            validateTrigger: "blur-sm"
         },
         {
             title: "版本",
@@ -93,7 +93,7 @@ export default function (crudOrFormRef: any) {
             dataIndex: "version",
             search: true,
             commonRules: [{ required: true, message: "版本必填" }],
-            validateTrigger: "blur",
+            validateTrigger: "blur-sm",
             help: "填写不带V字符",
             openPrepend: true
         },
@@ -103,7 +103,7 @@ export default function (crudOrFormRef: any) {
             dataIndex: "ref",
             search: true,
             commonRules: [{ required: true, message: "用户标识必填" }],
-            validateTrigger: "blur",
+            validateTrigger: "blur-sm",
             help: "客户使用的标识"
         },
         {

@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-between">
-        <div class="ma-content-block rounded-sm flex justify-between w-full p-3 bg-color">
+        <div class="ma-content-block rounded-xs flex justify-between w-full p-3 bg-color">
             <div class="pl-0 flex">
                 <a-avatar :size="75" class="hidden lg:inline-block">
                     <img src="@/assets/avatar/zhu.jpg" />

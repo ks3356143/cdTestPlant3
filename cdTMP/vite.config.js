@@ -3,6 +3,7 @@ import vue from "@vitejs/plugin-vue"
 import { resolve } from "path"
 import vueJsx from "@vitejs/plugin-vue-jsx"
 import { visualizer } from "rollup-plugin-visualizer"
+import tailwindcss from "@tailwindcss/vite"
 
 export default ({ mode }) => {
     const env = loadEnv(mode, process.cwd())
@@ -16,7 +17,8 @@ export default ({ mode }) => {
             visualizer({
                 open: true,
                 filename: "visualizer.html" // 分析图生成的文件名
-            })
+            }),
+            tailwindcss()
         ],
         resolve: {
             alias: {

@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <div class="user-header rounded-sm text-center">
+        <div class="user-header rounded-xs text-center">
             <div class="pt-6 mx-auto avatar-box top-box">
                 {{ userStore.name }}
             </div>
@@ -8,9 +8,9 @@
                 <a-tag size="large" class="mt-3 rounded-full" color="#de53ff"> 账号：{{ userStore.username }} </a-tag>
             </div>
         </div>
-        <a-layout-content class="block lg:flex lg:justify-between">
+        <div class="block lg:flex lg:justify-between">
             <div class="ma-content-block w-full lg:w-6/12 mt-3 p-4">
-                <a-tabs type="rounded">
+                <a-tabs default-active-key="info" :animation="true">
                     <a-tab-pane key="info" title="个人资料">
                         <user-infomation />
                     </a-tab-pane>
@@ -20,7 +20,7 @@
                 </a-tabs>
             </div>
             <div class="ma-content-block w-full lg:w-6/12 mt-3 p-4 ml-0 lg:ml-3">
-                <a-tabs type="rounded">
+                <a-tabs default-active-key="login-log" :animation="true">
                     <a-tab-pane key="login-log" title="登录日志" v-loading="isDataLoading">
                         <a-timeline class="pl-5 mt-3" v-if="loginLogList.length">
                             <a-timeline-item
@@ -48,7 +48,7 @@
                     </a-tab-pane>
                 </a-tabs>
             </div>
-        </a-layout-content>
+        </div>
     </div>
 </template>
 

@@ -159,7 +159,7 @@ const useCrudInit = function () {
                 { validator: validateBlank, message: "标识格式不正确" },
                 { validator: validateWindowFileNameInput }
             ],
-            validateTrigger: "blur"
+            validateTrigger: "blur-sm"
         },
         {
             title: "项目名称",

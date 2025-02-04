@@ -1,6 +1,6 @@
 <template>
     <div class="time-line-container">
-        <div class="ma-content-block rounded-sm flex-column justify-between w-full p-3 bg-color">
+        <div class="ma-content-block rounded-xs flex-column justify-between w-full p-3 bg-color">
             <div class="title">填写的项目时间轴</div>
             <a-timeline direction="horizontal" class="timeline" mode="alternate">
                 <a-timeline-item :label="pInfo.time_line.start_time">

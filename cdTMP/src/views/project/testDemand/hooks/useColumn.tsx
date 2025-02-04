@@ -25,7 +25,7 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
             editDefaultValue: "用例标识自动生成，结构为YL_IO_XXXX_001",
             editDisabled: true,
             search: true,
-            validateTrigger: "blur"
+            validateTrigger: "blur-sm"
         },
         {
             title: "名称",
@@ -33,7 +33,7 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
             align: "center",
             search: true,
             commonRules: [{ required: true, message: "名称是必填" }],
-            validateTrigger: "blur"
+            validateTrigger: "blur-sm"
         },
         {
             title: "是否通过",

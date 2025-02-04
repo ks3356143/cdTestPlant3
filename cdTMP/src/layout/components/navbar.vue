@@ -11,7 +11,11 @@
                     :style="{ margin: 0, fontSize: '18px' }"
                     :heading="5"
                 >
-                    测试管理平台
+                    <div
+                        class="font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600"
+                    >
+                        测试管理平台
+                    </div>
                 </a-typography-title>
                 <a-typography-title :heading="6" class="version">V0.0.4</a-typography-title>
                 <icon-menu-fold
@@ -23,8 +27,14 @@
         </div>
         <div class="center-side flex items-center justify-center font-bold text-lg">
             <template v-if="title">
-                <a-typography-title :style="{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }" :heading="4">
-                    项目名称：{{ $route.query.ident }}-{{ title }}
+                <a-typography-title
+                    :style="{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }"
+                    :heading="4"
+                    :ellipsis="{
+                        rows: 2
+                    }"
+                >
+                    <div>项目名称：{{ $route.query.ident }}-{{ title }}</div>
                 </a-typography-title>
             </template>
             <Menu v-if="topMenu"></Menu>

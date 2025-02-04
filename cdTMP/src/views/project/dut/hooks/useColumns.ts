@@ -9,7 +9,7 @@ export default function (crudOrFormRef: any) {
             hide: true,
             dataIndex: "id",
             commonRules: [{ required: true, message: "ID必填" }],
-            validateTrigger: "blur",
+            validateTrigger: "blur-sm",
             display: false
         },
         {
@@ -19,7 +19,7 @@ export default function (crudOrFormRef: any) {
             width: 180,
             dataIndex: "ident",
             search: true,
-            validateTrigger: "blur",
+            validateTrigger: "blur-sm",
             placeholder: "请输入文档中设计需求的标识",
             help: '若不知道则填"无"或不填',
             openPrepend: true
@@ -31,7 +31,7 @@ export default function (crudOrFormRef: any) {
             dataIndex: "name",
             search: true,
             commonRules: [{ required: true, message: "设计需求名称是必填" }],
-            validateTrigger: "blur"
+            validateTrigger: "blur-sm"
         },
         {
             title: "章节号",
@@ -51,7 +51,7 @@ export default function (crudOrFormRef: any) {
             search: true,
             dict: { name: "demandType", props: { label: "title", value: "key" }, translation: true },
             commonRules: [{ required: true, message: "需求类型是必填" }],
-            validateTrigger: "blur",
+            validateTrigger: "blur-sm",
             // 主要为了添加“接口”的4个字段
             onControl: (value) => {
                 if (value === "3") {

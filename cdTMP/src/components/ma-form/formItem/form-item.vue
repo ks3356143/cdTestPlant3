@@ -20,7 +20,7 @@
         :hide-label="props.component.hideLabel"
         :content-class="props.component.contentClass"
         :feedback="props.component.feedback"
-        :validate-trigger="props.component.validateTrigger ?? 'blur'"
+        :validate-trigger="props.component.validateTrigger ?? 'blur-sm'"
         :validate-status="props.component.validateStatus"
         :class="[props.component.customClass]"
     >

@@ -14,7 +14,7 @@
                 <slot name="customer">
                     <div
                         style="background-color: var(--color-fill-2); border: 1px dashed var(--color-fill-4)"
-                        class="rounded text-center p-7 w-full"
+                        class="rounded-sm text-center p-7 w-full"
                     >
                         <div>
                             <icon-upload class="text-5xl text-gray-400" />

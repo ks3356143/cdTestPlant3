@@ -46,7 +46,7 @@
                 <template #upload-button>
                     <slot name="customer">
                         <div
-                            :class="'upload-skin ' + (config.rounded ? 'rounded-full' : 'rounded-sm')"
+                            :class="'upload-skin ' + (config.rounded ? 'rounded-full' : 'rounded-xs')"
                             v-if="!props.modelValue || config.multiple"
                         >
                             <div class="icon text-3xl">

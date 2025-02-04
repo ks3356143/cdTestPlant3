@@ -17,7 +17,7 @@ export default function (crudOrFormRef: any) {
             sortable: { sortDirections: ["ascend"] },
             align: "center",
             search: true,
-            validateTrigger: "blur",
+            validateTrigger: "blur-sm",
             placeholder: "请填写测试项的标识，注意标识不能重复",
             commonRules: [{ required: true, message: "测试项标识必填" }],
             openPrepend: true
@@ -29,7 +29,7 @@ export default function (crudOrFormRef: any) {
             align: "center",
             search: true,
             commonRules: [{ required: true, message: "名称是必填" }],
-            validateTrigger: "blur"
+            validateTrigger: "blur-sm"
         },
         {
             title: "优先级",

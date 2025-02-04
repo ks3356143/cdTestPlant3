@@ -8,7 +8,7 @@
                     <img src="@/assets/img/wxwx-logo.svg" width="45" /><span>{{ $title }}</span>
                 </div>
                 <div class="slogan flex justify-end">
-                    <span>---- 为测评服务，打造测评高地</span>
+                    <span class="font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">---- 为测评服务，打造测评高地</span>
                 </div>
             </div>
 
@@ -193,6 +193,7 @@ const handleSubmit = async ({ values, errors }) => {
 
     .logo {
         display: flex;
+        align-items: center;
         margin-top: 20px;
         color: #333;
         perspective: 100px;

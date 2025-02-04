@@ -14,7 +14,7 @@
                 :title="props.component.title"
                 :disabled="props.component.disabled"
                 :icon="props.component.icon"
-                :rounded="props.component.rounded"
+                :rounded="props.component.rounded-sm"
                 :multiple="props.component.multiple"
                 :draggable="props.component.draggable"
                 :size="props.component.size"

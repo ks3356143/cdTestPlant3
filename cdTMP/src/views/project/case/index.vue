@@ -226,7 +226,7 @@ const crudColumns = ref([
         search: true,
         dataIndex: "name",
         commonRules: [{ required: true, message: "名称是必填" }],
-        validateTrigger: "blur"
+        validateTrigger: "blur-sm"
     },
     {
         title: "问题标识",
@@ -238,7 +238,7 @@ const crudColumns = ref([
         editDisabled: true,
         addDisabled: true,
         addDefaultValue: `${route.query.ident}`,
-        validateTrigger: "blur"
+        validateTrigger: "blur-sm"
     },
     {
         title: "缺陷状态",

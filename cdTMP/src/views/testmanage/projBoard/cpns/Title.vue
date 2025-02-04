@@ -1,6 +1,6 @@
 <template>
     <div class="title-container">
-        <div class="ma-content-block rounded-sm flex-col justify-between w-full p-3 bg-color">
+        <div class="ma-content-block rounded-xs flex-col justify-between w-full p-3 bg-color">
             <page-header :data="headerData"></page-header>
             <div class="title">基本信息</div>
             <div class="item-container">

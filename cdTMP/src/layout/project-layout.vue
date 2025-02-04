@@ -7,18 +7,20 @@
             <a-layout class="layout layout-demo">
                 <a-layout-sider class="layout-sider">
                     <div class="p-2 overflow-auto myhcalc">
-                        <a-input-group class="mb-2 w-full flex items-center h-1/12" size="mini">
+                        <a-input-group class="mb-2 w-full flex items-center" size="mini">
                             <a-input style="height: 32px" v-model="searchKey" allow-clear></a-input>
                             <a-button @click="handleSearchTreeDataClick">搜索</a-button>
                         </a-input-group>
-                        <a-button type="primary" @click="toggleExpanded" class="mb-1">
-                            {{ expandedKeys?.length ? "全部收缩" : "全部展开" }}
-                        </a-button>
-                        <a-popconfirm type="warning" @ok="handleCopyNode" content="是否确定根据选中节点进行创建？">
-                            <a-button type="outline" status="warning" class="ml-1">
-                                <template #icon> <icon-plus /></template>点击复制创建轮次
+                        <div class="flex justify-between mb-2">
+                            <a-button type="primary" @click="toggleExpanded" class="w-5/12">
+                                {{ expandedKeys?.length ? "全部收缩" : "全部展开" }}
                             </a-button>
-                        </a-popconfirm>
+                            <a-popconfirm type="warning" @ok="handleCopyNode" content="是否确定根据选中节点进行创建？">
+                                <a-button type="outline" status="warning">
+                                    <template #icon> <icon-plus /></template>点击复制创建轮次
+                                </a-button>
+                            </a-popconfirm>
+                        </div>
                         <a-tree
                             class="h-10/12 select-none my-arco-wrap-class"
                             :data="treeData"
