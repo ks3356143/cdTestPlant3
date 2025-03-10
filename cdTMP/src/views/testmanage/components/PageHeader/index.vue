@@ -10,6 +10,8 @@
                 <span>{{ props.data.name }}</span>
                 <span class="text-base ml-3 text-red-950" v-if="!props.data.step">所属文档片段</span>
                 <a-tag color="red" size="small" v-else>{{ props.data.step }}</a-tag>
+                <!-- 提示插槽：位置在页头最右侧 -->
+                <slot></slot>
             </a-space>
         </template>
     </a-page-header>

@@ -9,7 +9,7 @@
             :on-before-cancel="handleClickConfirmButton"
         >
             <template #title>正在生成{{ text }}</template>
-            <div><a-progress :percent="percent" size="large" /></div>
+            <div><a-progress :percent="percent" size="large" :show-text="false" /></div>
         </a-modal>
     </div>
 </template>
@@ -17,7 +17,6 @@
 <script setup>
 import { ref, watch, onUnmounted } from "vue"
 import { Notification } from "@arco-design/web-vue"
-import seitaiGenerateApi from "@/api/generate/seitaiGenerate"
 const emits = defineEmits(["clickConfirm"])
 const props = defineProps({
     visible: {
@@ -46,25 +45,32 @@ const handleClickConfirmButton = async () => {
     })
     return false
 }
+
+// 使用requestAnimationFrame优化性能 - 放入下面进度条中
+let animateFrame = null
+const updateProgress = () => {
+    if (percent.value <= 0.95) {
+        percent.value += 0.00018
+        animateFrame = requestAnimationFrame(updateProgress)
+    }
+}
+const cancelAnimateFrame = () => {
+    if (animateFrame) {
+        cancelAnimationFrame(animateFrame)
+        animateFrame = null
+    }
+}
+
 // 打开modal后自动移动
-let timer = null
 watch(
     () => props.visible,
     (newVal, oldVal) => {
         if (newVal) {
             percent.value = 0
-            timer = setInterval(() => {
-                if (percent.value <= 0.95) {
-                    let temp = parseFloat(percent.value.toFixed(2))
-                    temp += 0.01
-                    percent.value = parseFloat(temp.toFixed(2))
-                }
-            }, 120)
+            animateFrame = requestAnimationFrame(updateProgress)
         } else {
-            // 进度条清零
+            cancelAnimateFrame()
             percent.value = 0
-            clearInterval(timer)
-            timer = null
         }
     }
 )
@@ -74,15 +80,13 @@ watch(
     (newVal, oldVal) => {
         if (newVal) {
             percent.value = 1
-            clearInterval(timer)
-            timer = null
+            cancelAnimateFrame()
         }
     }
 )
 onUnmounted(() => {
-    clearInterval(timer)
-    timer = null
     // 进度条清零
+    cancelAnimateFrame()
     percent.value = 0
 })
 </script>

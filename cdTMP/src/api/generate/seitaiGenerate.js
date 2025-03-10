@@ -8,7 +8,8 @@ export default {
         return request({
             url: `/create/dgDocument`,
             method: "get",
-            params
+            params,
+            responseType: "blob"
         })
     },
     /**
@@ -19,7 +20,8 @@ export default {
         return request({
             url: `/create/smDocument`,
             method: "get",
-            params
+            params,
+            responseType: "blob"
         })
     },
     /**
@@ -30,7 +32,8 @@ export default {
         return request({
             url: `/create/jlDocument`,
             method: "get",
-            params
+            params,
+            responseType: "blob"
         })
     },
     /**
@@ -41,7 +44,8 @@ export default {
         return request({
             url: `/create/bgDocument`,
             method: "get",
-            params
+            params,
+            responseType: "blob"
         })
     },
     /**
@@ -52,7 +56,8 @@ export default {
         return request({
             url: `/create/hsmDocument`,
             method: "get",
-            params
+            params,
+            responseType: "blob"
         })
     },
     /**
@@ -63,7 +68,8 @@ export default {
         return request({
             url: `/create/hjlDocument`,
             method: "get",
-            params
+            params,
+            responseType: "blob"
         })
     },
     /**
@@ -74,7 +80,8 @@ export default {
         return request({
             url: `/create/wtdDocument`,
             method: "get",
-            params
+            params,
+            responseType: "blob"
         })
     },
     /**
@@ -85,7 +92,7 @@ export default {
         return request({
             url: `/create/cancel`,
             method: "get",
-            params
+            params,
         })
     }
 }

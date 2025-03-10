@@ -373,13 +373,13 @@ const useCrudInit = function () {
         {
             formType: "input",
             title: "联系电话",
-            maxLength: 11,
+            maxLength: 25,
             dataIndex: "entrust_contact_phone",
             hide: true,
             commonRules: [
                 { required: true, message: "联系电话必填" },
                 {
-                    match: /^1[3456789]\d{9}$/,
+                    match: /^(1[3-9]\d{9})|(\d{3,4}-\d{7,8}(-\d+)?)$/,
                     message: "电话号码格式错误"
                 }
             ]
@@ -408,13 +408,13 @@ const useCrudInit = function () {
         {
             formType: "input",
             title: "联系电话",
-            maxLength: 11,
+            maxLength: 25,
             dataIndex: "dev_contact_phone",
             hide: true,
             commonRules: [
                 { required: true, message: "联系电话必填" },
                 {
-                    match: /^1[3456789]\d{9}$/,
+                    match: /^(1[3-9]\d{9})|(\d{3,4}-\d{7,8}(-\d+)?)$/,
                     message: "电话号码格式错误"
                 }
             ]
@@ -448,11 +448,11 @@ const useCrudInit = function () {
             dataIndex: "test_contact_phone",
             addDefaultValue: textInfo.testUnintContactPhoneNumber,
             hide: true,
-            maxLength: 11,
+            maxLength: 25,
             commonRules: [
                 { required: true, message: "联系电话必填" },
                 {
-                    match: /^1[3456789]\d{9}$/,
+                    match: /^(1[3-9]\d{9})|(\d{3,4}-\d{7,8}(-\d+)?)$/,
                     message: "电话号码格式错误"
                 }
             ]
