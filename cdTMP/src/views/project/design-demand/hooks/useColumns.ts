@@ -86,6 +86,14 @@ export default function (crudOrFormRef: any) {
                 "测试用例覆盖XX子项名称1、XX子项名称2、XX子项名称3子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。"
         },
         {
+            title: "测试项描述",
+            hide: true,
+            dataIndex: "testDesciption",
+            formType: "textarea",
+            maxLength: 256,
+            placeholder: "FPGA-老版本需填写!!!"
+        },
+        {
             title: "测试子项",
             hide: true,
             dataIndex: "testContent",
@@ -111,8 +119,8 @@ export default function (crudOrFormRef: any) {
                     title: "子项描述",
                     dataIndex: "subDesc",
                     formType: "textarea",
-                    placeholder: "对应大纲测试项表格的测试项描述",
-                    rules: [{ required: true, message: "测试子项描述必填" }]
+                    placeholder: "对应大纲测试项表格的测试项描述，FPGA-老模版不用填写!!!"
+                    // rules: [{ required: true, message: "测试子项描述必填" }]
                 },
                 {
                     title: "条件",

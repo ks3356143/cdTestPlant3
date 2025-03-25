@@ -38,6 +38,18 @@
             >
                 <template #extra>
                     <a-space>
+                        <!-- 修改源码：添加向上和向下 -->
+                        <a-tooltip content="向上移动" v-if="!(props.component.hideAdd ?? false)">
+                            <a-button @click.stop="moveUp(itemIndex)" type="primary" size="small" shape="round">
+                                <template #icon><icon-arrow-rise /></template>
+                            </a-button>
+                        </a-tooltip>
+                        <a-tooltip content="向下移动" v-if="!(props.component.hideAdd ?? false)">
+                            <a-button @click.stop="moveDown(itemIndex)" type="primary" size="small" shape="round">
+                                <template #icon><icon-arrow-fall /></template>
+                            </a-button>
+                        </a-tooltip>
+                        <icon-oblique-line />
                         <!-- 修改源码：新增复制该项新增 -->
                         <a-tooltip content="复制该项添加" v-if="!(props.component.hideAdd ?? false)">
                             <a-button
@@ -136,7 +148,7 @@
                                 </td>
                                 <template v-for="component in viewFormList[index]">
                                     <td class="arco-table-td">
-                                        {{ (component.hideLabel = true ? "" : "") }}
+                                        {{ component.hideLabel = true ? "" : "" }}
                                         <span class="arco-table-cell">
                                             <component
                                                 v-if="!containerItems.includes(component.formType)"
@@ -218,10 +230,37 @@ if (props.component.type == "table") {
     })
 }
 
+// 辅助函数：交换数组两个元素
+function swapItems(idx1, idx2) {
+    const arr = formModel.value[props.component.dataIndex]
+    ;[arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]]
+}
+
+// 修改源码上移动和下移动
+const moveUp = (itemIndex) => {
+    const itemLength = formModel.value[props.component.dataIndex].length
+    // 如果是第一个，不做操作
+    if (itemIndex === 0) {
+        return
+    }
+    // 进行移动
+    swapItems(itemIndex, itemIndex - 1)
+}
+
+const moveDown = (itemIndex) => {
+    const itemLength = formModel.value[props.component.dataIndex].length
+    // 如果是最后一个，不做操作
+    if (itemIndex === itemLength - 1) {
+        return
+    }
+    // 进行移动
+    swapItems(itemIndex, itemIndex + 1)
+}
+
 const addItem = async (data = {}) => {
     // 修改源码：深度复制
     let newData = cloneDeep(data)
-    let index = formModel.value[props.component.dataIndex].length
+    let index = formModel.value[props.component.dataIndex].length // 当前子项列表长度
     viewFormList.value[index] = cloneDeep(formList)
     rv("onAdd", { formList: viewFormList.value[index], newData, index }) // 修改源码：深度复制data->newData
     formModel.value[props.component.dataIndex].push(newData) // 修改源码：深度复制data->newData

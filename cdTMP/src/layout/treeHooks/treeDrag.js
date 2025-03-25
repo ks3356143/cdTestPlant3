@@ -22,7 +22,7 @@ export default function useTreeDrag(projectId, routeViewRef) {
     const ondrop = ({ e, dragNode, dropNode, dropPosition }) => {
         const data = treeData.value // 1.这是整体的树数据
         // 提示用户只能拖拽用例节点
-        if (dragNode.level === "3") {
+        if (dragNode.level !== "4") {
             Message.warning("只能拖拽用例节点")
             return
         }
@@ -59,7 +59,7 @@ export default function useTreeDrag(projectId, routeViewRef) {
             }
         }
     }
-    // a-tree是否允许拖拽节点
+    // a-tree拖拽时是否允许在某级别节点上释放：目前支持在测试项节点、测试用例节点释放
     const allowdrop = (options) => {
         if (options.dropNode.level === "4" || options.dropNode.level === "3") {
             return true
