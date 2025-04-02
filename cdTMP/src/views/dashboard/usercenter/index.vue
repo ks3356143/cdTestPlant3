@@ -105,4 +105,7 @@ defineOptions({
 .top-box {
     font-size: 2rem;
 }
+:deep(.arco-form-item) {
+    margin-bottom: 20px; /* 覆盖默认样式 */
+}
 </style>

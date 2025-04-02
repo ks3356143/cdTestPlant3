@@ -24,6 +24,7 @@ app.use(ArcoVueIcon)
 app.use(router)
 app.use(pinia)
 app.use(globalComponents)
+
 // 使用服务端请求数据管理库
 import { VueQueryPlugin } from "@tanstack/vue-query"
 app.use(VueQueryPlugin)

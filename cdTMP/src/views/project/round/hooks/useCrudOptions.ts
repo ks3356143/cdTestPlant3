@@ -54,7 +54,6 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         },
         operationWidth: 500,
         showIndex: false,
-        showTools: false,
         rowSelection: { showCheckedAll: true },
         searchColNumber: 3,
         tablePagination: false,

@@ -2,6 +2,7 @@ import { ref } from "vue"
 import { validateBlank, validateWindowFileNameInput } from "@/utils/extensions/arcoValidator"
 import textInfo from "@/config/textInfo"
 import projectApi from "@/api/testmanage/project"
+import dictApi from "@/api/system/dict"
 
 const useCrudInit = function () {
     const crudRef = ref()
@@ -16,7 +17,6 @@ const useCrudInit = function () {
         operationColumn: true,
         operationWidth: 500,
         showIndex: false,
-        showTools: false,
         operationColumnWidth: 280, // 操作列宽度
         operationColumnAlign: "center", // 操作列对齐方式
         afterDelete(response: any) {
@@ -225,6 +225,14 @@ const useCrudInit = function () {
             hide: true,
             search: false,
             formType: "select",
+            allowCreate: true,
+            createInfo: {
+                title: "运行环境"
+            },
+            onCreate: async (value: any) => {
+                await dictApi.createDictItemFast({ code: "runtime", title: value })
+                return "runtime"
+            },
             dict: { name: "runtime", props: { label: "title", value: "key" } }
         },
         {
@@ -233,6 +241,8 @@ const useCrudInit = function () {
             hide: true,
             search: true,
             formType: "select",
+            // 多选最大标签数量
+            maxTagCount: 7,
             multiple: true,
             dict: { url: "system/user/list", props: { label: "name", value: "name" }, translation: true },
             commonRules: [{ required: true, message: "成员至少选择一个" }]
@@ -261,12 +271,24 @@ const useCrudInit = function () {
             search: false,
             formType: "select",
             allowCreate: true,
+            createInfo: {
+                title: "开发环境"
+            },
+            onCreate: async (value: any) => {
+                await dictApi.createDictItemFast({ code: "devplant", title: value })
+                return "devplant"
+            },
             dict: { name: "devplant", props: { label: "title", value: "key" } }
         },
         {
             title: "缩略语",
             dataIndex: "abbreviation",
             hide: true,
+            // 快速新增缩略语内容
+            allowAbbrNew: true,
+            abbrNewInfo: {
+                title: "新增缩略语"
+            },
             search: false,
             formType: "select",
             multiple: true,
@@ -339,6 +361,7 @@ const useCrudInit = function () {
             title: "编程语言",
             dataIndex: "language",
             addDefaultValue: ["1"],
+            maxTagCount: 4,
             commonRules: [{ required: true, message: "请至少选择一个" }],
             hide: true,
             formType: "select",
@@ -349,16 +372,27 @@ const useCrudInit = function () {
             title: "依据标准",
             dataIndex: "standard",
             addDefaultValue: ["1", "2", "3", "4", "9"],
+            maxTagCount: 20,
             commonRules: [{ required: true, message: "请至少选择一个" }],
             hide: true,
             multiple: true,
             formType: "select",
-            dict: { name: "standard", props: { label: "title", value: "key" } }
+            dict: { name: "standard", props: { label: "title", value: "key" } },
+            // 新增select选项
+            allowStd: true,
+            stdInfo: {
+                title: "新增标准"
+            }
         },
         {
             title: "单位",
             dataIndex: "entrust_unit",
             hide: true,
+            // 快速新增单位内容
+            allowNew: true,
+            newInfo: {
+                title: "新增单位信息"
+            },
             commonRules: [{ required: true, message: "单位必选" }],
             formType: "select",
             dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true }
@@ -393,6 +427,11 @@ const useCrudInit = function () {
         {
             title: "单位",
             dataIndex: "dev_unit",
+            // 快速新增单位内容
+            allowNew: true,
+            newInfo: {
+                title: "新增单位信息"
+            },
             hide: true,
             commonRules: [{ required: true, message: "单位必选" }],
             formType: "select",
@@ -429,6 +468,11 @@ const useCrudInit = function () {
             title: "单位",
             dataIndex: "test_unit",
             hide: true,
+            // 快速新增单位内容
+            allowNew: true,
+            newInfo: {
+                title: "新增单位信息"
+            },
             addDefaultValue: textInfo.testUnitAddDefaultText,
             commonRules: [{ required: true, message: "单位必选" }],
             formType: "select",

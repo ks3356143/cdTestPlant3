@@ -29,7 +29,6 @@ const crudOptions = reactive({
     api: operationApi.getOperationsLogs,
     showIndex: false,
     pageLayout: "fixed",
-    showTools: false,
     tablePagination: false,
     bordered: { wrapper: true, cell: true },
     afterDelete(response) {

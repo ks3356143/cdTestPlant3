@@ -11,7 +11,7 @@
                 :allow-clear="props.component.allowClear ?? true"
                 :disabled="props.component.disabled"
                 :readonly="props.component.readonly"
-                :auto-size="props.component.autoSize"
+                :auto-size="props.component.autoSize || true"
                 :error="props.component.error"
                 :placeholder="props.component.placeholder ?? `请输入${props.component.title}`"
                 :max-length="props.component.maxLength"

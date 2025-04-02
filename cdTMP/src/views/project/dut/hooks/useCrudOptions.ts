@@ -68,7 +68,6 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         formOption: {
             width: 1200
         },
-        showTools: false
     })
     return crudOptions
 }

@@ -98,7 +98,6 @@ const useCrudOption = () => {
         afterDelete(response: any) {
             crudRef.value.tableRef.selectAll(false)
         },
-        showTools: false,
         operationColumn: true,
         operationColumnWidth: 180,
         operationColumnAlign: "center",

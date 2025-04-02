@@ -109,7 +109,7 @@
     </div>
 </template>
 
-<script lang="jsx" setup>
+<script setup lang="jsx">
 import { ref } from "vue"
 import { useRouter } from "vue-router"
 import preview from "./cpns/preview.vue"

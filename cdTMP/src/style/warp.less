@@ -13,3 +13,22 @@ body {
     --border-radius-medium: 0px;
     --border-radius-large: 0px;
 }
+
+// 覆盖arco表单行间距为3px，原来为20px
+.arco-form-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+// 覆盖card组件actions的margin-top，原来为20px
+.arco-card-actions{
+    margin-top: 0px !important;
+}
+
+// 覆盖card组件，padding原来为16px
+.arco-card-body{
+    padding: 8px !important;
+}

@@ -124,7 +124,6 @@ const crudOptions = ref({
         return tableData
     },
     showIndex: false,
-    showTools: false,
     operationColumnAlign: "center",
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,

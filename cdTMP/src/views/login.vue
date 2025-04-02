@@ -8,7 +8,10 @@
                     <img src="@/assets/img/wxwx-logo.svg" width="45" /><span>{{ $title }}</span>
                 </div>
                 <div class="slogan flex justify-end">
-                    <span class="font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">---- 为测评服务，打造测评高地</span>
+                    <span
+                        class="font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600"
+                        >---- 为测评服务，打造测评高地</span
+                    >
                 </div>
             </div>
 
@@ -227,5 +230,9 @@ const handleSubmit = async ({ values, errors }) => {
     .weibo:hover {
         background: #f3ce2b;
     }
+}
+
+:deep(.arco-form-item) {
+    margin-bottom: 20px; /* 覆盖默认样式 */
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <a-layout-content class="flex flex-col lg:h-full relative w-full">
-        <div class="_crud-header flex flex-col mb-2" ref="crudHeaderRef">
+        <div class="_crud-header flex flex-col mb-1" ref="crudHeaderRef">
             <a-tabs
                 v-if="isArray(options.tabs.data) && options.tabs.data.length > 0"
                 v-model:active-key="options.tabs.defaultKey"

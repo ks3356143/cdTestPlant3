@@ -14,7 +14,6 @@ export default function useCrudRef(currentRow: Ref<{ id: number | string; name: 
         operationColumn: true,
         operationWidth: 160,
         operationColumnAlign: "center",
-        showTools: false,
         beforeAdd: (form: any) => {
             form.id = currentRow.value?.id
             return true
@@ -95,21 +94,22 @@ export default function useCrudRef(currentRow: Ref<{ id: number | string; name: 
             dataIndex: "doc_name",
             align: "center",
             search: false,
-            placeholder: "如果不是标准则不填"
+            placeholder: "不是标准则不填"
         },
         {
             title: "发布日期",
             dataIndex: "publish_date",
             align: "center",
             search: false,
-            placeholder: "如果不是标准则不填"
+            placeholder: "不是标准则不填，该文档发布日期",
+            formType: "date"
         },
         {
             title: "标准来源",
             dataIndex: "source",
             align: "center",
             search: false,
-            placeholder: "如果不是标准则不填"
+            placeholder: "不是标准则不填，文档发布机构"
         }
     ])
 

@@ -10,6 +10,7 @@
 <script lang="jsx" setup>
 import { ref } from "vue"
 import abbreviationApi from "@/api/system/abbreviation"
+import { columnsOptions } from "./columnsOptions.ts"
 
 const crudRef = ref()
 const crudOptions = ref({
@@ -29,25 +30,7 @@ const crudOptions = ref({
         crudRef.value.tableRef.selectAll(false)
     }
 })
-const crudColumns = ref([
-    { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },
-    {
-        title: "缩略语",
-        align: "center",
-        width: 200,
-        dataIndex: "title",
-        search: true,
-        commonRules: [{ required: true, message: "缩略语必填" }]
-    },
-    {
-        title: "全称",
-        align: "center",
-        dataIndex: "des",
-        search: true,
-        ellipsis: true,
-        commonRules: [{ required: true, message: "全称和描述必填" }]
-    }
-])
+const crudColumns = ref(columnsOptions)
 
 defineOptions({
     name: "abbreviation"

@@ -25,9 +25,9 @@
         </a-space>
 
         <a-alert type="warning" class="mt-2"
-            >排序：本页是指当前页排序；服务器是指后台排序，若自定义服务器排序可用
-            <a-tag>@sorterChange</a-tag> 事件来实现</a-alert
-        >
+            >排序：本页是指当前页排序，服务器是指后台排序，后台排序暂无
+            <!-- <a-tag>@sorterChange</a-tag> 事件来实现 -->
+        </a-alert>
         <a-table
             :data="allowShowColumns"
             :pagination="false"

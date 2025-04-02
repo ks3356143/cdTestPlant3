@@ -137,7 +137,6 @@ const crudOptions = ref({
         projectId: route.query.id,
         key: route.query.key
     },
-    showTools: false, // 不显示工具栏
     operationColumn: true,
     operationColumnAlign: "center", // 操作列居中
     isDbClickEdit: false, // 双击不编辑当前列

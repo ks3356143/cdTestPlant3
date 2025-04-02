@@ -53,7 +53,6 @@ const crudOptions = ref({
     api: logApi.getOperations,
     edit: { api: editClick, text: "查看操作日志信息", show: false },
     showIndex: false,
-    showTools: false,
     pageLayout: "fixed",
     tablePagination: false,
     operationColumn: true,

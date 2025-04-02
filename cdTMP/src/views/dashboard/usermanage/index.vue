@@ -51,7 +51,6 @@ const crudOptions = reactive({
     // 是否显示操作列
     operationColumn: true,
     operationWidth: 200,
-    showTools: false,
     // 设置列表数据API
     api: userApi.getPageList,
     // 设置新增接口-show为true则显示按钮

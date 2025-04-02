@@ -106,7 +106,6 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             testDemand: testDemandNumber
         },
         showIndex: false,
-        showTools: false,
         rowSelection: { showCheckedAll: true },
         searchColNumber: 3,
         tablePagination: false,

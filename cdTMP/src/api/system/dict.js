@@ -68,7 +68,7 @@ export default {
         })
     },
     /**
-     * 添加字典Item数据
+     * 添加dictItem数据
      * @returns
      */
     saveDictItem(data = {}) {
@@ -97,6 +97,28 @@ export default {
         return request({
             url: "system/dictType/realDeleteItem",
             method: "delete",
+            data
+        })
+    },
+    /**
+     * 快速新增字典项（非字典）
+     * @returns 成功或失败
+     */
+    createDictItemFast(data = {}) {
+        return request({
+            url: "system/dataDict/fastSave",
+            method: "post",
+            data
+        })
+    },
+    /**
+     * 快速新增依据标准字典项（非字典）
+     * @returns 成功或失败
+     */
+    createDictItemStdFast(data = {}) {
+        return request({
+            url: "system/dataDict/saveStdItem",
+            method: "post",
             data
         })
     }

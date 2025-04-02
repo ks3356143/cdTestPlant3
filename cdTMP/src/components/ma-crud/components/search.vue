@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <a-spin :loading="searchLoading" :tip="options.searchLoadingText" v-if="showSearch">
         <a-form
@@ -28,7 +24,7 @@
                     </a-form-item>
                 </template>
             </div>
-            <div class="text-center mt-5 w-full" v-if="searchColumns.length > 0">
+            <div class="text-center mt-2 w-full" v-if="searchColumns.length > 0">
                 <a-space size="medium">
                     <slot name="searchBeforeButtons" />
                     <slot name="searchButtons">

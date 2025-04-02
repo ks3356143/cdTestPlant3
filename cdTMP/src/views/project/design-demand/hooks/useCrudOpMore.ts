@@ -48,7 +48,6 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         add: { show: true, api: testDemandApi.save, text: "新增测试项" },
         edit: { show: true, api: testDemandApi.update, text: "修改测试项" },
         delete: { show: true, api: testDemandApi.delete },
-        showTools: false,
         beforeOpenAdd: function () {
             // 1.新增则将form的content数据变为undifined以便判断
             beforeFormContent = undefined

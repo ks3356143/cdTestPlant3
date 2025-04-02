@@ -28,7 +28,6 @@ export default function useDictCrud() {
         searchColNumber: 4,
         tablePagination: false,
         operationColumn: true,
-        showTools: false,
         afterDelete() {
             crudRef.value.tableRef.selectAll(false)
         }
