@@ -26,7 +26,7 @@
                 <div class="text-center leading-[32px]">管理平台版本:</div>
             </div>
             <div class="mt-2 leading-[32px]">
-                <a-tag class="w-fit h-[32px]" color="#0fc6c2">TestPlant V0.0.4</a-tag>
+                <a-tag class="w-fit h-[32px]" color="#0fc6c2">TestPlant v{{ $version }}</a-tag>
             </div>
         </div>
     </div>

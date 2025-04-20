@@ -379,9 +379,4 @@ const refresh = () => {
 defineExpose({ deleteAction, recoveryAction })
 </script>
 
-<style scoped>
-:deep(.arco-image-img) {
-    object-fit: contain;
-    background-color: var(--color-fill-4);
-}
-</style>
+<style scoped></style>

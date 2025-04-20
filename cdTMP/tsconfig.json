@@ -44,7 +44,7 @@
             "ES2015"
         ],
         "types": [
-            "vite/client"
+            "vite/client",
         ]
     },
     "include": [

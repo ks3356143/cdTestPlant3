@@ -41,12 +41,28 @@ function createService() {
             return res.data
         },
         (error) => {
-            const err = (text) => {
-                Message.error({
-                    content:
+            const err = async (text) => {
+                let content = ""
+                // 在设置axios为responseType: "blob"时候，data为Blob对象，需要解析Blob
+                if (error.response && error.response.data instanceof Blob) {
+                    try {
+                        const text = await error.response.data.text()
+                        content = JSON.parse(text).message && JSON.parse(text).message
+                        if (!content) {
+                            content = "未知Blob错误"
+                        }
+                    } catch (e) {
+                        Message.error("解析Blob失败")
+                    }
+                } else {
+                    // 非Blob正常错误响应
+                    content =
                         error.response && error.response.data && error.response.data.message
                             ? error.response.data.message
-                            : text,
+                            : text
+                }
+                Message.error({
+                    content,
                     icon: () => h(IconFaceFrownFill)
                 })
             }
@@ -57,6 +73,9 @@ function createService() {
                         break
                     case 500:
                         err("服务器内部错误")
+                        break
+                    case 400:
+                        err("服务器抛出逻辑错误")
                         break
                     case 401:
                         err("登录状态已过期，需要重新登录")

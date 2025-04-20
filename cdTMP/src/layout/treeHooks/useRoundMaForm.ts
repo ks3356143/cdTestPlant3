@@ -49,11 +49,6 @@ export default function useRoundMaForm(projectId: Ref<string>, handleSoDutExists
                                     ]
                                 },
                                 {
-                                    title: "速度等级",
-                                    dataIndex: "speedGrade",
-                                    placeholder: "请填入速度等级"
-                                },
-                                {
                                     title: "动态地点",
                                     dataIndex: "location",
                                     placeholder: "请填入测试地点",
@@ -83,11 +78,6 @@ export default function useRoundMaForm(projectId: Ref<string>, handleSoDutExists
                                     ]
                                 },
                                 {
-                                    title: "封装",
-                                    dataIndex: "package",
-                                    placeholder: "请填入封装"
-                                },
-                                {
                                     title: "质量等级",
                                     dataIndex: "grade",
                                     formType: "select",
@@ -100,6 +90,7 @@ export default function useRoundMaForm(projectId: Ref<string>, handleSoDutExists
                                         ]
                                     },
                                     placeholder: "请填入质量等级",
+                                    addDefaultValue: "1",
                                     rules: [{ required: true, message: "质量等级必填" }]
                                 }
                             ]
@@ -110,7 +101,7 @@ export default function useRoundMaForm(projectId: Ref<string>, handleSoDutExists
         },
         {
             formType: "card",
-            title: "极端工况信息",
+            title: "极端工况信息(FPGA)",
             customClass: ["mb-2", "pb-0"],
             bodyStyle: { paddingBottom: 0 },
             formList: [

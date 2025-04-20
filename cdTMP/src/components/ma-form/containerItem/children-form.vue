@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <a-form-item
         v-if="typeof props.component.display == 'undefined' || props.component.display === true"
@@ -236,7 +232,7 @@ function swapItems(idx1, idx2) {
     ;[arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]]
 }
 
-// 修改源码上移动和下移动
+// 修改源码：上移动和下移动
 const moveUp = (itemIndex) => {
     const itemLength = formModel.value[props.component.dataIndex].length
     // 如果是第一个，不做操作
@@ -290,9 +286,15 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="less">
 :deep(.arco-form-item-content-flex) {
     display: block;
+    position: relative;
+    .arco-radio-group {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-40%);
+    }
 }
 :deep(.arco-table-cell .arco-form-item) {
     margin-bottom: 0;

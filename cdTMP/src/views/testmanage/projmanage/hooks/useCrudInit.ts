@@ -10,14 +10,14 @@ const useCrudInit = function () {
         rowSelection: { showCheckedAll: true },
         api: projectApi.getPageList,
         add: { show: true, api: projectApi.save, text: "新增项目" },
-        edit: { show: true, api: projectApi.update, text: "编辑项目" }, // auth未空数组则所有都可以
+        edit: { show: true, api: projectApi.update, text: "编辑" }, // auth未空数组则所有都可以
         delete: { show: true, api: projectApi.delete },
         searchColNumber: 3,
         tablePagination: false,
         operationColumn: true,
         operationWidth: 500,
         showIndex: false,
-        operationColumnWidth: 280, // 操作列宽度
+        operationColumnWidth: 400, // 操作列宽度
         operationColumnAlign: "center", // 操作列对齐方式
         afterDelete(response: any) {
             crudRef.value.tableRef.selectAll(false)
@@ -37,17 +37,8 @@ const useCrudInit = function () {
                 {
                     formType: "grid",
                     cols: [
-                        { span: 8, formList: [{ dataIndex: "ident" }] },
-                        { span: 8, formList: [{ dataIndex: "name" }] },
-                        { span: 8, formList: [{ dataIndex: "engin_model" }] }
-                    ]
-                },
-                {
-                    formType: "grid",
-                    cols: [
-                        { span: 8, formList: [{ dataIndex: "section_system" }] },
-                        { span: 8, formList: [{ dataIndex: "sub_system" }] },
-                        { span: 8, formList: [{ dataIndex: "device" }] }
+                        { span: 4, formList: [{ dataIndex: "ident" }] },
+                        { span: 8, formList: [{ dataIndex: "name" }] }
                     ]
                 },
                 {
@@ -150,7 +141,7 @@ const useCrudInit = function () {
         {
             title: "项目标识",
             align: "center",
-            width: 90,
+            width: 80,
             sortable: { sortDirections: ["ascend"] },
             dataIndex: "ident",
             search: true,
@@ -163,28 +154,26 @@ const useCrudInit = function () {
         },
         {
             title: "项目名称",
-            width: 110,
+            width: 120,
             align: "center",
             dataIndex: "name",
             search: true,
             commonRules: [{ required: true, message: "名称是必填" }]
         },
-        { title: "工程型号", dataIndex: "engin_model", hide: true },
-        { title: "分系统", dataIndex: "section_system", hide: true },
-        { title: "子系统", dataIndex: "sub_system", hide: true },
-        { title: "设备名称", dataIndex: "device", hide: true },
         {
             title: "开始日期",
             dataIndex: "beginTime",
             align: "center",
             commonRules: [{ required: true, message: "开始时间必填" }],
-            formType: "date"
+            formType: "date",
+            width: 110
         },
         {
             title: "结束时间",
             align: "center",
             dataIndex: "endTime",
             formType: "date",
+            width: 110,
             extra: "注意：结束时间需要晚于最后一轮结束时间",
             commonRules: [
                 {
@@ -212,7 +201,7 @@ const useCrudInit = function () {
         {
             title: "责任人",
             align: "center",
-            width: 70,
+            width: 50,
             dataIndex: "duty_person",
             search: true,
             commonRules: [{ required: true, message: "责任人必选" }],
@@ -352,6 +341,7 @@ const useCrudInit = function () {
             align: "center",
             addDefaultValue: "9",
             search: true,
+            width: 70,
             commonRules: [{ required: true, message: "报告类型必填" }],
             // 字典-report_type
             formType: "radio",
@@ -371,7 +361,7 @@ const useCrudInit = function () {
         {
             title: "依据标准",
             dataIndex: "standard",
-            addDefaultValue: ["1", "2", "3", "4", "9"],
+            addDefaultValue: ["16", "2", "17", "3", "7", "4", "5", "6"],
             maxTagCount: 20,
             commonRules: [{ required: true, message: "请至少选择一个" }],
             hide: true,
@@ -510,6 +500,7 @@ const useCrudInit = function () {
         {
             title: "状态",
             align: "center",
+            width: 80,
             dataIndex: "step",
             search: true,
             formType: "radio",

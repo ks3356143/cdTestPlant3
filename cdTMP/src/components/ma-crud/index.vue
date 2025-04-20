@@ -136,9 +136,9 @@
                     <a-tooltip content="显隐搜索"
                         ><a-button shape="circle" @click="toggleSearch"><icon-search /></a-button
                     ></a-tooltip>
-                    <a-tooltip content="打印表格"
+                    <!-- <a-tooltip content="打印表格"
                         ><a-button shape="circle" @click="printTable"><icon-printer /></a-button
-                    ></a-tooltip>
+                    ></a-tooltip> -->
                     <a-tooltip content="设置"
                         ><a-button shape="circle" @click="tableSetting"><icon-settings /></a-button
                     ></a-tooltip>
@@ -809,9 +809,9 @@ const tabChange = async (value) => {
     await refresh()
 }
 
-const printTable = () => {
-    new Print(crudContentRef.value)
-}
+// const printTable = () => {
+//     new Print(crudContentRef.value)
+// }
 
 const openContextMenu = (ev, record) => {
     options.value?.contextMenu?.enabled === true && crudContextMenuRef.value.openContextMenu(ev, record)
@@ -821,9 +821,9 @@ const execContextMenuCommand = async (args) => {
     const item = args.contextItem
     const record = args.record
     switch (item.operation) {
-        case "print":
-            await printTable()
-            break
+        // case "print":
+        //     await printTable()
+        //     break
         case "refresh":
             await refresh()
             break

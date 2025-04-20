@@ -43,6 +43,7 @@ for (const path in modules) {
 app.config.globalProperties.$tool = tool
 app.config.globalProperties.$title = import.meta.env.VITE_APP_TITLE
 app.config.globalProperties.$url = import.meta.env.VITE_APP_BASE
+app.config.globalProperties.$version = packageJson.version
 app.mount("#app")
 
 // show version tag in console

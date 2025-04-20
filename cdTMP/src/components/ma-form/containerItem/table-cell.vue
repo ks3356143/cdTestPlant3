@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <td
         v-if="typeof props.component?.display == 'undefined' || props.component?.display === true"

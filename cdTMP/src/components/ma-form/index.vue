@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <div class="w-full">
         <a-spin :loading="formLoading" :tip="options.loadingText" class="w-full ma-form-spin">

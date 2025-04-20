@@ -191,7 +191,7 @@
     <!-- 关联的modal组件 -->
     <a-modal v-model:visible="modalVisible" :width="700" draggable :on-before-ok="handleCopyDemand">
         <template #title>复制到设计需求</template>
-        <div class="pb-3">选择复制到的节点:</div>
+        <div class="pb-3">选择复制到的节点（<span class="point">支持搜索</span>）:</div>
         <a-cascader
             :options="options"
             allow-search
@@ -431,5 +431,8 @@ const {
 }
 .chen-node-title {
     cursor: help;
+}
+.point {
+    color: red;
 }
 </style>

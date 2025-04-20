@@ -66,8 +66,9 @@ const useUserStore = defineStore("user", {
 
         // login函数，传一个form信息
         login(form) {
+            const form_data = { username: form.username, password: form.password }
             return loginAPI
-                .login(form)
+                .login(form_data)
                 .then((res) => {
                     if (res.success === true) {
                         this.setToken(res.data.token)

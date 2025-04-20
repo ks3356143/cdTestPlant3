@@ -341,7 +341,7 @@ const handleStdFormSubmit = async (data, done) => {
         }
         dictList.value["standard"].push(newInfo)
         // 清空当前数据
-        stdFormData.value = initStdFormData
+        stdFormData.value = { ...initStdFormData }
         Notification.success("添加成功，请回到输入框进行选择")
     } catch (err) {
         Notification.error("请求错误，请重试或在数据管理页面添加")

@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <a-drawer :visible="visible" unmountOnClose :footer="false" :width="950" @cancel="onCancel">
         <template #title>设置</template>

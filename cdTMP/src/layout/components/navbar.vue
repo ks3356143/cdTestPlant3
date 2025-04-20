@@ -17,7 +17,7 @@
                         测试管理平台
                     </div>
                 </a-typography-title>
-                <a-typography-title :heading="6" class="version">V0.0.4</a-typography-title>
+                <a-typography-title :heading="6" class="version">v{{ $version }}</a-typography-title>
                 <icon-menu-fold
                     v-if="!topMenu && appStore.device === 'mobile'"
                     style="font-size: 22px; cursor: pointer"

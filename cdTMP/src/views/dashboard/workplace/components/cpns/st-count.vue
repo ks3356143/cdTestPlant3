@@ -105,10 +105,10 @@ onMounted(async () => {
     width: 75px;
     color: #fff;
     text-align: center;
-    line-height: 65px;
     font-weight: bold;
     font-size: 1.3em;
-
-    border-radius: 2px 0 0 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

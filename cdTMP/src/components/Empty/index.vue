@@ -5,9 +5,9 @@
     </div>
 </template>
 
-<script setup>
-import { ref } from "vue"
-const text = ref("暂无数据")
+<script setup lang="ts">
+// 标准vue3.5+的默认值写法、结构写法、ts类型写法
+const { text = "暂无数据" } = defineProps<{ text?: string }>()
 </script>
 
 <style lang="less" scoped>

@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <ma-form-item
         v-if="typeof props.component.display == 'undefined' || props.component.display === true"
@@ -68,7 +64,7 @@ const columns = inject("columns")
 const rv = async (ev, value = undefined) =>
     await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 const index = props.customField ?? props.component.dataIndex
-//后端传入数字类型导致报错 Invalid prop: type check failed for prop "modelValue". Expected String with value "0", got Number with value 0
+// 后端传入数字类型导致报错 Invalid prop: type check failed for prop "modelValue". Expected String with value "0", got Number with value 0
 const toVal = ref(`${get(formModel.value, index)}`)
 const value = ref()
 if (toVal.value != "undefined") {

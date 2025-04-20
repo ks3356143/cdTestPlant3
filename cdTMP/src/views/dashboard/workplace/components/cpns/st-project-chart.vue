@@ -6,7 +6,7 @@
                     <img class="w-[200px] h-[300px]" src="@/assets/img/ErrorLoad.svg" alt="" />
                 </template>
                 <template v-else>
-                    <VueUiXy :dataset="chartData" :config="chartConfig" />
+                    <VueUiXy :dataset="chartData" :config="chartConfig" :style="{ padding: '10px' }" />
                 </template>
             </div>
         </a-spin>
@@ -18,12 +18,14 @@ import commonApi from "@/api/common"
 import { VueUiXy } from "vue-data-ui"
 import useVueDataUI from "@/views/dashboard/workplace/components/cpns/hooks/vueDataUI"
 import { useQuery } from "@tanstack/vue-query"
+
 // vue-query请求图表接口
 const { isPending, data, isError } = useQuery({
     queryKey: ["chart"],
     queryFn: commonApi.getChartData,
     refetchOnWindowFocus: false
 })
+
 // vue-data-ui图表
 const { chartData, chartConfig } = useVueDataUI(data)
 </script>

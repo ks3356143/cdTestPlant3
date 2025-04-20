@@ -108,7 +108,6 @@ import { useUserStore } from "@/store"
 import { useRouter, useRoute } from "vue-router"
 import userApi from "@/api/system/user"
 const router = useRouter()
-const route = useRoute()
 const userStore = useUserStore()
 // 绑定登录form的数据
 // const form = reactive({ username: "superAdmin", password: "admin123", code: "" })

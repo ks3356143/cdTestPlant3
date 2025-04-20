@@ -157,7 +157,7 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
                 }
             ],
             formType: "children-form",
-            type: "group",
+            type: "group", // 注意这里可能改样式"group"/"table"
             formList: [
                 {
                     title: "操作",

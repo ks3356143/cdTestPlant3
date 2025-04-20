@@ -58,7 +58,7 @@ export default function (crudOrFormRef: any) {
             dict: { name: "testType", translation: true, props: { label: "title", value: "key" } },
             extra: "支持拼音搜索，例如：gn可以搜索出功能测试",
             // 这是arco的属性，所以在ma-crud和ma-form可以直接使用arco属性和事件（事件+onXXX）
-            filterOption: function (inputValue, selectedOption) {
+            filterOption: function (inputValue: any, selectedOption: any) {
                 if (inputValue) {
                     let matchRes = PinYinMatch.match(selectedOption.label, inputValue)
                     if (matchRes) {
@@ -91,7 +91,7 @@ export default function (crudOrFormRef: any) {
             dataIndex: "testDesciption",
             formType: "textarea",
             maxLength: 256,
-            placeholder: "FPGA-老版本需填写!!!"
+            placeholder: "请填写整体测试项的描述"
         },
         {
             title: "测试子项",
@@ -99,53 +99,28 @@ export default function (crudOrFormRef: any) {
             dataIndex: "testContent",
             commonRules: [{ required: true, message: "测试方法是必填的" }],
             formType: "children-form",
+            type: "group",
             formList: [
                 {
                     title: "子项名称",
                     dataIndex: "subName",
                     placeholder: "对应测试项描述标题，和测试方法的标题",
                     rules: [{ required: true, message: "测试子项名称必填" }],
-                    onChange: (ev) => {
+                    onChange: (ev: any) => {
                         // 取出子项的对象数组
                         const subItemFormData = crudOrFormRef.value.getFormData().testContent
                         // 取出充分性条件字段字符串
-                        const mapRes = subItemFormData.map((subItem) => subItem.subName)
+                        const mapRes = subItemFormData.map((subItem: any) => subItem.subName)
                         crudOrFormRef.value.getFormData().adequacy = `测试用例覆盖${mapRes.join(
                             "、"
                         )}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
                     }
                 },
                 {
-                    title: "子项描述",
-                    dataIndex: "subDesc",
-                    formType: "textarea",
-                    placeholder: "对应大纲测试项表格的测试项描述，FPGA-老模版不用填写!!!"
-                    // rules: [{ required: true, message: "测试子项描述必填" }]
+                    title: "操作与预期",
+                    dataIndex: "subStep",
+                    formType: "steptable"
                 },
-                {
-                    title: "条件",
-                    dataIndex: "condition",
-                    formType: "textarea",
-                    placeholder: "在什么环境和前置条件下"
-                },
-                {
-                    title: "操作",
-                    dataIndex: "operation",
-                    formType: "textarea",
-                    placeholder: "通过xxx操作"
-                },
-                {
-                    title: "观察",
-                    dataIndex: "observe",
-                    formType: "textarea",
-                    placeholder: "查看xxx内容"
-                },
-                {
-                    title: "期望",
-                    dataIndex: "expect",
-                    formType: "textarea",
-                    placeholder: "xxx结果正确"
-                }
             ]
         }
     ])

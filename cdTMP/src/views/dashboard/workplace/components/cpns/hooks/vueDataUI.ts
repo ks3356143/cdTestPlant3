@@ -1,4 +1,6 @@
 import { Ref, computed } from "vue"
+import { storeToRefs } from "pinia"
+import { useAppStore } from "@/store"
 
 // 单个每月项目数量对象格式
 interface IData {
@@ -11,6 +13,9 @@ interface ResData {
 }
 
 function useVueDataUI(data: Ref<ResData>) {
+    const appStore = useAppStore()
+    const { theme } = storeToRefs(appStore)
+    // 结构pinia储存的主体响应式变量
     const initialData = [
         {
             name: "项目数量",
@@ -29,8 +34,10 @@ function useVueDataUI(data: Ref<ResData>) {
         }
         return initialData
     })
+    // 暗黑模式识别(这是存在pinia的)
+    const darkMode = document.body.getAttribute("arco-theme")
     const initialConfig = {
-        theme: "",
+        theme: darkMode === "dark" ? "celebrationNight" : "",
         responsive: false,
         customPalette: [],
         downsample: { threshold: 500 },
@@ -108,7 +115,7 @@ function useVueDataUI(data: Ref<ResData>) {
                 fontSize: 18,
                 bold: true,
                 textAlign: "left",
-                paddingLeft: 0,
+                paddingLeft: 5,
                 paddingRight: 0,
                 subtitle: { color: "#CCCCCCff", text: "", fontSize: 16, bold: false },
                 show: true
@@ -168,7 +175,10 @@ function useVueDataUI(data: Ref<ResData>) {
             const countData = data.value.data.map((it) => it.count)
             initialConfig.chart.grid.labels.yAxis.scaleMax = Math.max(...countData) ? Math.max(...countData) : 10
         }
-        return initialConfig
+        return {
+            ...initialConfig,
+            theme: theme.value === "dark" ? "celebrationNight" : ""
+        }
     })
     return { chartData, chartConfig }
 }

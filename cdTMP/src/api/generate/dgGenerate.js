@@ -308,15 +308,4 @@ export default {
             params
         })
     },
-    /**
-     *
-     * @returns 生成-主要战技指标
-     */
-    createMainTech(params = {}) {
-        return request({
-            url: `/generate/create/mainTech`,
-            method: "get",
-            params
-        })
-    }
 }

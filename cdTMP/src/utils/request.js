@@ -59,6 +59,9 @@ function createService() {
                     case 500:
                         err("服务器内部错误")
                         break
+                    case 400:
+                        err("服务器抛出逻辑错误")
+                        break
                     case 401:
                         err("登录状态已过期，需要重新登录")
                         // 清楚本地localStorage
