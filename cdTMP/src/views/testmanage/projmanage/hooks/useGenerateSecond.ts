@@ -42,7 +42,7 @@ const useGenerateSecond = function () {
             dgGenerateApi.createPerformance({ id }), // 生成-被测软件性能
             dgGenerateApi.createBaseInformation({ id }), // 生成-被测软件基本信息
             dgGenerateApi.createLevelAndType({ id }), // 生成-测试级别和测试类型 -【修改】
-            dgGenerateApi.createStrategy({ id }), // 生成-测试级别和测试类型 -【新增】
+            dgGenerateApi.createStrategy({ id }), // 生成-测试策略 -【新增】
             dgGenerateApi.createYzComparison({ id }), // 生成-研总-测试项对照表
             dgGenerateApi.createXqComparison({ id }), // 生成-需求规格说明-测试项对照表
             dgGenerateApi.createFanXqComparison({ id }), // 生成-反向测试项-需求规格说明对照表
@@ -56,6 +56,8 @@ const useGenerateSecond = function () {
             dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
             dgGenerateApi.createTestData({ id }), // 生成-测评数据
             dgGenerateApi.createEnvDiff({ id }), // 生成-环境差异性分析
+            // 2025年4月21日新增
+            dgGenerateApi.createIndicates({ id }) // 生成主要功能和性能指标（包括摸底）
         ]).finally(() => {
             isGenerating.value = false
             isDgLoading.value = false

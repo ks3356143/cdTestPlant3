@@ -37,7 +37,21 @@
                     </a-list-item>
                     <a-list-item v-for="(frag, index) in fragmentList" :key="index">
                         <div class="fragment-item">
-                            <div class="fragment-name">{{ frag.name }}</div>
+                            <div class="fragment-name text-center">{{ frag.name }}</div>
+                            <a-divider direction="vertical" />
+                            <template v-if="frag.isLock">
+                                <!-- 表示已经被锁住了 -->
+                                <a-popover title="片段被锁定">
+                                    <icon-lock style="color: red" size="20" />
+                                    <template #content>
+                                        <p>文档片段已经被设置为锁定（word中开发工具>属性解锁）</p>
+                                        <p style="color: red">注意：被锁定的片段无法被平台数据覆盖!</p>
+                                    </template>
+                                </a-popover>
+                            </template>
+                            <template v-else="frag.isLock">
+                                <icon-unlock style="color: green" size="20" />
+                            </template>
                             <a-divider direction="vertical" />
                             <a-switch v-model="frag.isCover"></a-switch>
                         </div>
@@ -88,6 +102,7 @@ import useSeitaiModal from "../hooks/useSeitaiModal"
 export interface IFragmentItem {
     name: string
     isCover: boolean
+    isLock: boolean // 是否锁定
 }
 
 // ~~~~1.文档片段展示功能~~~~
@@ -114,9 +129,10 @@ const open = async (documentType: DocumentType, id: number) => {
             documentType
         })
         // 填充到fragmentList
-        fragmentList.value = data.map((it: string) => ({
-            name: it,
-            isCover: false
+        fragmentList.value = data.map((it: { frag_name: string; isLock: boolean }) => ({
+            name: it.frag_name,
+            isCover: false,
+            isLock: it.isLock // 是否锁定
         }))
         fragmentListPending.value = false
     } catch (err) {

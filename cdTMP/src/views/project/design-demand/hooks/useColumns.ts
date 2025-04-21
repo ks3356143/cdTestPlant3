@@ -73,6 +73,7 @@ export default function (crudOrFormRef: any) {
             dataIndex: "testMethod",
             formType: "select",
             multiple: true,
+            maxTagCount: 5,
             dict: { name: "testMethod", props: { label: "title", value: "key" }, translation: true }
         },
         {
@@ -120,7 +121,7 @@ export default function (crudOrFormRef: any) {
                     title: "操作与预期",
                     dataIndex: "subStep",
                     formType: "steptable"
-                },
+                }
             ]
         }
     ])

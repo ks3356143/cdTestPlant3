@@ -58,7 +58,7 @@ export default function useCrudRef(currentRow: Ref<{ id: number | string; name: 
             dataIndex: "sort",
             formType: "input-number",
             addDefaultValue: 1,
-            width: 130,
+            width: 150,
             min: 0,
             max: 1000
         },

@@ -95,12 +95,14 @@ export default function (crudOrFormRef: any) {
                         {
                             title: "接口类型",
                             dataIndex: "type",
-                            hide: true
+                            hide: true,
+                            placeholder:"请填写接口类型或协议，例如：UART"
                         },
                         {
-                            title: "接口内容",
+                            title: "接口数据",
                             dataIndex: "protocal",
-                            hide: true
+                            hide: true,
+                            placeholder:"请填写接口的交互数据，例如：XX分级数据"
                         }
                     ]
                 }

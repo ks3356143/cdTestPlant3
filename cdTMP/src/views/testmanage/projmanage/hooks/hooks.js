@@ -25,7 +25,7 @@ export default {
             window.URL.revokeObjectURL(url) // 释放 URL 对象
             // 上面是触发下载
             isComplete.value = true
-            Message.success("文档生成并下载成功!")
+            Message.success("文档生成并下载成功，请打开问题全选->F9更新其中的域!")
         } catch (err) {
             isComplete.value = true
             visible.value = false

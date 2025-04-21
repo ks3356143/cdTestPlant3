@@ -308,4 +308,15 @@ export default {
             params
         })
     },
+    /**
+     *
+     * @returns 生成-代码质量度量分析表
+     */
+    createIndicates(params = {}) {
+        return request({
+            url: `/generate/create/indicators`,
+            method: "get",
+            params
+        })
+    },
 }
