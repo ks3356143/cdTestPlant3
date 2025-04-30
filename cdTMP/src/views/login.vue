@@ -1,6 +1,8 @@
 <template>
     <div id="background" class="fixed"></div>
-    <div class="bg-backdrop-layout"></div>
+    <div class="bg-backdrop-layout">
+        <ParticlesBg class="h-full" :quantity="200" :ease="100" :color="'#000'" :staticity="10" refresh></ParticlesBg>
+    </div>
     <div class="login-container">
         <div class="login-width md:w-10/12 mx-auto flex justify-between h-full items-center">
             <div class="w-6/12 mx-auto left-panel rounded-l pl-5 pr-5 hidden md:block">
@@ -107,6 +109,8 @@ import verifyCode from "@cps/ma-verifyCode/index.vue"
 import { useUserStore } from "@/store"
 import { useRouter, useRoute } from "vue-router"
 import userApi from "@/api/system/user"
+// 导入背景ui组件
+import ParticlesBg from "@/components/ui/particles-bg/ParticlesBg.vue"
 const router = useRouter()
 const userStore = useUserStore()
 // 绑定登录form的数据
@@ -157,7 +161,6 @@ const handleSubmit = async ({ values, errors }) => {
     width: 100%;
     height: 100%;
     background-size: cover;
-    background-image: url("@/assets/BingWallpaper.jpg");
 }
 .bg-backdrop-layout {
     top: 0;
@@ -176,13 +179,14 @@ const handleSubmit = async ({ values, errors }) => {
     z-index: 3;
     .login-width {
         max-width: 950px;
-        background: #fff;
         padding: 10px;
         height: 500px;
         position: relative;
         top: 50%;
         margin-top: -255px;
         border-radius: var(--border-radius-small);
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+        backdrop-filter: blur(3px);
     }
 
     .left-panel {

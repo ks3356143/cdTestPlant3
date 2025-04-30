@@ -1,6 +1,8 @@
-import { ref } from "vue"
+import { ref, shallowRef } from "vue"
 import { useRoute } from "vue-router"
 import beiceType from "@/views/project/round/beiceType"
+// 导入自定义组件
+import UploadInput from "@/components/UploadInput/index.vue"
 
 export default function (crudOrFormRef: any) {
     // global
@@ -8,10 +10,8 @@ export default function (crudOrFormRef: any) {
     // 计算注释率计算crud/form的数据，判断
     const calcPercent = () => {
         const formData = crudOrFormRef.value.getFormData()
-        const { code_line, comment_line, mix_line, black_line } = formData
-        const total_line = +black_line + +code_line + +comment_line + +mix_line
-        const comment_total = +comment_line + +mix_line
-        formData.comment_percent = `${(comment_total / total_line).toFixed(2).toString()}%`
+        const { total_lines, comment_lines } = formData
+        formData.comment_percent = `${(comment_lines / total_lines).toFixed(2).toString()}%`
     }
     const crudColumns = ref([
         {
@@ -51,28 +51,24 @@ export default function (crudOrFormRef: any) {
                 translation: true,
                 tagColors: { XQ: "blue", SO: "green", SJ: "orangered", XY: "pinkpurple", YZ: "red" }
             },
-            onControl: (value) => {
+            onControl: (value: string) => {
                 if (value === "SO") {
                     return {
-                        black_line: { display: true },
-                        code_line: { display: true },
-                        mix_line: { display: true },
-                        comment_line: { display: true },
-                        total_code_line: { display: true },
-                        total_line: { display: true },
+                        total_lines: { display: true },
+                        effective_lines: { display: true },
+                        comment_lines: { display: true },
                         comment_percent: { display: true },
+                        upload: { display: true },
                         release_date: { display: false }
                     }
                 } else {
                     // 其他数据清除
                     return {
-                        black_line: { display: false },
-                        code_line: { display: false },
-                        mix_line: { display: false },
-                        comment_line: { display: false },
-                        total_code_line: { display: false },
-                        total_line: { display: false },
+                        total_lines: { display: false },
+                        effective_lines: { display: false },
+                        comment_lines: { display: false },
                         comment_percent: { display: false },
+                        upload: { display: false },
                         release_date: { display: true }
                     }
                 }
@@ -123,49 +119,36 @@ export default function (crudOrFormRef: any) {
             formType: "date"
         },
         {
-            title: "空行",
+            title: "总行数",
             hide: true,
             align: "center",
-            dataIndex: "black_line",
+            dataIndex: "total_lines",
             formType: "input-number",
-            commonRules: [{ required: true, message: "空行数必填" }],
+            commonRules: [{ required: true, message: "总行数必填" }],
             min: 0,
             onControl: () => {
                 calcPercent()
             }
         },
         {
-            title: "纯代码行",
+            title: "有效行数",
             hide: true,
             align: "center",
-            dataIndex: "code_line",
+            dataIndex: "effective_lines",
             formType: "input-number",
-            commonRules: [{ required: true, message: "纯代码行数必填" }],
+            commonRules: [{ required: true, message: "有效行数必填" }],
             min: 0,
             onControl: () => {
                 calcPercent()
             }
         },
         {
-            title: "纯注释行",
+            title: "注释行数",
             hide: true,
             align: "center",
-            dataIndex: "comment_line",
+            dataIndex: "comment_lines",
             formType: "input-number",
-            commonRules: [{ required: true, message: "纯注释行数必填" }],
-            min: 0,
-            onControl: () => {
-                calcPercent()
-            }
-        },
-        {
-            title: "混合行",
-            hide: true,
-            align: "center",
-            dataIndex: "mix_line",
-            formType: "input-number",
-            help: "混合行是指：代码中一行即包含代码也包含注释",
-            commonRules: [{ required: true, message: "混合行数必填" }],
+            commonRules: [{ required: true, message: "注释行数必填" }],
             min: 0,
             onControl: () => {
                 calcPercent()
@@ -180,6 +163,15 @@ export default function (crudOrFormRef: any) {
             addDisabled: true,
             editDisabled: true,
             disabled: true
+        },
+        {
+            title: "上传源代码",
+            align: "center",
+            dataIndex: "upload",
+            placeholder: "上传源代码",
+            hide: true,
+            formType: "component",
+            component: shallowRef(UploadInput)
         }
     ])
     return crudColumns

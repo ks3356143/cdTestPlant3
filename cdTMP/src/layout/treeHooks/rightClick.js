@@ -31,7 +31,11 @@ export function useRightClick(projectId, routeViewRef) {
      */
     const displayRightMenu = (e) => {
         if (e.target) {
-            const { nodekey, level, title, isLeaf } = getContextNodeInfo(e.target)
+            const context = getContextNodeInfo(e.target)
+            if (!context) {
+                return
+            }
+            const { nodekey = undefined, level, title, isLeaf } = context
             // 如果是测试项则弹出【1.根据测试项步骤生成当前测试项用例 2.复制测试项到设计需求】
             if (+level === 3) {
                 e.preventDefault()

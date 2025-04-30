@@ -144,6 +144,28 @@ export default {
         })
     },
     /**
+     * 生成-软件问题统计-2025年4月27日新增
+     * @returns
+     */
+    createProblemStatistics(params = {}) {
+        return request({
+            url: `/generateBG/create/problem_statistics`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     * 生成摸底清单-依据测试项
+     * @returns
+     */
+    createBgModiList(params = {}) {
+        return request({
+            url: `/generateBG/create/modi_list`,
+            method: "get",
+            params
+        })
+    },
+    /**
      * 删除output/bg中所有文件，防止之前数据干扰
      * @returns
      */

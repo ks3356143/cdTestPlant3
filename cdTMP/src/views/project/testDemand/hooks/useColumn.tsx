@@ -140,9 +140,20 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
         },
         {
             title: "执行时间",
+            align: "center",
             dataIndex: "exe_time",
+            formType: "date",
+            customRender: ({ record }) => {
+                // 如果不存在exe_time则显示为“没有设置”
+                return record.exe_time ? record.exe_time : <a-tag color="red">未填写</a-tag>
+            }
+        },
+        {
+            title: "时序图(cpu不填写此字段)",
             hide: true,
-            formType: "date"
+            dataIndex: "timing_diagram",
+            addDefaultValue: "",
+            formType: "editor"
         },
         {
             title: "测试步骤",

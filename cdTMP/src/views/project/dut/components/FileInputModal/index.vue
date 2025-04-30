@@ -3,7 +3,7 @@
         <a-modal
             v-model:visible="modalVisible"
             width="80%"
-            title="设计需求批量写入"
+            title="批量导入设计需求"
             :unmount-on-close="true"
             :mask-closable="false"
             ok-text="录入"
@@ -11,20 +11,30 @@
             :on-before-ok="handleModalSubmit"
         >
             <div class="uploadContainer">
-                <span :style="{ marginBottom: '10px', flex: '0 1 160px' }">上传设计需求.docx:</span>
+                <span :style="{ marginBottom: '10px', flex: '0 1 150px' }">上传需求.docx:</span>
                 <a-upload
                     :style="{ marginBottom: '10px' }"
-                    :custom-request="handleRquest"
                     :limit="1"
                     accept=".docx"
+                    :action="`/api/dut_upload/upload_xq_docx/?parseChapter=${parseChapter}`"
                     @change="handleUploadChange"
+                    @success="handleUploadSuccess"
+                    @error="handleUploadError"
+                    :disabled="parseChapter.trim() === ''"
                 ></a-upload>
             </div>
+            <div class="flex items-center gap-3">
+                <span class="w-[350px]">要解析的章节名称：</span>
+                <a-input placeholder="输入要解析的章节名称" v-model="parseChapter"></a-input>
+                <span class="w-[350px]">选择需求录入类型：</span>
+                <a-select allow-search v-model="selectValue">
+                    <a-option v-for="item in demandType" :key="item.key" :value="item.key">{{ item.title }}</a-option>
+                </a-select>
+            </div>
             <a-alert :style="{ margin: '10px 0' }" type="warning">
-                请去除需求规格说明文件中不必要的部分再来此处解析，注意：本系统不支持word中emf格式图片，如果使用了visio等图片请<span
-                    class="important-text"
-                    >在word变为普通图片上传</span
-                >
+                只能上传.docx，<span class="important-text">如果有visio图请替换为普通图片上传</span
+                >，请在需求规格说明文档中操作 ->
+                <span class="important-text">引用 -> 目录 -> 自定义目录 -> 显示级别改为6</span>以上保存后上传
             </a-alert>
             <div class="operation-container">
                 <span :style="{ marginRight: '10px', fontWeight: 700 }">操作按钮:</span>
@@ -109,104 +119,39 @@
 </template>
 
 <script setup>
-import { ref, nextTick, watch } from "vue"
-import mammoth from "mammoth"
+import { ref, watch } from "vue"
 import dictApi from "@/api/system/dict"
 import demandApi from "@/api/project/designDemand"
-import { useRoute, useRouter } from "vue-router"
-import { parseHtmlStringByDemandDut } from "@/views/project/dut/tools/parseHtmlString"
-import { HtmlParser } from "@/views/project/dut/tools/parser"
+import { useRoute } from "vue-router"
 import { useTreeDataStore } from "@/store"
-// 其他初始化数据
-const route = useRoute()
-const router = useRouter()
-const treeDataStore = useTreeDataStore()
-// ~导入editor组件~tinymce
 import MaEditor from "@/components/ma-editor/index.vue"
 import { Message } from "@arco-design/web-vue"
-// 单个设计需求录入模版
-const templateDemandObj = {
-    chapter: "",
-    title: "",
-    ident: "",
-    demandType: "",
-    content: ""
-}
-// 先请求设计需求的dict，然后给demandType选项
+import useUpload from "./useUpload"
+import useListOperaton from "./useListOperation"
+// 定义录入完毕的事件，给父组件刷新表格
+const emit = defineEmits(["enterFinish"])
+// 其他初始化数据
+const route = useRoute()
+const treeDataStore = useTreeDataStore()
+// ~~~刚开始就加载字典数据，给选择框使用~~~
 let demandType = []
 const getDictDemandType = async function () {
     const res = await dictApi.getDictByCode({ code: "demandType" })
     demandType = res.data
 }
 getDictDemandType()
-// 弹窗显示
+// 弹窗显示ref
 const modalVisible = ref(false)
-// 全部html数据-循环创建折叠项
+// 全部html数据-给a-list展示
 const htmlData = ref([])
-// 数据变化spin显示
-const loading = ref(false)
-// 当upload组件发生变化时候
-const handleUploadChange = (files) => {
-    files.length ? (files.length = 1) : (htmlData.value = [])
-}
-// 上传行为函数
-const handleRquest = function (options) {
-    const { onProgress, onError, onSuccess, fileItem } = options
-    onProgress(0.1)
-    // 让spin组件先转圈
-    loading.value = true
-    // 让Empty组件不显示
-    htmlData.value.push(templateDemandObj)
-    // 获取文件
-    let reader = new FileReader()
-    reader.readAsArrayBuffer(fileItem.file)
-    reader.onload = function (loadEvent) {
-        let arrayBuffer = loadEvent.target.result
-        mammoth
-            .convertToHtml({ arrayBuffer: arrayBuffer })
-            .then((res) => {
-                // 已经上传到浏览器了，需要解析为列表
-                onSuccess(1)
-                const rawHtml = res.value
-                const parser = new HtmlParser(rawHtml)
-                const finalData = parser.parseToArray()
-                htmlData.value = finalData
-                // ~~~~使用nextTick：等待DOM更新完成~~~~
-                nextTick(() => {
-                    loading.value = false
-                })
-            })
-            .catch(function (error) {
-                console.log("处理错误导致失败，请检查前端代码")
-                console.log("错误如下：", error)
-                onError(error)
-            })
-    }
-}
-// 上方按钮：直接在最下新增一条
-const handleCreateAtLatest = () => {
-    const newDemand = JSON.parse(JSON.stringify(templateDemandObj))
-    htmlData.value.push(newDemand)
-}
-// 上方按钮：重置数据，点击页面不卡段
-const handleResetData = () => {
-    htmlData.value = []
-}
-// 点击单条右侧按钮：下方新增 - 深拷贝,并插入到下方
-const handledownCreate = (index) => {
-    const newDemand = JSON.parse(JSON.stringify(templateDemandObj))
-    htmlData.value.splice(index + 1, 0, newDemand)
-}
-// 因为a-list限制必须知道当前页码和页容量
-const currentPage = ref(1)
-const handlePageChange = (page) => {
-    currentPage.value = page
-}
-// 点击单条右侧按钮：删除 - 需要根据currentPage动态觉得因为a-list每页都是这样计算的
-const handleDelete = (index) => {
-    const currentIndex = index + (currentPage.value - 1) * 15
-    htmlData.value.splice(currentIndex, 1)
-}
+
+// ~~~~1.list~~~~
+const { loading, handleCreateAtLatest, handleResetData, handledownCreate, handlePageChange, handleDelete } =
+    useListOperaton(htmlData)
+
+// ~~~~2.upload~~~~
+const { handleUploadSuccess, handleUploadError, parseChapter, selectValue } = useUpload(htmlData)
+
 // 打开弹窗并初始化form数据
 const open = function () {
     // 打开时候传入对象可初始化from
@@ -234,11 +179,19 @@ const handleModalSubmit = async () => {
     })
     if (res.code === 200) {
         treeDataStore.updateDesignDemandTreeData(res.data, route.query.id)
+        // 给父元素说明我已经完成了
+        emit("enterFinish")
         Message.success("批量新增设计需求成功...")
         return true
     }
     return false
 }
+
+// 当upload组件发生变化时候-性能配置
+const handleUploadChange = (files) => {
+    files.length ? (files.length = 1) : (htmlData.value = [])
+}
+
 // 暴露该组件ref的方法
 defineExpose({ open })
 </script>

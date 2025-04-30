@@ -25,7 +25,7 @@ export default function (crudOrFormRef: any) {
         {
             title: "名称",
             dataIndex: "name",
-            width: 120,
+            width: 150,
             align: "center",
             search: true,
             commonRules: [{ required: true, message: "名称是必填" }],

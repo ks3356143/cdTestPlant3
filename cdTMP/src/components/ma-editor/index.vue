@@ -57,7 +57,7 @@ const props = defineProps({
         type: [String, Array],
         // 如果要取消粘贴只粘贴文本，需要用户加格式请加上pastetext
         default:
-            "undo redo aligncenter alignleft indent styleselect formatselect fontselect fontsizeselect removeformat"
+            "code undo redo aligncenter alignleft indent styleselect formatselect fontselect fontsizeselect removeformat"
 
         // 下面是备份配置：
         //     default:"code undo redo restoredraft | paste | bold | aligncenter alignleft alignjustify indent | \

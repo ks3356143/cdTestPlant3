@@ -24,6 +24,17 @@ export default {
     },
     /**
      *
+     * @returns 顶层技术依据文件
+     */
+    createTopFile(params = {}) {
+        return request({
+            url: `/generate/create/top_file`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
      * @returns 生成联系方式
      */
     createContact(params = {}) {
@@ -57,17 +68,6 @@ export default {
     },
     /**
      *
-     * @returns 生成测评大纲-被测软件功能
-     */
-    createFuncList(params = {}) {
-        return request({
-            url: `/generate/create/funcList`,
-            method: "get",
-            params
-        })
-    },
-    /**
-     *
      * @returns 生成测评大纲-测评对象的软件组成描述
      */
     createSoftComposition(params = {}) {
@@ -84,17 +84,6 @@ export default {
     createInterface(params = {}) {
         return request({
             url: `/generate/create/interface`,
-            method: "get",
-            params
-        })
-    },
-    /**
-     *
-     * @returns 生成测评大纲-被测软件性能
-     */
-    createPerformance(params = {}) {
-        return request({
-            url: `/generate/create/performance`,
             method: "get",
             params
         })
@@ -318,5 +307,5 @@ export default {
             method: "get",
             params
         })
-    },
+    }
 }

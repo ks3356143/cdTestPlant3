@@ -19,7 +19,7 @@
                 <template #inputPrepend-ident> SJ-XX- </template>
             </ma-crud>
         </div>
-        <file-input-modal ref="fileInputRef"></file-input-modal>
+        <file-input-modal ref="fileInputRef" @enterFinish="crudRef.refresh()"></file-input-modal>
     </div>
 </template>
 

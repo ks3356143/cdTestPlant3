@@ -39,31 +39,24 @@ const soDutColumn = ref([
         rules: [{ required: true, message: "单位必选" }]
     },
     {
-        title: "空行",
-        dataIndex: "black_line",
+        title: "总行数",
+        dataIndex: "total_lines",
         formType: "input-number",
-        rules: [{ required: true, message: "空行数必填" }],
+        rules: [{ required: true, message: "总行数必填" }],
         min: 0
     },
     {
-        title: "纯注释",
-        dataIndex: "comment_line",
+        title: "有效行数",
+        dataIndex: "effective_lines",
         formType: "input-number",
-        rules: [{ required: true, message: "纯注释数必填" }],
+        rules: [{ required: true, message: "有效行数必填" }],
         min: 0
     },
     {
-        title: "混合行",
-        dataIndex: "mix_line",
+        title: "注释行数",
+        dataIndex: "comment_lines",
         formType: "input-number",
-        rules: [{ required: true, message: "混合行必填" }],
-        min: 0
-    },
-    {
-        title: "纯代码",
-        dataIndex: "code_line",
-        formType: "input-number",
-        rules: [{ required: true, message: "纯代码行必填" }],
+        rules: [{ required: true, message: "注释行数必填" }],
         min: 0
     }
 ])

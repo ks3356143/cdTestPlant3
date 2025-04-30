@@ -123,7 +123,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
                 },
                 {
                     formType: "card",
-                    customClass: ["ml-10", "mb-3", "py-0", "px-0"],
+                    customClass: ["ml-5", "mb-3", "py-0", "px-0"],
                     title: "人员信息",
                     formList: [
                         {

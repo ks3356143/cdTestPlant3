@@ -32,14 +32,12 @@ const useGenerateSecond = function () {
             dgGenerateApi.createTechYiju({ id }), // 技术依据文件
             dgGenerateApi.createContact({ id }), // 生成联系人和方式
             dgGenerateApi.createTimeaddress({ id }), // 生成测评时间和地点
-            dgGenerateApi.createFuncList({ id }), // 生成被测软件功能列表
             dgGenerateApi.createSoftComposition({ id }), // 生成测评对象-软件组成
             dgGenerateApi.createAdequacyEffectiveness({ id }), // 生成测试充分性（adequancy）和有效性（effectiveness）说明
             dgGenerateApi.createGroup({ id }), // 生成测评组织及分工
             dgGenerateApi.createGuarantee({ id }), // 生成测评保障
             dgGenerateApi.createAbbreviation({ id }), // 生成缩略语
             dgGenerateApi.createInterface({ id }), // 生成-被测软件接口
-            dgGenerateApi.createPerformance({ id }), // 生成-被测软件性能
             dgGenerateApi.createBaseInformation({ id }), // 生成-被测软件基本信息
             dgGenerateApi.createLevelAndType({ id }), // 生成-测试级别和测试类型 -【修改】
             dgGenerateApi.createStrategy({ id }), // 生成-测试策略 -【新增】
@@ -47,6 +45,8 @@ const useGenerateSecond = function () {
             dgGenerateApi.createXqComparison({ id }), // 生成-需求规格说明-测试项对照表
             dgGenerateApi.createFanXqComparison({ id }), // 生成-反向测试项-需求规格说明对照表
             dgGenerateApi.createCodeQuality({ id }), // 生成-代码质量度量分析表
+            // 2025年4月29日新增 - 顶层技术文件
+            dgGenerateApi.createTopFile({ id }), // 生成顶层技术文件
             // 新增拆分接口
             dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
             dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
@@ -69,9 +69,7 @@ const useGenerateSecond = function () {
         isSmLoading.value = true
         await Promise.all([
             dgGenerateApi.createSoftComposition({ id }), // 生成测评对象 - 和大纲一样
-            dgGenerateApi.createFuncList({ id }), // 生成被测软件功能 - 和大纲重复
             dgGenerateApi.createInterface({ id }), // 生成被测软件接口 - 和大纲重复 - 可能会删除
-            dgGenerateApi.createPerformance({ id }), // 生成被测软件性能 - 和大纲重复 - 可能会删除
             dgGenerateApi.createBaseInformation({ id }), // 生成被测软件基本信息 - 和大纲重复 - 可能会删除
             dgGenerateApi.createYiju({ id }), // 生成标准类引用文档 - 和大纲重复 - 可能会删除
             smGenerateApi.createSMTechyiju({ id }), // 生成技术类引用文档列表 -> 在大纲基础上添加《测评大纲》
@@ -97,7 +95,12 @@ const useGenerateSecond = function () {
     const createJLItem = async (id: number) => {
         isGenerating.value = true
         isJlloading.value = true
-        await jlGenerateApi.createJLcaserecord({ id }).finally(() => {
+        await Promise.all([
+            // 生成-被测软件基本信息 - 和大纲一样
+            dgGenerateApi.createBaseInformation({ id }),
+            // 记录相关片段
+            jlGenerateApi.createJLcaserecord({ id })
+        ]).finally(() => {
             isGenerating.value = false
             isJlloading.value = false
         })
@@ -116,7 +119,10 @@ const useGenerateSecond = function () {
             hsmGenerateApi.createCaseListDesc({ id }),
             hsmGenerateApi.createCaseList({ id }),
             hsmGenerateApi.createTrack({ id }),
-            // 拆分大纲软硬件环境
+            // 拆分大纲软硬件环境-大纲内容
+            dgGenerateApi.createSoftComposition({ id }), // 生成测评对象-软件组成
+            dgGenerateApi.createYiju({ id }), // 生成依据文件
+            dgGenerateApi.createInterface({ id }), // 生成-被测软件接口 - 和大纲一样
             dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
             dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
             dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
@@ -171,7 +177,15 @@ const useGenerateSecond = function () {
             bgGenerateApi.createBgEntire({ id }),
             bgGenerateApi.createBgYzxqTrack({ id }),
             bgGenerateApi.createBgProblemsSummary({ id }),
-            // 拆分软硬件环境
+            // 2025年4月27日新增：软件问题统计
+            bgGenerateApi.createProblemStatistics({ id }), // 生成软件问题统计
+            // 2025年4月28日新增：摸底清单
+            bgGenerateApi.createBgModiList({ id }), // 生成摸底清单
+            // 拆分软硬件环境-大纲内容
+            dgGenerateApi.createSoftComposition({ id }), // 生成测评对象 - 大纲内容
+            dgGenerateApi.createYiju({ id }), // 生成依据文件
+            dgGenerateApi.createInterface({ id }), // 生成-被测软件接口 - 大纲内容
+            dgGenerateApi.createAbbreviation({ id }), // 生成缩略语 - 大纲内容
             dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
             dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
             dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
@@ -179,7 +193,9 @@ const useGenerateSecond = function () {
             dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
             dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
             dgGenerateApi.createTestData({ id }), // 生成-测评数据
-            dgGenerateApi.createEnvDiff({ id }) // 生成-环境差异性分析
+            dgGenerateApi.createEnvDiff({ id }), // 生成-环境差异性分析
+            // 2025年4月29日新增 - 顶层技术文件
+            dgGenerateApi.createTopFile({ id }) // 生成顶层技术文件
         ]).finally(() => {
             isGenerating.value = false
             isBgLoading.value = false
