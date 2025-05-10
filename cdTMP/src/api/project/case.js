@@ -24,6 +24,16 @@ export default {
         })
     },
     /**
+     * 查询单个测试项-id
+     * @returns 单个测试项数据
+     */
+    getCaseOneById(id) {
+        return request({
+            url: `project/getCaseOneById?id=${id}`,
+            method: "get"
+        })
+    },
+    /**
      * 添加测试用例
      * @returns
      */
@@ -87,6 +97,39 @@ export default {
             url: "/project/case/copy_or_move_by_case",
             method: "get",
             params
+        })
+    },
+    /**
+     * 提交选择的行、列，被替换内容，替换内容，请求后端替换
+     * @returns
+     */
+    replace(data) {
+        return request({
+            url: "/project/case/replace/",
+            method: "post",
+            data
+        })
+    },
+    /**
+     * 批量修改设计人员、执行人员、审核人员
+     * @returns
+     */
+    personReplace(data = { selectRows: [], designPerson: "不替换", testPerson: "不替换", monitorPerson: "不替换" }) {
+        return request({
+            url: "/project/case/personReplace/",
+            method: "post",
+            data
+        })
+    },
+    /**
+     * 批量替换事件
+     * @returns
+     */
+    exetimeReplace(data = { selectRows: [], exetime: "" }) {
+        return request({
+            url: "/project/case/timeReplace/",
+            method: "post",
+            data
         })
     }
 }

@@ -23,6 +23,16 @@ export default {
         })
     },
     /**
+     * 查询单个测试项-id
+     * @returns 单个测试项数据
+     */
+    getDemandOneById(id) {
+        return request({
+            url: `project/getTestDemandOneById?id=${id}`,
+            method: "get"
+        })
+    },
+    /**
      * 添加被测件
      * @returns
      */
@@ -97,6 +107,17 @@ export default {
             url: "/project/testDemand/copy_to_design",
             method: "post",
             data: params
+        })
+    },
+    /**
+     * 提交选择的行、列，被替换内容，替换内容，请求后端替换
+     * @returns
+     */
+    replace(data) {
+        return request({
+            url: "/project/testDemand/replace/",
+            method: "post",
+            data
         })
     }
 }

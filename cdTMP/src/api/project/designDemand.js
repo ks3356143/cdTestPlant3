@@ -13,7 +13,7 @@ export default {
         })
     },
     /**
-     * 查询单个设计需求
+     * 查询单个设计需求-传统
      * @returns 单个设计需求数据
      */
     getDesignDemandOne(params = {}) {
@@ -21,6 +21,16 @@ export default {
             url: `project/getDesignOne`,
             method: "get",
             params
+        })
+    },
+    /**
+     * 查询单个设计需求-id
+     * @returns 单个设计需求数据
+     */
+    getDesignOneById(id) {
+        return request({
+            url: `project/getDesignOneById?id=${id}`,
+            method: "get"
         })
     },
     /**
@@ -87,6 +97,17 @@ export default {
             url: "/project/designDemand/getRelatedDesign",
             method: "get",
             params
+        })
+    },
+    /**
+     * 提交选择的行、列，被替换内容，替换内容，请求后端替换
+     * @returns
+     */
+    replace(data) {
+        return request({
+            url: "/project/designDemand/replace/",
+            method: "post",
+            data
         })
     }
 }

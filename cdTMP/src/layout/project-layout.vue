@@ -86,6 +86,38 @@
                                             "
                                             @click="() => handleRoundEditClick(nodeData)"
                                     /></a-tooltip>
+                                    <a-tooltip content="综合阅览该轮次下问题单"
+                                        ><icon-bug
+                                            style="
+                                                position: absolute;
+                                                right: 60px;
+                                                font-size: 12px;
+                                                top: 8px;
+                                                color: #3370ff;
+                                            "
+                                            @click="handleProblemShowClick"
+                                    /></a-tooltip>
+                                    <a-tooltip content="轮次数据管理视图"
+                                        ><icon-storage
+                                            style="
+                                                position: absolute;
+                                                right: 77px;
+                                                font-size: 12px;
+                                                top: 8px;
+                                                color: #3370ff;
+                                            "
+                                            @click="
+                                                () => {
+                                                    router.push({
+                                                        name: 'opeSets',
+                                                        query: {
+                                                            ...route.query,
+                                                            key: nodeData.key
+                                                        }
+                                                    })
+                                                }
+                                            "
+                                    /></a-tooltip>
                                 </template>
                             </template>
                             <!-- 设计节点的图标 -->
@@ -122,13 +154,23 @@
                     </div>
                 </a-layout-sider>
                 <a-layout class="layout-content myhcalc my-custom">
-                    <a-layout-content class="work-area project-layout">
+                    <!-- 右侧界面是该元素决定滚动条overflow-y:auto -->
+                    <a-layout-content class="work-area project-layout" id="basic-scroll-container">
                         <PageLayout ref="routeViewRef" />
                     </a-layout-content>
                 </a-layout>
             </a-layout>
         </a-layout>
     </a-layout>
+    <a-back-top target-container="#basic-scroll-container" :style="{ position: 'absolute' }">
+        <a-popover title="回到顶部">
+            <a-button type="primary" shape="circle">
+                <template #icon>
+                    <icon-arrow-rise />
+                </template>
+            </a-button>
+        </a-popover>
+    </a-back-top>
     <ma-form-modal
         ref="maFormModalRef"
         :title="title"
@@ -249,7 +291,7 @@ import MaFormModal from "@/components/ma-form-modal/index.vue"
 import roundRight from "./treeComponents/roundRight.vue"
 // 问题单ma-crud
 import ProblemChoose from "@/views/project/case/components/ProblemChoose.vue"
-import { useRoute } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { useTreeDataStore } from "@/store"
 import { storeToRefs } from "pinia"
 import Progress from "@/views/testmanage/projmanage/cpns/progress.vue"
@@ -274,6 +316,7 @@ provide("rightViewRef", routeViewRef)
 const treeDataStore = useTreeDataStore()
 const { treeData, currentNode } = storeToRefs(treeDataStore)
 const route = useRoute()
+const router = useRouter()
 const treeRef = ref()
 const projectInfo = ref({ ...route.query })
 const projectId = ref(route.query.id)

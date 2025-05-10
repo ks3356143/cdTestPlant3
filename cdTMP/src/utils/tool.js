@@ -72,4 +72,23 @@ const renameKeyInArray = (arr, oldKey, newKey) => {
 
 tool.renameKeyInArray = renameKeyInArray
 
+tool.chnRoundNameArray = [
+    "首轮",
+    "第二轮",
+    "第三轮",
+    "第四轮",
+    "第五轮",
+    "第六轮",
+    "第七轮",
+    "第八轮",
+    "第九轮",
+    "第十轮",
+    "第十一轮",
+    "第十二轮",
+    "第十三轮",
+    "第十四轮",
+    "第十五轮",
+    "第十六轮"
+]
+
 export default tool

@@ -5,7 +5,6 @@ import { appRoutes } from "./routes"
 import { REDIRECT_MAIN, NOT_FOUND_ROUTE, PROJECT_LAYOUT } from "./routes/base"
 import createRouteGuard from "@/router/guard/index"
 
-
 // 定义工作区路由名称，为了不写死
 export const WORK_AREA_NAME = "project"
 
@@ -108,6 +107,18 @@ const router = createRouter({
                         ignoreCache: true,
                         roles: ["*"],
                         locale: "问题单详情",
+                        icon: "icon-arrow-right"
+                    }
+                },
+                {
+                    path: "opeSets",
+                    name: "opeSets",
+                    component: () => import("@/views/project/opeSets/index.vue"),
+                    meta: {
+                        requiresAuth: true,
+                        ignoreCache: true,
+                        roles: ["*"],
+                        locale: "操作集合",
                         icon: "icon-arrow-right"
                     }
                 }

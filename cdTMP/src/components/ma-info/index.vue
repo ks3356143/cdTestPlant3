@@ -14,7 +14,7 @@
             <a-descriptions-item
                 v-for="item in descriptions"
                 :label="item.label"
-                :span="isArray(item.value) ? props.column : 1"
+                :span="item.span ? item.span : isArray(item.value) ? props.column : 1"
             >
                 <template v-if="item.formType === 'upload'">
                     <a-image-preview-group infinite v-if="isArray(item.value)">
@@ -26,6 +26,25 @@
                 </template>
                 <template v-else-if="item.infoSlot">
                     <slot :name="item.dataIndex" :row="item" :data="data"></slot>
+                </template>
+                <!-- 修改源码-如果dataIndex为testContent -->
+                <template v-else-if="item.dataIndex === 'testContent'">
+                    <div class="overflow-y-auto max-h-80">
+                        <template v-if="item.value.length > 0">
+                            <template v-for="(sub, idx) in item.value" :key="idx">
+                                <!-- 这是每个测试子项 -->
+                                <div class="subTitle mt-1">{{ idx + 1 }}.{{ sub.subName }}</div>
+                                <template v-for="(step, index) in sub.subStep" :key="index">
+                                    <span class="text-amber-700">步骤{{ index + 1 }}）</span>
+                                    <div class="operation">
+                                        <span class="text-bold">操作：</span>{{ step.operation }}
+                                    </div>
+                                    <div class="mb-1"><span class="text-bold">预期：</span>{{ step.expect }}</div>
+                                </template>
+                            </template>
+                        </template>
+                        <template v-else>暂无信息</template>
+                    </div>
                 </template>
                 <template
                     v-else-if="item.formType === 'radio' || item.formType === 'select' || item.formType === 'checkbox'"
@@ -46,7 +65,7 @@
                         </a-tag>
                     </template>
                 </template>
-                <div v-else>{{ item.value }} {{ item?.textAppend }}</div>
+                <div v-else><div class="white-space-change" v-html="item.value"></div></div>
             </a-descriptions-item>
         </a-descriptions>
     </a-space>
@@ -139,4 +158,8 @@ watch(
 defineExpose({ reset })
 </script>
 
-<style scoped></style>
+<style scoped>
+.white-space-change {
+    white-space: normal;
+}
+</style>

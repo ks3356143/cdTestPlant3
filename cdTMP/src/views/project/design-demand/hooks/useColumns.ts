@@ -108,13 +108,15 @@ export default function (crudOrFormRef: any) {
                     placeholder: "对应测试项描述标题，和测试方法的标题",
                     rules: [{ required: true, message: "测试子项名称必填" }],
                     onChange: (ev: any) => {
-                        // 取出子项的对象数组
-                        const subItemFormData = crudOrFormRef.value.getFormData().testContent
-                        // 取出充分性条件字段字符串
-                        const mapRes = subItemFormData.map((subItem: any) => subItem.subName)
-                        crudOrFormRef.value.getFormData().adequacy = `测试用例覆盖${mapRes.join(
-                            "、"
-                        )}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
+                        if (crudOrFormRef) {
+                            // 取出子项的对象数组
+                            const subItemFormData = crudOrFormRef.value.getFormData().testContent
+                            // 取出充分性条件字段字符串
+                            const mapRes = subItemFormData.map((subItem: any) => subItem.subName)
+                            crudOrFormRef.value.getFormData().adequacy = `测试用例覆盖${mapRes.join(
+                                "、"
+                            )}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
+                        }
                     }
                 },
                 {

@@ -23,7 +23,7 @@
     </div>
 </template>
 
-<script setup lang="jsx">
+<script setup>
 import { ref } from "vue"
 import useCrudOptions from "@/views/project/dut/hooks/useCrudOptions"
 import useColumns from "./hooks/useColumns"

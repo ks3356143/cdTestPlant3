@@ -9,9 +9,12 @@ export default function (crudOrFormRef: any) {
     const route = useRoute()
     // 计算注释率计算crud/form的数据，判断
     const calcPercent = () => {
-        const formData = crudOrFormRef.value.getFormData()
-        const { total_lines, comment_lines } = formData
-        formData.comment_percent = `${(comment_lines / total_lines).toFixed(2).toString()}%`
+        if (crudOrFormRef) {
+            const formData = crudOrFormRef.value.getFormData()
+            const { total_lines, comment_lines } = formData
+            formData.comment_percent = `${(comment_lines / total_lines).toFixed(2).toString()}%`
+        }
+        return "无法计算注释率"
     }
     const crudColumns = ref([
         {
@@ -109,6 +112,7 @@ export default function (crudOrFormRef: any) {
             search: true,
             commonRules: [{ required: true, message: "单位必选" }],
             formType: "select",
+            span: 3,
             dict: { url: "system/contact/index", props: { label: "name", value: "name" }, translation: true }
         },
         {

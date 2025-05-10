@@ -21,6 +21,7 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
             width: 180,
             align: "center",
             addDisabled: true,
+            disabled: true,
             addDefaultValue: "用例标识自动生成，结构为YL_IO_XXXX_001",
             editDefaultValue: "用例标识自动生成，结构为YL_IO_XXXX_001",
             editDisabled: true,

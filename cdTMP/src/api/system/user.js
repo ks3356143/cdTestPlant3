@@ -35,6 +35,18 @@ export default {
             params
         })
     },
+    // ~~~~~~大表页面使用~~~~~~
+    /**
+     * 获取用户信息列表
+     * @returns
+     */
+    getProjectList(project_id) {
+        return request({
+            url: "system/user/list",
+            method: "get",
+            params: { project_id }
+        })
+    },
     // ~~~~~~usermanage~~~~~~页面的
     /**
      * 添加用户

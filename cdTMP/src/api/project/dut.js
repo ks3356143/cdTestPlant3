@@ -25,6 +25,16 @@ export default {
         })
     },
     /**
+     * 查询单个设计需求-根据id
+     * @returns 单个设计需求数据
+     */
+    getDutOneById(id) {
+        return request({
+            url: `project/getDutOneById?id=${id}`,
+            method: "get"
+        })
+    },
+    /**
      * 添加被测件
      * @returns
      */

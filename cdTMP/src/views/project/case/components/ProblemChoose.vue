@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" width="1200px" :footer="false" draggable>
+    <a-modal v-model:visible="visible" width="1200px" :footer="false" :mask-closable="false">
         <template #title>{{ title }}</template>
         <!-- crud组件 -->
         <div class="lg:w-full w-full">
@@ -258,7 +258,7 @@ const crudOptions = ref({
 const columns = ref([
     {
         title: "名称",
-        align: "left",
+        align: "center",
         search: true,
         dataIndex: "name",
         commonRules: [{ required: true, message: "名称是必填" }],
