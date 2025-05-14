@@ -6,6 +6,7 @@
         "declarationMap": true,
         "esModuleInterop": true,
         "jsx": "preserve",
+        "jsxImportSource": "vue",
         "allowJs": true,
         "strictFunctionTypes": false,
         "strictNullChecks": true,
@@ -45,6 +46,7 @@
         ],
         "types": [
             "vite/client",
+            "@arco-design/web-vue"
         ]
     },
     "include": [

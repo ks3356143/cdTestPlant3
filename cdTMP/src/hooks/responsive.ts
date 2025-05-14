@@ -3,7 +3,7 @@ import { useDebounceFn } from '@vueuse/core'
 import { useAppStore } from '@/store'
 import { addEventListen, removeEventListen } from '@/utils/event'
 
-const WIDTH = 992 // https://arco.design/vue/component/grid#responsivevalue
+const WIDTH = 992
 
 function queryDevice() {
     const rect = document.body.getBoundingClientRect()

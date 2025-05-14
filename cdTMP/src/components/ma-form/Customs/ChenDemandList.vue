@@ -61,7 +61,7 @@
                                             </a-button>
                                         </a-tooltip>
                                         <a-button-group shape="round" size="mini">
-                                            <a-button type="primary" @click="moveUp(index)">
+                                            <a-button type="primary"  @click="moveUp(index)">
                                                 <icon-arrow-rise />
                                             </a-button>
                                             <a-button type="primary" @click="moveDown(index)">

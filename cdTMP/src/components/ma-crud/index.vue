@@ -257,7 +257,8 @@
 
         <ma-setting ref="crudSettingRef" @onChangeSearchHide="initSearchColumns()" @onChangeColumnHide="changeColumn" />
         <!-- 修改源码：透传ma-crud属性给ma-form -->
-        <ma-form ref="crudFormRef" @success="requestSuccess" v-bind="$attrs">
+        <!-- 修改源码：传递parentKey值 -->
+        <ma-form ref="crudFormRef" @success="requestSuccess" v-bind="$attrs" :parent-key="props.parentKey">
             <template v-for="(slot, index) in Object.keys($slots)" #[slot]="component" :key="index">
                 <slot :name="slot" v-bind="component" />
             </template>
@@ -308,7 +309,9 @@ const props = defineProps({
     options: { type: Object, default: {} },
     crud: { type: Object, default: {} },
     // 字段列设置
-    columns: { type: Array, default: [] }
+    columns: { type: Array, default: [] },
+    // ~~~2025年5月14日新增透传给ma-form字段
+    parentKey: { type: String, default: "" }
 })
 
 const loading = ref(true)

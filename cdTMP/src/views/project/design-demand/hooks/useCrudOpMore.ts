@@ -60,7 +60,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > ${td[round_key].children[dut_key].children[design_key].title} > 测试项-`
             return true
         },
-        beforeOpenEdit: function (record) {
+        beforeOpenEdit: function (record: any) {
             // 1.储存打开前form的content数据到ref中，以便后续比较
             beforeFormContent = cloneDeep(record.testContent)
             // 2.处理标识

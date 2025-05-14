@@ -2,7 +2,13 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef" @beforeCancel="handleBeforeCancel">
+            <ma-crud
+                :options="crudOptions"
+                :columns="crudColumns"
+                ref="crudRef"
+                @beforeCancel="handleBeforeCancel"
+                :parent-key="route.query.key"
+            >
                 <template #ident="{ record }">
                     {{ showType(record) }}
                 </template>
@@ -17,6 +23,8 @@ import { ref } from "vue"
 import ProblemForm from "@/views/project/case/components/ProblemForm.vue"
 import useCrudOpMore from "./hooks/useCrudOpMore"
 import useColumn from "./hooks/useColumn"
+import { useRoute } from "vue-router"
+const route = useRoute()
 const problemFormRef = ref(null)
 const title = ref("问题单表单")
 const crudRef = ref()

@@ -17,7 +17,14 @@
     >
         <template #title>{{ actionTitle }}</template>
         <a-spin :loading="dataLoading" tip="加载中..." class="w-full">
-            <ma-form v-model="form" :columns="formColumns" :options="formOptions" ref="maFormRef">
+            <!-- 修改源码parentKey -->
+            <ma-form
+                v-model="form"
+                :columns="formColumns"
+                :parent-key="props.parentKey"
+                :options="formOptions"
+                ref="maFormRef"
+            >
                 <template v-for="slot in Object.keys($slots)" #[slot]="component">
                     <slot :name="slot" v-bind="component" />
                 </template>
@@ -34,6 +41,11 @@ import { isArray, isFunction, get, cloneDeep, isUndefined } from "lodash-es"
 import { useRouter } from "vue-router"
 import tool from "@/utils/tool"
 import { useFormStore } from "@/store/index"
+
+// 2025年5月14日新增
+const props = defineProps({
+    parentKey: { type: String, default: "" }
+})
 
 const formStore = useFormStore()
 const router = useRouter()

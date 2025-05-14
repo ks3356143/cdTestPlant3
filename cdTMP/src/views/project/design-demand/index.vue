@@ -2,7 +2,13 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef" @beforeCancel="handleBeforeCancel">
+            <ma-crud
+                :options="crudOptions"
+                :columns="crudColumns"
+                ref="crudRef"
+                @beforeCancel="handleBeforeCancel"
+                :parent-key="route.query.key"
+            >
                 <template #ident="{ record }">
                     {{ showType(record) }}
                 </template>
@@ -44,10 +50,13 @@
 <script setup>
 import { ref } from "vue"
 import commonApi from "@/api/common"
+import { useRoute } from "vue-router"
 // hooks
 import useCrudOpMore from "./hooks/useCrudOpMore"
 import useColumn from "./hooks/useColumns"
 import useRalateDemand from "./hooks/useRalateDemand"
+// inits
+const route = useRoute()
 // refs
 const crudRef = ref(null)
 // 根据传参获取key，分别为轮次、设计需求的key

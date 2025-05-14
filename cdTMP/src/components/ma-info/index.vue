@@ -6,7 +6,7 @@
             :title="props.title"
             :layout="props.layout"
             :bordered="props.bordered"
-            table-layout="fixed"
+            :table-layout="props.tableLayout"
             :size="props.size"
             :label-style="props.labelStyle"
             :value-style="props.valueStyle"
@@ -105,7 +105,9 @@ const props = defineProps({
     },
     size: {
         default: "large"
-    }
+    },
+    // 新增
+    tableLayout: { type: String, default: "fixed" }
 })
 
 watch(

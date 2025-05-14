@@ -63,12 +63,16 @@
                     </div>
                 </slot>
             </a-form>
+            <!-- 修改源码：判断是否传入parentKey -->
+            <template v-if="parentKey">
+                <ParentPreview :parent-key="parentKey"></ParentPreview>
+            </template>
         </a-spin>
     </div>
 </template>
 
 <script setup>
-import { ref, watch, provide, onMounted, nextTick, getCurrentInstance } from "vue"
+import { ref, watch, provide, onMounted, nextTick, getCurrentInstance, inject, computed } from "vue"
 import { isNil, set, get, cloneDeep } from "lodash-es"
 import defaultOptions from "./js/defaultOptions.js"
 import {
@@ -94,11 +98,32 @@ const dictList = ref({})
 const cascaderList = ref([])
 const form = ref({})
 
+// custom start
+// 2025年5月14日新增功能hover查看上级节点
+import ParentPreview from "@/views/project/ParentPreview/index.vue"
+// 判断是否有
+const formKey = computed(() => {
+    // 去掉双击被测件：即key.split("").length > 1
+    if (form.value.key && form.value.key.split("-").length > 2) {
+        // 如果存在则取前面的
+        return form.value.key.slice(0, -2)
+    }
+    return ""
+})
+
+const parentKey = computed(() => {
+    return props.parentKey || formKey.value || ""
+})
+// custom end
+
 const props = defineProps({
     modelValue: { type: Object, default: {} },
     columns: { type: Array },
-    options: { type: Object, default: {} }
+    options: { type: Object, default: {} },
+    // 2025年5月14日新增属性-非必须，后面根据非必须判断
+    parentKey: { type: String, default: "" }
 })
+
 const emit = defineEmits(["submit", "update:modelValue"])
 
 watch(
