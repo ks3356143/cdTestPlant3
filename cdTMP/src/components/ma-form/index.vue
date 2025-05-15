@@ -18,6 +18,7 @@
                 :disabled="options?.disabled"
                 :rules="options?.rules"
                 @submit="formSubmit"
+                :key="componentKey"
             >
                 <slot name="formContent">
                     <template v-for="(component, componentIndex) in columns" :key="componentIndex">
@@ -25,6 +26,7 @@
                             :is="getComponentName(component?.formType ?? 'input')"
                             :component="component"
                             :ref="setDialogRef"
+                            @swichTableAndGroup="handleChangeDisplay"
                         >
                             <template v-for="slot in Object.keys($slots)" #[slot]="component">
                                 <slot :name="slot" v-bind="component" />
@@ -98,7 +100,20 @@ const dictList = ref({})
 const cascaderList = ref([])
 const form = ref({})
 
-// custom start
+// ~~~custom start - 新增功能利用key强制更新form表单组件
+const componentKey = ref(0)
+const updateKey = () => {
+    componentKey.value += 1
+    if (componentKey.value > 20000) {
+        componentKey.value = 0
+    }
+}
+const handleChangeDisplay = (type) => {
+    updateKey()
+}
+// ~~~custom end
+
+// ~~~~custom start
 // 2025年5月14日新增功能hover查看上级节点
 import ParentPreview from "@/views/project/ParentPreview/index.vue"
 // 判断是否有
@@ -114,7 +129,7 @@ const formKey = computed(() => {
 const parentKey = computed(() => {
     return props.parentKey || formKey.value || ""
 })
-// custom end
+// ~~~~custom end
 
 const props = defineProps({
     modelValue: { type: Object, default: {} },

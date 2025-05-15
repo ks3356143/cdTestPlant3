@@ -106,6 +106,12 @@
                                                 top: 8px;
                                                 color: #3370ff;
                                             "
+                                            :style="{
+                                                color:
+                                                    isOpeSetsRoute && nodeData.key === route.query.key
+                                                        ? 'red'
+                                                        : '#3370ff'
+                                            }"
                                             @click="
                                                 () => {
                                                     router.push({
@@ -283,7 +289,7 @@
 </template>
 
 <script setup>
-import { provide, ref } from "vue"
+import { provide, ref, watch } from "vue"
 import NavBar from "@/layout/components/navbar.vue"
 import PageLayout from "@/layout/page-layout.vue"
 import MaFormModal from "@/components/ma-form-modal/index.vue"
@@ -349,6 +355,21 @@ const { expandedKeys, toggleExpanded } = useNodeExpand()
 //~~~~~~大功能：单击/双击节点逻辑~~~~~~
 const { selectedKeys, pointNode, dutSubFormRef, designSubFormRef, testDemandSubFormRef, caseSubFormRef } =
     useNodeClick(expandedKeys)
+
+//~~~~~~小功能：路由中key绑定selectedKeys：好像有点非性能~~~~~~
+const isOpeSetsRoute = ref(false)
+watch(
+    () => route,
+    (newRoute) => {
+        isOpeSetsRoute.value = newRoute.matched.some((it) => it.name === "opeSets")
+        if (isOpeSetsRoute.value) {
+            selectedKeys.value = []
+        } else {
+            selectedKeys.value = [newRoute.query.key]
+        }
+    },
+    { immediate: true, deep: true }
+)
 
 //~~~~~~大功能：动态加载a-tree节点函数~~~~~~
 const { loadMore } = useLoadTreeNode()
@@ -477,5 +498,11 @@ const {
 }
 .point {
     color: red;
+}
+// 自定义选中节点样式
+:deep(.arco-tree-node-selected) {
+    .arco-tree-node-title {
+        color: #F53F3F !important;
+    }
 }
 </style>

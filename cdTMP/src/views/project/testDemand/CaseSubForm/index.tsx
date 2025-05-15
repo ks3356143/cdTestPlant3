@@ -52,7 +52,12 @@ const CaseSubForm = defineComponent({
         // Dom
         return () => (
             // 注意v-model:visible是不能放在对象解构的
-            <a-modal {...modalOptions} v-model:visible={visible.value} on-before-cancel={handleBeforeCancel}>
+            <a-modal
+                {...modalOptions}
+                v-model:visible={visible.value}
+                on-before-cancel={handleBeforeCancel}
+                width="86%"
+            >
                 {{
                     title: () => <span>[设计需求]-{title.value}</span>,
                     default: () => (

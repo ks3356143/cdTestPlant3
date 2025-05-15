@@ -1,17 +1,14 @@
 <script lang="tsx">
-import { computed, defineComponent, ref, Teleport } from "vue"
+import { defineComponent, Teleport } from "vue"
 import { useRoute } from "vue-router"
 import { Popover } from "@arco-design/web-vue"
-import MaInfo from "@/components/ma-info/index.vue"
 // 请求的API
 import dutApi from "@/api/project/dut"
 import designApi from "@/api/project/designDemand"
 import demandApi from "@/api/project/testDemand"
-// columns导入
-import useDutColumn from "@/views/project/round/hooks/useColumn"
-import useDesignColumn from "@/views/project/dut/hooks/useColumns"
-import useDemandColumn from "@/views/project/design-demand/hooks/useColumns"
-import Empty from "@/components/Empty/index.vue"
+// hooks
+import useHoverText from "./useHoverText"
+import useKeyToMaInfo from "./useKeyToMaInfo"
 
 export default defineComponent({
     name: "ParentPreview",
@@ -19,76 +16,28 @@ export default defineComponent({
         parentKey: { type: String, default: "" } // 在ma-form已经判断所以必然有值，索引上级key
     },
     setup(props) {
+        // 1.获取路由上的-项目id
         const route = useRoute()
         const project_id = route.query.id // 项目id
-        const hoverText = ref("")
-        const buttonLikeRef = ref<HTMLDivElement | null>(null)
-        const onMouseenter = () => {
-            // 进入时候注册事件
-            hoverText.value = "查看上级"
-        }
-        const onMouseleave = () => {
-            hoverText.value = ""
-        }
-        // ma-info变量
-        const dutOriginColumns = useDutColumn(undefined)
-        const dutColumns = computed(() => {
-            // 去掉上传源代码字段
-            const quUploadColumns = dutOriginColumns.value.filter((it) => it.dataIndex !== "upload")
-            // 判断是否为源代码被测件
-            return quUploadColumns
-        })
-        const designColumns = useDesignColumn(undefined)
-        const demandColumns = useDemandColumn(undefined)
-        // 根据parentKey判断是哪个级别节点
+        // 2.获取传入的key信息，给上级节点
         const keyLength = props.parentKey.split("-").length
-        // 储存ma-info的dom
-        let maInfoDom = <Empty></Empty>
-        // 处理异步请求的函数
-        const fetchNodeData = async (resPromise: Promise<any>, nodeType: string) => {
-            const res = await resPromise
-            switch (nodeType) {
-                case "dut":
-                    const dutInfo = res.data
-                    const dutInfoJudge = computed(() => {
-                        if (dutInfo.type === "SO") {
-                            // 计算注释率：注释行/总行数
-                            dutInfo.comment_percent = (dutInfo.comment_lines / dutInfo.total_lines) * 100 + "%"
-                        } else {
-                            // 如果是非源代码被测件行数均填写：“不适用”
-                            dutInfo.comment_lines = "不适用"
-                            dutInfo.comment_percent = "不适用"
-                            dutInfo.effective_lines = "不适用"
-                            dutInfo.total_lines = "不适用"
-                        }
-                        return dutInfo
-                    })
-                    maInfoDom = (
-                        <MaInfo columns={dutColumns.value} data={dutInfoJudge.value} tableLayout="auto"></MaInfo>
-                    )
-                    break
-                case "design":
-                    maInfoDom = <MaInfo columns={designColumns.value} data={res.data} tableLayout="auto"></MaInfo>
-                    break
-                case "demand":
-                    maInfoDom = <MaInfo columns={demandColumns.value} data={res.data} tableLayout="auto"></MaInfo>
-                    break
-                default:
-                    break
-            }
-        }
+        // 3.hover变化按钮hook
+        const { hoverText, buttonLikeRef, onMouseenter, onMouseleave } = useHoverText()
+        // 4.里面处理不同columns，返回的函数可以对ma-info的DOM进行构建
+        const { maInfoDom, fetchNodeDataAndSetMaInfo } = useKeyToMaInfo()
+        // 5.根据不同长度
         switch (keyLength) {
             case 2:
                 // 请求设计需求节点
-                fetchNodeData(dutApi.getDutOne({ project_id, key: props.parentKey }), "dut")
+                fetchNodeDataAndSetMaInfo(dutApi.getDutOne({ project_id, key: props.parentKey }), "dut")
                 break
             case 3:
                 // 请求测试项节点
-                fetchNodeData(designApi.getDesignDemandOne({ project_id, key: props.parentKey }), "design")
+                fetchNodeDataAndSetMaInfo(designApi.getDesignDemandOne({ project_id, key: props.parentKey }), "design")
                 break
             case 4:
                 // 请求用例节点
-                fetchNodeData(demandApi.getTestDemandOne({ project_id, key: props.parentKey }), "demand")
+                fetchNodeDataAndSetMaInfo(demandApi.getTestDemandOne({ project_id, key: props.parentKey }), "demand")
                 break
             default:
                 break
@@ -112,12 +61,13 @@ export default defineComponent({
                             </div>
                         ),
                         content: () => (
+                            // 内容插槽
                             <div
                                 style={{
                                     width: "600px"
                                 }}
                             >
-                                {maInfoDom}
+                                {maInfoDom.value}
                             </div>
                         )
                     }}
@@ -157,6 +107,9 @@ export default defineComponent({
 .button-like:hover {
     width: 120px;
     border-radius: 22px;
+    transition: all 0.1s;
+    border: 1px solid rgb(64, 128, 255);
+    color: rgb(64, 128, 255);
 }
 .click-content {
     min-width: 500px;

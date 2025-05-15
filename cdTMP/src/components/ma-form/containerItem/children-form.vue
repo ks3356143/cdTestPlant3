@@ -30,7 +30,7 @@
             <a-collapse-item
                 v-for="(item, itemIndex) in formModel[props.component.dataIndex]"
                 :key="itemIndex"
-                :header="`${props.component.title} ${itemIndex + 1}项`"
+                :header="`${props.component.title} 第${itemIndex + 1}项 ${item.subName ? item.subName : ''}`"
             >
                 <template #extra>
                     <a-space>
@@ -165,6 +165,15 @@
                 </table>
             </div>
         </div>
+        <!-- 修改源码：切换显示形态 -->
+        <a-popover>
+            <template #title>切换{{ props.component.type === "group" ? "表格" : "聚合" }}显示</template>
+            <div class="sticky-container" @click="swapTableOrGroupDisplay">
+                <div class="sticky-button">
+                    <icon-swap />
+                </div>
+            </div>
+        </a-popover>
     </a-form-item>
 </template>
 
@@ -183,6 +192,24 @@ const formModel = inject("formModel")
 const dictList = inject("dictList")
 const getColumnService = inject("getColumnService")
 const columns = inject("columns")
+
+// ~~~~修改源码-start
+const emit = defineEmits(["swichTableAndGroup"])
+const swapTableOrGroupDisplay = () => {
+    props.component.type = props.component.type === "group" ? "table" : "group"
+    emit("swichTableAndGroup", props.component.type)
+}
+watch(
+    () => props.component.type,
+    (newVal) => {
+        if (newVal === "group") {
+            formList.forEach((item) => (item.hideLabel = false))
+        }
+    },
+    { immediate: true }
+)
+// ~~~~修改源码-end
+
 const rv = async (ev, value = undefined) =>
     await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 
@@ -298,5 +325,37 @@ onMounted(async () => {
 }
 :deep(.arco-table-cell .arco-form-item) {
     margin-bottom: 0;
+}
+// 切换按钮-以后单独封装一个组件
+.sticky-container {
+    position: fixed;
+    right: 80px;
+    top: 35%;
+    z-index: 10000;
+}
+.sticky-button {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    border-radius: 50%;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+    transition: all 0.1s;
+    overflow: hidden;
+    position: relative;
+    span {
+        white-space: nowrap;
+        opacity: 0;
+    }
+}
+.sticky-button:hover {
+    transition: all 0.1s;
+    border: 1px solid rgb(64, 128, 255);
+    color: rgb(64, 128, 255);
 }
 </style>

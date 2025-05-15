@@ -47,6 +47,7 @@ export default function (crudOrFormRef: any) {
             align: "center",
             dataIndex: "type",
             search: true,
+            width: 200,
             formType: "radio",
             addDefaultValue: "SO",
             dict: {

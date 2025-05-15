@@ -1,6 +1,7 @@
 <template>
     <!-- 修改源码：添加mask-closable属性 -->
     <!-- 修改源码：添加on-before-cancel属性 -->
+    <!-- 修改源码：如果为componentName为a-modal则标题吸顶 -->
     <component
         :is="componentName"
         v-model:visible="dataVisible"
@@ -15,7 +16,9 @@
         :fullscreen="options.formOption.isFull || false"
         unmount-on-close
     >
-        <template #title>{{ actionTitle }}</template>
+        <template #title>
+            {{ actionTitle }}
+        </template>
         <a-spin :loading="dataLoading" tip="加载中..." class="w-full">
             <!-- 修改源码parentKey -->
             <ma-form

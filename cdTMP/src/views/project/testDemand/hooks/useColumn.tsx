@@ -169,31 +169,35 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
                 }
             ],
             formType: "children-form",
-            type: "group", // 注意这里可能改样式"group"/"table"
+            type: "table", // 注意这里可能改样式"group"/"table"
             formList: [
                 {
                     title: "操作",
                     dataIndex: "operation",
                     formType: "editor",
-                    height: 180
+                    height: 180,
+                    width: 360
                 },
                 {
                     title: "预期",
                     placeholder: "请输入预期结果",
-                    dataIndex: "expect"
+                    dataIndex: "expect",
+                    formType: "textarea",
+                    width: 160
                 },
                 {
                     title: "结果",
                     dataIndex: "result",
                     formType: "editor",
-                    height: 180
+                    height: 400
                 },
                 {
                     title: "是否通过",
                     dataIndex: "passed",
                     formType: "radio",
                     dict: { name: "passType", props: { label: "title", value: "key" } },
-                    commonRules: [{ required: true, message: "是否通过必填" }]
+                    commonRules: [{ required: true, message: "是否通过必填" }],
+                    width: 128
                 }
             ]
         },

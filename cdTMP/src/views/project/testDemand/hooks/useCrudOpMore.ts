@@ -112,7 +112,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         operationColumnWidth: 180,
         operationColumn: true,
         formOption: {
-            width: 1200,
+            width: "86%",
             layout: [
                 {
                     formType: "grid",

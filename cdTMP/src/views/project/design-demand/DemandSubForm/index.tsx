@@ -6,7 +6,6 @@ import useOptions from "./useOptions"
 import subFormHooks from "@/views/project/projPublicHooks/subFormHooks"
 import useBeforeCancel from "@/views/project/projPublicHooks/useBeforeCancel"
 import { cloneDeep } from "lodash-es"
-import ParentPreview from "@/views/project/ParentPreview/index.vue"
 
 const DemandSubForm = defineComponent({
     name: "DemandSubFormForm",
@@ -49,7 +48,7 @@ const DemandSubForm = defineComponent({
         // Dom
         return () => (
             // 注意v-model:visible是不能放在对象解构的
-            <a-modal {...modalOptions} v-model:visible={visible.value} on-before-cancel={handleBeforeCancel}>
+            <a-modal {...modalOptions} v-model:visible={visible.value} on-before-cancel={handleBeforeCancel} width='86%'>
                 {{
                     title: () => <span>[设计需求]-{title.value}</span>,
                     default: () => (
