@@ -237,7 +237,7 @@
     </a-dropdown>
     <!-- 复制modal组件 -->
     <!-- 关联的modal组件 -->
-    <a-modal v-model:visible="modalVisible" :width="700" draggable :on-before-ok="handleCopyDemand">
+    <a-modal v-model:visible="modalVisible" unmount-on-close :width="700" draggable :on-before-ok="handleCopyDemand">
         <template #title>复制到设计需求</template>
         <div class="pb-3">选择复制到的节点（<span class="point">支持搜索</span>）:</div>
         <a-cascader
@@ -502,7 +502,7 @@ const {
 // 自定义选中节点样式
 :deep(.arco-tree-node-selected) {
     .arco-tree-node-title {
-        color: #F53F3F !important;
+        color: #f53f3f !important;
     }
 }
 </style>

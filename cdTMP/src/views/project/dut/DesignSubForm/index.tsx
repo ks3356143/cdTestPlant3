@@ -40,7 +40,7 @@ const DesignSubForm = defineComponent({
         // Dom
         return () => (
             // 注意v-model:visible是不能放在对象解构的
-            <a-modal {...modalOptions} v-model:visible={visible.value}>
+            <a-modal {...modalOptions} v-model:visible={visible.value} unmount-on-close>
                 {{
                     title: () => <span>[设计需求]-{title.value}</span>,
                     default: () => (

@@ -26,7 +26,7 @@
             </ma-crud>
         </div>
         <!-- 关联的modal组件 -->
-        <a-modal v-model:visible="visible" width="700px" draggable :on-before-ok="handleRelatedOk">
+        <a-modal v-model:visible="visible" width="700px" draggable unmount-on-close :on-before-ok="handleRelatedOk">
             <template #title>关联测试项</template>
             <div class="pb-3">已存在的关联项:</div>
             <a-typography-paragraph>

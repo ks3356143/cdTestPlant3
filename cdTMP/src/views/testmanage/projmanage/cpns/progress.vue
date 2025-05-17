@@ -4,6 +4,7 @@
             draggable
             :visible="visible"
             hide-cancel
+            unmount-on-close
             :mask-closable="false"
             :on-before-ok="handleClickConfirmButton"
             :on-before-cancel="handleClickConfirmButton"

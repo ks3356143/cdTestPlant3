@@ -14,7 +14,7 @@ export default {
     // 请求参数
     requestParams: {},
     // 设置分页组件每页记录数
-    pageSizeOption: [10, 20, 30, 50, 100],
+    pageSizeOption: [10, 20, 30, 50, 1000],
     // 是否开启表格分页
     tablePagination: false,
     // 设置选择列

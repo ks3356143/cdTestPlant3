@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" width="1200px" :footer="false" :mask-closable="false">
+    <a-modal v-model:visible="visible" width="1200px" :footer="false" :mask-closable="false" unmount-on-close>
         <template #title>{{ title }}</template>
         <!-- crud组件 -->
         <div class="lg:w-full w-full">

@@ -7,6 +7,7 @@
             cancel-text="关闭"
             width="950px"
             draggable
+            unmount-on-close
         >
             <template #title>{{ props.title }}</template>
             <ma-form v-model="form" :columns="columnsOptions" :options="options" ref="crudForm" />

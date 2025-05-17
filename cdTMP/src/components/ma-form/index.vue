@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full">
+    <div class="w-full" ref="containerRef" id="form-main-id">
         <a-spin :loading="formLoading" :tip="options.loadingText" class="w-full ma-form-spin">
             <div
                 v-if="options.showFormTitle"
@@ -69,12 +69,25 @@
             <template v-if="parentKey">
                 <ParentPreview :parent-key="parentKey"></ParentPreview>
             </template>
+            <!-- ctrl+F的替换功能：仅支持用例、测试项 -->
+            <template v-if="form.testStep || form.testContent">
+                <teleport to="body">
+                    <div class="alert-container">
+                        <a-alert show-icon type="info">
+                            <p>支持</p>
+                            <p>Ctrl+F</p>
+                            <p>替换</p>
+                        </a-alert>
+                    </div>
+                </teleport>
+                <BulkReplaceModal ref="replaceModalRef" :parent-form="form" />
+            </template>
         </a-spin>
     </div>
 </template>
 
 <script setup>
-import { ref, watch, provide, onMounted, nextTick, getCurrentInstance, inject, computed } from "vue"
+import { ref, watch, provide, onMounted, onUnmounted, nextTick, getCurrentInstance, inject, computed } from "vue"
 import { isNil, set, get, cloneDeep } from "lodash-es"
 import defaultOptions from "./js/defaultOptions.js"
 import {
@@ -91,6 +104,8 @@ import ColumnService from "./js/columnService.js"
 
 import { runEvent } from "./js/event.js"
 import { Message } from "@arco-design/web-vue"
+// 修改源码导入：查找和替换组件
+import BulkReplaceModal from "@/components/ma-form/Customs/BulkReplaceModal.vue"
 
 const formLoading = ref(false)
 const maFormRef = ref()
@@ -100,7 +115,23 @@ const dictList = ref({})
 const cascaderList = ref([])
 const form = ref({})
 
-// ~~~custom start - 新增功能利用key强制更新form表单组件
+// ~~~custom start0 - 查找和替换组件
+const replaceModalRef = ref()
+const containerRef = ref()
+const handleKeydown = (e) => {
+    if (e.ctrlKey && e.key === "f") {
+        e.preventDefault()
+        replaceModalRef.value && replaceModalRef.value.open()
+    }
+}
+onMounted(() => {
+    document.addEventListener("keydown", handleKeydown)
+})
+onUnmounted(() => {
+    document.removeEventListener("keydown", handleKeydown)
+})
+
+// ~~~custom start1 - 新增功能利用key强制更新form表单组件
 const componentKey = ref(0)
 const updateKey = () => {
     componentKey.value += 1
@@ -113,7 +144,7 @@ const handleChangeDisplay = (type) => {
 }
 // ~~~custom end
 
-// ~~~~custom start
+// ~~~~custom start2
 // 2025年5月14日新增功能hover查看上级节点
 import ParentPreview from "@/views/project/ParentPreview/index.vue"
 // 判断是否有
@@ -326,8 +357,21 @@ defineExpose({
 </script>
 
 <style lang="less" scoped>
+div:deep(.arco-modal-container) {
+    pointer-events: none;
+}
+:deep(.arco-modal.arco-modal-draggable) {
+    pointer-events: auto;
+}
 .ma-form-title {
     font-size: 18px;
     text-align: center;
+}
+.alert-container {
+    position: fixed;
+    bottom: 50%;
+    user-select: none;
+    width: 113px;
+    z-index: 9999;
 }
 </style>

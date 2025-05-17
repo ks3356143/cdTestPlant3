@@ -1,6 +1,6 @@
 <template>
     <!-- 描述列表组件 -->
-    <a-modal width="1000px" v-model:visible="visible" :footer="false">
+    <a-modal width="1000px" v-model:visible="visible" :footer="false" unmount-on-close>
         <template #title>项目名称：{{ previewRecord.name }}</template>
         <ma-info
             class="my-custom-class"

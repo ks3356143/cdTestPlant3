@@ -166,14 +166,16 @@
             </div>
         </div>
         <!-- 修改源码：切换显示形态 -->
-        <a-popover>
-            <template #title>切换{{ props.component.type === "group" ? "表格" : "聚合" }}显示</template>
-            <div class="sticky-container" @click="swapTableOrGroupDisplay">
-                <div class="sticky-button">
-                    <icon-swap />
+        <Teleport to="body">
+            <a-popover>
+                <template #title>切换{{ props.component.type === "group" ? "表格" : "聚合" }}显示</template>
+                <div class="sticky-container" @click="swapTableOrGroupDisplay">
+                    <div class="sticky-button">
+                        <icon-swap />
+                    </div>
                 </div>
-            </div>
-        </a-popover>
+            </a-popover>
+        </Teleport>
     </a-form-item>
 </template>
 

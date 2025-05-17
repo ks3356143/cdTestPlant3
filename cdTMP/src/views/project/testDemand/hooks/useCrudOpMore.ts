@@ -109,6 +109,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         rowSelection: { showCheckedAll: true },
         searchColNumber: 3,
         tablePagination: false,
+        draggable: false,
         operationColumnWidth: 180,
         operationColumn: true,
         formOption: {

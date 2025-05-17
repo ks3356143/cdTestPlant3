@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" width="80%" draggable :footer="false">
+    <a-modal v-model:visible="visible" width="80%" draggable :footer="false" unmount-on-close>
         <template #title>维护数据字典 →【{{ currentRow.name }}】</template>
         <!-- crud组件 -->
         <div class="lg:w-full w-full lg:mt-0">

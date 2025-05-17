@@ -242,13 +242,13 @@ const searchSubmit = (data: ISearchFormCase) => {
 // 9.批量修改人员
 const replacePersonModalRef = ref<InstanceType<typeof ReplacePerson>>()
 const handlePerpleModal = () => {
-    replacePersonModalRef.value.open()
+    replacePersonModalRef.value!.open()
 }
 
 // 10.批量修改事件
 const replaceExetimeModalRef = ref<InstanceType<typeof ReplacePerson>>()
 const handleExetimeModal = () => {
-    replaceExetimeModalRef.value.open()
+    replaceExetimeModalRef.value!.open()
 }
 </script>
 

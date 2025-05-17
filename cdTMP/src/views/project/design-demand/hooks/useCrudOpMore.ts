@@ -101,6 +101,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         tablePagination: false,
         operationColumnWidth: 200,
         operationColumn: true,
+        draggable: false,
         operationColumnAlign: "center",
         formOption: {
             width: "86%",

@@ -21,7 +21,7 @@
             />
         </a-space>
 
-        <a-modal v-model:visible="visible" width="1000px" draggable :on-before-ok="close" unmountOnClose>
+        <a-modal v-model:visible="visible" width="1000px" draggable :on-before-ok="close" unmount-on-close>
             <template #title>{{ props.text }}</template>
 
             <ma-crud

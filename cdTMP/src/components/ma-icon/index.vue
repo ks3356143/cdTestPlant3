@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
   <div class="w-full">
     <a-input-group class="w-full">

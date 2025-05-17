@@ -32,7 +32,7 @@ import "tinymce/plugins/nonbreaking" // 插入不间断空格
 // import "tinymce/plugins/preview" // 预览
 import "tinymce/plugins/quickbars" // 快速工具栏
 import "tinymce/plugins/save" // 保存
-import "tinymce/plugins/searchreplace" // 查找替换
+// import "tinymce/plugins/searchreplace" // 查找替换
 import "tinymce/plugins/table" // 表格
 // import "tinymce/plugins/visualblocks" //显示元素范围
 import "tinymce/plugins/visualchars" // 显示不可见字符
@@ -49,10 +49,13 @@ const props = defineProps({
         type: String,
         default: () => "tinymce" + new Date().getTime().toString() + "-" + Math.random().toString(16).substring(2, 10)
     },
+    // 插件
     plugins: {
         type: [String, Array],
-        default: "searchreplace visualchars code table nonbreaking lists autosave autoresize"
+        default: "visualchars code table nonbreaking lists autosave autoresize"
+        // 备份："searchreplace visualchars code table nonbreaking lists autosave autoresize"
     },
+    // 工具栏
     toolbar: {
         type: [String, Array],
         // 如果要取消粘贴只粘贴文本，需要用户加格式请加上pastetext
@@ -60,7 +63,7 @@ const props = defineProps({
             "code undo redo aligncenter alignleft indent styleselect formatselect fontselect fontsizeselect removeformat"
 
         // 下面是备份配置：
-        //     default:"code undo redo restoredraft | paste | bold | aligncenter alignleft alignjustify indent | \
+        //     default:"code undo redo restoredraft | paste | bold | aligncenter alignleft alignjustify indent searchreplace | \
         // styleselect formatselect fontselect fontsizeselect | bullist numlist | removeformat"
     }
 })
@@ -157,7 +160,8 @@ const initConfig = reactive({
             : "/tinymce/skins/content/default/content.css",
     // selector: "#textarea1", // 下面自定义样式选中的区域为编辑区
     content_style: "body {line-height:1.5;font-size:14px;} p {margin:2px 0px;}", // 这里可以设置自定义样式
-    // paste_as_text: false, // 粘贴文字只能是纯文本
+    // paste_as_text: false,
+    // 粘贴文字只能是纯文本
     // 1.自定义粘贴过滤器函数，args.content就是粘贴内容
     paste_preprocess: function (plugin, args) {
         let content = args.content

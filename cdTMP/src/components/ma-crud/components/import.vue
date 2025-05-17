@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <a-modal v-model:visible="visible" :footer="false" @cancel="close" draggable>
         <template #title>导入</template>

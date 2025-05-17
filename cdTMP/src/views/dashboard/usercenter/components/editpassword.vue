@@ -46,7 +46,7 @@
         </a-form-item>
     </a-form>
 
-    <a-modal v-model:visible="visible" @ok="resetLogin">
+    <a-modal v-model:visible="visible" @ok="resetLogin" unmount-on-close>
         <template #title>提示</template>
         密码已经修改成功，需要重新登录系统，点击确定跳转登录页面。
     </a-modal>

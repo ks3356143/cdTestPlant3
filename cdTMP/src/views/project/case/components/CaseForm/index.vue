@@ -4,6 +4,7 @@
         width="80%"
         draggable
         :okLoading="okLoading"
+        unmount-on-close
         :title="form.name ? form.name : '请填写用例名称'"
         :on-before-ok="handleOkBefore"
     >

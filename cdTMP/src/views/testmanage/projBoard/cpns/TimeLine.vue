@@ -30,7 +30,7 @@
             </a-timeline>
         </div>
         <!-- a-modal组件，展示生成文档的全部信息 -->
-        <a-modal v-model:visible="visible" hide-cancel :closable="false" width="auto">
+        <a-modal v-model:visible="visible" unmount-on-close hide-cancel :closable="false" width="auto">
             <template #title> 生成文档时间一览表 </template>
             <a-card
                 :style="{ width: '600px' }"

@@ -57,9 +57,10 @@ const CaseSubForm = defineComponent({
                 v-model:visible={visible.value}
                 on-before-cancel={handleBeforeCancel}
                 width="86%"
+                unmount-on-close
             >
                 {{
-                    title: () => <span>[设计需求]-{title.value}</span>,
+                    title: () => <span>[测试用例]-{title.value}</span>,
                     default: () => (
                         <ma-form
                             ref={formRef}
