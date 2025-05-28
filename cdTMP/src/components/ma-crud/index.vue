@@ -279,7 +279,7 @@
 
 <script setup>
 import config from "@/config/crud"
-import { ref, watch, provide, nextTick, onMounted, onUnmounted } from "vue"
+import { ref, watch, provide, nextTick, onMounted, onUnmounted, computed } from "vue"
 import defaultOptions from "./js/defaultOptions"
 import { loadDict } from "@cps/ma-form/js/networkRequest.js"
 import ColumnService from "@cps/ma-form/js/columnService"
@@ -728,6 +728,11 @@ const setSelecteds = (key) => {
     selecteds.value = key
 }
 
+// 修改源码，获取selected的值
+const getSelecteds = () => {
+    return selecteds.value
+}
+
 const switchDataType = async () => {
     isRecovery.value = !isRecovery.value
     currentApi.value =
@@ -929,7 +934,8 @@ defineExpose({
     crudSearchRef,
     crudImportRef,
     crudSettingRef,
-    setTableData
+    setTableData,
+    getSelecteds
 })
 </script>
 

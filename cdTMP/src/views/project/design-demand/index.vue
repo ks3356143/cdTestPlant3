@@ -6,6 +6,7 @@
                 :options="crudOptions"
                 :columns="crudColumns"
                 ref="crudRef"
+                id="basic-table-demand-normal"
                 @beforeCancel="handleBeforeCancel"
                 :parent-key="route.query.key"
             >
@@ -14,12 +15,18 @@
                 </template>
                 <!-- 表格前置扩展槽:添加关联按钮 -->
                 <template #tableAfterButtons>
-                    <a-button type="outline" status="warning" @click="handleOpenRelationCSX">
-                        <template #icon>
-                            <icon-tags />
-                        </template>
-                        关联测试项
-                    </a-button>
+                    <a-space>
+                        <a-button type="outline" status="warning" @click="handleOpenRelationCSX">
+                            <template #icon>
+                                <icon-tags />
+                            </template>
+                            关联测试项
+                        </a-button>
+                        <a-divider direction="vertical" type="double" />
+                        <a-button type="outline" @click="handleReplaceClick">批量替换</a-button>
+                        <a-divider direction="vertical" type="double" />
+                        <a-button type="outline" @click="handleOpenReplacePriority">批量修改优先级</a-button>
+                    </a-space>
                 </template>
                 <!-- 版本字段的插槽 -->
                 <template #inputPrepend-ident> XQ_XX_ </template>
@@ -44,6 +51,21 @@
                 v-model:model-value="relatedData"
             />
         </a-modal>
+        <ReplaceModel
+            ref="replaceModal"
+            :api="demandApi.replace"
+            :columns="[
+                { dataIndex: 'ident', title: '标识' },
+                { dataIndex: 'name', title: '名称' },
+                { dataIndex: 'testDesciption', title: '测试描述' },
+                { dataIndex: 'testContent', title: '测试子项' }
+            ]"
+            key="modal-demand-normal"
+            popup-key="demand-normal"
+            @replaceSuccess="replaceSuccessHandle"
+        />
+        <!-- 批量修改优先级 -->
+        <ReplacePriority @modifySuccess="crudRef.refresh()" ref="replacePriorityRef" />
     </div>
 </template>
 
@@ -51,14 +73,36 @@
 import { ref } from "vue"
 import commonApi from "@/api/common"
 import { useRoute } from "vue-router"
+import { Message } from "@arco-design/web-vue"
 // hooks
 import useCrudOpMore from "./hooks/useCrudOpMore"
 import useColumn from "./hooks/useColumns"
 import useRalateDemand from "./hooks/useRalateDemand"
+import demandApi from "@/api/project/testDemand"
+import ReplaceModel from "@/views/project/opeSets/components/DesignTable/ReplaceModal.vue"
+import ReplacePriority from "@/views/project/opeSets/components/DemandTable/ReplacePriority.vue"
 // inits
 const route = useRoute()
 // refs
 const crudRef = ref(null)
+
+// 2025年5月新增
+const replaceModal = ref()
+const handleReplaceClick = () => {
+    replaceModal.value?.open(crudRef.value.getSelecteds) // 把获取选中行的函数给传递给替换组件
+}
+const replaceSuccessHandle = async (count) => {
+    Message.success(`批量更新成功，尝试更新行数：${count}`)
+    // 批量更新后刷新表格
+    crudRef.value.refresh()
+}
+
+// 2025-05新增-批量修改优先级
+const replacePriorityRef = ref(null)
+const handleOpenReplacePriority = () => {
+    replacePriorityRef.value?.open(crudRef.value.getSelecteds)
+}
+
 // 根据传参获取key，分别为轮次、设计需求的key
 const { projectId, crudOptions, handleBeforeCancel } = useCrudOpMore(crudRef)
 const crudColumns = useColumn(crudRef)
@@ -96,5 +140,12 @@ defineOptions({
 <style lang="less" scoped>
 .ol-reset {
     list-style: auto;
+}
+/* 下面让modal的蒙层不交互，让用户可以复制table的文字 */
+div:deep(.arco-modal-container) {
+    pointer-events: none;
+}
+:deep(.arco-modal.arco-modal-draggable) {
+    pointer-events: auto;
 }
 </style>

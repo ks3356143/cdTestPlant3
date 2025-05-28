@@ -18,8 +18,8 @@
                     <template #icon><icon-swap /></template>
                 </a-button>
                 <a-divider direction="vertical"></a-divider>
-                <a-button type="primary" @click="handlePerpleModal">批量修改人员</a-button>
-                <a-button type="primary" @click="handleExetimeModal">批量修改时间</a-button>
+                <a-button type="outline" @click="handlePerpleModal">批量修改人员</a-button>
+                <a-button type="outline" @click="handleExetimeModal">批量修改时间</a-button>
             </a-space>
             <a-space>
                 <a-space class="lg:mt-0 mt-2">
@@ -126,7 +126,7 @@
             ref="replaceModal"
             :selectRows="selecteds"
             :api="caseApi.replace"
-            :columns="columns"
+            :columns="columns.filter((it) => it.dataIndex !== 'ident')"
             key="modal-case"
             popup-key="case"
             @replaceSuccess="replaceSuccessHandle"
@@ -152,8 +152,8 @@ import useDelete from "@/views/project/opeSets/components/DesignTable/useDelete"
 import { Message } from "@arco-design/web-vue"
 import ReplaceModal from "@/views/project/opeSets/components/DesignTable/ReplaceModal.vue"
 // case专属组件
-import ReplacePerson from "./ReplacePerson.vue"
-import ReplaceExetime from "./ReplaceExetime.vue"
+import ReplacePerson from "@/views/project/opeSets/components/CaseTable/ReplacePerson.vue"
+import ReplaceExetime from "@/views/project/opeSets/components/CaseTable/ReplaceExetime.vue"
 
 const columns = ref([
     {
@@ -224,7 +224,7 @@ const { deletesMultipleAction } = useDelete(caseApi.delete, fetchData, selecteds
 // 7.2.批量替换相关
 const replaceModal = ref<InstanceType<typeof ReplaceModal> | null>(null)
 const handleOpenReplaceModal = () => {
-    replaceModal.value?.open()
+    replaceModal.value?.open(undefined)
 }
 const replaceSuccessHandle = async (count: number) => {
     Message.success(`批量更新成功，尝试更新行数：${count}`)
@@ -242,13 +242,13 @@ const searchSubmit = (data: ISearchFormCase) => {
 // 9.批量修改人员
 const replacePersonModalRef = ref<InstanceType<typeof ReplacePerson>>()
 const handlePerpleModal = () => {
-    replacePersonModalRef.value!.open()
+    replacePersonModalRef.value!.open(undefined)
 }
 
-// 10.批量修改事件
+// 10.批量修改时间
 const replaceExetimeModalRef = ref<InstanceType<typeof ReplacePerson>>()
 const handleExetimeModal = () => {
-    replaceExetimeModalRef.value!.open()
+    replaceExetimeModalRef.value!.open(undefined)
 }
 </script>
 

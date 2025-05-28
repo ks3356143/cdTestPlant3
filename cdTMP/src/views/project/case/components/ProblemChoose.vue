@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" width="1200px" :footer="false" :mask-closable="false" unmount-on-close>
+    <a-modal v-model:visible="visible" width="1200px" :footer="false" :mask-closable="false">
         <template #title>{{ title }}</template>
         <!-- crud组件 -->
         <div class="lg:w-full w-full">
@@ -37,7 +37,7 @@
 
 <script setup lang="jsx">
 // 本组件位置：1.在右键轮次问题单 2.用例界面关联问题单
-import { ref } from "vue"
+import { nextTick, ref } from "vue"
 import problemApi from "@/api/project/problem"
 import problemSingleApi from "@/api/project/singleProblem"
 import { Message, Notification } from "@arco-design/web-vue"
@@ -102,25 +102,27 @@ const handleRelatedChange = async (record) => {
 }
 
 // 数据定义
-const crudRef = ref()
+const crudRef = ref(null)
 const visible = ref(false)
-const caseModalRef = ref()
+const caseModalRef = ref(null)
 
 // 定义open事件
 const open = (row) => {
-    if (props.hasRelated === "roundProblem") {
-        const columnService = crudRef.value.getColumnService()
-        columnService.get("related").setAttr("hide", true)
-        crudRef.value.requestParams = { round_key: row }
-        crudRef.value.requestData() // 这里要变化，请求的API变化
-        visible.value = true
-    }
-    if (props.hasRelated === "relatedProblem") {
-        crudRef.value.requestData() // 手动请求数据
-        visible.value = true
-        // 打开时赋值caseInfo
-        caseInfo.value = row
-    }
+    nextTick(() => {
+        if (props.hasRelated === "roundProblem") {
+            const columnService = crudRef.value.getColumnService()
+            columnService.get("related").setAttr("hide", true)
+            crudRef.value.requestParams = { round_key: row }
+            crudRef.value.requestData() // 这里要变化，请求的API变化
+            visible.value = true
+        }
+        if (props.hasRelated === "relatedProblem") {
+            crudRef.value.requestData() // 手动请求数据
+            visible.value = true
+            // 打开时赋值caseInfo
+            caseInfo.value = row
+        }
+    })
 }
 // crudOptions设置
 const crudOptions = ref({
@@ -505,6 +507,7 @@ const columns = ref([
 // 暴露自己的open方法
 defineExpose({ open })
 </script>
+
 <style lang="less" scoped>
 .alert {
     max-height: 32px;

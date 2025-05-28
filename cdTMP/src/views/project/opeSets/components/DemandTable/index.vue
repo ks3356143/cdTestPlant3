@@ -17,6 +17,8 @@
                     批量替换
                     <template #icon><icon-swap /></template>
                 </a-button>
+                <a-divider direction="vertical"></a-divider>
+                <a-button type="outline" @click="handleOpenReplacePriority">批量修改优先级</a-button>
             </a-space>
             <a-space>
                 <a-space class="lg:mt-0 mt-2">
@@ -136,11 +138,13 @@
             ref="replaceModal"
             :selectRows="selecteds"
             :api="demandApi.replace"
-            :columns="columns"
+            :columns="columns.filter((it) => it.dataIndex !== 'priority' && it.dataIndex !== 'testType')"
             key="modal-demand"
             popup-key="demand"
             @replaceSuccess="replaceSuccessHandle"
         />
+        <!-- 批量修改优先级 -->
+        <ReplacePriority ref="replacePriorityRef" @modifySuccess="fetchData()" :selected-rows="selecteds" />
     </div>
 </template>
 
@@ -157,6 +161,7 @@ import Trigger from "./Trigger.vue"
 import Search from "@/views/project/opeSets/components/DesignTable/Search.vue"
 import useDelete from "@/views/project/opeSets/components/DesignTable/useDelete"
 import ReplaceModal from "@/views/project/opeSets/components/DesignTable/ReplaceModal.vue"
+import ReplacePriority from "@/views/project/opeSets/components/DemandTable/ReplacePriority.vue"
 import { Message } from "@arco-design/web-vue"
 
 // 0.[不同]定义列字段
@@ -262,7 +267,7 @@ const { deletesMultipleAction } = useDelete(demandApi.delete, fetchData, selecte
 // 7.2.批量替换相关
 const replaceModal = ref<InstanceType<typeof ReplaceModal> | null>(null)
 const handleOpenReplaceModal = () => {
-    replaceModal.value?.open()
+    replaceModal.value?.open(undefined)
 }
 const replaceSuccessHandle = async (count: number) => {
     Message.success(`批量更新成功，尝试更新行数：${count}`)
@@ -275,6 +280,12 @@ const searchVisible = ref(true)
 const searchSubmit = (data: ISearchFormDemand) => {
     searchParams.value = { ...data }
     fetchData(true)
+}
+
+// 9.批量修改优先级-priority
+const replacePriorityRef = ref<InstanceType<typeof ReplacePriority> | null>(null)
+const handleOpenReplacePriority = () => {
+    replacePriorityRef.value?.open(undefined)
 }
 </script>
 

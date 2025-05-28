@@ -30,8 +30,13 @@ import caseApi from "@/api/project/case"
 const visible = ref(false)
 const formData = ref({})
 const exetime = ref("")
+const getSelectedsFunc = ref<any>(() => [])
+
 // props
-const { selectRows } = defineProps<{ selectRows: any }>()
+const { selectRows } = defineProps<{ selectRows?: any }>()
+
+// emits
+const emit = defineEmits(["modifySuccess"])
 
 // 2.异步执行替换操作，返回boolean-true则关闭弹窗
 const submitReplace = async () => {
@@ -40,13 +45,15 @@ const submitReplace = async () => {
         Message.error("请选择时间后，进行替换操作")
         return false
     }
-    if (selectRows.length && selectRows.length > 0) {
+    const selecteds = selectRows || getSelectedsFunc.value() || []
+    if (selecteds.length && selecteds.length > 0) {
         // 判断是否选择了行
         // 请求后台执行
         await caseApi.exetimeReplace({
-            selectRows: selectRows,
+            selectRows: selecteds,
             exetime: exetime.value
         })
+        emit("modifySuccess")
         Message.success("批量替换成功...")
         return true
     }
@@ -55,7 +62,8 @@ const submitReplace = async () => {
 }
 
 // 其他：打开modal
-const open = () => {
+const open = (getFunc: (() => number[]) | undefined) => {
+    if (getFunc) getSelectedsFunc.value = getFunc
     exetime.value = ""
     visible.value = true
 }

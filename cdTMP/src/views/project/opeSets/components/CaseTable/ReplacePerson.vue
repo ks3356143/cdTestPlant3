@@ -56,8 +56,13 @@ const formData = ref({})
 const designPerson = ref("不替换")
 const testPerson = ref("不替换")
 const monitorPerson = ref("不替换")
+const getSelectedsFunc = ref<any>(() => [])
+
 // props
 const { selectRows } = defineProps<{ selectRows: any }>()
+
+// emits
+const emit = defineEmits(["modifySuccess"])
 
 // 1.在created时候直接请求后端项目人员信息
 const persons = ref([])
@@ -74,15 +79,17 @@ const submitReplace = async () => {
         Message.error("至少选择一项替换")
         return false
     }
-    if (selectRows.length && selectRows.length > 0) {
+    const selecteds = selectRows || getSelectedsFunc.value() || []
+    if (selecteds.length && selecteds.length > 0) {
         // 判断是否选择了行
         // 请求后台执行
         await caseApi.personReplace({
-            selectRows: selectRows,
+            selectRows: selecteds,
             designPerson: designPerson.value,
             testPerson: testPerson.value,
             monitorPerson: monitorPerson.value
         })
+        emit("modifySuccess")
         Message.success("批量替换成功...")
         return true
     }
@@ -91,7 +98,8 @@ const submitReplace = async () => {
 }
 
 // 其他：打开modal
-const open = () => {
+const open = (getFunc: (() => number[]) | undefined) => {
+    if (getFunc) getSelectedsFunc.value = getFunc
     designPerson.value = "不替换"
     testPerson.value = "不替换"
     monitorPerson.value = "不替换"

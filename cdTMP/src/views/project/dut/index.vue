@@ -2,17 +2,32 @@
     <div class="ma-content-block lg:flex justify-between p-4">
         <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
             <!-- CRUD组件 -->
-            <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef" :parent-key="route.query.key">
+            <ma-crud
+                id="basic-table-design-normal"
+                :options="crudOptions"
+                :columns="crudColumns"
+                ref="crudRef"
+                :parent-key="route.query.key"
+            >
                 <template #ident="{ record }">
                     {{ showType(record) }}
                 </template>
                 <template #tableAfterButtons>
-                    <a-button status="success" type="outline" @click="handleAddFileInputDemand" v-if="isXQ === 'XQ'">
-                        <template #icon>
-                            <icon-plus />
-                        </template>
-                        上传需求规格说明快捷录入
-                    </a-button>
+                    <a-space>
+                        <a-button
+                            status="success"
+                            type="outline"
+                            @click="handleAddFileInputDemand"
+                            v-if="isXQ === 'XQ'"
+                        >
+                            <template #icon>
+                                <icon-plus />
+                            </template>
+                            上传需求规格说明快捷录入
+                        </a-button>
+                        <a-divider direction="vertical" type="double" />
+                        <a-button type="outline" @click="handleReplaceClick">批量替换</a-button>
+                    </a-space>
                 </template>
                 <!-- 字段的前缀后缀的插槽 -->
                 <!-- 版本字段的插槽 -->
@@ -20,6 +35,20 @@
             </ma-crud>
         </div>
         <file-input-modal ref="fileInputRef" @enterFinish="crudRef.refresh()"></file-input-modal>
+        <!-- 批量替换组件 -->
+        <ReplaceModel
+            ref="replaceModal"
+            :api="designApi.replace"
+            :columns="[
+                { dataIndex: 'ident', title: '标识' },
+                { dataIndex: 'name', title: '名称' },
+                { dataIndex: 'chapter', title: '章节号' },
+                { dataIndex: 'description', title: '需求描述' }
+            ]"
+            key="modal-design-normal"
+            popup-key="design-normal"
+            @replaceSuccess="replaceSuccessHandle"
+        />
     </div>
 </template>
 
@@ -27,13 +56,31 @@
 import { ref } from "vue"
 import useCrudOptions from "@/views/project/dut/hooks/useCrudOptions"
 import useColumns from "./hooks/useColumns"
+import { Message } from "@arco-design/web-vue"
 import { useRoute } from "vue-router"
 import dutApi from "@/api/project/dut"
+import designApi from "@/api/project/designDemand"
 import commonApi from "@/api/common"
 import FileInputModal from "./components/FileInputModal/index.vue"
+import ReplaceModel from "@/views/project/opeSets/components/DesignTable/ReplaceModal.vue"
+
 const route = useRoute()
 const crudRef = ref()
 const projectId = ref(route.query.id)
+
+// 5月28日新增功能：替换
+const replaceModal = ref()
+
+const handleReplaceClick = () => {
+    replaceModal.value?.open(crudRef.value.getSelecteds) // 把获取选中行的函数给传递给替换组件
+}
+
+const replaceSuccessHandle = async (count) => {
+    Message.success(`批量更新成功，尝试更新行数：${count}`)
+    // 批量更新后刷新表格
+    crudRef.value.refresh()
+}
+
 // 5月8日修改设计需求标识就按SJ-FT-设计需求标识来
 const demandTypeDict = ref([])
 ;(function () {
@@ -62,6 +109,7 @@ const showType = (record) => {
 // crud组件
 const crudOptions = useCrudOptions(crudRef)
 const crudColumns = useColumns(crudRef)
+
 // ~~~大功能打开ma-form-modal~~~
 const fileInputRef = ref(null)
 const handleAddFileInputDemand = () => {
@@ -78,4 +126,12 @@ defineOptions({
 })
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+/* 下面让modal的蒙层不交互，让用户可以复制table的文字 */
+div:deep(.arco-modal-container) {
+    pointer-events: none;
+}
+:deep(.arco-modal.arco-modal-draggable) {
+    pointer-events: auto;
+}
+</style>

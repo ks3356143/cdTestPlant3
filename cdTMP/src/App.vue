@@ -17,6 +17,7 @@ const storageEvent = function (e: StorageEvent) {
         })
     }
 }
+
 window.addEventListener("storage", storageEvent)
 onUnmounted(() => {
     window.removeEventListener("storage", storageEvent)

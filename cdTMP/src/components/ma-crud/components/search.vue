@@ -41,6 +41,11 @@
                 </a-space>
             </div>
         </a-form>
+        <a-divider
+            :style="{
+                margin: '8px 0'
+            }"
+        ></a-divider>
     </a-spin>
 </template>
 

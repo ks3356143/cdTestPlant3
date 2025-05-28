@@ -63,14 +63,21 @@ import { useRoute } from "vue-router"
 // refs
 const visible = ref(false)
 const route = useRoute()
+// 保存获取选择行的函数
+const selectedGetFunc = ref<() => number[] | undefined>(() => [])
 
 // ref
-const formRef = ref<InstanceType<typeof Form>>(null)
+const formRef = ref<InstanceType<typeof Form>>()
 
 // props
 /// 已选择的行数据的id列表
-const { selectRows, columns, api, popupKey } = defineProps<{
-    selectRows: number[]
+const {
+    selectRows = undefined,
+    columns,
+    api,
+    popupKey
+} = defineProps<{
+    selectRows?: number[]
     columns: any[]
     api: Function
     popupKey: string
@@ -94,18 +101,27 @@ const submitReplace = async () => {
     // 验证表单
     const validate = await formRef.value.validate()
     if (!validate) {
+        // 判断使用selectedRows还是selectedOpenIn
+        let selecteds = selectRows || selectedGetFunc.value!() || []
         // 进入这里表示验证通过，手动验证是否选择了行
-        if (selectRows.length < 1) {
+        if (selecteds.length < 1) {
             // 提示用户需要先选择table的行
-            Message.error("请先在表格中选择行进行替换")
+            Message.error("您还未选择行...")
             return false
         }
         // 都验证后提交给后端操作
         try {
+            // 首先该组件两个地方使用，需要处理key的问题
+            const round_key = {
+                key: route.query.key as string
+            }
+            if (round_key.key && round_key.key.split("-").length > 1) {
+                round_key.key = round_key.key.split("-")[0]
+            }
             const res = await api({
                 project_id: route.query.id,
-                round_key: route.query.key,
-                selectRows,
+                round_key: round_key.key,
+                selectRows: selecteds,
                 ...formData.value
             })
             // 批量修改成功放出信号给父组件更新表格
@@ -119,7 +135,11 @@ const submitReplace = async () => {
 }
 
 // expose functions
-const open = () => {
+const open = (selectedIdsGetFunc: (() => number[]) | undefined) => {
+    // 保存获取用户选择行的函数, 可能是undefined
+    if (selectedIdsGetFunc) {
+        selectedGetFunc.value = selectedIdsGetFunc
+    }
     // 每次打开初始化表单数据
     formData.value = {
         ...initialFormData

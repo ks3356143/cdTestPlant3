@@ -119,5 +119,16 @@ export default {
             method: "post",
             data
         })
+    },
+    /**
+     * 选择行后，批量修改“优先级”
+     * @returns
+     */
+    priorityReplace(data = { selectRows: [], priority: "" }) {
+        return request({
+            url: "/project/testDemand/priorityReplace/",
+            method: "post",
+            data
+        })
     }
 }

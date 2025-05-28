@@ -214,7 +214,7 @@ const { deletesMultipleAction } = useDelete(designApi.delete, fetchData, selecte
 // 7.2.批量替换相关
 const replaceModal = ref<InstanceType<typeof ReplaceModal> | null>(null)
 const handleOpenReplaceModal = () => {
-    replaceModal.value?.open()
+    replaceModal.value?.open(undefined)
 }
 const replaceSuccessHandle = async (count: number) => {
     Message.success(`批量更新成功，尝试更新行数：${count}`)

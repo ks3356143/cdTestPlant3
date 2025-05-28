@@ -37,7 +37,7 @@ const useCrudInit = function () {
                 {
                     formType: "grid",
                     cols: [
-                        { span: 4, formList: [{ dataIndex: "ident" }] },
+                        { span: 8, formList: [{ dataIndex: "ident" }] },
                         { span: 8, formList: [{ dataIndex: "name" }] }
                     ]
                 },
