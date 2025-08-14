@@ -261,6 +261,20 @@ function swapItems(idx1, idx2) {
     ;[arr[idx1], arr[idx2]] = [arr[idx2], arr[idx1]]
 }
 
+// 辅助函数：触发充分性分析
+// 2025-06-24：新增子项后需对触发更新
+function updateChongFen() {
+    if (formModel.value.testContent && formModel.value.testContent.length > 0) {
+        // 如果有testContent则更新“充分性要求”
+        const subItemFormData = formModel.value.testContent
+        const mapRes = subItemFormData.map((subItem) => subItem.subName || "")
+        formModel.value.adequacy &&
+            (formModel.value.adequacy = `测试用例覆盖${mapRes.join(
+                "、"
+            )}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`)
+    }
+}
+
 // 修改源码：上移动和下移动
 const moveUp = (itemIndex) => {
     const itemLength = formModel.value[props.component.dataIndex].length
@@ -270,6 +284,8 @@ const moveUp = (itemIndex) => {
     }
     // 进行移动
     swapItems(itemIndex, itemIndex - 1)
+    // 2025-06-24修改
+    updateChongFen()
 }
 
 const moveDown = (itemIndex) => {
@@ -280,6 +296,8 @@ const moveDown = (itemIndex) => {
     }
     // 进行移动
     swapItems(itemIndex, itemIndex + 1)
+    // 2025-06-24修改
+    updateChongFen()
 }
 
 const addItem = async (data = {}) => {
@@ -289,6 +307,8 @@ const addItem = async (data = {}) => {
     viewFormList.value[index] = cloneDeep(formList)
     rv("onAdd", { formList: viewFormList.value[index], newData, index }) // 修改源码：深度复制data->newData
     formModel.value[props.component.dataIndex].push(newData) // 修改源码：深度复制data->newData
+    // 修改源码，触发充分性更新
+    updateChongFen()
 }
 
 const deleteItem = async (index) => {
@@ -298,6 +318,8 @@ const deleteItem = async (index) => {
         await nextTick()
         formModel.value[props.component.dataIndex].splice(index, 1)
     }
+    // 2025-06-24修改
+    updateChongFen()
 }
 
 const getChildrenDataIndex = (index, dataIndex) => {

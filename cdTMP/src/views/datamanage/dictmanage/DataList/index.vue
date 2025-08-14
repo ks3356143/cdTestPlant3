@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visible" width="80%" draggable :footer="false" unmount-on-close>
+    <a-modal v-model:visible="visible" width="80%" draggable :footer="false">
         <template #title>维护数据字典 →【{{ currentRow.name }}】</template>
         <!-- crud组件 -->
         <div class="lg:w-full w-full lg:mt-0">
@@ -35,6 +35,7 @@ import useOpenChangeModal from "./useOpenChangeModal"
 
 const currentRow = ref({ id: undefined, name: undefined }) // 当前选择的行
 const { crudRef, crudOptions, columns } = useCrudRef(currentRow)
+
 const { visible, changeSort, changeStatus, open } = useOpenChangeModal(crudRef, currentRow)
 // 暴露自己的open方法
 defineExpose({ open })

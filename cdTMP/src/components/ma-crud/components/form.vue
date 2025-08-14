@@ -99,10 +99,15 @@ const submit = async () => {
         if (isFunction(options.beforeEdit) && !(await options.beforeEdit(formData))) {
             return false
         }
-        if (!options.parameters) {
-            response = await options.edit.api(formData[options.pk], formData)
-        } else {
-            response = await options.edit.api(formData[options.pk], { ...formData, ...options.parameters })
+        // 修改源码2025-06-24，使用try...catch捕获信息
+        try {
+            if (!options.parameters) {
+                response = await options.edit.api(formData[options.pk], formData)
+            } else {
+                response = await options.edit.api(formData[options.pk], { ...formData, ...options.parameters })
+            }
+        } catch (e) {
+            return false
         }
         isFunction(options.afterEdit) && (await options.afterEdit(response, formData))
     }

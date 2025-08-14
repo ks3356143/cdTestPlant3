@@ -61,7 +61,7 @@
                                             </a-button>
                                         </a-tooltip>
                                         <a-button-group shape="round" size="mini">
-                                            <a-button type="primary"  @click="moveUp(index)">
+                                            <a-button type="primary" @click="moveUp(index)">
                                                 <icon-arrow-rise />
                                             </a-button>
                                             <a-button type="primary" @click="moveDown(index)">
@@ -100,6 +100,7 @@
 
 <script setup lang="ts">
 import { type Ref, nextTick } from "vue"
+import { cloneDeep } from "lodash-es"
 
 // 辅助函数：当modelValue不是列表时候
 function handleIsNotArray() {
@@ -129,7 +130,7 @@ const deleteItem = (index: number) => {
 
 // 复制单项
 const copyItem = (index: number) => {
-    const newItem = modelValue.value[index]
+    const newItem = cloneDeep(modelValue.value[index])
     modelValue.value = [...modelValue.value, newItem]
 }
 

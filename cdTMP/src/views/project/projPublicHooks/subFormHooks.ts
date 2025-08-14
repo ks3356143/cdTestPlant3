@@ -24,10 +24,14 @@ export default function (updateApiFunc: Function, updateTreeFunc: Function, widt
             return false
         } else {
             // 成功 **变化**
-            const res = await updateApiFunc(formData.value.id, { project_id, ...formData.value })
-            updateTreeFunc(res.data, project_id) // 刷新树节点信息
-            !(rightViewRef as any).value.refresh()
-            Message.success("修改成功")
+            try {
+                const res = await updateApiFunc(formData.value.id, { project_id, ...formData.value })
+                updateTreeFunc(res.data, project_id) // 刷新树节点信息
+                !(rightViewRef as any).value.refresh()
+                Message.success("修改成功")
+            } catch (e) {
+                return false
+            }
         }
     }
     const modalOptions = {
