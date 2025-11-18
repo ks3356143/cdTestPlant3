@@ -12,7 +12,7 @@
                     :heading="5"
                 >
                     <div
-                        class="font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600"
+                        class="font-extrabold bg-clip-text text-transparent bg-linear-to-r from-blue-500 to-purple-600"
                     >
                         测试管理平台
                     </div>

@@ -150,7 +150,12 @@ import ParentPreview from "@/views/project/ParentPreview/index.vue"
 // 判断是否有
 const formKey = computed(() => {
     // 去掉双击被测件：即key.split("").length > 1
-    if (form.value.key && form.value.key.split("-").length > 2) {
+    if (
+        form.value.key &&
+        typeof form.value.key !== "number" &&
+        form.value.key &&
+        form.value.key.split("-").length > 2
+    ) {
         // 如果存在则取前面的
         return form.value.key.slice(0, -2)
     }
