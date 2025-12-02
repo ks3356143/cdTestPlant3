@@ -47,7 +47,8 @@
         ],
         "types": [
             "vite/client",
-            "@arco-design/web-vue"
+            "@arco-design/web-vue",
+            "@types/node"
         ]
     },
     "include": [

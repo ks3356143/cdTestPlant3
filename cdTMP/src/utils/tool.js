@@ -91,4 +91,15 @@ tool.chnRoundNameArray = [
     "第十六轮"
 ]
 
+// 将html变为纯文本
+tool.htmlToTextWithDOM = (htmlString) => {
+    // 1. 创建一个临时的div元素
+    const tempDiv = document.createElement("div")
+    // 2. 将HTML字符串设置为临时div的内容
+    tempDiv.innerHTML = htmlString
+    // 3. 使用innerText属性获取纯文本，这会自动忽略所有HTML标签
+    const text = tempDiv.innerText || tempDiv.textContent
+    return text
+}
+
 export default tool

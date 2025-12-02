@@ -85,7 +85,7 @@
                         <template v-else>
                             <tr>
                                 <td colspan="3">
-                                    <div class="flex justify-center items-center p-2 border-1">
+                                    <div class="flex justify-center items-center p-2 border">
                                         <a-alert>暂无测试子项条目，请添加</a-alert>
                                     </div>
                                 </td>

@@ -26,6 +26,8 @@
                         <a-button type="outline" @click="handleReplaceClick">批量替换</a-button>
                         <a-divider direction="vertical" type="double" />
                         <a-button type="outline" @click="handleOpenReplacePriority">批量修改优先级</a-button>
+                        <a-divider direction="vertical" type="double" />
+                        <AiButton @click="handleAiButtonClick" />
                     </a-space>
                 </template>
                 <!-- 版本字段的插槽 -->
@@ -66,6 +68,8 @@
         />
         <!-- 批量修改优先级 -->
         <ReplacePriority @modifySuccess="crudRef.refresh()" ref="replacePriorityRef" />
+        <!-- AI-Modal -->
+        <AiModal v-model:visible="ai_modal_visible"></AiModal>
     </div>
 </template>
 
@@ -74,6 +78,8 @@ import { ref } from "vue"
 import commonApi from "@/api/common"
 import { useRoute } from "vue-router"
 import { Message } from "@arco-design/web-vue"
+import AiButton from "@/components/ai-button/index.vue"
+import AiModal from "./AiModal.vue"
 // hooks
 import useCrudOpMore from "./hooks/useCrudOpMore"
 import useColumn from "./hooks/useColumns"
@@ -106,6 +112,7 @@ const handleOpenReplacePriority = () => {
 // 根据传参获取key，分别为轮次、设计需求的key
 const { projectId, crudOptions, handleBeforeCancel } = useCrudOpMore(crudRef)
 const crudColumns = useColumn(crudRef)
+
 // 关联弹窗、关联的事件处理
 const { visible, relatedData, options, cascaderLoading, computedRelatedData, handleOpenRelationCSX, handleRelatedOk } =
     useRalateDemand(projectId)
@@ -125,6 +132,12 @@ const showType = (record) => {
             return "XQ-" + item.show_title + "-" + record.ident
         }
     }
+}
+
+// AI-MODAL
+const ai_modal_visible = ref(false)
+const handleAiButtonClick = () => {
+    ai_modal_visible.value = true
 }
 
 // 暴露给route-view的刷新表格函数
