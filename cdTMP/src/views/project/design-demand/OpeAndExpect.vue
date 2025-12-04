@@ -6,12 +6,12 @@
                     <tr class="arco-table-tr">
                         <th class="arco-table-th" :width="400">
                             <span class="arco-table-cell arco-table-cell-align-center">
-                                <span class="arco-table-th-title">操作</span>
+                                <span class="arco-table-th-title label">操作</span>
                             </span>
                         </th>
                         <th class="arco-table-th" :width="400">
                             <span class="arco-table-cell arco-table-cell-align-center">
-                                <span class="arco-table-th-title">预期</span>
+                                <span class="arco-table-th-title label">预期</span>
                             </span>
                         </th>
                     </tr>

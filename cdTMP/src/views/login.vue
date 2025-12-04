@@ -10,10 +10,7 @@
                     <img src="@/assets/img/wxwx-logo.svg" width="45" /><span>{{ $title }}</span>
                 </div>
                 <div class="slogan flex justify-end">
-                    <span
-                        class="font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600"
-                        >---- 为测评服务，打造测评高地</span
-                    >
+                    <span class="font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">---- 为测评服务，打造测评高地</span>
                 </div>
             </div>
 
@@ -28,14 +25,7 @@
                             { maxLength: 30, message: '用户名不能超过30个字符' }
                         ]"
                     >
-                        <a-input
-                            v-model="form.username"
-                            class="w-full"
-                            size="large"
-                            placeholder="用户名"
-                            allow-clear
-                            :max-length="30"
-                        >
+                        <a-input v-model="form.username" class="w-full" size="large" placeholder="用户名" allow-clear :max-length="30">
                             <template #prefix><icon-user /></template>
                         </a-input>
                     </a-form-item>
@@ -48,13 +38,7 @@
                             { maxLength: 30, message: '密码不超过30字符' }
                         ]"
                     >
-                        <a-input-password
-                            v-model="form.password"
-                            placeholder="请输入密码"
-                            size="large"
-                            allow-clear
-                            :max-length="30"
-                        >
+                        <a-input-password v-model="form.password" placeholder="请输入密码" size="large" allow-clear :max-length="30">
                             <template #prefix><icon-lock /></template>
                         </a-input-password>
                     </a-form-item>
@@ -70,13 +54,7 @@
                             }
                         ]"
                     >
-                        <a-input
-                            v-model="form.code"
-                            placeholder="请输入验证码"
-                            size="large"
-                            allow-clear
-                            :max-length="4"
-                        >
+                        <a-input v-model="form.code" placeholder="请输入验证码" size="large" allow-clear :max-length="4">
                             <template #prefix><icon-safe /></template>
                             <template #append>
                                 <verify-code ref="Verify" />
@@ -85,9 +63,7 @@
                     </a-form-item>
 
                     <a-form-item :hide-label="true" class="mt-5">
-                        <a-button html-type="submit" type="primary" long size="large" :loading="loading">
-                            登录
-                        </a-button>
+                        <a-button html-type="submit" type="primary" long size="large" :loading="loading"> 登录 </a-button>
                     </a-form-item>
 
                     <a-divider orientation="center">未来登录方式</a-divider>
@@ -115,7 +91,7 @@ const router = useRouter()
 const userStore = useUserStore()
 // 绑定登录form的数据
 // const form = reactive({ username: "superAdmin", password: "admin123", code: "" })
-const form = reactive({ username: "", password: "", code: "" })
+const form = reactive({ username: "superAdmin", password: "admin123", code: "" })
 // 获取验证码dom && arco表单loading
 const Verify = ref(null)
 const loading = ref(null)
@@ -185,7 +161,9 @@ const handleSubmit = async ({ values, errors }) => {
         top: 50%;
         margin-top: -255px;
         border-radius: var(--border-radius-small);
-        box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+        box-shadow:
+            rgba(0, 0, 0, 0.25) 0px 14px 28px,
+            rgba(0, 0, 0, 0.22) 0px 10px 10px;
         backdrop-filter: blur(3px);
     }
 

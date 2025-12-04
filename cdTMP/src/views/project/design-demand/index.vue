@@ -69,7 +69,7 @@
         <!-- 批量修改优先级 -->
         <ReplacePriority @modifySuccess="crudRef.refresh()" ref="replacePriorityRef" />
         <!-- AI-Modal -->
-        <AiModal v-model:visible="ai_modal_visible"></AiModal>
+        <AiModal @updateTable="handleAiRefresh" v-model:visible="ai_modal_visible"></AiModal>
     </div>
 </template>
 
@@ -81,6 +81,7 @@ import { Message } from "@arco-design/web-vue"
 import AiButton from "@/components/ai-button/index.vue"
 import AiModal from "./AiModal.vue"
 // hooks
+import { useTreeDataStore } from "@/store"
 import useCrudOpMore from "./hooks/useCrudOpMore"
 import useColumn from "./hooks/useColumns"
 import useRalateDemand from "./hooks/useRalateDemand"
@@ -89,6 +90,7 @@ import ReplaceModel from "@/views/project/opeSets/components/DesignTable/Replace
 import ReplacePriority from "@/views/project/opeSets/components/DemandTable/ReplacePriority.vue"
 // inits
 const route = useRoute()
+const treeDataStore = useTreeDataStore()
 // refs
 const crudRef = ref(null)
 
@@ -114,8 +116,7 @@ const { projectId, crudOptions, handleBeforeCancel } = useCrudOpMore(crudRef)
 const crudColumns = useColumn(crudRef)
 
 // 关联弹窗、关联的事件处理
-const { visible, relatedData, options, cascaderLoading, computedRelatedData, handleOpenRelationCSX, handleRelatedOk } =
-    useRalateDemand(projectId)
+const { visible, relatedData, options, cascaderLoading, computedRelatedData, handleOpenRelationCSX, handleRelatedOk } = useRalateDemand(projectId)
 
 // 标识显示字段
 const testTypeDict = ref([])
@@ -139,10 +140,13 @@ const ai_modal_visible = ref(false)
 const handleAiButtonClick = () => {
     ai_modal_visible.value = true
 }
-
+const handleAiRefresh = () => {
+    refreshCrudTable()
+}
 // 暴露给route-view的刷新表格函数
 const refreshCrudTable = () => {
     crudRef.value.refresh()
+    treeDataStore.updateTestDemandTreeData({ key: route.query.key + "-0" }, projectId.value)
 }
 defineExpose({ refreshCrudTable })
 defineOptions({

@@ -33,7 +33,7 @@ export default {
         })
     },
     /**
-     * 添加被测件
+     * 添加测试项
      * @returns
      */
     save(params = {}) {

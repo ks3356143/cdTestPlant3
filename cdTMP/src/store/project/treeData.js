@@ -65,6 +65,7 @@ const useTreeDataStore = defineStore("treeDataStore", {
         },
         // 新增删除designDemand后tree显示-注意传的是测试项的key
         async updateDesignDemandTreeData(data, projrctId) {
+            console.log(data);
             let temp = data.key.split("-")
             temp.pop(-1)
             let roundKey = temp[0]

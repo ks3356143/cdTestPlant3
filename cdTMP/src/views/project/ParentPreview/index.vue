@@ -49,12 +49,7 @@ export default defineComponent({
                     {{
                         default: () => (
                             <div class="preview-container">
-                                <div
-                                    class="button-like"
-                                    ref={buttonLikeRef}
-                                    onMouseenter={onMouseenter}
-                                    onMouseleave={onMouseleave}
-                                >
+                                <div class="button-like" ref={buttonLikeRef} onMouseenter={onMouseenter} onMouseleave={onMouseleave}>
                                     <icon-find-replace />
                                     {hoverText.value && <span class="ml-2">{hoverText.value}</span>}
                                 </div>

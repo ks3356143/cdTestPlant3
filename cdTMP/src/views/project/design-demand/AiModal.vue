@@ -1,6 +1,6 @@
 <template>
     <div class="ai-modal-container">
-        <a-modal v-model:visible="visible" width="80%" unmount-on-close draggable>
+        <a-modal v-model:visible="visible" width="80%" unmount-on-close draggable :footer="false">
             <template #title> AI生成测试项 </template>
             <div class="flex flex-col">
                 <a-button type="primary" :disabled="generateLoading" @click="generateClick">{{
@@ -24,10 +24,10 @@
                             <div class="item-container">
                                 <a-input-group>
                                     <div class="index-hao">{{ indexTu[index] }}</div>
-                                    测试项：
+                                    <span class="label">测试项：</span>
                                     <a-input placeholder="测试项标识" v-model="item.ident" :style="{ width: '100px' }" @click.stop.prevent></a-input>
-                                    <a-input placeholder="测试项名称" v-model="item.title" :style="{ width: '200px' }" @click.stop.prevent></a-input>
-                                    <a-select placeholder="选择优先级" v-model="item.priority" :style="{ width: '100px' }">
+                                    <a-input placeholder="测试项名称" v-model="item.title" :style="{ width: '250px' }" @click.stop.prevent></a-input>
+                                    <a-select placeholder="选择优先级" v-model="item.priority" :style="{ width: '150px' }">
                                         <a-option value="1">高</a-option>
                                         <a-option value="2">中</a-option>
                                         <a-option value="3">低</a-option>
@@ -37,7 +37,7 @@
                                             {{ type.title }}
                                         </a-option>
                                     </a-select>
-                                    <a-select placeholder="选择测试手段" multiple v-model="item.testMethod" :style="{ width: '250px' }">
+                                    <a-select placeholder="选择测试手段" multiple v-model="item.testMethod" :style="{ width: '400px' }">
                                         <a-option v-for="method in testMethod" :key="method.key" :value="method.key">
                                             {{ method.title }}
                                         </a-option>
@@ -56,17 +56,17 @@
                                                 <tr class="arco-table-tr">
                                                     <th class="arco-table-th" :width="100">
                                                         <span class="arco-table-cell arco-table-cell-align-center">
-                                                            <span class="arco-table-th-title">子项序号</span>
+                                                            <span class="arco-table-th-title label">子项序号</span>
                                                         </span>
                                                     </th>
                                                     <th class="arco-table-th" :width="400">
                                                         <span class="arco-table-cell arco-table-cell-align-center">
-                                                            <span class="arco-table-th-title">测试子项描述</span>
+                                                            <span class="arco-table-th-title label">测试子项描述</span>
                                                         </span>
                                                     </th>
                                                     <th class="arco-table-th" :width="800">
                                                         <span class="arco-table-cell arco-table-cell-align-center">
-                                                            <span class="arco-table-th-title">测试子项步骤</span>
+                                                            <span class="arco-table-th-title label">测试子项步骤</span>
                                                         </span>
                                                     </th>
                                                 </tr>
@@ -98,7 +98,11 @@
                         </a-list-item>
                     </template>
                 </a-list>
+                <div class="luButton">
+                    <a-button :loading="luButtonLoading" type="primary" @click="luButtonClick">确认录入测试项</a-button>
+                </div>
             </div>
+            <ParentPreview :parent-key="currentKey" />
         </a-modal>
     </div>
 </template>
@@ -112,6 +116,9 @@ import OpeAndExpect from "./OpeAndExpect.vue" // 操作和预期子表格
 import aiApi from "@/api/outs/aiApi"
 import { Message } from "@arco-design/web-vue"
 import tool from "@/utils/tool"
+import { isEmpty } from "lodash-es"
+import demandApi from "@/api/project/testDemand"
+import ParentPreview from "@/views/project/ParentPreview/index.vue"
 
 // 常量
 const indexTu = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚"
@@ -132,6 +139,7 @@ fetchTestType()
 
 // 初始化设计需求
 const route = useRoute()
+const currentKey: string = route.query.key as string
 const getDesign = async () => {
     try {
         const res = await designApi.getDesignDemandOne({ project_id: route.query.id, key: route.query.key })
@@ -158,11 +166,30 @@ const generateClick = async () => {
         // 变量：给AI的问题
         const question = tool.htmlToTextWithDOM(designObj.value?.description || "")
         console.log("给AI的问题如下：", question)
+        // 请求后处理结果
         const res = await aiApi.getAiTestItem({ question: question, stream: false })
+        // 判断真实接口和开发环境接口
+        let tempSolve: any = null
+        if (res.data) {
+            // 说明是开发环境
+            tempSolve = res.data
+        } else {
+            tempSolve = res
+        }
+        const solveRes = JSON.parse(tempSolve.history[0].at(-1))
+        console.log("AI生成测试项结果：", solveRes)
+        // 给Vue渲染测试项
+        dataList.value = solveRes
+        dataList.value.forEach((it: any) => {
+            it.ident = designObj.value.ident
+            it.priority = "1"
+            it.testType = "4"
+            it.testMethod = ["4"]
+        })
         percent.value = 1.0 // 完成进度
-        console.log("AI接口返回如下", res)
         Message.success("生成测试项成功，请完善信息后录入数据")
     } catch (e) {
+        console.log(e)
         percent.value = 0.0
     } finally {
         stopProgressSimulation()
@@ -199,6 +226,79 @@ onUnmounted(() => {
 
 // defineModel
 const visible = defineModel<boolean>("visible", { default: false })
+
+// 录入按钮相关
+const luButtonLoading = ref(false)
+const emit = defineEmits(["updateTable"])
+const luButtonClick = async () => {
+    // 1.检查是否还未生成测试项
+    if (isEmpty(dataList.value)) {
+        Message.warning("您还未生成测试项，请生成后再试")
+        return
+    }
+    // 2.检查测试项标识、测试项名称、优先级、测试类型、测试手段是否填写
+    const testItem: any = dataList.value.at(0)
+    if (!testItem.title.trim()) {
+        Message.warning("请先填写测试项名称!")
+        return
+    }
+    if (!testItem.demandDescription.trim()) {
+        Message.warning("请填写测试项描述后再试!")
+        return
+    }
+    if (testItem.testMethod.length === 0) {
+        Message.warning("请先选择测试手段后再试!")
+        return
+    }
+    // 3.组装接口需要的数据
+    const projectId = route.query.id
+    const splitKey: string[] = (route.query.key as any).split("-")
+    const round = splitKey[0]
+    const dut = splitKey[1]
+    const designDemand = splitKey.at(-1)
+    const adequacy: string = "测试用例覆盖测试子项要求的全部内容。\n所有用例执行完毕，对于未执行用例说明未执行原因。"
+    const ident = testItem.ident
+    const name = testItem.title
+    const testType = testItem.testType
+    const testMethod = testItem.testMethod
+    const testDesciption = testItem.demandDescription
+    const priority = testItem.priority
+    const testContent = testItem.children.map(({ name: subName, ...rest }) => ({
+        subName,
+        ...rest
+    }))
+    // 4.异步录入啦
+    try {
+        // 首先设置状态
+        luButtonLoading.value = true
+        generateLoading.value = true
+        await demandApi.save({
+            projectId,
+            round,
+            dut,
+            designDemand,
+            adequacy,
+            ident,
+            name,
+            testType,
+            testMethod,
+            testDesciption,
+            priority,
+            testContent
+        })
+        // 请求成功后需要：清除dataList内容，关闭弹窗，提示新增成功，刷新树状结构以及表格（给父组件刷新）
+        dataList.value = []
+        visible.value = false
+        Message.success("录入测试项成功")
+        emit("updateTable")
+    } catch (e) {
+    } finally {
+        luButtonLoading.value = false
+        generateLoading.value = false
+    }
+}
+
+// 悬浮按钮显示上级设计需求内容
 </script>
 
 <style scoped lang="less">
@@ -215,5 +315,13 @@ const visible = defineModel<boolean>("visible", { default: false })
 }
 :deep(.arco-progress-line) {
     border-radius: 0 !important;
+}
+.label {
+    font-weight: 700;
+}
+.luButton {
+    margin-left: auto;
+    padding: 10px;
+    padding-right: 0;
 }
 </style>
