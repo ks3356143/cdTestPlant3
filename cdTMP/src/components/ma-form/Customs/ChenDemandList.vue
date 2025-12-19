@@ -8,9 +8,7 @@
                             <th class="arco-table-th" :width="20">
                                 <span class="arco-table-cell arco-table-cell-align-center">
                                     <a-tooltip content="添加步骤">
-                                        <a-button type="primary" size="mini" shape="round" @click="addItem">
-                                            新增步骤+
-                                        </a-button>
+                                        <a-button :tabindex="-1" type="primary" size="mini" shape="round" @click="addItem"> 新增步骤+ </a-button>
                                     </a-tooltip>
                                 </span>
                             </th>
@@ -28,16 +26,13 @@
                     </thead>
                     <tbody>
                         <!-- 根据subStep渲染 -->
-                        <template
-                            v-if="modelValue && modelValue.length > 0"
-                            v-for="(stepItem, index) in modelValue"
-                            :key="index"
-                        >
+                        <template v-if="modelValue && modelValue.length > 0" v-for="(stepItem, index) in modelValue" :key="index">
                             <tr class="arco-table-tr">
                                 <td class="arco-table-td">
                                     <span class="arco-table-cell justify-center gap-1.5">
                                         <!-- 删除单项按钮 -->
                                         <a-button
+                                            :tabindex="-1"
                                             type="primary"
                                             status="danger"
                                             size="mini"
@@ -48,23 +43,17 @@
                                             <template #icon><icon-close /></template>
                                         </a-button>
                                         <a-tooltip content="复制该项添加">
-                                            <a-button
-                                                type="primary"
-                                                status="warning"
-                                                size="mini"
-                                                shape="round"
-                                                @click="copyItem(index)"
-                                            >
+                                            <a-button :tabindex="-1" type="primary" status="warning" size="mini" shape="round" @click="copyItem(index)">
                                                 <template #icon>
                                                     <icon-copy />
                                                 </template>
                                             </a-button>
                                         </a-tooltip>
                                         <a-button-group shape="round" size="mini">
-                                            <a-button type="primary" @click="moveUp(index)">
+                                            <a-button :tabindex="-1" type="primary" @click="moveUp(index)">
                                                 <icon-arrow-rise />
                                             </a-button>
-                                            <a-button type="primary" @click="moveDown(index)">
+                                            <a-button :tabindex="-1" type="primary" @click="moveDown(index)">
                                                 <icon-arrow-fall />
                                             </a-button>
                                         </a-button-group>

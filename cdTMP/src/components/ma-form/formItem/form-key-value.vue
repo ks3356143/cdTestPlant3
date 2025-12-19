@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <ma-form-item
         v-if="typeof props.component.display == 'undefined' || props.component.display === true"
@@ -35,7 +31,7 @@
                                     ><template #icon><icon-plus /></template
                                 ></a-button>
                                 <a-button size="small" type="primary" @click="minus(rowIndex)"
-                                    ><template #icon><icon-minus /></template
+                                    ><template #icon><icon-close /></template
                                 ></a-button>
                             </a-space>
                         </template>

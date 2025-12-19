@@ -17,11 +17,7 @@
                 </template>
             </ma-crud>
         </div>
-        <problem-choose
-            ref="problemchoose"
-            @deleted="related_reload"
-            @relatedOrunrelated="related_reload"
-        ></problem-choose>
+        <problem-choose ref="problemchoose" @deleted="related_reload" @relatedOrunrelated="related_reload"></problem-choose>
     </div>
 </template>
 
@@ -33,10 +29,13 @@ import { useTreeDataStore } from "@/store"
 import ProblemChoose from "./components/ProblemChoose.vue"
 import { Message } from "@arco-design/web-vue"
 import getCaseInfoHook from "@/hooks/workarea/currentCasePage"
+import { useUserStore } from "@/store"
+
 const treeDataStore = useTreeDataStore()
+const userStore = useUserStore()
 const route = useRoute()
 // hook-获取当前用例信息
-const { tempCaseInfo, caseIsNotPassedOrNotExe } = getCaseInfoHook()
+const { tempCaseInfo, caseIsNotPassedOrNotExe, fetchCaseOneStatus } = getCaseInfoHook()
 
 // const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
@@ -118,6 +117,8 @@ const crudOptions = ref({
     },
     // 请求后置处理-用于新增/删除更新树状的用例关联问题单状态
     afterRequest(tableData) {
+        // 调用更新是否有未通过变量
+        fetchCaseOneStatus()
         const caseQuery = { key: route.query.key }
         treeDataStore.updateCaseTreeData(caseQuery, route.query.id)
         // 新版本mime必须返回
@@ -384,6 +385,7 @@ const crudColumns = ref([
         search: true,
         align: "center",
         formType: "select",
+        addDefaultValue: userStore.name,
         commonRules: [{ required: true, message: "测试人员必填" }],
         dict: {
             url: "system/user/list",

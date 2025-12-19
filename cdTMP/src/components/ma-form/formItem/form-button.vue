@@ -1,7 +1,3 @@
-<!--
- - @Author XXX
- - @Link XXX
--->
 <template>
     <div>
         <slot :name="`form-${props.component.dataIndex}`" v-bind="props.component">
@@ -36,8 +32,7 @@ const props = defineProps({
 const formModel = inject("formModel")
 const getColumnService = inject("getColumnService")
 const columns = inject("columns")
-const rv = async (ev, value = undefined) =>
-    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
+const rv = async (ev, value = undefined) => await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 
 rv("onCreated")
 onMounted(() => rv("onMounted"))

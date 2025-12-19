@@ -13,7 +13,7 @@
             <template #title>替换执行时间</template>
             <div class="content-container">
                 <a-form ref="exeTime" :model="formData" scroll-to-first-error>
-                    <a-form-item field="designPerson" label="执行时间">
+                    <a-form-item field="exetime" label="执行时间">
                         <a-date-picker v-model="exetime" style="width: 200px" />
                     </a-form-item>
                 </a-form>

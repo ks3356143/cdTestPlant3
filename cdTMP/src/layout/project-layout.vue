@@ -119,6 +119,16 @@
                                     </template>
                                 </template>
                             </template>
+                            <!-- 节点title插槽 -->
+                            <template #title="{ level, title }">
+                                <template v-if="level === '0' || level === '3'">
+                                    {{ title }}
+                                    <span class="small-right-context-tip">
+                                        <i>右键</i>
+                                    </span>
+                                </template>
+                                <template v-else>{{ title }}</template>
+                            </template>
                         </a-tree>
                     </div>
                 </a-layout-sider>
@@ -428,10 +438,34 @@ const { paoVisible, paoContainer, pao2Visible, pao2Container, ondrop, allowdrop,
 }
 .font-icon {
     font-size: 20px;
-    margin-bottom: -2px;
+    margin-bottom: -2.8px;
 }
 .font-icon:hover {
     color: #f53f3fed;
     transition: all 0.3s;
+}
+// 有右键菜单节点显示图标
+.small-right-context-tip {
+    align-items: center;
+    background: linear-gradient(54.58deg, rgba(74, 228, 255, 0.12) -14.12%, rgba(66, 130, 255, 0.12) 47.61%, rgba(215, 104, 255, 0.12) 105.84%);
+    border: 1px solid #d5d7f9;
+    border-radius: 10px;
+    color: transparent;
+    display: inline-flex;
+    height: 10px;
+    justify-content: center;
+    margin-left: 2px;
+    padding: 0 2.5px;
+    position: absolute;
+    top: 7px;
+    i {
+        -webkit-text-fill-color: transparent !important;
+        zoom: 0.7;
+        background: linear-gradient(85.2deg, #0062ff -3.15%, #cb50ff 98.89%) !important;
+        background-clip: text !important;
+        -webkit-background-clip: text !important;
+        font-size: 10px;
+        font-style: normal;
+    }
 }
 </style>

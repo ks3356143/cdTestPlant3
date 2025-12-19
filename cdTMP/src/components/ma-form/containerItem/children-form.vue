@@ -36,35 +36,30 @@
                     <a-space>
                         <!-- 修改源码：添加向上和向下 -->
                         <a-tooltip content="向上移动" v-if="!(props.component.hideAdd ?? false)">
-                            <a-button @click.stop="moveUp(itemIndex)" type="primary" size="small" shape="round">
+                            <a-button :tabindex="-1" @click.stop="moveUp(itemIndex)" type="primary" size="small" shape="round">
                                 <template #icon><icon-arrow-rise /></template>
                             </a-button>
                         </a-tooltip>
                         <a-tooltip content="向下移动" v-if="!(props.component.hideAdd ?? false)">
-                            <a-button @click.stop="moveDown(itemIndex)" type="primary" size="small" shape="round">
+                            <a-button :tabindex="-1" @click.stop="moveDown(itemIndex)" type="primary" size="small" shape="round">
                                 <template #icon><icon-arrow-fall /></template>
                             </a-button>
                         </a-tooltip>
                         <icon-oblique-line />
                         <!-- 修改源码：新增复制该项新增 -->
                         <a-tooltip content="复制该项添加" v-if="!(props.component.hideAdd ?? false)">
-                            <a-button
-                                @click.stop="addItem(item)"
-                                type="primary"
-                                size="small"
-                                shape="round"
-                                status="warning"
-                            >
+                            <a-button :tabindex="-1" @click.stop="addItem(item)" type="primary" size="small" shape="round" status="warning">
                                 <template #icon><icon-copy /></template>
                             </a-button>
                         </a-tooltip>
                         <a-tooltip content="添加新子项" v-if="!(props.component.hideAdd ?? false)">
-                            <a-button @click.stop="addItem()" type="primary" size="small" shape="round">
+                            <a-button :tabindex="-1" @click.stop="addItem()" type="primary" size="small" shape="round">
                                 <template #icon><icon-plus /></template>
                             </a-button>
                         </a-tooltip>
                         <a-tooltip content="删除该子项" v-if="!(props.component.hideDelete ?? false)">
                             <a-button
+                                :tabindex="-1"
                                 @click.stop="deleteItem(itemIndex)"
                                 :disabled="formModel[props.component.dataIndex].length === 1"
                                 type="primary"
@@ -72,7 +67,7 @@
                                 shape="round"
                                 status="danger"
                             >
-                                <template #icon><icon-minus /></template>
+                                <template #icon><icon-close /></template>
                             </a-button>
                         </a-tooltip>
                     </a-space>
@@ -99,7 +94,7 @@
                         <tr class="arco-table-tr">
                             <th class="arco-table-th" width="60">
                                 <span class="arco-table-cell arco-table-cell-align-center">
-                                    <a-button type="primary" @click="addItem()" size="small" shape="round">
+                                    <a-button :tabindex="-1" type="primary" @click="addItem()" size="small" shape="round">
                                         <template #icon>
                                             <icon-plus />
                                         </template>
@@ -126,6 +121,7 @@
                                 <td class="arco-table-td">
                                     <span class="arco-table-cell">
                                         <a-button
+                                            :tabindex="-1"
                                             type="primary"
                                             status="danger"
                                             size="small"
@@ -133,7 +129,7 @@
                                             :disabled="formModel[props.component.dataIndex].length === 1"
                                             @click="deleteItem(index)"
                                         >
-                                            <template #icon><icon-minus /></template>
+                                            <template #icon><icon-close /></template>
                                         </a-button>
                                     </span>
                                 </td>
@@ -212,8 +208,7 @@ watch(
 )
 // ~~~~修改源码-end
 
-const rv = async (ev, value = undefined) =>
-    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
+const rv = async (ev, value = undefined) => await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 
 const defaultOpenKeys = [0]
 
@@ -269,9 +264,7 @@ function updateChongFen() {
         const subItemFormData = formModel.value.testContent
         const mapRes = subItemFormData.map((subItem) => subItem.subName || "")
         formModel.value.adequacy &&
-            (formModel.value.adequacy = `测试用例覆盖${mapRes.join(
-                "、"
-            )}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`)
+            (formModel.value.adequacy = `测试用例覆盖${mapRes.join("、")}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`)
     }
 }
 

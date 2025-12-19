@@ -51,7 +51,7 @@ export default function () {
             dataIndex: "testMethod",
             align: "center",
             slotName: "testMethod",
-            width: 210
+            width: 220
         },
         {
             title: "测试类型",

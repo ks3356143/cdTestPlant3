@@ -246,7 +246,7 @@ const handlePerpleModal = () => {
 }
 
 // 10.批量修改时间
-const replaceExetimeModalRef = ref<InstanceType<typeof ReplacePerson>>()
+const replaceExetimeModalRef = ref<InstanceType<typeof ReplaceExetime>>()
 const handleExetimeModal = () => {
     replaceExetimeModalRef.value!.open(undefined)
 }

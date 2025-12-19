@@ -12,13 +12,17 @@ export default function () {
     const tempCaseInfo = ref<any>(null)
     // 项目id和当前case的key
     const { id, key } = route.query
-    onMounted(async () => {
+    const fetchCaseOneStatus = async () => {
         try {
             const res = await caseApi.getCaseOne({ key, projectId: id })
             tempCaseInfo.value = res.data
         } catch (err) {
             Message.error("获取用例信息失败，请检查服务器")
         }
+    }
+    // 在初次加载时更新状态，如何在用例更新后再次加载呢
+    onMounted(() => {
+        fetchCaseOneStatus()
     })
     // hook里面判断函数：判断是否该用例未执行或未通过
     const caseIsNotPassedOrNotExe = function (): boolean {
@@ -34,7 +38,8 @@ export default function () {
     }
     return {
         tempCaseInfo,
-        caseIsNotPassedOrNotExe
+        caseIsNotPassedOrNotExe,
+        fetchCaseOneStatus
     }
 }
 
