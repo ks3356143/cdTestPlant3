@@ -59,8 +59,7 @@ const props = defineProps({
     toolbar: {
         type: [String, Array],
         // 如果要取消粘贴只粘贴文本，需要用户加格式请加上pastetext
-        default:
-            "code undo redo aligncenter alignleft indent styleselect formatselect fontselect fontsizeselect removeformat"
+        default: "code undo redo aligncenter alignleft indent styleselect formatselect fontselect fontsizeselect removeformat"
 
         // 下面是备份配置：
         //     default:"code undo redo restoredraft | paste | bold | aligncenter alignleft alignjustify indent searchreplace | \
@@ -154,10 +153,7 @@ const initConfig = reactive({
     min_height: 100,
     max_height: 600,
     autoresize_bottom_margin: 10,
-    content_css:
-        theme.value === "dark"
-            ? "/tinymce/skins/content/dark/content.css"
-            : "/tinymce/skins/content/default/content.css",
+    content_css: theme.value === "dark" ? "/tinymce/skins/content/dark/content.css" : "/tinymce/skins/content/default/content.css",
     // selector: "#textarea1", // 下面自定义样式选中的区域为编辑区
     content_style: "body {line-height:1.5;font-size:14px;} p {margin:2px 0px;}", // 这里可以设置自定义样式
     // paste_as_text: false,

@@ -1,7 +1,7 @@
 <template>
     <a-modal
         :width="prop.width"
-        :fullscreen="isFull"
+        :fullscreen="prop.isFull"
         v-model:visible="modal.visible"
         :on-before-ok="modal.submit"
         unmount-on-close

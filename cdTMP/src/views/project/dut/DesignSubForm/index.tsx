@@ -44,12 +44,7 @@ const DesignSubForm = defineComponent({
                 {{
                     title: () => <span>[设计需求]-{title.value}</span>,
                     default: () => (
-                        <ma-form
-                            ref={formRef}
-                            v-model={formData.value}
-                            options={options.value}
-                            columns={columnOptions.value}
-                        >
+                        <ma-form ref={formRef} v-model={formData.value} options={options.value} columns={columnOptions.value}>
                             {{
                                 "inputPrepend-ident": () => <span>SJ-XX-</span>
                             }}

@@ -1,6 +1,6 @@
 <template>
     <div class="ai-modal-container">
-        <a-modal v-model:visible="visible" width="80%" unmount-on-close draggable :footer="false">
+        <a-modal v-model:visible="visible" width="90%" unmount-on-close draggable :footer="false">
             <template #title> AI生成测试项 </template>
             <div class="flex flex-col">
                 <a-button type="primary" :disabled="generateLoading" @click="generateClick">{{
@@ -44,10 +44,12 @@
                                     </a-select>
                                 </a-input-group>
                                 <div class="m-2 flex justify-start items-center">
-                                    <div class="label">测试项描述：</div>
-                                    <div class="input flex-1">
-                                        <a-input v-model="item.demandDescription"></a-input>
-                                    </div>
+                                    <template v-if="isFPGA">
+                                        <div class="label">测试项描述：</div>
+                                        <div class="input flex-1">
+                                            <a-input v-model="item.demandDescription"></a-input>
+                                        </div>
+                                    </template>
                                 </div>
                                 <div class="arco-table arco-table-size-large arco-table-border arco-table-stripe arco-table-hover">
                                     <div class="arco-table-container">
@@ -59,11 +61,19 @@
                                                             <span class="arco-table-th-title label">子项序号</span>
                                                         </span>
                                                     </th>
-                                                    <th class="arco-table-th" :width="400">
+                                                    <th class="arco-table-th" :width="200">
                                                         <span class="arco-table-cell arco-table-cell-align-center">
-                                                            <span class="arco-table-th-title label">测试子项描述</span>
+                                                            <span class="arco-table-th-title label">子项名称</span>
                                                         </span>
                                                     </th>
+                                                    <template v-if="!isFPGA">
+                                                        <th class="arco-table-th" :width="250">
+                                                            <span class="arco-table-cell arco-table-cell-align-center">
+                                                                <span class="arco-table-th-title label">测试子项描述</span>
+                                                            </span>
+                                                        </th>
+                                                    </template>
+
                                                     <th class="arco-table-th" :width="800">
                                                         <span class="arco-table-cell arco-table-cell-align-center">
                                                             <span class="arco-table-th-title label">测试子项步骤</span>
@@ -84,6 +94,17 @@
                                                             <a-textarea auto-size placeholder="请填写测试子项名称" v-model="row.name"></a-textarea>
                                                         </span>
                                                     </td>
+                                                    <template v-if="!isFPGA">
+                                                        <td class="arco-table-td">
+                                                            <span class="arco-table-cell">
+                                                                <a-textarea
+                                                                    auto-size
+                                                                    placeholder="请填写测试子项描述"
+                                                                    v-model="row.subDescription"
+                                                                ></a-textarea>
+                                                            </span>
+                                                        </td>
+                                                    </template>
                                                     <td class="arco-table-td">
                                                         <span class="arco-table-cell">
                                                             <OpeAndExpect v-model="row.subStep" />
@@ -121,7 +142,9 @@ import demandApi from "@/api/project/testDemand"
 import ParentPreview from "@/views/project/ParentPreview/index.vue"
 
 // 常量
+const route = useRoute()
 const indexTu = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳㉑㉒㉓㉔㉕㉖㉗㉘㉙㉚"
+const isFPGA = tool.checkForCpuOrFPGA(route.query.plant_type)
 
 // 初始化测试类型-一起请求处理错误
 const testType = ref<any>([])
@@ -138,7 +161,7 @@ const fetchTestType = async () => {
 fetchTestType()
 
 // 初始化设计需求
-const route = useRoute()
+
 const currentKey: string = route.query.key as string
 const getDesign = async () => {
     try {
@@ -165,7 +188,6 @@ const generateClick = async () => {
         startProgressSimulation()
         // 变量：给AI的问题
         const question = tool.htmlToTextWithDOM(designObj.value?.description || "")
-        console.log("给AI的问题如下：", question)
         // 请求后处理结果
         const res = await aiApi.getAiTestItem({ question: question, stream: false })
         // 判断真实接口和开发环境接口

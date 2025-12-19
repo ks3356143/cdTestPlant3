@@ -13,7 +13,7 @@
             <div class="uploadContainer">
                 <span :style="{ marginBottom: '10px', flex: '0 1 150px' }">上传需求.docx:</span>
                 <a-upload
-                    :style="{ marginBottom: '10px' }"
+                    :style="{ marginBottom: '10px', marginLeft: '9px' }"
                     :limit="1"
                     accept=".docx"
                     :action="`/api/dut_upload/upload_xq_docx/?parseChapter=${parseChapter}`"
@@ -24,16 +24,15 @@
                 ></a-upload>
             </div>
             <div class="flex items-center gap-3">
-                <span class="w-[350px]">要解析的章节名称：</span>
+                <span class="w-87.5">要解析的章节名称：</span>
                 <a-input placeholder="输入要解析的章节名称" v-model="parseChapter"></a-input>
-                <span class="w-[350px]">选择需求录入类型：</span>
+                <span class="w-87.5">选择需求录入类型：</span>
                 <a-select allow-search v-model="selectValue">
                     <a-option v-for="item in demandType" :key="item.key" :value="item.key">{{ item.title }}</a-option>
                 </a-select>
             </div>
             <a-alert :style="{ margin: '10px 0' }" type="warning">
-                只能上传.docx，<span class="important-text">如果有visio图请替换为普通图片上传</span
-                >，请在需求规格说明文档中操作 ->
+                只能上传.docx，<span class="important-text">如果有visio图请替换为普通图片上传</span>，请在需求规格说明文档中操作 ->
                 <span class="important-text">引用 -> 目录 -> 自定义目录 -> 显示级别改为6</span>以上保存后上传
             </a-alert>
             <div class="operation-container">
@@ -45,60 +44,26 @@
             </div>
             <a-spin :loading="loading" tip="解析word完成，正在渲染界面..." :style="{ width: '100%' }">
                 <div class="demand-container">
-                    <a-list
-                        @page-change="handlePageChange"
-                        :data="htmlData"
-                        :pagination-props="{ defaultPageSize: 15, total: htmlData.length }"
-                    >
+                    <a-list @page-change="handlePageChange" :data="htmlData" :pagination-props="{ defaultPageSize: 15, total: htmlData.length }">
                         <template #item="{ item, index }">
                             <a-list-item>
                                 <div class="item-container">
                                     <a-input-group>
-                                        <a-input
-                                            placeholder="章节号"
-                                            v-model="item.chapter"
-                                            :style="{ width: '100px' }"
-                                            @click.stop.prevent
-                                        ></a-input>
-                                        <a-input
-                                            placeholder="标题"
-                                            v-model="item.title"
-                                            :style="{ width: '300px' }"
-                                            @click.stop.prevent
-                                        ></a-input>
-                                        <a-input
-                                            placeholder="标识"
-                                            v-model="item.ident"
-                                            :style="{ width: '200px' }"
-                                            @click.stop.prevent
-                                        ></a-input>
-                                        <a-select
-                                            :style="{ width: '150px' }"
-                                            placeholder="请选择设计需求类型"
-                                            @click.stop.prevent
-                                            v-model="item.demandType"
-                                        >
+                                        <a-input placeholder="章节号" v-model="item.chapter" :style="{ width: '100px' }" @click.stop.prevent></a-input>
+                                        <a-input placeholder="标题" v-model="item.title" :style="{ width: '300px' }" @click.stop.prevent></a-input>
+                                        <a-input placeholder="标识" v-model="item.ident" :style="{ width: '200px' }" @click.stop.prevent></a-input>
+                                        <a-select :style="{ width: '150px' }" placeholder="请选择设计需求类型" @click.stop.prevent v-model="item.demandType">
                                             <a-option v-for="it in demandType" :value="it.key">{{ it.title }}</a-option>
                                         </a-select>
                                     </a-input-group>
                                     <a-button-group>
-                                        <a-button
-                                            type="primary"
-                                            status="success"
-                                            size="small"
-                                            @click.stop.prevent="handledownCreate(index)"
-                                        >
+                                        <a-button type="primary" status="success" size="small" @click.stop.prevent="handledownCreate(index)">
                                             <template #icon>
                                                 <icon-plus />
                                             </template>
                                             下方新增
                                         </a-button>
-                                        <a-button
-                                            type="primary"
-                                            status="danger"
-                                            size="small"
-                                            @click.stop.prevent="handleDelete(index)"
-                                        >
+                                        <a-button type="primary" status="danger" size="small" @click.stop.prevent="handleDelete(index)">
                                             <template #icon>
                                                 <icon-delete />
                                             </template>
@@ -146,8 +111,7 @@ const modalVisible = ref(false)
 const htmlData = ref([])
 
 // ~~~~1.list~~~~
-const { loading, handleCreateAtLatest, handleResetData, handledownCreate, handlePageChange, handleDelete } =
-    useListOperaton(htmlData)
+const { loading, handleCreateAtLatest, handleResetData, handledownCreate, handlePageChange, handleDelete } = useListOperaton(htmlData)
 
 // ~~~~2.upload~~~~
 const { handleUploadSuccess, handleUploadError, parseChapter, selectValue } = useUpload(htmlData)

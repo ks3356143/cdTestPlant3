@@ -1,6 +1,6 @@
 import { ref } from "vue"
 
-export default function (crudOrFormRef: any) {
+export default function (crudOrFormRef?: any) {
     const crudColumns = ref([
         {
             title: "ID",

@@ -4,8 +4,11 @@ import MaInfo from "@/components/ma-info/index.vue"
 import useDutColumn from "@/views/project/round/hooks/useColumn"
 import useDesignColumn from "@/views/project/dut/hooks/useColumns"
 import useDemandColumn from "@/views/project/design-demand/hooks/useColumns"
+import tool from "@/utils/tool"
+import { useRoute } from "vue-router"
 
 export default function useKeyToMaInfo() {
+    const route = useRoute()
     // 初始状态为空
     let maInfoDom = ref(<Empty></Empty>)
     // 3个列信息
@@ -17,6 +20,14 @@ export default function useKeyToMaInfo() {
     })
     const designColumns = useDesignColumn(undefined)
     const demandColumns = useDemandColumn(undefined)
+    // 如果是FPGA则测试项ma-info去掉“测试项描述列”
+    const demandColumnsNew = computed(() => {
+        if (tool.checkForCpuOrFPGA(route.query.plant_type)) {
+            return demandColumns.value
+        }
+        return demandColumns.value.filter((item) => item.dataIndex !== "testDesciption")
+    })
+
     // 函数：传入switch后的Promise以及是什么类型展示信息
     const fetchNodeDataAndSetMaInfo = async (resPromise: Promise<any>, nodeType: string) => {
         const res = await resPromise
@@ -42,7 +53,7 @@ export default function useKeyToMaInfo() {
                 maInfoDom.value = <MaInfo columns={designColumns.value} data={res.data} tableLayout="auto"></MaInfo>
                 break
             case "demand":
-                maInfoDom.value = <MaInfo columns={demandColumns.value} data={res.data} tableLayout="auto"></MaInfo>
+                maInfoDom.value = <MaInfo columns={demandColumnsNew.value} data={res.data} tableLayout="auto"></MaInfo>
                 break
             default:
                 break

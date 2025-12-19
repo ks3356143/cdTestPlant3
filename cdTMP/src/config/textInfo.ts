@@ -8,6 +8,6 @@ interface ITextInfo {
 const textInfo: ITextInfo = {
     testUnitAddDefaultText: "中国科学院卫星软件测评中心",
     testUnitContactPersonName: "高才栋",
-    testUnintContactPhoneNumber: "13564753024"
+    testUnintContactPhoneNumber: "010-50735018"
 }
 export default textInfo

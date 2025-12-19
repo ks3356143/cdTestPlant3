@@ -11,11 +11,7 @@
             :label-style="props.labelStyle"
             :value-style="props.valueStyle"
         >
-            <a-descriptions-item
-                v-for="item in descriptions"
-                :label="item.label"
-                :span="item.span ? item.span : isArray(item.value) ? props.column : 1"
-            >
+            <a-descriptions-item v-for="item in descriptions" :label="item.label" :span="item.span ? item.span : isArray(item.value) ? props.column : 1">
                 <template v-if="item.formType === 'upload'">
                     <a-image-preview-group infinite v-if="isArray(item.value)">
                         <a-space>
@@ -34,11 +30,10 @@
                             <template v-for="(sub, idx) in item.value" :key="idx">
                                 <!-- 这是每个测试子项 -->
                                 <div class="subTitle mt-1">{{ idx + 1 }}.{{ sub.subName }}</div>
+                                <div>测试子项描述：{{ sub.subDescription }}</div>
                                 <template v-for="(step, index) in sub.subStep" :key="index">
                                     <span class="text-amber-700">步骤{{ index + 1 }}）</span>
-                                    <div class="operation">
-                                        <span class="text-bold">操作：</span>{{ step.operation }}
-                                    </div>
+                                    <div class="operation"><span class="text-bold">操作：</span>{{ step.operation }}</div>
                                     <div class="mb-1"><span class="text-bold">预期：</span>{{ step.expect }}</div>
                                 </template>
                             </template>
@@ -46,9 +41,7 @@
                         <template v-else>暂无信息</template>
                     </div>
                 </template>
-                <template
-                    v-else-if="item.formType === 'radio' || item.formType === 'select' || item.formType === 'checkbox'"
-                >
+                <template v-else-if="item.formType === 'radio' || item.formType === 'select' || item.formType === 'checkbox'">
                     <template v-if="isArray(item.value)">
                         <!-- 修改源码 -->
                         <a-space>
@@ -162,6 +155,8 @@ defineExpose({ reset })
 
 <style scoped>
 .white-space-change {
+    max-height: 68vh;
     white-space: normal;
+    overflow-y: auto;
 }
 </style>

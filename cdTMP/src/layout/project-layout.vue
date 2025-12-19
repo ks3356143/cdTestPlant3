@@ -48,69 +48,30 @@
                                 <template v-if="nodeData.level === '0'">
                                     <a-tooltip content="点击新增轮次">
                                         <IconPlus
-                                            style="
-                                                position: absolute;
-                                                right: 8px;
-                                                font-size: 12px;
-                                                top: 8px;
-                                                color: #3370ff;
-                                            "
+                                            style="position: absolute; right: 8px; font-size: 12px; top: 8px; color: #3370ff"
                                             @click="() => handleRoundAddClick(nodeData)"
                                         />
                                     </a-tooltip>
                                     <a-tooltip content="点击删除轮次">
-                                        <a-popconfirm
-                                            content="确定要删除该轮次吗?"
-                                            position="bottom"
-                                            @ok="handleRoundDelClick(nodeData)"
-                                        >
-                                            <IconMinus
-                                                style="
-                                                    position: absolute;
-                                                    right: 25px;
-                                                    font-size: 12px;
-                                                    top: 8px;
-                                                    color: #3370ff;
-                                                "
-                                            />
+                                        <a-popconfirm content="确定要删除该轮次吗?" position="bottom" @ok="handleRoundDelClick(nodeData)">
+                                            <icon-close style="position: absolute; right: 25px; font-size: 12px; top: 8px; color: #3370ff" />
                                         </a-popconfirm>
                                     </a-tooltip>
                                     <a-tooltip content="点击编辑当前轮次"
                                         ><IconEdit
-                                            style="
-                                                position: absolute;
-                                                right: 42px;
-                                                font-size: 12px;
-                                                top: 8px;
-                                                color: #3370ff;
-                                            "
+                                            style="position: absolute; right: 42px; font-size: 12px; top: 8px; color: #3370ff"
                                             @click="() => handleRoundEditClick(nodeData)"
                                     /></a-tooltip>
                                     <a-tooltip content="综合阅览该轮次下问题单"
                                         ><icon-bug
-                                            style="
-                                                position: absolute;
-                                                right: 60px;
-                                                font-size: 12px;
-                                                top: 8px;
-                                                color: #3370ff;
-                                            "
+                                            style="position: absolute; right: 60px; font-size: 12px; top: 8px; color: #3370ff"
                                             @click="handleProblemShowClick"
                                     /></a-tooltip>
                                     <a-tooltip content="轮次数据管理视图"
                                         ><icon-storage
-                                            style="
-                                                position: absolute;
-                                                right: 77px;
-                                                font-size: 12px;
-                                                top: 8px;
-                                                color: #3370ff;
-                                            "
+                                            style="position: absolute; right: 77px; font-size: 12px; top: 8px; color: #3370ff"
                                             :style="{
-                                                color:
-                                                    isOpeSetsRoute && nodeData.key === route.query.key
-                                                        ? 'red'
-                                                        : '#3370ff'
+                                                color: isOpeSetsRoute && nodeData.key === route.query.key ? 'red' : '#3370ff'
                                             }"
                                             @click="
                                                 () => {
@@ -127,13 +88,15 @@
                                 </template>
                             </template>
                             <!-- 设计节点的图标 -->
-                            <template #switcher-icon="node, { isLeaf }">
-                                <IconDown v-if="!isLeaf" />
-                                <IconFile v-if="isLeaf" />
+                            <template #switcher-icon="_, { isLeaf }">
+                                <div class="font-icon">
+                                    <IconDownCircle v-if="!isLeaf" />
+                                    <IconFile v-if="isLeaf" />
+                                </div>
                             </template>
                             <!-- 节点图标插槽 -->
                             <template #icon="props">
-                                <template v-if="props.node.level === '1'"> [被测件] </template>
+                                <template v-if="props.node.level === '1'"> <span style="white-space: nowrap">[被测件]</span> </template>
                                 <template v-if="props.node.level === '2'"> [设] </template>
                                 <template v-if="props.node.level === '3'"> [项] </template>
                                 <template v-if="props.node.level === '4'">
@@ -177,15 +140,7 @@
             </a-button>
         </a-popover>
     </a-back-top>
-    <ma-form-modal
-        ref="maFormModalRef"
-        :title="title"
-        :column="roundColumn"
-        :options="roundOption"
-        :width="800"
-        :submit="handleRoundSubmit"
-    >
-    </ma-form-modal>
+    <ma-form-modal ref="maFormModalRef" :title="title" :column="roundColumn" :options="roundOption" :width="800" :submit="handleRoundSubmit"> </ma-form-modal>
     <!-- 如果没有第一轮的SO_dut则弹窗 -->
     <ma-form-modal
         ref="soDutFormRef"
@@ -202,20 +157,9 @@
         <!-- 添加input前缀 -->
         <template #inputPrepend-version> V </template>
     </ma-form-modal>
-    <Progress
-        :visible="visible"
-        :isComplete="isComplete"
-        :text="ptext"
-        @clickConfirm="handleModalConfirmClick"
-    ></Progress>
+    <Progress :visible="visible" :isComplete="isComplete" :text="ptext" @clickConfirm="handleModalConfirmClick"></Progress>
     <!-- 右键菜单 -->
-    <a-dropdown
-        v-model:popup-visible="popupVisible"
-        :popup-container="popupContainer"
-        position="bottom"
-        alignPoint
-        :style="{ display: 'block' }"
-    >
+    <a-dropdown v-model:popup-visible="popupVisible" :popup-container="popupContainer" position="bottom" alignPoint :style="{ display: 'block' }">
         <template #content>
             <a-dgroup title="执行操作">
                 <a-doption @click="handleDoptionClickGreateCases">
@@ -278,6 +222,7 @@
         @update:visible="roundRightVisible = false"
         :container="roundRightContainer"
         @click-problem-show="handleProblemShowClick"
+        @create-renji="handleCreateRenji"
     ></roundRight>
     <!-- w2:轮次的问题单ma-crud，这里要传参2个，首先是请求另外一个接口，然后取消是否关联字段 -->
     <problem-choose ref="problemRoundRef" hasRelated="roundProblem" :title="problemTitle"></problem-choose>
@@ -340,21 +285,13 @@ provide("toggleDrawerMenu", () => {
 const { searchKey, handleSearchTreeDataClick } = useSearchNodes()
 
 //~~~~~~M功能：强制必须有源代码被测件~~~~~~
-const {
-    soDutFormRef,
-    soDutModalTitle,
-    handleSoDutExistsForceModal,
-    handleSoDutSubmit,
-    handleSoDutCancel,
-    soDutColumn
-} = useMustSoDut(projectId)
+const { soDutFormRef, soDutModalTitle, handleSoDutExistsForceModal, handleSoDutSubmit, handleSoDutCancel, soDutColumn } = useMustSoDut(projectId)
 
 //~~~~~~小功能：展开和收缩~~~~~~
 const { expandedKeys, toggleExpanded } = useNodeExpand()
 
 //~~~~~~大功能：单击/双击节点逻辑~~~~~~
-const { selectedKeys, pointNode, dutSubFormRef, designSubFormRef, testDemandSubFormRef, caseSubFormRef } =
-    useNodeClick(expandedKeys)
+const { selectedKeys, pointNode, dutSubFormRef, designSubFormRef, testDemandSubFormRef, caseSubFormRef } = useNodeClick(expandedKeys)
 
 //~~~~~~小功能：路由中key绑定selectedKeys：好像有点非性能~~~~~~
 const isOpeSetsRoute = ref(false)
@@ -375,16 +312,10 @@ watch(
 const { loadMore } = useLoadTreeNode()
 
 //~~~~~~功能：轮次的Ma-Form~~~~~~
-const {
-    maFormModalRef,
-    title,
-    roundColumn,
-    roundOption,
-    handleRoundAddClick,
-    handleRoundEditClick,
-    handleRoundDelClick,
-    handleRoundSubmit
-} = useRoundMaForm(projectId, handleSoDutExistsForceModal)
+const { maFormModalRef, title, roundColumn, roundOption, handleRoundAddClick, handleRoundEditClick, handleRoundDelClick, handleRoundSubmit } = useRoundMaForm(
+    projectId,
+    handleSoDutExistsForceModal
+)
 
 // 大功能：~~~~~~右键菜单实现~~~~~~
 const {
@@ -403,22 +334,12 @@ const {
     handleProblemShowClick,
     handleDoptionClickGreateCases,
     handleDoptionClickCopyDemand,
-    handleCopyDemand
+    handleCopyDemand,
+    handleCreateRenji
 } = useRightClick(projectId, routeViewRef)
 
 // ~~~~~~~~大功能：拖拽~~~~~~~~
-const {
-    paoVisible,
-    paoContainer,
-    pao2Visible,
-    pao2Container,
-    ondrop,
-    allowdrop,
-    paoOk,
-    paoCancel,
-    paoOk2,
-    paoCancel2
-} = useTreeDrag(projectId, routeViewRef)
+const { paoVisible, paoContainer, pao2Visible, pao2Container, ondrop, allowdrop, paoOk, paoCancel, paoOk2, paoCancel2 } = useTreeDrag(projectId, routeViewRef)
 </script>
 
 <style lang="less" scoped>
@@ -504,5 +425,13 @@ const {
     .arco-tree-node-title {
         color: #f53f3f !important;
     }
+}
+.font-icon {
+    font-size: 20px;
+    margin-bottom: -2px;
+}
+.font-icon:hover {
+    color: #f53f3fed;
+    transition: all 0.3s;
 }
 </style>

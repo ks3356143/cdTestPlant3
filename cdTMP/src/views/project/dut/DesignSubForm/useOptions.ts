@@ -3,12 +3,12 @@ import tool from "@/utils/tool"
 import useColumn from "../hooks/useColumns"
 
 // 设置不同ma-form选项
-export default function useOptions(formRef: any) {
+export default function useOptions(formRef?: any) {
     const options = ref({
         showButtons: false,
         labelAlign: "center"
     })
-    const crudColumns = useColumn(formRef)
+    const crudColumns = useColumn()
     const columnOptions = computed(() => {
         return tool.renameKeyInArray(crudColumns.value, "commonRules", "rules")
     })

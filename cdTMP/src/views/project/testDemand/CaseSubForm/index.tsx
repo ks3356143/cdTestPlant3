@@ -8,15 +8,11 @@ import useBeforeCancel from "@/views/project/projPublicHooks/useBeforeCancel"
 import { cloneDeep } from "lodash-es"
 
 const CaseSubForm = defineComponent({
-    name: "DemandSubFormForm",
+    name: "CaseSubFrom",
     setup(_, { expose }) {
         // hook variable
         const treeDataStore = useTreeDataStore()
-        const { title, formData, formRef, modalOptions, project_id, visible } = subFormHooks(
-            caseApi.update,
-            treeDataStore.updateCaseTreeData,
-            "80%"
-        )
+        const { title, formData, formRef, modalOptions, project_id, visible } = subFormHooks(caseApi.update, treeDataStore.updateCaseTreeData, "80%")
         // hooks
         const { options, columnOptions } = useOptions(formRef) // **option里面变化**
         // 双击打开回调
@@ -26,7 +22,7 @@ const CaseSubForm = defineComponent({
                 const key = nodeData.key as string
                 // 设置表单名称
                 title.value = nodeData.title!
-                // 注意这里因为case接口原因，这里需要projectId!!!!!!!!!!!!!!!
+                // 注意这里因为case接口原因，这里需要projectId!
                 const res = await caseApi.getCaseOne({ projectId: project_id, key }) // **API变化**
                 // 得到数据时候将beforeFormContent搞定
                 beforeFormContent.value = cloneDeep(res.data.testStep)
@@ -52,23 +48,10 @@ const CaseSubForm = defineComponent({
         // Dom
         return () => (
             // 注意v-model:visible是不能放在对象解构的
-            <a-modal
-                {...modalOptions}
-                v-model:visible={visible.value}
-                on-before-cancel={handleBeforeCancel}
-                width="86%"
-                unmount-on-close
-            >
+            <a-modal {...modalOptions} v-model:visible={visible.value} on-before-cancel={handleBeforeCancel} width="86%" unmount-on-close>
                 {{
                     title: () => <span>[测试用例]-{title.value}</span>,
-                    default: () => (
-                        <ma-form
-                            ref={formRef}
-                            v-model={formData.value}
-                            options={options.value}
-                            columns={columnOptions.value}
-                        ></ma-form>
-                    )
+                    default: () => <ma-form ref={formRef} v-model={formData.value} options={options.value} columns={columnOptions.value}></ma-form>
                 }}
             </a-modal>
         )

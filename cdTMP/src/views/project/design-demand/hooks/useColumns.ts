@@ -1,7 +1,11 @@
 import { ref } from "vue"
 import PinYinMatch from "pinyin-match"
+import tool from "@/utils/tool"
+import { useRoute } from "vue-router"
 
 export default function (crudOrFormRef: any) {
+    const route = useRoute()
+    const isFpga = tool.checkForCpuOrFPGA(route.query.plant_type)
     const crudColumns = ref([
         {
             title: "ID",
@@ -83,8 +87,7 @@ export default function (crudOrFormRef: any) {
             formType: "textarea",
             maxLength: 256,
             commonRules: [{ required: true, message: "充分性描述必填" }],
-            addDefaultValue:
-                "测试用例覆盖XX子项名称1、XX子项名称2、XX子项名称3子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。"
+            addDefaultValue: "测试用例覆盖XX子项名称1、XX子项名称2、XX子项名称3子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。"
         },
         {
             title: "测试项描述",
@@ -92,7 +95,10 @@ export default function (crudOrFormRef: any) {
             dataIndex: "testDesciption",
             formType: "textarea",
             maxLength: 256,
-            placeholder: "请填写整体测试项的描述"
+            placeholder: "FPGA填写-请填写整体测试项的描述",
+            display: isFpga,
+            addDisplay: isFpga,
+            editDisplay: isFpga
         },
         {
             title: "测试子项",
@@ -118,6 +124,15 @@ export default function (crudOrFormRef: any) {
                             )}子项要求的全部内容。\n所有用例执行完毕，对于未执行的用例说明未执行原因。`
                         }
                     }
+                },
+                {
+                    title: "测试项描述",
+                    dataIndex: "subDescription",
+                    placeholder: "非FPGA填写每个子项一句话描述",
+                    formType:"textarea",
+                    display: !isFpga,
+                    addDisplay: !isFpga,
+                    editDisplay: !isFpga
                 },
                 {
                     title: "操作与预期",

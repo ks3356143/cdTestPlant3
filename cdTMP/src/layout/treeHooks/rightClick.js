@@ -5,6 +5,7 @@ import caseApi from "@/api/project/case"
 import designApi from "@/api/project/designDemand"
 import demandApi from "@/api/project/testDemand"
 import { useTreeDataStore } from "@/store"
+
 /**
  * 右键测试项节点与轮次的hook
  */
@@ -135,6 +136,19 @@ export function useRightClick(projectId, routeViewRef) {
             Message.error("复制失败，服务器错误")
         }
     }
+
+    // 新增点击增加人机交互界面测试
+    const handleCreateRenji = async () => {
+        const res = await designApi.create_rj({
+            round_id: rightClickNode.nodekey,
+            project_id: projectId.value
+        })
+        // 更新树状目录
+        if (res.code === 200 && res.data) {
+            treeDataStore.updateDesignDemandTreeData({ key: res.data + "-0" }, projectId.value)
+        }
+    }
+
     return {
         popupVisible,
         popupContainer,
@@ -151,6 +165,7 @@ export function useRightClick(projectId, routeViewRef) {
         handleProblemShowClick,
         handleDoptionClickGreateCases,
         handleDoptionClickCopyDemand,
-        handleCopyDemand
+        handleCopyDemand,
+        handleCreateRenji
     }
 }

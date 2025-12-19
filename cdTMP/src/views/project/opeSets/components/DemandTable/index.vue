@@ -3,11 +3,7 @@
         <search v-show="searchVisible" @submit="searchSubmit" />
         <div class="lg:flex justify-between mb-2">
             <a-space>
-                <a-popconfirm
-                    content="确定要删除数据吗? 这会删除全部下级数据!"
-                    position="bottom"
-                    @ok="deletesMultipleAction"
-                >
+                <a-popconfirm content="确定要删除数据吗? 这会删除全部下级数据!" position="bottom" @ok="deletesMultipleAction">
                     <a-button type="primary" status="danger">
                         批量删除
                         <template #icon><icon-delete /></template>
@@ -62,11 +58,7 @@
                 <template v-for="column in columns" :key="column.dataIndex">
                     <template v-if="!column.hide">
                         <!-- 正常的数据列 -->
-                        <a-table-column
-                            v-bind="column"
-                            v-if="!column.showType && column.dataIndex !== 'testContent'"
-                            tooltip
-                        >
+                        <a-table-column v-bind="column" v-if="!column.showType && column.dataIndex !== 'testContent'" tooltip>
                             <!-- 如果column有isHyperText属性，则直接渲染html -->
                             <template #cell="{ record }" v-if="column.isHyperText">
                                 <div v-html="record[column.dataIndex]"></div>
@@ -79,15 +71,12 @@
                                     <!-- 如果有测试子项即subStep -->
                                     <template v-for="(sub, idx) in record[column.dataIndex]" :key="idx">
                                         <!-- 这是每个测试子项 -->
-                                        <div class="subTitle mt-1">{{ idx + 1 }}.{{ sub.subName }}</div>
+                                        <div class="subTitle mt-3">{{ idx + 1 }}.{{ sub.subName }}</div>
+                                        <div>测试子项描述：{{ sub.subDescription }}</div>
                                         <template v-for="(step, index) in sub.subStep" :key="index">
                                             <span class="text-amber-700">步骤{{ index + 1 }}）</span>
-                                            <div class="operation">
-                                                <span class="text-bold">操作：</span>{{ step.operation }}
-                                            </div>
-                                            <div class="mb-1">
-                                                <span class="text-bold">预期：</span>{{ step.expect }}
-                                            </div>
+                                            <div class="operation"><span class="text-bold">操作：</span>{{ step.operation }}</div>
+                                            <div class="mb-1"><span class="text-bold">预期：</span>{{ step.expect }}</div>
                                         </template>
                                     </template>
                                 </div>
@@ -247,10 +236,7 @@ const showType = useShowType("priority")
 const showTestType = useShowType("testType")
 
 // 3.query查询和分页相关
-const { tableData, isFetching, fetchData, total, pageChange, pageSizeChange, searchParams } = useFetchData(
-    demandApi.getTestDemandList,
-    columns
-)
+const { tableData, isFetching, fetchData, total, pageChange, pageSizeChange, searchParams } = useFetchData(demandApi.getTestDemandList, columns)
 
 // 4.表单相关
 const formRef = ref<InstanceType<typeof Form> | null>(null)

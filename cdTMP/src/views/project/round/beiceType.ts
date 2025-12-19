@@ -9,7 +9,7 @@ const beiceType: BeiceTypeT[] = [
     { label: "设计说明", value: "SJ" },
     { label: "需求文档", value: "XQ" },
     { label: "通信协议", value: "XY" },
-    { label: "研制总要求/技术协议等", value: "YZ" }
+    { label: "研制总要求/技术协议/顶层任务书等", value: "YZ" }
 ]
 
 export default beiceType

@@ -361,7 +361,7 @@ const useCrudInit = function () {
         {
             title: "依据标准",
             dataIndex: "standard",
-            addDefaultValue: ["16", "2", "17", "3", "7", "4", "5", "6"],
+            addDefaultValue: ["16", "17", "3", "7", "4", "5", "18", "6", "19"],
             maxTagCount: 20,
             commonRules: [{ required: true, message: "请至少选择一个" }],
             hide: true,

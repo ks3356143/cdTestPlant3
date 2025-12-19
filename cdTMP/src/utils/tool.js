@@ -102,4 +102,14 @@ tool.htmlToTextWithDOM = (htmlString) => {
     return text
 }
 
+// 判断数组是否包含'1'或者字符串是'1'
+tool.checkForCpuOrFPGA = (input_value) => {
+    if (Array.isArray(input_value)) {
+        return input_value.includes("1")
+    } else if (typeof input_value === "string") {
+        return input_value === "1"
+    }
+    return false
+}
+
 export default tool

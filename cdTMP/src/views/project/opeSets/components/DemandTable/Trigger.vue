@@ -27,8 +27,10 @@ import useColumn from "@/views/project/dut/hooks/useColumns"
 
 // refs
 const formRef = ref(null)
+
 // 0.props-表示不通用代码
 const { designInfo } = defineProps<{ designInfo: any }>()
+
 // 计算属性单独处理
 const designInfoJudge = computed(() => {
     return designInfo

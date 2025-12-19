@@ -44,6 +44,17 @@ export default {
         })
     },
     /**
+     * 批量新增添加测试项
+     * @returns
+     */
+    batchSave(data = {}) {
+        return request({
+            url: "/project/testDemand/multi_save",
+            method: "post",
+            data
+        })
+    },
+    /**
      * 更新dut
      * @returns
      */

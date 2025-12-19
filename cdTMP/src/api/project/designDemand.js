@@ -59,11 +59,11 @@ export default {
      * 批量添加设计需求
      * @returns
      */
-    multiSave(params = {}) {
+    multiSave(data = {}) {
         return request({
             url: "/project/designDemand/multi_save",
             method: "post",
-            data: params
+            data
         })
     },
     /**
@@ -108,6 +108,17 @@ export default {
             url: "/project/designDemand/replace/",
             method: "post",
             data
+        })
+    },
+    /**
+     * 自动生成人机交互界面测试5个测试项和用例
+     * @returns
+     */
+    create_rj(params = {}) {
+        return request({
+            url: "/project/create_renji/",
+            method: "get",
+            params
         })
     }
 }

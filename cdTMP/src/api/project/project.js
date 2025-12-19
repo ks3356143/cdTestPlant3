@@ -27,7 +27,7 @@ export default {
         })
     },
     /**
-     * 根据项目名、树节点等级和key查找设计需求
+     * 根据项目名、树节点等级和key查找测试项
      * @returns 设计需求树状节点信息
      */
     getDemandInfo(projectId, key, level) {
@@ -42,8 +42,22 @@ export default {
         })
     },
     /**
-     * 根据项目名、树节点等级和key查找测试需求
-     * @returns 返回测试需求testDemand
+     * 根据项目id和轮次key
+     * @returns 测试项级联数据
+     */
+    getRoundRelatedDemand(id, round) {
+        return request({
+            url: `project/getRelatedTestDemand`,
+            method: "get",
+            params: {
+                id,
+                round
+            }
+        })
+    },
+    /**
+     * 根据项目名、树节点等级和key查找测试项
+     * @returns 返回测试项testDemand
      */
     getTestInfo(projectId, key, level) {
         return request({

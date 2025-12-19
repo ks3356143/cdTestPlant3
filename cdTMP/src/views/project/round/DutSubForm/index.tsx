@@ -40,7 +40,7 @@ const DutSubForm = defineComponent({
             // 注意v-model:visible是不能放在对象解构的
             <a-modal {...modalOptions} v-model:visible={visible.value} unmount-on-close>
                 {{
-                    title: () => <span>[被测件]-{title.value}</span>,
+                    title: () => <span >[被测件]-{title.value}</span>,
                     default: () => (
                         <ma-form
                             ref={formRef}

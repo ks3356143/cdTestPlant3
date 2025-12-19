@@ -26,6 +26,12 @@
                         </template>
                         查看轮次下问题单
                     </a-doption>
+                    <a-doption @click="handleRenjiTest">
+                        <template #icon>
+                            <icon-file />
+                        </template>
+                        点击生成人机交互界面测试
+                    </a-doption>
                 </a-dgroup>
             </template>
         </a-dropdown>
@@ -47,7 +53,7 @@ const props = defineProps({
         }
     }
 })
-const emits = defineEmits(["update:visible", "click-problem-show"])
+const emits = defineEmits(["update:visible", "click-problem-show", "create-renji"])
 // 点击查看问题单列表
 const handleSelect = async (value) => {
     emits("update:visible") // 给父组件传递关闭弹窗
@@ -59,6 +65,10 @@ const change = () => {
 // 点击给父组件发生事件
 const handleProblemShow = () => {
     emits("click-problem-show")
+}
+// 点击生成人机交互界面测试
+const handleRenjiTest = () => {
+    emits("create-renji")
 }
 </script>
 

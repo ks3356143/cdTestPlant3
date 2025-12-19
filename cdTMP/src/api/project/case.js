@@ -45,6 +45,17 @@ export default {
         })
     },
     /**
+     * 添加测试用例
+     * @returns
+     */
+    batchSave(data = {}) {
+        return request({
+            url: "/project/case/multi_save",
+            method: "post",
+            data
+        })
+    },
+    /**
      * 更新测试用例
      * @returns
      */

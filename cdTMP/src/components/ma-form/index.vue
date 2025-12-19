@@ -1,11 +1,7 @@
 <template>
     <div class="w-full" ref="containerRef" id="form-main-id">
         <a-spin :loading="formLoading" :tip="options.loadingText" class="w-full ma-form-spin">
-            <div
-                v-if="options.showFormTitle"
-                :class="['ma-form-title', options.formTitleClass]"
-                :style="options.formTitleStyle"
-            >
+            <div v-if="options.showFormTitle" :class="['ma-form-title', options.formTitleClass]" :style="options.formTitleStyle">
                 {{ options.formTitle }}
             </div>
             <a-form
@@ -37,23 +33,13 @@
                         <a-space>
                             <slot name="formBeforeButtons" />
                             <slot name="formButtons">
-                                <a-button
-                                    :type="options.submitType"
-                                    :status="options.submitStatus"
-                                    v-if="options.submitShowBtn"
-                                    html-type="submit"
-                                >
+                                <a-button :type="options.submitType" :status="options.submitStatus" v-if="options.submitShowBtn" html-type="submit">
                                     <template #icon v-if="options?.submitIcon">
                                         <component :is="options.submitIcon" />
                                     </template>
                                     {{ options.submitText }}
                                 </a-button>
-                                <a-button
-                                    :type="options.resetType"
-                                    :status="options.resetStatus"
-                                    v-if="options.resetShowBtn"
-                                    @click="resetForm"
-                                >
+                                <a-button :type="options.resetType" :status="options.resetStatus" v-if="options.resetShowBtn" @click="resetForm">
                                     <template #icon v-if="options?.resetIcon">
                                         <component :is="options.resetIcon" />
                                     </template>
@@ -90,14 +76,7 @@
 import { ref, watch, provide, onMounted, onUnmounted, nextTick, getCurrentInstance, inject, computed } from "vue"
 import { isNil, set, get, cloneDeep } from "lodash-es"
 import defaultOptions from "./js/defaultOptions.js"
-import {
-    getComponentName,
-    toHump,
-    interactiveControl,
-    handleFlatteningColumns,
-    insertGlobalCssToHead,
-    insertGlobalFunctionsToHtml
-} from "./js/utils.js"
+import { getComponentName, toHump, interactiveControl, handleFlatteningColumns, insertGlobalCssToHead, insertGlobalFunctionsToHtml } from "./js/utils.js"
 import { loadDict, handlerCascader } from "./js/networkRequest.js"
 import arrayComponentDefault from "./js/defaultArrayComponent.js"
 import ColumnService from "./js/columnService.js"
@@ -150,14 +129,9 @@ import ParentPreview from "@/views/project/ParentPreview/index.vue"
 // 判断是否有
 const formKey = computed(() => {
     // 去掉双击被测件：即key.split("").length > 1
-    if (
-        form.value.key &&
-        typeof form.value.key !== "number" &&
-        form.value.key &&
-        form.value.key.split("-").length > 2
-    ) {
+    if (form.value.key && typeof form.value.key !== "number" && form.value.key && form.value.key.split("-").length > 2) {
         // 如果存在则取前面的
-        return form.value.key.slice(0, -2)
+        return form.value.key.split("-").slice(0, -1).join("-")
     }
     return ""
 })
@@ -257,14 +231,7 @@ const init = async () => {
         }
 
         // 联动
-        await handlerCascader(
-            get(form.value, item.dataIndex),
-            item,
-            flatteningColumns.value,
-            dictList.value,
-            form.value,
-            false
-        )
+        await handlerCascader(get(form.value, item.dataIndex), item, flatteningColumns.value, dictList.value, form.value, false)
     })
 
     await nextTick(() => {
