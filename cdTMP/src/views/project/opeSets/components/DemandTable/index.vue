@@ -163,7 +163,8 @@ const columns = ref([
         hide: false,
         ellipsis: true,
         search: true,
-        formType: "input"
+        formType: "input",
+        fixed: ""
     },
     {
         title: "名称",
@@ -173,7 +174,8 @@ const columns = ref([
         hide: false,
         ellipsis: true,
         search: true,
-        formType: "input"
+        formType: "input",
+        fixed: ""
     },
     {
         title: "优先级",
@@ -188,7 +190,8 @@ const columns = ref([
         // 只是指明a-table-column渲染v-if
         showType: (text: string) => {
             return text
-        }
+        },
+        fixed: ""
     },
     {
         title: "测试类型",
@@ -202,7 +205,8 @@ const columns = ref([
         dict: true,
         showType: (text: string) => {
             return text
-        }
+        },
+        fixed: ""
     },
     {
         title: "测项描述",
@@ -214,7 +218,8 @@ const columns = ref([
         search: false, // 不搜索
         formType: "input", // 搜索输入框形式
         isHyperText: false,
-        bodyCellClass: "hyperTextCell-table-chen"
+        bodyCellClass: "hyperTextCell-table-chen",
+        fixed: ""
     },
     {
         // 这是单独处理的字段，只声明Search组件相关属性
@@ -226,7 +231,8 @@ const columns = ref([
         ellipsis: false,
         search: false, // 要搜索
         formType: "input", // 搜索输入框形式
-        bodyCellClass: "hyperTextCell-table-chen"
+        bodyCellClass: "hyperTextCell-table-chen",
+        fixed: ""
     }
 ])
 provide("columns", columns)

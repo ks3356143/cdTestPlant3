@@ -3,11 +3,7 @@
         <search v-show="searchVisible" @submit="searchSubmit" />
         <div class="lg:flex justify-between mb-2">
             <a-space>
-                <a-popconfirm
-                    content="确定要删除数据吗? 这会删除全部下级数据!"
-                    position="bottom"
-                    @ok="deletesMultipleAction"
-                >
+                <a-popconfirm content="确定要删除数据吗? 这会删除全部下级数据!" position="bottom" @ok="deletesMultipleAction">
                     <a-button type="primary" status="danger">
                         批量删除
                         <template #icon><icon-delete /></template>
@@ -164,7 +160,8 @@ const columns = ref([
         hide: false,
         ellipsis: true,
         search: true,
-        formType: "input"
+        formType: "input",
+        fixed: ""
     },
     {
         title: "名称",
@@ -174,7 +171,8 @@ const columns = ref([
         hide: false,
         ellipsis: true,
         search: true,
-        formType: "input"
+        formType: "input",
+        fixed: ""
     },
     {
         title: "用例综述",
@@ -186,7 +184,8 @@ const columns = ref([
         search: false, // 不搜索
         formType: "input", // 搜索输入框形式
         isHyperText: false,
-        bodyCellClass: "hyperTextCell-table-chen"
+        bodyCellClass: "hyperTextCell-table-chen",
+        fixed: ""
     },
     {
         // 这是单独处理的字段，只声明Search组件相关属性
@@ -198,16 +197,14 @@ const columns = ref([
         ellipsis: false,
         search: false, // 要搜索
         formType: "input", // 搜索输入框形式
-        bodyCellClass: "hyperTextCell-table-chen"
+        bodyCellClass: "hyperTextCell-table-chen",
+        fixed: ""
     }
 ])
 provide("columns", columns)
 
 // 3.query查询和分页相关
-const { tableData, isFetching, fetchData, total, pageChange, pageSizeChange, searchParams } = useFetchData(
-    caseApi.getCaseList,
-    columns
-)
+const { tableData, isFetching, fetchData, total, pageChange, pageSizeChange, searchParams } = useFetchData(caseApi.getCaseList, columns)
 
 // 4.表单相关
 const formRef = ref<InstanceType<typeof Form> | null>(null)

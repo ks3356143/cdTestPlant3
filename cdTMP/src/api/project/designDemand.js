@@ -120,5 +120,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 复制到当前dut下面，CRUD中操作列
+     * @returns
+     */
+    copy_current(params = {}) {
+        return request({
+            url: "/project/copy_current",
+            method: "get",
+            params
+        })
     }
 }

@@ -20,3 +20,8 @@ export interface ISearchFormDemand {
 export interface ISearchFormCase {
     
 }
+
+// 问题单搜索字段
+export interface ISearchFormProblem {
+
+}

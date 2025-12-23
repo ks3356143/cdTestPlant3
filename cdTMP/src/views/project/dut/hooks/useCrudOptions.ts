@@ -36,15 +36,15 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${(td[round_key] as any).title} > ${(td[round_key] as any).children[dut_key].title} >设计需求[${record.name}]-`
             return true
         },
-        afterAdd: (res) => {
+        afterAdd: (res: any) => {
             let id = projectId.value
             treeDataStore.updateDesignDemandTreeData(res.data, id)
         },
-        afterEdit: (res) => {
+        afterEdit: (res: any) => {
             let id = projectId.value
             treeDataStore.updateDesignDemandTreeData(res.data, id)
         },
-        afterDelete: (res, record) => {
+        afterDelete: (_: any, record: any) => {
             let id = projectId.value
             if (!record) {
                 record = { key: route.query.key + "-X" }
@@ -62,12 +62,12 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         rowSelection: { showCheckedAll: true },
         searchColNumber: 4,
         tablePagination: false,
-        operationColumnWidth: 250,
+        operationColumnWidth: 300,
         operationColumn: true,
         operationColumnAlign: "center",
         formOption: {
             width: 1200
-        },
+        }
     })
     return crudOptions
 }

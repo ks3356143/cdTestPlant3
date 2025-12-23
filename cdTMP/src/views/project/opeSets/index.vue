@@ -14,6 +14,9 @@
                 <a-tab-pane key="case" title="测试用例">
                     <ProTable type="case"></ProTable>
                 </a-tab-pane>
+                <a-tab-pane key="problem" title="本轮问题单">
+                    <ProTable type="problem"></ProTable>
+                </a-tab-pane>
             </a-tabs>
         </div>
     </div>

@@ -1,9 +1,12 @@
 import { ref } from "vue"
 import { useRoute } from "vue-router"
+import tool from "@/utils/tool"
 
 export default function (crudOrFormRef: any, problemFormRef?: any) {
     const title = ref("问题单表单")
     const route = useRoute()
+    // 固定是否为FPGA
+    const isFPGA = !tool.checkForCpuOrFPGA(route.query.plant_type)
     const crudColumns = ref([
         {
             title: "ID",
@@ -154,7 +157,10 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
             hide: true,
             dataIndex: "timing_diagram",
             addDefaultValue: "",
-            formType: "editor"
+            formType: "editor",
+            display: !isFPGA,
+            editDisplay: !isFPGA,
+            addDisplay: !isFPGA
         },
         {
             title: "测试步骤",

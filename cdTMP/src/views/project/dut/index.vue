@@ -31,6 +31,10 @@
                 <!-- 字段的前缀后缀的插槽 -->
                 <!-- 版本字段的插槽 -->
                 <template #inputPrepend-ident> SJ-XX- </template>
+                <!-- 操作列前置插槽 -->
+                <template #operationBeforeExtend="{ record }">
+                    <a-link @click="handleCopyCurrentNode($event, record)" :loading="copyLoading"><icon-copy />复制当前</a-link>
+                </template>
             </ma-crud>
         </div>
         <file-input-modal ref="fileInputRef" @enterFinish="crudRef.refresh()"></file-input-modal>
@@ -59,6 +63,7 @@
 
 <script setup>
 import { ref } from "vue"
+import { useTreeDataStore } from "@/store"
 import useCrudOptions from "@/views/project/dut/hooks/useCrudOptions"
 import useColumns from "./hooks/useColumns"
 import { Message } from "@arco-design/web-vue"
@@ -75,6 +80,7 @@ import BatchCaseCreate from "@/views/project/components/BatchCaseCreate/index.vu
 const route = useRoute()
 const crudRef = ref()
 const projectId = ref(route.query.id)
+const treeDataStore = useTreeDataStore()
 
 // 5月28日新增功能：替换
 const replaceModal = ref()
@@ -141,6 +147,23 @@ const handleBatchDemandCreate = () => {
 // ~~~批量新增测试用例弹窗~~~
 const handleBatchCaseCreate = () => {
     batchCreateCaseRef.value.open({})
+}
+
+// 复制设计需求到当前dut
+const copyLoading = ref(false)
+const handleCopyCurrentNode = async (_, record) => {
+    copyLoading.value = true
+    try {
+        await designApi.copy_current({ dut_id: record.dut.id, design_id: record.id })
+        // 复制成功给提示
+        Message.success("复制成功!")
+        refreshCrudTable()
+        treeDataStore.updateDesignDemandTreeData({ key: record.key }, projectId.value)
+    } catch (e) {
+        console.log("复制失败，后台打印错误：", e)
+    } finally {
+        copyLoading.value = false
+    }
 }
 
 const refreshCrudTable = () => {

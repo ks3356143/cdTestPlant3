@@ -3,11 +3,7 @@
         <search v-show="searchVisible" @submit="searchSubmit" />
         <div class="lg:flex justify-between mb-2">
             <a-space>
-                <a-popconfirm
-                    content="确定要删除数据吗? 这会删除全部下级数据!"
-                    position="bottom"
-                    @ok="deletesMultipleAction"
-                >
+                <a-popconfirm content="确定要删除数据吗? 这会删除全部下级数据!" position="bottom" @ok="deletesMultipleAction">
                     <a-button type="primary" status="danger">
                         批量删除
                         <template #icon><icon-delete /></template>
@@ -140,7 +136,8 @@ const columns = ref([
         hide: false,
         ellipsis: true,
         search: true,
-        formType: "input"
+        formType: "input",
+        fixed: ""
     },
     {
         title: "标识",
@@ -150,7 +147,8 @@ const columns = ref([
         hide: false,
         ellipsis: true,
         search: true,
-        formType: "input"
+        formType: "input",
+        fixed: ""
     },
     {
         title: "章节号",
@@ -160,7 +158,8 @@ const columns = ref([
         hide: false,
         ellipsis: true,
         search: true,
-        formType: "input"
+        formType: "input",
+        fixed: ""
     },
     {
         title: "类型",
@@ -174,7 +173,8 @@ const columns = ref([
         showType: (text: string) => {
             return text
         },
-        dict: true
+        dict: true,
+        fixed: ""
     },
     {
         title: "需求描述",
@@ -185,7 +185,8 @@ const columns = ref([
         formType: "input",
         // 设置内容单元格样式-注意作用与<td>
         bodyCellClass: "hyperTextCell-table-chen",
-        isHyperText: true
+        isHyperText: true,
+        fixed: ""
     }
 ])
 provide("columns", columns)
@@ -194,10 +195,7 @@ provide("columns", columns)
 const showType = useShowType("demandType")
 
 // 3.query查询和分页相关
-const { tableData, isFetching, fetchData, total, pageChange, pageSizeChange, searchParams } = useFetchData(
-    designApi.getDesignDemandList,
-    columns
-)
+const { tableData, isFetching, fetchData, total, pageChange, pageSizeChange, searchParams } = useFetchData(designApi.getDesignDemandList, columns)
 
 // 4.表单相关
 const formRef = ref<InstanceType<typeof Form> | null>(null)

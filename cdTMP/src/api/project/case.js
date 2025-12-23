@@ -136,7 +136,7 @@ export default {
      * 批量替换事件
      * @returns
      */
-    exetimeReplace(data = { selectRows: [], exetime: "" }) {
+    exetimeReplace(data = { selectRows: [], exetime: [] }) {
         return request({
             url: "/project/case/timeReplace/",
             method: "post",
