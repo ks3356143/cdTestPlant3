@@ -71,7 +71,6 @@ const route = useRoute()
 const problemFormRef = ref(null)
 const title = ref("问题单表单")
 const crudRef = ref()
-
 // 2025年5月新增
 const replaceModal = ref()
 const handleReplaceClick = () => {

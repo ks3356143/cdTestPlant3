@@ -23,11 +23,7 @@
                 <a-tabs default-active-key="login-log" :animation="true">
                     <a-tab-pane key="login-log" title="登录日志" v-loading="isDataLoading">
                         <a-timeline class="pl-5 mt-3" v-if="loginLogList.length">
-                            <a-timeline-item
-                                :label="`IP地址：${item.ip}，操作系统：${item.os}`"
-                                v-for="(item, idx) in loginLogList"
-                                :key="idx"
-                            >
+                            <a-timeline-item :label="`IP地址：${item.ip}，操作系统：${item.os}`" v-for="(item, idx) in loginLogList" :key="idx">
                                 您于 {{ item.create_datetime }} 登录系统，浏览器：{{ item.browser }}
                             </a-timeline-item>
                         </a-timeline>

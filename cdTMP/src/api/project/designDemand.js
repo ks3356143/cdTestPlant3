@@ -131,5 +131,16 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     * 拖拽设计需求排序
+     * @returns
+     */
+    switch_position(from_key, to_key, pos, project_id) {
+        return request({
+            url: "/project/switch_position",
+            method: "get",
+            params: { from_key, to_key, pos, project_id }
+        })
     }
 }

@@ -93,7 +93,7 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
                 timerId && clearTimeout(timerId)
                 timerId = null
             }
-        }, 250)
+        }, 250) as any
     }
     return {
         selectedKeys,
