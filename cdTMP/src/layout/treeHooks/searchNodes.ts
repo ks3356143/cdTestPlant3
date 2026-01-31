@@ -34,7 +34,6 @@ export default function useSearchNodes() {
     const searchKey = ref("")
     // 点击搜索事件
     const handleSearchTreeDataClick = () => {
-        console.log(searchKey.value)
         // 返回过滤后的treeData
         // treeDataStore.originTreeData
         if (searchKey.value) {

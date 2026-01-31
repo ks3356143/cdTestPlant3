@@ -5,31 +5,18 @@
                 <div class="logo-container">
                     <img src="@/assets/img/wxwx-logo.svg" class="logo" alt="logo" @click="handleClickLogo" />
                 </div>
-                <a-typography-title
-                    class="title"
-                    @click="handleClickLogo"
-                    :style="{ margin: 0, fontSize: '18px' }"
-                    :heading="5"
-                >
-                    <div
-                        class="font-extrabold bg-clip-text text-transparent bg-linear-to-r from-blue-500 to-purple-600"
-                    >
-                        测试管理平台
-                    </div>
+                <a-typography-title class="title" @click="handleClickLogo" :style="{ margin: 0, fontSize: '18px' }" :heading="5">
+                    <div class="font-extrabold bg-clip-text text-transparent bg-linear-to-r from-blue-500 to-purple-600">测试管理平台</div>
                 </a-typography-title>
                 <a-typography-title :heading="6" class="version">v{{ $version }}</a-typography-title>
-                <icon-menu-fold
-                    v-if="!topMenu && appStore.device === 'mobile'"
-                    style="font-size: 22px; cursor: pointer"
-                    @click="toggleDrawerMenu"
-                />
+                <icon-menu-fold v-if="!topMenu && appStore.device === 'mobile'" style="font-size: 22px; cursor: pointer" @click="toggleDrawerMenu" />
             </a-space>
         </div>
         <div class="center-side flex items-center justify-center font-bold text-lg">
             <template v-if="title">
                 <a-typography-title
-                    :style="{ margin: 0, fontSize: '1.1rem', fontWeight: 'bold' }"
-                    :heading="4"
+                    :style="{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }"
+                    :heading="3"
                     :ellipsis="{
                         rows: 2
                     }"
@@ -102,6 +89,9 @@
                 </a-dropdown>
             </li>
         </ul>
+        <div class="fix-side" v-if="route.query.id">
+            <project-info-other />
+        </div>
     </div>
 </template>
 
@@ -114,6 +104,9 @@ import useUser from "@/hooks/logout"
 import { Message } from "@arco-design/web-vue"
 import Menu from "@/layout/components/menu.vue"
 import { useRouter, useRoute } from "vue-router"
+// 项目信息录入组件
+import projectInfoOther from "./projectInfoOther/index.vue"
+
 const router = useRouter()
 const route = useRoute()
 const appStore = useAppStore()
@@ -165,6 +158,14 @@ const handleClickLogo = () => {
 </script>
 
 <style scoped lang="less">
+// 项目管理悬浮定位
+.fix-side {
+    position: absolute;
+    left: 16%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .logo-container {
     perspective: 1000px;
     .logo {
