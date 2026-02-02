@@ -110,5 +110,27 @@ export default {
                 id: projectId
             }
         })
+    },
+    /**
+     * 新增或者修改软件概述
+     * @returns 返回新增或修改是否成功
+     */
+    postSoftSummary(data) {
+        return request({
+            url: "/testmanage/project/soft_summary/",
+            method: "post",
+            data: data
+        })
+    },
+    /**
+     * 获取项目的软件概述
+     * @returns 返回软件概述数据
+     */
+    getSoftSummary(id) {
+        return request({
+            url: "/testmanage/project/get_soft_summary/",
+            method: "get",
+            params: { id: id }
+        })
     }
 }

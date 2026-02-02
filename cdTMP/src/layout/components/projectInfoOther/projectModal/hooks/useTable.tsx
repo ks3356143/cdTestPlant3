@@ -1,5 +1,5 @@
 import { TableColumnData } from "@arco-design/web-vue"
-import { ref, reactive } from "vue"
+import { ref, reactive, onUnmounted } from "vue"
 // 粘贴图片组件
 import ImageInput from "../ImageInput/index.vue"
 // wordlike组件
@@ -44,7 +44,7 @@ export default function useTable() {
                     case "image":
                         return <ImageInput v-model={data.value[rowIndex].content} v-model:fontnote={data.value[rowIndex].fontnote}></ImageInput>
                     case "table":
-                        return <WordLikeTable></WordLikeTable>
+                        return <WordLikeTable v-model={data.value[rowIndex].content} v-model:fontnote={data.value[rowIndex].fontnote}></WordLikeTable>
                 }
             }
         },
@@ -66,14 +66,19 @@ export default function useTable() {
         }
     ])
 
+    // 卸载时清空数据
+    const handleOnClose = () => {
+        data.value = [{ ...initalRowData }]
+    }
+
     // 数据定义 - 测试
-    const data = ref([
+    const data = ref<
         {
-            type: "text",
-            content: "这是数据内容",
-            fontnote: ""
-        }
-    ])
+            type: string
+            content: string | string[][]
+            fontnote: string
+        }[]
+    >([])
 
     // 单行初始内容-并设置数据类型
     const initalRowData = {
@@ -104,8 +109,16 @@ export default function useTable() {
 
     // 新增表格
     const addTableRow = () => {
-        data.value.push({ type: "table", content: "", fontnote: "" })
+        data.value.push({
+            type: "table",
+            content: [
+                ["", "", ""],
+                ["", "", ""],
+                ["", "", ""]
+            ],
+            fontnote: ""
+        })
     }
 
-    return { columns, data, handleChange, addTextRow, addPicRow, addTableRow }
+    return { columns, data, handleChange, addTextRow, addPicRow, addTableRow, handleOnClose }
 }

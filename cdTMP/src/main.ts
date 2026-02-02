@@ -25,6 +25,10 @@ app.use(router)
 app.use(pinia)
 app.use(globalComponents)
 
+// 全局loading插件
+import loadingPlugin from "./plugins/loading"
+app.use(loadingPlugin)
+
 // 使用服务端请求数据管理库
 import { VueQueryPlugin } from "@tanstack/vue-query"
 app.use(VueQueryPlugin)

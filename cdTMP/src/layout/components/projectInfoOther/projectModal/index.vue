@@ -1,7 +1,17 @@
 <template>
     <div class="project-modal-container">
-        <a-modal v-model:visible="visible" width="70%" draggable :on-before-ok="handleSyncOk">
-            <template #title>{{ "软件概述" }}</template>
+        <a-modal
+            v-model:visible="visible"
+            width="80%"
+            draggable
+            :on-before-ok="handleSyncOk"
+            unmount-on-close
+            ok-text="确认保存"
+            cancel-text="关闭不保存"
+            :maskClosable="false"
+            @close="handleOnClose"
+        >
+            <template #title>{{ title }}</template>
             <div class="mb-2">
                 <a-space>
                     <a-dropdown>
@@ -23,17 +33,44 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import useTable from "./hooks/useTable"
+import projectApi from "@/api/project/project"
+import { useRoute } from "vue-router"
+import { Message } from "@arco-design/web-vue"
+import { getCurrentInstance } from "vue"
+
+const { proxy } = getCurrentInstance() as any
+
+const route = useRoute()
 
 const visible = ref(false)
+const title = ref("软件概述-新增")
 
-const { columns, data, handleChange, addTextRow, addPicRow, addTableRow } = useTable()
+const { columns, data, handleChange, addTextRow, addPicRow, addTableRow, handleOnClose } = useTable()
 
 const handleSyncOk = async () => {
+    try {
+        await projectApi.postSoftSummary({ id: route.query.id, data: data.value })
+        visible.value = false
+        Message.success("保存成功")
+    } catch (e) {
+        Message.error("提交时发送错误，请联系管理员")
+    }
     return false
 }
 
 const open = async () => {
-    visible.value = true
+    proxy?.$loading?.show("数据加载中...")
+    try {
+        const res = await projectApi.getSoftSummary(route.query.id)
+        const code = res.code // 25001表示有数据，25002表示没有数据
+        title.value = code === 25001 ? "软件概述-修改" : "软件概述-新增"
+        data.value = res.data
+        visible.value = true
+    } catch (e) {
+        Message.error("获取软件概述信息失败")
+    } finally {
+        proxy?.$loading?.hide()
+    }
 }
 
 defineExpose({ open })
