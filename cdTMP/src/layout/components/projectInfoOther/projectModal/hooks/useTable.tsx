@@ -5,7 +5,7 @@ import ImageInput from "../ImageInput/index.vue"
 // wordlike组件
 import WordLikeTable from "../wordLikeTable/index.vue"
 
-export default function useTable() {
+export default function useTable(reset: Function) {
     const columns = reactive<TableColumnData[]>([
         {
             title: "类型",
@@ -69,6 +69,8 @@ export default function useTable() {
     // 卸载时清空数据
     const handleOnClose = () => {
         data.value = [{ ...initalRowData }]
+        // 更新展示状态
+        reset()
     }
 
     // 数据定义 - 测试

@@ -132,5 +132,16 @@ export default {
             method: "get",
             params: { id: id }
         })
+    },
+    /**
+     * 获取所有状态
+     * @returns 返回是否填写软件概述等等是否已经填写
+     */
+    getAllStatus(id) {
+        return request({
+            url: "/testmanage/project/project_info_status/",
+            method: "get",
+            params: { id: id }
+        })
     }
 }

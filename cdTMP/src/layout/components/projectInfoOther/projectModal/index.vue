@@ -42,10 +42,14 @@ const { proxy } = getCurrentInstance() as any
 
 const route = useRoute()
 
+const { reset } = defineProps<{
+    reset: () => void
+}>()
+
 const visible = ref(false)
 const title = ref("软件概述-新增")
 
-const { columns, data, handleChange, addTextRow, addPicRow, addTableRow, handleOnClose } = useTable()
+const { columns, data, handleChange, addTextRow, addPicRow, addTableRow, handleOnClose } = useTable(reset)
 
 const handleSyncOk = async () => {
     try {
