@@ -35,7 +35,7 @@
         "vue": "^3.5.27",
         "vue-clipboard3": "^2.0.0",
         "vue-color-kit": "^1.0.6",
-        "vue-data-ui": "^3.14.2",
+        "vue-data-ui": "^3.14.5",
         "vue-router": "^5.0.2",
         "vuedraggable": "^2.24.3"
     },

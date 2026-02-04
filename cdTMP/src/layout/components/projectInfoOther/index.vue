@@ -34,25 +34,33 @@
                 </template>
             </template>
         </a-dropdown>
+        <!-- 软件概述... -->
         <project-modal ref="projectModalRef" :reset="fetchAllStatus" />
+        <!-- 接口图 -->
+        <InterfaceImage ref="interfaceImageRef" :reset="fetchAllStatus" />
     </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
-import ProjectModal from "./projectModal/index.vue"
 import projectApi from "@/api/project/project"
 import { useRoute } from "vue-router"
 import { Message } from "@arco-design/web-vue"
+import ProjectModal from "./projectModal/index.vue"
+import InterfaceImage from "./InterfaceImage.vue"
 
 const route = useRoute()
 
 // ref
 const projectModalRef = ref<InstanceType<typeof ProjectModal> | null>(null)
+const interfaceImageRef = ref<InstanceType<typeof InterfaceImage> | null>(null)
 
 // events
 const clickSoftSummary = async () => {
     projectModalRef.value?.open()
+}
+const clickInterfaceImage = async () => {
+    interfaceImageRef.value?.open()
 }
 
 // 进入页面时候请求知道各项目样式情况-ref
@@ -82,12 +90,10 @@ const inputOptions = ref([
         handler: clickSoftSummary
     },
     {
-        name: "static_soft_item",
+        name: "interface_image",
         title: "接口图",
         status: true,
-        handler: () => {
-            console.log("暂未实现")
-        }
+        handler: clickInterfaceImage
     }
 ])
 const allStatus = computed(() => inputOptions.value.every((item) => item.status))

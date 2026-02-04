@@ -31,12 +31,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, getCurrentInstance } from "vue"
 import useTable from "./hooks/useTable"
 import projectApi from "@/api/project/project"
 import { useRoute } from "vue-router"
 import { Message } from "@arco-design/web-vue"
-import { getCurrentInstance } from "vue"
 
 const { proxy } = getCurrentInstance() as any
 

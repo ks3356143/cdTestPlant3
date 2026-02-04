@@ -134,6 +134,29 @@ export default {
         })
     },
     /**
+     * 提交修改或新增软件接口图
+     * @returns 返回新增或修改是否成功
+     */
+    postInterfaceImage(id, data) {
+        return request({
+            url: "/testmanage/project/interface_image/",
+            method: "post",
+            params: { id: id },
+            data
+        })
+    },
+    /**
+     * 提交修改或新增软件接口图
+     * @returns 返回新增或修改是否成功
+     */
+    getInterfaceImage(id) {
+        return request({
+            url: "/testmanage/project/get_interface_image/",
+            method: "get",
+            params: { id: id }
+        })
+    },
+    /**
      * 获取所有状态
      * @returns 返回是否填写软件概述等等是否已经填写
      */

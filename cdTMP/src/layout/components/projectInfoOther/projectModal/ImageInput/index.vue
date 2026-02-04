@@ -12,7 +12,7 @@
             </template>
 
             <template v-else>
-                <div class="placeholder">请粘贴图片</div>
+                <div class="placeholder">此处Ctrl+V粘贴图片</div>
             </template>
         </div>
         <!-- 题注：fontnote -->
