@@ -1,5 +1,5 @@
 import { TableColumnData } from "@arco-design/web-vue"
-import { ref, reactive, onUnmounted } from "vue"
+import { ref, reactive } from "vue"
 // 粘贴图片组件
 import ImageInput from "../ImageInput/index.vue"
 // wordlike组件

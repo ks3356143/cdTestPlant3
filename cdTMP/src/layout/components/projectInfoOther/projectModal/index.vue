@@ -46,10 +46,27 @@ const { reset } = defineProps<{
 }>()
 
 const visible = ref(false)
-const title = ref("软件概述-新增")
+const title = ref("")
 
 const { columns, data, handleChange, addTextRow, addPicRow, addTableRow, handleOnClose } = useTable(reset)
 
+// enums - 维护一个obj来储存同类对应的内容
+const dictMap = {
+    软件概述: {
+        createTitle: "软件概述-新增",
+        modifyTitle: "软件概述-修改",
+        getFunc: projectApi.getSoftSummary,
+        postFunc: projectApi.postSoftSummary,
+        errorMsg: "获取软件概述失败"
+    },
+    动态环境描述: {
+        createTitle: "动态环境描述-新增",
+        modifyTitle: "动态环境描述-修改",
+        errorMsg: "获取动态环境描述失败"
+    }
+}
+
+// functions and events
 const handleSyncOk = async () => {
     try {
         await projectApi.postSoftSummary({ id: route.query.id, data: data.value })
@@ -61,16 +78,17 @@ const handleSyncOk = async () => {
     return false
 }
 
-const open = async () => {
+const open = async (category: string) => {
     proxy?.$loading?.show("数据加载中...")
+    const currentCate = dictMap[category]
     try {
-        const res = await projectApi.getSoftSummary(route.query.id)
+        const res = await currentCate.getFunc(route.query.id)
         const code = res.code // 25001表示有数据，25002表示没有数据
-        title.value = code === 25001 ? "软件概述-修改" : "软件概述-新增"
+        title.value = code === 25001 ? currentCate.modifyTitle : currentCate.createTitle
         data.value = res.data
         visible.value = true
     } catch (e) {
-        Message.error("获取软件概述信息失败")
+        Message.error(currentCate.errorMsg)
     } finally {
         proxy?.$loading?.hide()
     }

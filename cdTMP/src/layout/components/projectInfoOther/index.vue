@@ -38,29 +38,36 @@
         <project-modal ref="projectModalRef" :reset="fetchAllStatus" />
         <!-- 接口图 -->
         <InterfaceImage ref="interfaceImageRef" :reset="fetchAllStatus" />
+        <!-- 静态软件项、静态硬件项、动态软件项、动态硬件项 -->
+        <StaticDynamicTable ref="staticDynamiRef" :reset="fetchAllStatus" />
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, onMounted, ref, useTemplateRef } from "vue"
 import projectApi from "@/api/project/project"
 import { useRoute } from "vue-router"
 import { Message } from "@arco-design/web-vue"
 import ProjectModal from "./projectModal/index.vue"
 import InterfaceImage from "./InterfaceImage.vue"
+import StaticDynamicTable from "./StaticDynamicTable.vue"
 
 const route = useRoute()
 
 // ref
 const projectModalRef = ref<InstanceType<typeof ProjectModal> | null>(null)
 const interfaceImageRef = ref<InstanceType<typeof InterfaceImage> | null>(null)
+const staticDynamiRef = useTemplateRef("staticDynamiRef")
 
 // events
-const clickSoftSummary = async () => {
-    projectModalRef.value?.open()
+const clickStuctDatas = async (category: string) => {
+    projectModalRef.value?.open(category)
 }
 const clickInterfaceImage = async () => {
     interfaceImageRef.value?.open()
+}
+const clickStaticDynamic = async (title: string) => {
+    staticDynamiRef.value?.open(title)
 }
 
 // 进入页面时候请求知道各项目样式情况-ref
@@ -87,13 +94,43 @@ const inputOptions = ref([
         name: "soft_summary",
         title: "软件概述",
         status: false,
-        handler: clickSoftSummary
+        handler: () => clickStuctDatas("软件概述")
     },
     {
         name: "interface_image",
         title: "接口图",
-        status: true,
+        status: false,
         handler: clickInterfaceImage
+    },
+    {
+        name: "static_soft_item",
+        title: "静态软件项表",
+        status: false,
+        handler: () => clickStaticDynamic("静态软件项")
+    },
+    {
+        name: "static_soft_hardware",
+        title: "静态硬件项表",
+        status: false,
+        handler: () => clickStaticDynamic("静态硬件项")
+    },
+    {
+        name: "dynamic_des",
+        title: "动态环境描述",
+        status: false,
+        handler: () => clickStuctDatas("动态环境描述")
+    },
+    {
+        name: "dynamic_soft_item",
+        title: "动态软件项表",
+        status: false,
+        handler: () => clickStaticDynamic("动态软件项")
+    },
+    {
+        name: "dynamic_soft_hardware",
+        title: "动态硬件项表",
+        status: false,
+        handler: () => clickStaticDynamic("动态硬件项")
     }
 ])
 const allStatus = computed(() => inputOptions.value.every((item) => item.status))

@@ -157,6 +157,28 @@ export default {
         })
     },
     /**
+     * 获取静态软件项、静态硬件项、动态软件项、动态硬件项的数据
+     * @returns 返回数据
+     */
+    getStaticDynamicItems(id, category) {
+        return request({
+            url: "/testmanage/project/get_static_dynamic_items/",
+            method: "get",
+            params: { id: id, category }
+        })
+    },
+    /**
+     * 提交修改或新增静态软件项、静态硬件项、动态软件项、动态硬件项
+     * @returns null
+     */
+    postStaticDynamicItems(data) {
+        return request({
+            url: "/testmanage/project/post_static_dynamic_item/",
+            method: "post",
+            data
+        })
+    },
+    /**
      * 获取所有状态
      * @returns 返回是否填写软件概述等等是否已经填写
      */
