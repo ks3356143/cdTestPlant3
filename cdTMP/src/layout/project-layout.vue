@@ -85,6 +85,9 @@
                                                 }
                                             "
                                     /></a-tooltip>
+                                    <template v-if="nodeData.key !== '0'">
+                                        <Influence :node-data="nodeData"></Influence>
+                                    </template>
                                 </template>
                             </template>
                             <!-- 设计节点的图标 -->
@@ -248,6 +251,8 @@ import { provide, ref, watch } from "vue"
 import NavBar from "@/layout/components/navbar.vue"
 import PageLayout from "@/layout/page-layout.vue"
 import MaFormModal from "@/components/ma-form-modal/index.vue"
+// 影响域分析
+import Influence from "@/layout/components/Influence/index.vue"
 // 轮次的右键菜单，单独一个组件 -> 在treeComponents里面
 import roundRight from "./treeComponents/roundRight.vue"
 // 问题单ma-crud

@@ -47,6 +47,7 @@ const { reset } = defineProps<{
 
 const visible = ref(false)
 const title = ref("")
+const category = ref("软件概述")
 
 const { columns, data, handleChange, addTextRow, addPicRow, addTableRow, handleOnClose } = useTable(reset)
 
@@ -62,25 +63,29 @@ const dictMap = {
     动态环境描述: {
         createTitle: "动态环境描述-新增",
         modifyTitle: "动态环境描述-修改",
-        errorMsg: "获取动态环境描述失败"
+        errorMsg: "获取动态环境描述失败",
+        getFunc: projectApi.getDynamicDescription,
+        postFunc: projectApi.postDynamicDescription
     }
 }
 
 // functions and events
-const handleSyncOk = async () => {
+const handleSyncOk = async () => { 
     try {
-        await projectApi.postSoftSummary({ id: route.query.id, data: data.value })
+        await dictMap[category.value].postFunc({ id: route.query.id, data: data.value })
         visible.value = false
         Message.success("保存成功")
     } catch (e) {
+        console.log(e);
         Message.error("提交时发送错误，请联系管理员")
     }
     return false
 }
 
-const open = async (category: string) => {
+const open = async (category_str: string) => {
     proxy?.$loading?.show("数据加载中...")
-    const currentCate = dictMap[category]
+    category.value = category_str
+    const currentCate = dictMap[category.value]
     try {
         const res = await currentCate.getFunc(route.query.id)
         const code = res.code // 25001表示有数据，25002表示没有数据

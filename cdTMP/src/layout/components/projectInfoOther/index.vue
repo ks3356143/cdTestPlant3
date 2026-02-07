@@ -1,20 +1,16 @@
 <template>
     <div class="project-info-other-container">
-        <a-dropdown>
-            <a-button class="nav-btn">
-                <template #icon>
-                    <icon-settings />
-                </template>
-                <a-space>
-                    <span>项目设置</span>
+        <a-dropdown :popup-max-height="false">
+            <a-space>
+                <SettingButton label="项目设置">
                     <a-tooltip :content="allStatus ? '您已全部填写' : '还有未填写项目'">
                         <span class="text-green-500" v-if="allStatus">
-                            <icon-check-circle-fill />
+                            <icon-check-circle-fill size="20px" />
                         </span>
-                        <span class="text-red-500" v-else><icon-exclamation-circle-fill /></span>
+                        <span class="text-red-500" v-else><icon-exclamation-circle-fill size="20px" /></span>
                     </a-tooltip>
-                </a-space>
-            </a-button>
+                </SettingButton>
+            </a-space>
             <template #content>
                 <template v-for="item in inputOptions" :key="item.name">
                     <template v-if="!item.status">
@@ -40,6 +36,8 @@
         <InterfaceImage ref="interfaceImageRef" :reset="fetchAllStatus" />
         <!-- 静态软件项、静态硬件项、动态软件项、动态硬件项 -->
         <StaticDynamicTable ref="staticDynamiRef" :reset="fetchAllStatus" />
+        <!-- 环境差异性分析 -->
+        <TextAndTable ref="textAndTableRef" :reset="fetchAllStatus" />
     </div>
 </template>
 
@@ -51,6 +49,8 @@ import { Message } from "@arco-design/web-vue"
 import ProjectModal from "./projectModal/index.vue"
 import InterfaceImage from "./InterfaceImage.vue"
 import StaticDynamicTable from "./StaticDynamicTable.vue"
+import TextAndTable from "./TextAndTable.vue"
+import SettingButton from "./settingButton/index.vue"
 
 const route = useRoute()
 
@@ -58,6 +58,7 @@ const route = useRoute()
 const projectModalRef = ref<InstanceType<typeof ProjectModal> | null>(null)
 const interfaceImageRef = ref<InstanceType<typeof InterfaceImage> | null>(null)
 const staticDynamiRef = useTemplateRef("staticDynamiRef")
+const textAndTableRef = useTemplateRef("textAndTableRef")
 
 // events
 const clickStuctDatas = async (category: string) => {
@@ -68,6 +69,9 @@ const clickInterfaceImage = async () => {
 }
 const clickStaticDynamic = async (title: string) => {
     staticDynamiRef.value?.open(title)
+}
+const clickTextAndTable = async (title: string) => {
+    textAndTableRef.value?.open(title)
 }
 
 // 进入页面时候请求知道各项目样式情况-ref
@@ -131,6 +135,18 @@ const inputOptions = ref([
         title: "动态硬件项表",
         status: false,
         handler: () => clickStaticDynamic("动态硬件项")
+    },
+    {
+        name: "evaluate_data",
+        title: "测评数据",
+        status: false,
+        handler: () => clickStaticDynamic("测评数据")
+    },
+    {
+        name: "env_analysis",
+        title: "环境差异性分析",
+        status: false,
+        handler: () => clickTextAndTable("环境差异性分析")
     }
 ])
 const allStatus = computed(() => inputOptions.value.every((item) => item.status))

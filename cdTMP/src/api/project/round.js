@@ -35,7 +35,7 @@ export default {
         })
     },
     /**
-     * 更新轮次
+     * 删除轮次
      * @returns
      */
     delete(project_id, data = {}) {
@@ -44,6 +44,39 @@ export default {
             method: "delete",
             data,
             params: { project_id }
+        })
+    },
+    /**
+     * 获取影响域分析
+     * @returns 获取数据或code=25002
+     */
+    getInfluence(id, round_key) {
+        return request({
+            url: "project/round/get_influence",
+            method: "get",
+            params: { id, round_key }
+        })
+    },
+    /**
+     * 新增或修改影响域分析
+     * @returns null
+     */
+    postInfluence(data) {
+        return request({
+            url: "project/round/create_influence",
+            method: "post",
+            data
+        })
+    },
+    /**
+     * 查看轮次的影响域分析是否有数据
+     * @returns data: boolean
+     */
+    getInfluenceStatus(id, round_key) {
+        return request({
+            url: "project/round/get_status_influence",
+            method: "get",
+            params: { id, round_key }
         })
     }
 }

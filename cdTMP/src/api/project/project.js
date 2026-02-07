@@ -113,11 +113,22 @@ export default {
     },
     /**
      * 新增或者修改软件概述
-     * @returns 返回新增或修改是否成功
+     * @returns null
      */
     postSoftSummary(data) {
         return request({
             url: "/testmanage/project/soft_summary/",
+            method: "post",
+            data: data
+        })
+    },
+    /**
+     * 新增或者修改动态环境描述
+     * @returns null
+     */
+    postDynamicDescription(data) {
+        return request({
+            url: "/testmanage/project/dynamic_description/",
             method: "post",
             data: data
         })
@@ -129,6 +140,17 @@ export default {
     getSoftSummary(id) {
         return request({
             url: "/testmanage/project/get_soft_summary/",
+            method: "get",
+            params: { id: id }
+        })
+    },
+    /**
+     * 获取动态环境描述
+     * @returns 返回动态环境描述结构化数据
+     */
+    getDynamicDescription(id) {
+        return request({
+            url: "/testmanage/project/dynamic_des/",
             method: "get",
             params: { id: id }
         })
@@ -165,6 +187,28 @@ export default {
             url: "/testmanage/project/get_static_dynamic_items/",
             method: "get",
             params: { id: id, category }
+        })
+    },
+    /**
+     * 获取环境差异性分析数据
+     * @returns 返回数据
+     */
+    getEnvAnalysis(id) {
+        return request({
+            url: "/testmanage/project/get_env_analysis/",
+            method: "get",
+            params: { id: id }
+        })
+    },
+    /**
+     * 提交环境差异性数据
+     * @returns null
+     */
+    postEnvAnalysis(data) {
+        return request({
+            url: "/testmanage/project/post_env_analysis/",
+            method: "post",
+            data
         })
     },
     /**

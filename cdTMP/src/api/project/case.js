@@ -142,5 +142,16 @@ export default {
             method: "post",
             data
         })
+    },
+    /**
+     * 请求上一轮次，级联选择器的cases数据
+     * @returns
+     */
+    getRelatedCases(id, round_key) {
+        return request({
+            url: "/project/case/getRelatedCase",
+            method: "get",
+            params: { id, round_key }
+        })
     }
 }

@@ -90,6 +90,6 @@ const handlePaste = async (e: ClipboardEvent) => {
 .preview-image {
     max-width: 100%;
     max-height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 </style>
