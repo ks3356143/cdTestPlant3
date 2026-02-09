@@ -16,7 +16,7 @@
         "@tanstack/vue-query": "^5.92.9",
         "@tinymce/tinymce-vue": "^6.3.0",
         "@vueuse/core": "^14.2.0",
-        "axios": "^1.13.4",
+        "axios": "^1.13.5",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "dayjs": "^1.11.19",
@@ -35,7 +35,7 @@
         "vue": "^3.5.27",
         "vue-clipboard3": "^2.0.0",
         "vue-color-kit": "^1.0.6",
-        "vue-data-ui": "^3.14.9",
+        "vue-data-ui": "^3.14.10",
         "vue-router": "^5.0.2",
         "vuedraggable": "^2.24.3"
     },
