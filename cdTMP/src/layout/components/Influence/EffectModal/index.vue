@@ -119,7 +119,8 @@ const handleOk = async () => {
 }
 
 const handleCloseEnd = async () => {
-    datas.value.forEach((item) => {
+    // Iterator Helper
+    datas.value.values().forEach((item) => {
         // 安全地检查并重置 change_des
         if (item && typeof item === "object" && "change_des" in item) {
             item.change_des = ""
@@ -148,11 +149,14 @@ const open = async () => {
         // 获取影响域分析数据
         const res2 = await roundApi.getInfluence(route.query.id, nodeData?.key)
         if (res2.code !== 25002) {
-            // 有影响域分析
-            datas.value = res2.data.map((item: any) => ({
-                ...item,
-                id: item.id || `loaded_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-            }))
+            // 有影响域分析 - 注意使用了Iterator Helper，老版本浏览器可能会不支持
+            datas.value = res2.data
+                .values()
+                .map((item: any) => ({
+                    ...item,
+                    id: item.id || `loaded_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+                }))
+                .toArray()
         } else {
             Message.info("暂未填写影响域分析，请填写")
         }
