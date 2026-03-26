@@ -7,7 +7,7 @@ import { appRoutes } from "../routes"
 import { WHITE_LIST, NOT_FOUND } from "../constants"
 // 权限守卫
 export default function setupPermissionGuard(router) {
-    router.beforeEach(async (to, from, next) => {
+    router.beforeEach(async (to, from) => {
         const appStore = useAppStore()
         const userStore = useUserStore()
         const Permission = usePermission()
@@ -34,16 +34,18 @@ export default function setupPermissionGuard(router) {
                 }
             }
             if (exist && permissionsAllow) {
-                next()
-            } else next(NOT_FOUND)
+                return true
+            } else {
+                return NOT_FOUND
+            }
         } else {
             // eslint-disable-next-line no-lonely-if
-            if (permissionsAllow) next()
-            else {
+            if (permissionsAllow) {
+                return true
+            } else {
                 const destination = Permission.findFirstPermissionRoute(appRoutes, userStore.role) || NOT_FOUND
-                next(destination)
+                return destination
             }
         }
-        NProgress.done()
     })
 }

@@ -16,7 +16,7 @@ export default ({ mode }) => {
             vueJsx(),
             visualizer({
                 open: true,
-                filename: "visualizer.html" // 分析图生成的文件名
+                filename: "./dist/visualizer.html" // 分析图生成的文件名
             }),
             tailwindcss()
         ],
@@ -33,8 +33,25 @@ export default ({ mode }) => {
             __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
         },
         build: {
-            chunkSizeWarningLimit: 3000,
+            chunkSizeWarningLimit: 3000
             // assetsPublicPath: "./"
+            // v8版本又报tinymce is not defined，只有遗憾业务js大的问题
+            /** 
+            rolldownOptions: {
+                output: {
+                    codeSplitting: {
+                        groups: [
+                            {
+                                test: (id) => id.includes("tinymce"),
+                                name: "tinymce",
+                            }
+                        ]
+                    }
+                }
+            }
+            */
+            // vite v7版本配置：V8已经移除
+            /** 
             rollupOptions: {
                 output: {
                     manualChunks: (id) => {
@@ -43,6 +60,7 @@ export default ({ mode }) => {
                     }
                 }
             }
+            */
         },
         server: {
             host: "0.0.0.0",

@@ -8,9 +8,8 @@
 import { reactive, ref, watch, computed } from "vue"
 import { useAppStore } from "@/store"
 
-import Editor from "@tinymce/tinymce-vue"
 import tinymce from "tinymce/tinymce.min.js"
-
+import Editor from "@tinymce/tinymce-vue"
 import "tinymce/icons/default/icons.min.js"
 import "tinymce/models/dom/model.min.js"
 import "tinymce/themes/silver/theme.min.js"

@@ -5,6 +5,8 @@ import setupPermissionGuard from "@/router/guard/permisstion"
 import { setRouteTitle } from "@/utils/title"
 // 为了已登录用户直接进入login
 import { useUserStore } from "@/store"
+import NProgress from "nprogress" // progress bar
+import "nprogress/nprogress.css"
 
 function setupPageGuard(router) {
     router.beforeEach(async (to) => {
@@ -14,6 +16,7 @@ function setupPageGuard(router) {
     // 设置站点document.title
     router.afterEach((to, from) => {
         setRouteTitle(to.meta.title)
+        NProgress.done()
     })
     // 设置如果已登录用户进入login页面则直接进入工作台
     router.beforeEach((to) => {
