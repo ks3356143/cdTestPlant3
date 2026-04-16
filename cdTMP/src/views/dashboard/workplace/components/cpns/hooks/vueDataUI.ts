@@ -2,12 +2,10 @@ import { Ref, computed } from "vue"
 import { storeToRefs } from "pinia"
 import { useAppStore } from "@/store"
 
-// 单个每月项目数量对象格式
 interface IData {
     mouth: string
     count: number
 }
-// 响应.data的数据格式
 interface ResData {
     data: IData[]
 }
@@ -15,7 +13,8 @@ interface ResData {
 function useVueDataUI(data: Ref<ResData>) {
     const appStore = useAppStore()
     const { theme } = storeToRefs(appStore)
-    // 结构pinia储存的主体响应式变量
+
+    // 基础数据集
     const initialData = [
         {
             name: "项目数量",
@@ -27,36 +26,38 @@ function useVueDataUI(data: Ref<ResData>) {
             smooth: true
         }
     ]
-    const chartData = computed<any[]>(() => {
+
+    const chartData = computed(() => {
         if (data.value) {
             const countData = data.value.data.map((it) => it.count)
-            initialData[0].series = countData
+            // 注意：这里直接修改了 initialData[0].series，为避免副作用，建议每次返回新对象
+            return [
+                {
+                    ...initialData[0],
+                    series: countData
+                }
+            ]
         }
         return initialData
     })
-    // 暗黑模式识别(这是存在pinia的)
-    const darkMode = document.body.getAttribute("arco-theme")
-    const initialConfig = {
-        theme: darkMode === "dark" ? "celebrationNight" : "",
+
+    // 基础配置（不包含颜色相关部分）
+    const baseConfig = {
         responsive: false,
         customPalette: [],
         downsample: { threshold: 500 },
         chart: {
             fontFamily: "inherit",
-            backgroundColor: "#FFFFFFff",
-            color: "#1A1A1Aff",
             height: 300,
             width: 1200,
             padding: { top: 36, right: 24, bottom: 48, left: 48 },
-            highlighter: { color: "#1A1A1Aff", opacity: 5, useLine: false, lineDasharray: 2, lineWidth: 1 },
+            highlighter: { opacity: 5, useLine: false, lineDasharray: 2, lineWidth: 1 },
             grid: {
-                stroke: "#e1e5e8ff",
                 showVerticalLines: false,
                 showHorizontalLines: false,
                 position: "middle",
                 frame: {
                     show: false,
-                    stroke: "#E1E5E8ff",
                     strokeWidth: 2,
                     strokeLinecap: "round",
                     strokeLinejoin: "round",
@@ -64,7 +65,6 @@ function useVueDataUI(data: Ref<ResData>) {
                 },
                 labels: {
                     show: true,
-                    color: "#1A1A1Aff",
                     fontSize: 12,
                     axis: { yLabel: "", yLabelOffsetX: 0, xLabel: "", xLabelOffsetY: 14, fontSize: 12 },
                     zeroLine: { show: true },
@@ -81,22 +81,8 @@ function useVueDataUI(data: Ref<ResData>) {
                         scaleMax: 20
                     },
                     xAxisLabels: {
-                        color: "#1A1A1Aff",
                         show: true,
-                        values: [
-                            "一月",
-                            "二月",
-                            "三月",
-                            "四月",
-                            "五月",
-                            "六月",
-                            "七月",
-                            "八月",
-                            "九月",
-                            "十月",
-                            "十一月",
-                            "十二月"
-                        ],
+                        values: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
                         fontSize: 12,
                         showOnlyFirstAndLast: false,
                         showOnlyAtModulo: false,
@@ -108,26 +94,22 @@ function useVueDataUI(data: Ref<ResData>) {
             },
             comments: { show: true, showInTooltip: true, width: 200, offsetX: 0, offsetY: 0 },
             labels: { fontSize: 10, prefix: "", suffix: "" },
-            legend: { color: "#1A1A1Aff", show: false, fontSize: 16 },
+            legend: { show: false, fontSize: 16 },
             title: {
                 text: "项目每月统计",
-                color: "#1A1A1Aff",
                 fontSize: 18,
                 bold: true,
                 textAlign: "left",
                 paddingLeft: 5,
                 paddingRight: 0,
-                subtitle: { color: "#CCCCCCff", text: "", fontSize: 16, bold: false },
+                subtitle: { text: "", fontSize: 16, bold: false },
                 show: true
             },
             tooltip: {
                 show: true,
-                color: "#1A1A1Aff",
-                backgroundColor: "#FFFFFFff",
                 fontSize: 14,
                 customFormat: null,
                 borderRadius: 4,
-                borderColor: "#e1e5e8",
                 borderWidth: 1,
                 backgroundOpacity: 30,
                 position: "center",
@@ -170,16 +152,73 @@ function useVueDataUI(data: Ref<ResData>) {
         },
         showTable: false
     }
+
     const chartConfig = computed(() => {
+        const isDark = theme.value === "dark"
+
+        // 计算 Y 轴最大值
+        let scaleMax = 10
         if (data.value) {
             const countData = data.value.data.map((it) => it.count)
-            initialConfig.chart.grid.labels.yAxis.scaleMax = Math.max(...countData) ? Math.max(...countData) : 10
+            scaleMax = Math.max(...countData) || 10
         }
+
+        // 动态生成颜色相关配置
         return {
-            ...initialConfig,
-            theme: theme.value === "dark" ? "celebrationNight" : ""
+            ...baseConfig,
+            // 不设置 theme，完全自定义
+            chart: {
+                ...baseConfig.chart,
+                // 背景色
+                backgroundColor: isDark ? "#1A1A1Aff" : "#FFFFFFff",
+                // 全局文字颜色
+                color: isDark ? "#FFFFFFFF" : "#1A1A1Aff",
+                highlighter: {
+                    ...baseConfig.chart.highlighter,
+                    color: isDark ? "#FFFFFFFF" : "#1A1A1Aff"
+                },
+                grid: {
+                    ...baseConfig.chart.grid,
+                    stroke: isDark ? "#444444ff" : "#e1e5e8ff",
+                    frame: {
+                        ...baseConfig.chart.grid.frame,
+                        stroke: isDark ? "#444444ff" : "#E1E5E8ff"
+                    },
+                    labels: {
+                        ...baseConfig.chart.grid.labels,
+                        color: isDark ? "#FFFFFFFF" : "#1A1A1Aff",
+                        yAxis: {
+                            ...baseConfig.chart.grid.labels.yAxis,
+                            scaleMax
+                        },
+                        xAxisLabels: {
+                            ...baseConfig.chart.grid.labels.xAxisLabels,
+                            color: isDark ? "#FFFFFFFF" : "#1A1A1Aff"
+                        }
+                    }
+                },
+                legend: {
+                    ...baseConfig.chart.legend,
+                    color: isDark ? "#FFFFFFFF" : "#1A1A1Aff"
+                },
+                title: {
+                    ...baseConfig.chart.title,
+                    color: isDark ? "#FFFFFFFF" : "#1A1A1Aff",
+                    subtitle: {
+                        ...baseConfig.chart.title.subtitle,
+                        color: isDark ? "#AAAAAAff" : "#CCCCCCff"
+                    }
+                },
+                tooltip: {
+                    ...baseConfig.chart.tooltip,
+                    color: isDark ? "#FFFFFFFF" : "#1A1A1Aff",
+                    backgroundColor: isDark ? "#333333ff" : "#FFFFFFff",
+                    borderColor: isDark ? "#555555ff" : "#e1e5e8"
+                }
+            }
         }
     })
+
     return { chartData, chartConfig }
 }
 

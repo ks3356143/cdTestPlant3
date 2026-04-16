@@ -3,7 +3,7 @@
         <a-spin class="chartContainer" :loading="isPending" tip="图标数据加载中...">
             <div class="flex justify-center items-center" v-if="!isPending">
                 <template v-if="isError">
-                    <img class="w-[200px] h-[300px]" src="@/assets/img/ErrorLoad.svg" alt="" />
+                    <img class="w-50 h-75" src="@/assets/img/ErrorLoad.svg" alt="" />
                 </template>
                 <template v-else>
                     <VueUiXy :dataset="chartData" :config="chartConfig" :style="{ padding: '10px' }" />
@@ -28,6 +28,8 @@ const { isPending, data, isError } = useQuery({
 
 // vue-data-ui图表
 const { chartData, chartConfig } = useVueDataUI(data)
+
+// 暗黑模式配置
 </script>
 
 <style lang="less" scoped>
