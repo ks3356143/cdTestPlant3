@@ -214,6 +214,8 @@ const useCrudInit = function () {
             hide: true,
             search: false,
             formType: "select",
+            maxTagCount: 4,
+            multiple: true,
             allowCreate: true,
             createInfo: {
                 title: "运行环境"
@@ -259,6 +261,8 @@ const useCrudInit = function () {
             hide: true,
             search: false,
             formType: "select",
+            multiple:true,
+            maxTagCount: 4,
             allowCreate: true,
             createInfo: {
                 title: "开发环境"

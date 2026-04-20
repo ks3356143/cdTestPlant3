@@ -1,7 +1,7 @@
 {
     "name": "testplant",
     "private": true,
-    "version": "1.0.1",
+    "version": "0.1.1",
     "type": "module",
     "scripts": {
         "dev": "vite",
@@ -12,11 +12,11 @@
     },
     "dependencies": {
         "@arco-design/color": "^0.4.0",
-        "@arco-design/web-vue": "^2.57.0",
-        "@tanstack/vue-query": "^5.99.0",
+        "@arco-design/web-vue": "^2.58.0",
+        "@tanstack/vue-query": "^5.99.2",
         "@tinymce/tinymce-vue": "^6.3.0",
         "@vueuse/core": "^14.2.1",
-        "axios": "^1.15.0",
+        "axios": "^1.15.1",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "dayjs": "^1.11.20",
@@ -50,7 +50,7 @@
         "@vitejs/plugin-vue-jsx": "^5.1.5",
         "@vue/babel-plugin-jsx": "^2.0.1",
         "browserslist": "^4.28.2",
-        "eslint": "^10.2.0",
+        "eslint": "^10.2.1",
         "eslint-plugin-vue": "^10.8.0",
         "less": "^4.6.4",
         "less-loader": "^12.3.2",
@@ -58,7 +58,7 @@
         "prettier": "^3.8.3",
         "rollup-plugin-visualizer": "^7.0.1",
         "tailwindcss": "^4.2.2",
-        "typescript": "^6.0.2",
+        "typescript": "^6.0.3",
         "vite": "^8.0.8",
         "vue-eslint-parser": "^10.4.0"
     }

@@ -26,9 +26,7 @@
                             </a-space>
                         </template>
                     </a-popover>
-                    <a-button @click="enterWorkPlant(record)" size="mini" status="warning" type="outline">
-                        工作区
-                    </a-button>
+                    <a-button @click="enterWorkPlant(record)" size="mini" status="warning" type="outline"> 工作区 </a-button>
                     <a-link @click="previewRef.open(record)"><icon-eye />预览</a-link>
                     <a-link @click="handleFragmentClick(record)"><icon-file />片段</a-link>
                     <a-link @click="handleBoardClick(record)"><icon-dashboard />看板</a-link>

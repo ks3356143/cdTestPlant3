@@ -41,7 +41,7 @@ const imageUrl = ref("")
 
 const handleSyncOk = async () => {
     // 验证题注是否为空
-    if (fontnote.value.trim().length <= 0 || !imageUrl.value.trim()) {
+    if (fontnote.value?.trim().length <= 0 || !imageUrl.value?.trim()) {
         Message.error("请输入题注和粘贴图片")
         return false
     }
@@ -65,8 +65,8 @@ const open = async () => {
     proxy?.$loading?.show("数据加载中...")
     try {
         const { data } = await projectApi.getInterfaceImage(route.query.id)
-        fontnote.value = data.fontnote
-        imageUrl.value = data.content
+        fontnote.value = data.fontnote || ""
+        imageUrl.value = data.content || ""
         visible.value = true
     } catch (e) {
     } finally {

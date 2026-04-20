@@ -5,7 +5,7 @@ import caseApi from "@/api/project/case"
 import { useTreeDataStore } from "@/store"
 import { isEqual, cloneDeep } from "lodash-es"
 /**
- * Dut被测件的crud选项
+ * 用例的Crud Init
  */
 export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
     // globals
@@ -24,7 +24,6 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         if (!beforeFormStep) {
             return
         }
-        crudRef.value.getFormData().testStep
         const iuEqualValue = isEqual(crudRef.value.getFormData().testStep, beforeFormStep)
         !iuEqualValue &&
             app.$modal.confirm({

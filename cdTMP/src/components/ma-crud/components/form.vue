@@ -21,13 +21,7 @@
         </template>
         <a-spin :loading="dataLoading" tip="加载中..." class="w-full">
             <!-- 修改源码parentKey -->
-            <ma-form
-                v-model="form"
-                :columns="formColumns"
-                :parent-key="props.parentKey"
-                :options="formOptions"
-                ref="maFormRef"
-            >
+            <ma-form v-model="form" :columns="formColumns" :parent-key="props.parentKey" :options="formOptions" ref="maFormRef">
                 <template v-for="slot in Object.keys($slots)" #[slot]="component">
                     <slot :name="slot" v-bind="component" />
                 </template>
@@ -88,12 +82,17 @@ const submit = async () => {
         if (isFunction(options.beforeAdd) && !(await options.beforeAdd(formData))) {
             return false
         }
-        // 修改源码添加parameters参数
-        if (!options.parameters) {
-            response = await options.add.api(formData)
-        } else {
-            response = await options.add.api({ ...formData, ...options.parameters })
+        try {
+            if (!options.parameters) {
+                response = await options.add.api(formData)
+            } else {
+                response = await options.add.api({ ...formData, ...options.parameters })
+            }
+        } catch (error) {
+            console.error("标识重复")
+            return false
         }
+        // 修改源码添加parameters参数
         isFunction(options.afterAdd) && (await options.afterAdd(response, formData))
     } else {
         if (isFunction(options.beforeEdit) && !(await options.beforeEdit(formData))) {

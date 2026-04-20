@@ -89,8 +89,8 @@ const open = async (category_str: string) => {
         const res = await projectApi.getEnvAnalysis(route.query.id)
         if (res.code === 25001) {
             tableDatas.value = res.data.table
-            fontnote.value = res.data.fontnote
-            description.value = res.data.description
+            fontnote.value = res.data.fontnote || ""
+            description.value = res.data.description || ""
         }
         visible.value = true
     } catch (e) {

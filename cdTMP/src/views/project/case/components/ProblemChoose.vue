@@ -70,7 +70,8 @@ const handleRelatedChange = async (record) => {
     // 因为switch绑定了record.related所以可以动态改变
     loading.value = true
     // 判断该用例是否是未通过，如果未执行或已通过则不允许关联问题单
-    if (!caseIsPassed(caseInfo.value)) {
+    // 修改：当用户取消关联时应该不判断是否caseIsPassed
+    if (record.related && !caseIsPassed(caseInfo.value)) {
         Message.error("该用例没有缓存或无未通过步骤，请切换页面或设置未通过步骤后添加问题单!")
         loading.value = false
         record.related = !record.related
@@ -90,7 +91,7 @@ const handleRelatedChange = async (record) => {
         })
     if (res) {
         if (!res.data.isOK) {
-            // 后台说没关联成功则保持不变
+            // 后端返回失败则回退switch状态
             record.related = !record.related
             loading.value = false
         }

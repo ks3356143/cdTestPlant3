@@ -51,14 +51,14 @@ const props = defineProps({
     // 插件
     plugins: {
         type: [String, Array],
-        default: "visualchars code table nonbreaking lists autosave autoresize"
+        default: "visualchars code table nonbreaking autosave autoresize"
         // 备份："searchreplace visualchars code table nonbreaking lists autosave autoresize"
     },
     // 工具栏
     toolbar: {
         type: [String, Array],
         // 如果要取消粘贴只粘贴文本，需要用户加格式请加上pastetext
-        default: "code undo redo aligncenter alignleft indent styleselect formatselect fontselect fontsizeselect removeformat"
+        default: "code undo redo aligncenter alignleft indent styleselect formatselect fontselect fontsizeselect"
 
         // 下面是备份配置：
         //     default:"code undo redo restoredraft | paste | bold | aligncenter alignleft alignjustify indent searchreplace | \

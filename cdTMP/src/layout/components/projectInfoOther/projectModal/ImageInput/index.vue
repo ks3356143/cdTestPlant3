@@ -22,56 +22,75 @@
 
 <script setup lang="ts">
 import { Message } from "@arco-design/web-vue"
-import { nextTick, ref } from "vue"
+import { nextTick, ref, onMounted, onBeforeUnmount } from "vue"
 
-// 储存图片base64
 const imgData = defineModel<string>()
-// 储存题注
 const fontnote = defineModel<string>("fontnote")
-// 加载状态
 const isLoading = ref(false)
 
-// 处理粘贴事件
-const handlePaste = async (e: ClipboardEvent) => {
+// 全局粘贴处理函数
+const onGlobalPaste = (e: ClipboardEvent) => {
+    // 可以增加判断：只有当前组件所在的 modal 打开时才处理（通过 props 传入 visible 状态或使用 provide/inject）
+    // 简单起见，这里假设始终需要处理（父组件控制显示隐藏）
+    handlePaste(e)
+}
+
+// 处理粘贴逻辑（复用之前的修复版）
+const handlePaste = (e: ClipboardEvent) => {
     e.preventDefault()
-    // 处理没有粘贴内容
-    if (!e.clipboardData) return
-    const items = e.clipboardData!.items
-    // 遍历粘贴板内容
+    const clipboardData = e.clipboardData
+    if (!clipboardData) return
+
+    const items = clipboardData.items
+    let imageItem: DataTransferItem | null = null
+
     for (let i = 0; i < items.length; i++) {
         const item = items[i]
-        // 判断是否是粘贴的图片
         if (item.kind === "file" && item.type.startsWith("image/")) {
-            const file = item.getAsFile()
-            if (!file) {
-                Message.error("读取图片失败，请重新粘贴")
-                break
-            }
-            // 判断大小不超过50M
-            if (file.size > 50 * 1024 * 1024) {
-                Message.error("要求图片不超过50M")
-                break
-            }
-            isLoading.value = true
-            const reader = new FileReader()
-            reader.onload = async (e: ProgressEvent<FileReader>) => {
-                imgData.value = e.target!.result as string
-                await nextTick() // 保证图片展示
-                isLoading.value = false
-            }
-            // 加载失败处理
-            reader.onerror = () => {
-                Message.error("图片加载失败，请重试")
-                isLoading.value = false
-            }
-            reader.readAsDataURL(file) // 可直接转为base64的url给img元素使用
-            break
-        } else {
-            Message.error("请粘贴图片，无法粘贴文字或其他内容")
+            imageItem = item
             break
         }
     }
+
+    if (!imageItem) {
+        Message.error("请粘贴图片，无法粘贴文字或其他内容")
+        return
+    }
+
+    const file = imageItem.getAsFile()
+    if (!file) {
+        Message.error("读取图片失败，请重新粘贴")
+        return
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+        Message.error("要求图片不超过50M")
+        return
+    }
+
+    isLoading.value = true
+    const reader = new FileReader()
+    reader.onload = (e) => {
+        imgData.value = e.target!.result as string
+        nextTick(() => {
+            isLoading.value = false
+        })
+    }
+    reader.onerror = () => {
+        Message.error("图片加载失败，请重试")
+        isLoading.value = false
+    }
+    reader.readAsDataURL(file)
 }
+
+// 挂载全局监听
+onMounted(() => {
+    document.addEventListener("paste", onGlobalPaste)
+})
+
+onBeforeUnmount(() => {
+    document.removeEventListener("paste", onGlobalPaste)
+})
 </script>
 
 <style scoped lang="less">
@@ -81,7 +100,7 @@ const handlePaste = async (e: ClipboardEvent) => {
     border: 1px solid #eee;
     cursor: alias;
 
-    .img-container{
+    .img-container {
         width: 100%;
         height: 100%;
     }

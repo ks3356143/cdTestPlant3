@@ -46,7 +46,7 @@ const fontnote = ref("")
 
 const handleSyncOk = async () => {
     // 验证题注是否为空
-    if (tableData.value.length <= 0) {
+    if (tableData.value?.length <= 0) {
         Message.error("请输入表格内容再提交")
         return false
     }
@@ -80,7 +80,7 @@ const open = async (title: string) => {
         if (res.code === 25001) {
             const data = res.data
             tableData.value = data.table
-            fontnote.value = data.fontnote
+            fontnote.value = data.fontnote || ""
         }
         visible.value = true
     } catch (e) {

@@ -39,17 +39,9 @@
             @replaceSuccess="replaceSuccessHandle"
         />
         <!-- 批量替换人员组件 -->
-        <replace-person
-            :selectRows="undefined"
-            @modify-success="crudRef.refresh()"
-            ref="replacePersonModalRef"
-        />
+        <replace-person :selectRows="undefined" @modify-success="crudRef.refresh()" ref="replacePersonModalRef" />
         <!-- 批量替换时间 -->
-        <replace-exetime
-            :selectRows="undefined"
-            @modify-success="crudRef.refresh()"
-            ref="replaceExetimeModalRef"
-        />
+        <replace-exetime :selectRows="undefined" @modify-success="crudRef.refresh()" ref="replaceExetimeModalRef" />
     </div>
 </template>
 

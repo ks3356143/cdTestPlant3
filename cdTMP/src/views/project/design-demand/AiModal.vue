@@ -86,7 +86,7 @@
                                                 <tr class="arco-table-tr" v-for="(row, idx) in item.children" :key="idx">
                                                     <td class="arco-table-td">
                                                         <span class="arco-table-cell arco-table-cell-align-center">
-                                                            {{ idx + 1 }}
+                                                            {{ Number(idx) + 1 }}
                                                         </span>
                                                     </td>
                                                     <td class="arco-table-td">
@@ -161,7 +161,6 @@ const fetchTestType = async () => {
 fetchTestType()
 
 // 初始化设计需求
-
 const currentKey: string = route.query.key as string
 const getDesign = async () => {
     try {
