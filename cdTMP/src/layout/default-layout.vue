@@ -21,15 +21,7 @@
                         <Menu />
                     </div>
                 </a-layout-sider>
-                <a-drawer
-                    v-if="hideMenu"
-                    :visible="drawerVisible"
-                    placement="left"
-                    :footer="false"
-                    mask-closable
-                    :closable="false"
-                    @cancel="drawerCancel"
-                >
+                <a-drawer v-if="hideMenu" :visible="drawerVisible" placement="left" :footer="false" mask-closable :closable="false" @cancel="drawerCancel">
                     <Menu />
                 </a-drawer>
                 <a-layout class="layout-content" :style="paddingStyle">

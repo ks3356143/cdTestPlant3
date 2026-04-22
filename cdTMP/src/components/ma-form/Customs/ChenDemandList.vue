@@ -12,6 +12,11 @@
                                     </a-tooltip>
                                 </span>
                             </th>
+                            <th class="arco-table-th" :width="18">
+                                <span class="arco-table-cell arco-table-cell-align-center">
+                                    <span class="arco-table-th-title">序号</span>
+                                </span>
+                            </th>
                             <th class="arco-table-th" :width="400">
                                 <span class="arco-table-cell arco-table-cell-align-center">
                                     <span class="arco-table-th-title">操作</span>
@@ -58,6 +63,9 @@
                                             </a-button>
                                         </a-button-group>
                                     </span>
+                                </td>
+                                <td class="arco-table-td text-center!">
+                                    <a-badge class="mt-1" :count="index + 1" :dotStyle="{ background: '#E5E6EB', color: '#86909C' }" />
                                 </td>
                                 <td class="arco-table-td">
                                     <span class="arco-table-cell">

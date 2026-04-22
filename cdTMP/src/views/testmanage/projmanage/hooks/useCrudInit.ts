@@ -525,7 +525,7 @@ const useCrudInit = function () {
             hide: true,
             formType: "radio",
             addDefaultValue: "1",
-            addDisabled: true,
+            addDisabled: false,
             dict: {
                 name: "secret",
                 translation: true,

@@ -29,6 +29,7 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
             editDefaultValue: "用例标识自动生成，结构为YL_IO_XXXX_001",
             editDisabled: true,
             search: true,
+            searchPlaceholder:"仅搜索标识字母，不要搜索YL、SU、-、001等字样",
             validateTrigger: "blur-sm"
         },
         {

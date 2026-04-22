@@ -53,39 +53,86 @@ export default function (crudOrFormRef?: any) {
             commonRules: [{ required: true, message: "需求类型是必填" }],
             validateTrigger: "blur-sm",
             // 主要为了添加“接口”的4个字段
-            onControl: (value) => {
+            onControl: (value: string, maFormObject: any) => {
+                const columnService = maFormObject.getColumnService()
                 if (value === "3") {
-                    return {
-                        source: { display: true },
-                        to: { display: true },
-                        type: { display: true },
-                        protocal: { display: true }
-                    }
+                    // 表明是接口设计需求
+                    columnService.get("forward_source").setAttr("display", true)
+                    columnService.get("forward_destination").setAttr("display", true)
+                    columnService.get("forward_description").setAttr("display", true)
+                    columnService.get("type").setAttr("display", true)
+                    columnService.get("is_bidirectional").setAttr("display", true)
                 } else {
-                    return {
-                        source: { display: false },
-                        to: { display: false },
-                        type: { display: false },
-                        protocal: { display: false }
-                    }
+                    columnService.get("forward_source").setAttr("display", false)
+                    columnService.get("forward_destination").setAttr("display", false)
+                    columnService.get("forward_description").setAttr("display", false)
+                    columnService.get("type").setAttr("display", false)
+                    columnService.get("is_bidirectional").setAttr("display", false)
                 }
             }
         },
         {
             formType: "grid-tailwind",
-            customClass: [],
             colNumber: 2,
+            customClass: ["ml-[5px]"],
             cols: [
                 {
                     formList: [
                         {
-                            title: "接口来源",
-                            dataIndex: "source",
-                            hide: true
-                        },
+                            title: "接口类型",
+                            dataIndex: "type",
+                            hide: true,
+                            placeholder: "请填写接口类型或协议，例如：UART"
+                        }
+                    ]
+                },
+                {
+                    formList: [
                         {
-                            title: "目的地",
-                            dataIndex: "to",
+                            // 新增：单项双向接口选择
+                            title: "是否双向",
+                            dataIndex: "is_bidirectional",
+                            formType: "switch",
+                            hide: true,
+                            onControl: (value: boolean, maFormObject: any) => {
+                                const columnService = maFormObject.getColumnService()
+                                // 如果is_bidirectional都被隐藏了，那么reverse被隐藏，不要执行后续代码
+                                const shuangxiangDisplay = columnService.get("is_bidirectional").getAttr("display")
+                                if (!shuangxiangDisplay) {
+                                    columnService.get("reverse_source").setAttr("display", false)
+                                    columnService.get("reverse_destination").setAttr("display", false)
+                                    columnService.get("reverse_description").setAttr("display", false)
+                                    return
+                                }
+                                if (value) {
+                                    return {
+                                        reverse_source: { display: true },
+                                        reverse_destination: { display: true },
+                                        reverse_description: { display: true }
+                                    }
+                                } else {
+                                    return {
+                                        reverse_source: { display: false },
+                                        reverse_destination: { display: false },
+                                        reverse_description: { display: false }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            formType: "grid-tailwind",
+            colNumber: 3,
+            customClass: ["ml-3"],
+            cols: [
+                {
+                    formList: [
+                        {
+                            title: "正向来源",
+                            dataIndex: "forward_source",
                             hide: true
                         }
                     ]
@@ -93,16 +140,52 @@ export default function (crudOrFormRef?: any) {
                 {
                     formList: [
                         {
-                            title: "接口类型",
-                            dataIndex: "type",
-                            hide: true,
-                            placeholder:"请填写接口类型或协议，例如：UART"
-                        },
+                            title: "正向去处",
+                            dataIndex: "forward_destination",
+                            hide: true
+                        }
+                    ]
+                },
+                {
+                    formList: [
                         {
-                            title: "接口数据",
-                            dataIndex: "protocal",
-                            hide: true,
-                            placeholder:"请填写接口的交互数据，例如：XX分级数据"
+                            title: "接口描述",
+                            dataIndex: "forward_description",
+                            hide: true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            formType: "grid-tailwind",
+            colNumber: 3,
+            customClass: ["ml-3"],
+            cols: [
+                {
+                    formList: [
+                        {
+                            title: "反向来源",
+                            dataIndex: "reverse_source",
+                            hide: true
+                        }
+                    ]
+                },
+                {
+                    formList: [
+                        {
+                            title: "反向去处",
+                            dataIndex: "reverse_destination",
+                            hide: true
+                        }
+                    ]
+                },
+                {
+                    formList: [
+                        {
+                            title: "接口描述",
+                            dataIndex: "reverse_description",
+                            hide: true
                         }
                     ]
                 }

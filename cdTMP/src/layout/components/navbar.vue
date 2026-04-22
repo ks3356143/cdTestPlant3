@@ -12,10 +12,13 @@
                 <icon-menu-fold v-if="!topMenu && appStore.device === 'mobile'" style="font-size: 22px; cursor: pointer" @click="toggleDrawerMenu" />
             </a-space>
         </div>
-        <div class="center-side flex items-center justify-center font-bold text-lg">
+        <div class="center-side flex items-center font-bold text-lg justify-center">
+            <div class="fix-side" v-if="route.query.id">
+                <project-info-other />
+            </div>
             <template v-if="title">
                 <a-typography-title
-                    :style="{ margin: 0, fontSize: '1.2rem', fontWeight: 'bold' }"
+                    class="project-name"
                     :heading="3"
                     :ellipsis="{
                         rows: 2
@@ -89,9 +92,6 @@
                 </a-dropdown>
             </li>
         </ul>
-        <div class="fix-side" v-if="route.query.id">
-            <project-info-other />
-        </div>
     </div>
 </template>
 
@@ -158,12 +158,10 @@ const handleClickLogo = () => {
 </script>
 
 <style scoped lang="less">
-// 项目管理悬浮定位
 .fix-side {
-    position: absolute;
-    left: 16%;
-    top: 50%;
-    transform: translateY(-50%);
+    // 项目设置按钮
+    margin-left: 50px;
+    margin-top: 10px;
 }
 
 .logo-container {
@@ -248,6 +246,26 @@ const handleClickLogo = () => {
         animation: neon6 0.5s ease-in-out infinite alternate;
     }
 }
+
+// 根据浏览器宽度调整
+.project-name {
+    font-size: 1.2rem;
+    flex: 1;
+    text-align: center;
+}
+
+@media (max-width: 1024px) {
+    .project-name {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 1280px) {
+    .project-name {
+        font-size: 1rem;
+    }
+}
+
 @keyframes neon6 {
     from {
         text-shadow:

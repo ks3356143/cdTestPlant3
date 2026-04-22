@@ -65,7 +65,7 @@
 import { ref } from "vue"
 import { useTreeDataStore } from "@/store"
 import useCrudOptions from "@/views/project/dut/hooks/useCrudOptions"
-import useColumns from "./hooks/useColumns"
+import useColumns from "@/views/project/dut/hooks/useColumns"
 import { Message } from "@arco-design/web-vue"
 import { useRoute } from "vue-router"
 import dutApi from "@/api/project/dut"

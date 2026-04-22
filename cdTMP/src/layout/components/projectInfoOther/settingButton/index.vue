@@ -38,14 +38,21 @@ defineOptions({
     background: #5e41de33;
     border-radius: 20px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .lable {
-    line-height: 20px;
+    line-height: 1.2;
     font-size: 17px;
     color: #5d41de;
     font-family: sans-serif;
     letter-spacing: 1px;
+}
+
+.svg-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
 }
 
 .button:hover {
@@ -60,9 +67,47 @@ defineOptions({
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
+    }
+}
+
+/* 屏幕宽度 ≤1280px 时适度缩小 */
+@media (max-width: 1280px) {
+    .button {
+        width: 170px;
+        height: 32px;
+        padding: 5px 10px;
+        gap: 6px;
+    }
+
+    .lable {
+        font-size: 16px;
+    }
+
+    .svg-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* 屏幕宽度 ≤1024px 时进一步缩小 */
+@media (max-width: 1024px) {
+    .button {
+        width: 150px;
+        height: 30px;
+        padding: 4px 8px;
+        gap: 5px;
+    }
+
+    .lable {
+        font-size: 15px;
+        letter-spacing: 0.5px;
+    }
+
+    .svg-icon {
+        width: 16px;
+        height: 16px;
     }
 }
 </style>

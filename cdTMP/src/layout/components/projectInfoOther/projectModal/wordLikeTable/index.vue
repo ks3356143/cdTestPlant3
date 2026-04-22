@@ -5,7 +5,7 @@
             <span>题注：</span>
             <a-input v-model="fontnote" :style="{ width: '500px' }"></a-input>
         </a-space>
-        <a-alert type="warning" class="mt-2">表格第一行为[表头]，测评数据、软/硬件项表格会自动添加序号列，而其他纯自定义表格（动态环境描述、软件概述）不会添加序号列</a-alert>
+        <a-alert type="warning" class="mt-2">表格第一行为[表头]，自定义表格外例如软/硬件环境、测评数据、环境差异性分析会自动添加[序号]</a-alert>
     </div>
     <div class="arco-table arco-table-size-large arco-table-border arco-table-stripe arco-table-hover">
         <div class="arco-table-container">

@@ -3,144 +3,142 @@
         <div class="navbar layout-navbar">
             <NavBar :title="projectInfo.name" />
         </div>
-        <a-layout class="layout">
-            <a-layout class="layout layout-demo">
-                <a-layout-sider class="layout-sider">
-                    <div class="p-2 overflow-auto myhcalc">
-                        <a-input-group class="mb-2 w-full flex items-center" size="mini">
-                            <a-input style="height: 32px" v-model="searchKey" allow-clear></a-input>
-                            <a-button @click="handleSearchTreeDataClick">搜索</a-button>
-                        </a-input-group>
-                        <div class="flex justify-between mb-2">
-                            <a-button type="primary" @click="toggleExpanded" class="w-5/12">
-                                {{ expandedKeys?.length ? "全部收缩" : "全部展开" }}
+        <a-layout class="layout layout-demo">
+            <a-layout-sider class="layout-sider" :resize-directions="['right']" :width="300">
+                <div class="p-2 overflow-auto">
+                    <a-input-group class="mb-2 w-full flex items-center" size="mini">
+                        <a-input style="height: 32px" v-model="searchKey" allow-clear></a-input>
+                        <a-button @click="handleSearchTreeDataClick">搜索</a-button>
+                    </a-input-group>
+                    <div class="flex justify-between mb-2">
+                        <a-button type="primary" @click="toggleExpanded" class="w-5/12">
+                            {{ expandedKeys?.length ? "全部收缩" : "全部展开" }}
+                        </a-button>
+                        <a-popconfirm type="warning" @ok="handleCopyNode" content="是否确定根据选中节点进行创建？">
+                            <a-button type="outline" status="warning">
+                                <template #icon> <icon-plus /></template>点击复制创建轮次
                             </a-button>
-                            <a-popconfirm type="warning" @ok="handleCopyNode" content="是否确定根据选中节点进行创建？">
-                                <a-button type="outline" status="warning">
-                                    <template #icon> <icon-plus /></template>点击复制创建轮次
-                                </a-button>
-                            </a-popconfirm>
-                        </div>
-                        <a-tree
-                            class="h-10/12 select-none my-arco-wrap-class"
-                            :data="treeData"
-                            size="mini"
-                            showLine
-                            checkable
-                            block-node
-                            draggable
-                            animation
-                            auto-expand-parent
-                            @select="pointNode"
-                            @drop="ondrop"
-                            :allow-drop="allowdrop"
-                            :load-more="loadMore"
-                            v-model:expanded-keys="expandedKeys"
-                            v-model:selected-keys="selectedKeys"
-                            v-model:checked-keys="checkedKeys"
-                            ref="treeRef"
-                            border
-                            @contextmenu="displayRightMenu"
-                            :default-selected-keys="[currentNode ? currentNode : route.query.key]"
-                        >
-                            <!-- 在轮次节点可以新增、编辑、删除、复制 -->
-                            <template #extra="nodeData">
-                                <template v-if="nodeData.level === '0'">
-                                    <a-tooltip content="点击新增轮次">
-                                        <IconPlus
-                                            style="position: absolute; right: 8px; font-size: 12px; top: 8px; color: #3370ff"
-                                            @click="() => handleRoundAddClick(nodeData)"
-                                        />
-                                    </a-tooltip>
-                                    <a-tooltip content="点击删除轮次">
-                                        <a-popconfirm content="确定要删除该轮次吗?" position="bottom" @ok="handleRoundDelClick(nodeData)">
-                                            <icon-close style="position: absolute; right: 25px; font-size: 12px; top: 8px; color: #3370ff" />
-                                        </a-popconfirm>
-                                    </a-tooltip>
-                                    <a-tooltip content="点击编辑当前轮次"
-                                        ><IconEdit
-                                            style="position: absolute; right: 42px; font-size: 12px; top: 8px; color: #3370ff"
-                                            @click="() => handleRoundEditClick(nodeData)"
-                                    /></a-tooltip>
-                                    <a-tooltip content="综合阅览该轮次下问题单"
-                                        ><icon-bug
-                                            style="position: absolute; right: 60px; font-size: 12px; top: 8px; color: #3370ff"
-                                            @click="handleProblemShowClick"
-                                    /></a-tooltip>
-                                    <a-tooltip content="轮次数据管理视图"
-                                        ><icon-storage
-                                            style="position: absolute; right: 77px; font-size: 12px; top: 8px; color: #3370ff"
-                                            :style="{
-                                                color: isOpeSetsRoute && nodeData.key === route.query.key ? 'red' : '#3370ff'
-                                            }"
-                                            @click="
-                                                () => {
-                                                    router.push({
-                                                        name: 'opeSets',
-                                                        query: {
-                                                            ...route.query,
-                                                            key: nodeData.key
-                                                        }
-                                                    })
-                                                }
-                                            "
-                                    /></a-tooltip>
-                                    <template v-if="nodeData.key !== '0'">
-                                        <Influence :node-data="nodeData"></Influence>
-                                    </template>
+                        </a-popconfirm>
+                    </div>
+                    <a-tree
+                        class="h-10/12 select-none my-arco-wrap-class"
+                        :data="treeData"
+                        size="mini"
+                        showLine
+                        checkable
+                        block-node
+                        draggable
+                        animation
+                        auto-expand-parent
+                        @select="pointNode"
+                        @drop="ondrop"
+                        :allow-drop="allowdrop"
+                        :load-more="loadMore"
+                        v-model:expanded-keys="expandedKeys"
+                        v-model:selected-keys="selectedKeys"
+                        v-model:checked-keys="checkedKeys"
+                        ref="treeRef"
+                        border
+                        @contextmenu="displayRightMenu"
+                        :default-selected-keys="[currentNode ? currentNode : route.query.key]"
+                    >
+                        <!-- 在轮次节点可以新增、编辑、删除、复制 -->
+                        <template #extra="nodeData">
+                            <template v-if="nodeData.level === '0'">
+                                <a-tooltip content="点击新增轮次">
+                                    <IconPlus
+                                        style="position: absolute; right: 8px; font-size: 12px; top: 8px; color: #3370ff"
+                                        @click="() => handleRoundAddClick(nodeData)"
+                                    />
+                                </a-tooltip>
+                                <a-tooltip content="点击删除轮次">
+                                    <a-popconfirm content="确定要删除该轮次吗?" position="bottom" @ok="handleRoundDelClick(nodeData)">
+                                        <icon-close style="position: absolute; right: 25px; font-size: 12px; top: 8px; color: #3370ff" />
+                                    </a-popconfirm>
+                                </a-tooltip>
+                                <a-tooltip content="点击编辑当前轮次"
+                                    ><IconEdit
+                                        style="position: absolute; right: 42px; font-size: 12px; top: 8px; color: #3370ff"
+                                        @click="() => handleRoundEditClick(nodeData)"
+                                /></a-tooltip>
+                                <a-tooltip content="综合阅览该轮次下问题单"
+                                    ><icon-bug
+                                        style="position: absolute; right: 60px; font-size: 12px; top: 8px; color: #3370ff"
+                                        @click="handleProblemShowClick"
+                                /></a-tooltip>
+                                <a-tooltip content="轮次数据管理视图"
+                                    ><icon-storage
+                                        style="position: absolute; right: 77px; font-size: 12px; top: 8px; color: #3370ff"
+                                        :style="{
+                                            color: isOpeSetsRoute && nodeData.key === route.query.key ? 'red' : '#3370ff'
+                                        }"
+                                        @click="
+                                            () => {
+                                                router.push({
+                                                    name: 'opeSets',
+                                                    query: {
+                                                        ...route.query,
+                                                        key: nodeData.key
+                                                    }
+                                                })
+                                            }
+                                        "
+                                /></a-tooltip>
+                                <template v-if="nodeData.key !== '0'">
+                                    <Influence :node-data="nodeData"></Influence>
                                 </template>
                             </template>
-                            <!-- 设计节点的图标 -->
-                            <template #switcher-icon="_, { isLeaf }">
-                                <div class="font-icon">
-                                    <IconDownCircle v-if="!isLeaf" />
-                                    <IconFile v-if="isLeaf" />
-                                </div>
-                            </template>
-                            <!-- 节点图标插槽 -->
-                            <template #icon="props">
-                                <template v-if="props.node.level === '1'"> <span style="white-space: nowrap">[被测件]</span> </template>
-                                <template v-if="props.node.level === '2'"> [设] </template>
-                                <template v-if="props.node.level === '3'"> [项] </template>
-                                <template v-if="props.node.level === '4'">
-                                    <template v-if="props.node.isRelatedProblem">
-                                        <a-tooltip content="有问题单关联">
-                                            <button>[@]</button>
+                        </template>
+                        <!-- 设计节点的图标 -->
+                        <template #switcher-icon="_, { isLeaf }">
+                            <div class="font-icon">
+                                <IconDownCircle v-if="!isLeaf" />
+                                <IconFile v-if="isLeaf" />
+                            </div>
+                        </template>
+                        <!-- 节点图标插槽 -->
+                        <template #icon="props">
+                            <template v-if="props.node.level === '1'"> <span style="white-space: nowrap">[被测件]</span> </template>
+                            <template v-if="props.node.level === '2'"> [设] </template>
+                            <template v-if="props.node.level === '3'"> [项] </template>
+                            <template v-if="props.node.level === '4'">
+                                <template v-if="props.node.isRelatedProblem">
+                                    <a-tooltip content="有问题单关联">
+                                        <button>[@]</button>
+                                    </a-tooltip>
+                                </template>
+                                <template v-else>
+                                    <template v-if="props.node.isNotPassed">
+                                        <a-tooltip content="该用例未通过，但是未关联问题单，请关联">
+                                            <button :style="{ color: 'red' }">[×]</button>
                                         </a-tooltip>
                                     </template>
                                     <template v-else>
-                                        <template v-if="props.node.isNotPassed">
-                                            <a-tooltip content="该用例未通过，但是未关联问题单，请关联">
-                                                <button :style="{ color: 'red' }">[×]</button>
-                                            </a-tooltip>
-                                        </template>
-                                        <template v-else>
-                                            <a-tooltip content="该用例未执行或已通过，未关联问题单">
-                                                <button>[>]</button>
-                                            </a-tooltip>
-                                        </template>
+                                        <a-tooltip content="该用例未执行或已通过，未关联问题单">
+                                            <button>[>]</button>
+                                        </a-tooltip>
                                     </template>
                                 </template>
                             </template>
-                            <!-- 节点title插槽 -->
-                            <template #title="{ level, title }">
-                                <template v-if="level === '0' || level === '3'">
-                                    {{ title }}
-                                    <span class="small-right-context-tip">
-                                        <i>右键</i>
-                                    </span>
-                                </template>
-                                <template v-else>{{ title }}</template>
+                        </template>
+                        <!-- 节点title插槽 -->
+                        <template #title="{ level, title }">
+                            <template v-if="level === '0' || level === '3'">
+                                {{ title }}
+                                <span class="small-right-context-tip">
+                                    <i>右键</i>
+                                </span>
                             </template>
-                        </a-tree>
-                    </div>
-                </a-layout-sider>
-                <a-layout class="layout-content myhcalc my-custom">
-                    <!-- 右侧界面是该元素决定滚动条overflow-y:auto -->
-                    <a-layout-content class="work-area project-layout" id="basic-scroll-container">
-                        <PageLayout ref="routeViewRef" />
-                    </a-layout-content>
-                </a-layout>
+                            <template v-else>{{ title }}</template>
+                        </template>
+                    </a-tree>
+                </div>
+            </a-layout-sider>
+            <a-layout class="layout-content">
+                <!-- 右侧界面是该元素决定滚动条overflow-y:auto -->
+                <a-layout-content class="work-area project-layout" id="basic-scroll-container">
+                    <PageLayout ref="routeViewRef" />
+                </a-layout-content>
             </a-layout>
         </a-layout>
     </a-layout>
@@ -365,7 +363,8 @@ const { paoVisible, paoContainer, pao2Visible, pao2Container, ondrop, allowdrop,
     display: flex;
 }
 .layout-demo :deep(.arco-layout-sider) {
-    width: 300px !important;
+    min-width: 300px;
+    max-width: 800px;
 }
 .layout {
     width: 100%;
@@ -382,12 +381,11 @@ const { paoVisible, paoContainer, pao2Visible, pao2Container, ondrop, allowdrop,
 }
 
 .layout-sider {
-    position: fixed;
-    top: 60px;
+    will-change: width; // 通知浏览器宽度会变化
+    transition: none !important; // 禁止transition防止延迟
     left: 0;
     z-index: 99;
     height: 100%;
-    transition: all 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
     &::after {
         position: absolute;
         top: 0;
@@ -404,25 +402,17 @@ const { paoVisible, paoContainer, pao2Visible, pao2Container, ondrop, allowdrop,
     }
 }
 .layout-demo {
-    position: relative;
+    display: flex; // 确保是 flex 容器（Arco Layout 默认已是 flex）
+    height: calc(100vh - 60px);
+    margin-top: 60px;
+    overflow: hidden; // 防止溢出
 }
 .layout-content {
-    position: absolute;
-    top: 60px;
-    left: 300px;
+    transition: none !important; // 禁止transition防止延迟
+    flex: 1;
     min-height: 100vh;
-    width: 100% - 300px;
     overflow-y: auto;
     background-color: var(--color-fill-2);
-    transition: padding 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
-    position: absolute;
-}
-.myhcalc {
-    height: calc(100% - 60px);
-}
-// 这里容易出错注意
-.my-custom {
-    width: calc(100% - 300px);
 }
 .my-arco-wrap-class :deep(.arco-tree-node-title-text) {
     white-space: nowrap;
