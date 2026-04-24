@@ -136,6 +136,25 @@ const handleModalSubmit = async () => {
         Message.error("请添加设计需求后再提交...")
         return false
     }
+    // 校验每一条需要填写的字段
+    for (let i = 0; i < htmlData.value.length; i++) {
+        const item = htmlData.value[i]
+        const idx = i + 1 // 第几条，用户友好提示
+        if (!item.chapter?.trim()) {
+            Message.error(`第 ${idx} 条需求的章节号不能为空`)
+            return false
+        }
+        if (!item.title?.trim()) {
+            Message.error(`第 ${idx} 条需求的标题不能为空`)
+            return false
+        }
+        // 标识、内容都可以为空
+        if (!item.demandType) {
+            Message.error(`第 ${idx} 条需求的设计需求类型不能为空`)
+            return false
+        }
+        // content 可以为空，不校验
+    }
     const res = await demandApi.multiSave({
         projectId: route.query.id,
         key: route.query.key,

@@ -1,6 +1,7 @@
 import { ref, computed } from "vue"
 import projectApi from "@/api/project/project"
-export function useDocTimeShow(projectId: number) {
+import { PROJECT_ENDTIME_ERROR_CODE } from "@/config/backendErrorCodes"
+export function useDocTimeShow(projectId: number, showError: Function) {
     const visible = ref<boolean>(false)
     const handleModalVisible = (): void => {
         visible.value = true
@@ -8,8 +9,15 @@ export function useDocTimeShow(projectId: number) {
     // 获取时间模块
     const timeTemp = ref<any[]>([])
     const getTimeByBackend = async () => {
-        const res = await projectApi.getDocumentTimeShow(projectId)
-        timeTemp.value = res.data
+        try {
+            const res = await projectApi.getDocumentTimeShow(projectId)
+            timeTemp.value = res.data
+        } catch (e: any) {
+            // 如果检测到项目时间错误，则处理一些东西
+            if (e.data.flag === PROJECT_ENDTIME_ERROR_CODE) {
+                showError()
+            }
+        }
     }
     getTimeByBackend()
     const timeList = computed(() => {
@@ -20,7 +28,7 @@ export function useDocTimeShow(projectId: number) {
                     item[key] = item[key].join("~")
                 } else {
                     if (item[key].includes("年")) {
-                        item[key] = item[key].replace('年','').replace('月','').replace('日','')
+                        item[key] = item[key].replace("年", "").replace("月", "").replace("日", "")
                     }
                 }
             })

@@ -11,16 +11,22 @@
                 <a-timeline-item
                     v-for="(item, index) in pInfo.time_line.round_time"
                     :key="index"
-                    :label="`结束时间 : ${item.end}`"
+                    :dot-color="isErrorHighlight && index === pInfo.time_line.round_time.length - 1 ? 'red' : undefined"
                 >
+                    <template #label>
+                        <span :class="{ 'text-red-500': isErrorHighlight && index === pInfo.time_line.round_time.length - 1 }">结束时间 : {{ item.end }}</span>
+                    </template>
                     <a-col>
                         <div>{{ item.name }}</div>
                         <div class="a-col-title">开始时间 : {{ item.start }}</div>
                     </a-col>
                 </a-timeline-item>
-                <a-timeline-item :label="pInfo.time_line.end_time">
+                <a-timeline-item :dot-color="isErrorHighlight ? 'red' : undefined">
+                    <template #label>
+                        <span :class="{ 'text-red-500': isErrorHighlight }">{{ pInfo.time_line.end_time }}</span>
+                    </template>
                     <a-row :style="{ display: 'inline-flex', alignItems: 'center' }">
-                        <div>结束时间</div>
+                        <span>结束时间</span>
                     </a-row>
                 </a-timeline-item>
                 <div class="info">
@@ -32,16 +38,10 @@
         <!-- a-modal组件，展示生成文档的全部信息 -->
         <a-modal v-model:visible="visible" unmount-on-close hide-cancel :closable="false" width="auto">
             <template #title> 生成文档时间一览表 </template>
-            <a-card
-                :style="{ width: '600px' }"
-                :title="item.title"
-                hoverable
-                v-for="(item, index) in timeList"
-                :key="item.title"
-            >
+            <a-card :style="{ width: '600px' }" :title="item.title" hoverable v-for="(item, index) in timeList" :key="item.title">
                 <p v-for="(value, key, idx) in item" class="flex">
                     <template v-if="key !== 'title'">
-                        <span class="font-bold w-[300px]">{{ key }}</span>
+                        <span class="font-bold w-75">{{ key }}</span>
                         <span class="">{{ value }}</span>
                     </template>
                 </p>
@@ -51,8 +51,8 @@
 </template>
 
 <script setup>
+import { ref } from "vue"
 import { useDocTimeShow } from "./useDocTimeShow"
-// 在一开始就请求接口
 // 1.定义props
 const props = defineProps({
     pInfo: {
@@ -64,7 +64,19 @@ const props = defineProps({
         required: true
     }
 })
-const { visible, handleModalVisible, timeList } = useDocTimeShow(props.projectId)
+
+// 在一开始就请求接口
+const { visible, handleModalVisible, timeList } = useDocTimeShow(props.projectId, highlightLastItems)
+
+// 控制错误状态
+const isErrorHighlight = ref(false)
+function highlightLastItems() {
+    isErrorHighlight.value = true
+}
+
+defineExpose({
+    highlightLastItems
+})
 </script>
 
 <style lang="less" scoped>

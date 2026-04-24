@@ -5,7 +5,7 @@
         </div>
         <a-layout class="layout layout-demo">
             <a-layout-sider class="layout-sider" :resize-directions="['right']" :width="300">
-                <div class="p-2 overflow-auto">
+                <div class="p-2 overflow-auto h-full">
                     <a-input-group class="mb-2 w-full flex items-center" size="mini">
                         <a-input style="height: 32px" v-model="searchKey" allow-clear></a-input>
                         <a-button @click="handleSearchTreeDataClick">搜索</a-button>

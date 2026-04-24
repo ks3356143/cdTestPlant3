@@ -12,7 +12,7 @@ export default {
         })
     },
     /**
-     * 生成回归测试说明的被测软件基本信息
+     * 生成回归测试说明的用例信息
      * @returns
      */
     createCaseinfo(params = {}) {
@@ -32,5 +32,5 @@ export default {
             method: "get",
             params
         })
-    }
+    },
 }

@@ -5,7 +5,9 @@
             <span>题注：</span>
             <a-input v-model="fontnote" :style="{ width: '500px' }"></a-input>
         </a-space>
-        <a-alert type="warning" class="mt-2">表格第一行为[表头]，自定义表格外例如软/硬件环境、测评数据、环境差异性分析会自动添加[序号]</a-alert>
+        <a-alert type="warning" class="mt-2"
+            >表格第一行为[表头]，和轮次无关均会渲染，自定义表格外例如软/硬件环境、测评数据、环境差异性分析会自动添加[序号]</a-alert
+        >
     </div>
     <div class="arco-table arco-table-size-large arco-table-border arco-table-stripe arco-table-hover">
         <div class="arco-table-container">
@@ -37,8 +39,8 @@
                                 </a-tooltip>
                             </span>
                         </th>
-                        <th class="arco-table-th" :style="{ textAlign: 'center' }">
-                            <span>操作</span>
+                        <th class="arco-table-th w-25" :style="{ textAlign: 'center' }">
+                            <span>适应轮次/操作</span>
                         </th>
                     </tr>
                 </thead>
@@ -51,6 +53,11 @@
                         </td>
                         <td class="arco-table-td">
                             <span class="arco-table-cell items-center justify-center">
+                                <template v-if="datasRounds && rowIndex !== 0">
+                                    <a-select size="mini" multiple :style="{ width: '140px' }" placeholder="渲染轮次" v-model="datasRounds![rowIndex]">
+                                        <a-option v-for="item in roundOptions" :key="item.value" :value="item.value">{{ item.label }}</a-option>
+                                    </a-select>
+                                </template>
                                 <a-tooltip content="此行后新增行">
                                     <a-button type="text" size="mini" @click="addRow(rowIndex)" class="delete-col-btn">
                                         <template #icon>
@@ -75,14 +82,26 @@
 </template>
 
 <script setup lang="ts">
+// 从仓库读取有多少轮次
+import { computed } from "vue"
+import { useTreeDataStore } from "@/store"
+// 导入中文轮次数组
+import tool from "@/utils/tool"
+
+const treeDataStore = useTreeDataStore()
+const treeLength = computed(() => treeDataStore.treeData.length)
+const roundOptions = computed(() => Array.from({ length: treeLength.value }, (_, i) => ({ value: String(i), label: tool.chnRoundNameArray[i] })))
 // 该组件储存数据
 const fontnote = defineModel<string>("fontnote")
-
 const datas = defineModel<string[][]>()
-
+// 这里设置undefined一定要判断了
+const datasRounds = defineModel<string[][]>("rowRounds", { default: undefined })
 // 行列操作
 const deleteRow = (rowIndex: number) => {
     datas.value!.splice(rowIndex, 1)
+    if (datasRounds.value) {
+        datasRounds.value.splice(rowIndex, 1)
+    }
 }
 const deleteColumn = (colIndex: number) => {
     datas.value!.forEach((row) => {
@@ -92,6 +111,9 @@ const deleteColumn = (colIndex: number) => {
 const addRow = (rowIndex: number) => {
     const newRow = new Array(datas.value![0].length).fill("")
     datas.value!.splice(rowIndex + 1, 0, newRow)
+    if (datasRounds.value) {
+        datasRounds.value.splice(rowIndex + 1, 0, ["0"])
+    }
 }
 const addColumn = (colIndex: number) => {
     // 处理空表格的特殊情况

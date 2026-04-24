@@ -98,5 +98,60 @@ export default {
             method: "get",
             params
         })
+    },
+    /**
+     *
+     * @returns 生成-静态软件项
+     */
+    createHsmStaticSoft(params = {}) {
+        return request({
+            url: `/generateHSM/create/static_soft`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-静态硬件和固件项
+     */
+    createHsmStaticHard(params = {}) {
+        return request({
+            url: `/generateHSM/create/static_hard`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-动态软件项
+     */
+    createHsmDynamicSoft(params = {}) {
+        return request({
+            url: `/generateHSM/create/dynamic_soft`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-动态硬件项
+     */
+    createHsmDynamicHard(params = {}) {
+        return request({
+            url: `/generateHSM/create/dynamic_hard`,
+            method: "get",
+            params
+        })
+    },
+    /**
+     *
+     * @returns 生成-测试数据
+     */
+    createHsmTestData(params = {}) {
+        return request({
+            url: `/generateHSM/create/test_data`,
+            method: "get",
+            params
+        })
     }
 }

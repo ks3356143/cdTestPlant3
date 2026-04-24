@@ -49,12 +49,12 @@ const useGenerateSecond = function () {
             dgGenerateApi.createTopFile({ id }), // 生成顶层技术文件
             // 新增拆分接口
             dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
-            dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
-            dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
+            dgGenerateApi.createStaticSoft({ id, current_round: "0" }), // 生成-静态软件项
+            dgGenerateApi.createStaticHard({ id, current_round: "0" }), // 生成-静态硬件和固件项
             dgGenerateApi.createDynamicEnv({ id }), // 生成-动态测试环境说明
-            dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
-            dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
-            dgGenerateApi.createTestData({ id }), // 生成-测评数据
+            dgGenerateApi.createDynamicSoft({ id, current_round: "0" }), // 生成-动态软件项
+            dgGenerateApi.createDynamicHard({ id, current_round: "0" }), // 生成-动态硬件和固件项
+            dgGenerateApi.createTestData({ id, current_round: "0" }), // 生成-测评数据
             dgGenerateApi.createEnvDiff({ id }), // 生成-环境差异性分析
             // 2025年4月21日新增
             dgGenerateApi.createIndicates({ id }) // 生成主要功能和性能指标（包括摸底）
@@ -75,12 +75,12 @@ const useGenerateSecond = function () {
             smGenerateApi.createSMTechyiju({ id }), // 生成技术类引用文档列表 -> 在大纲基础上添加《测评大纲》
             // 拆分软硬件环境
             dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
-            dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
-            dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
+            dgGenerateApi.createStaticSoft({ id, current_round: "0" }), // 生成-静态软件项
+            dgGenerateApi.createStaticHard({ id, current_round: "0" }), // 生成-静态硬件和固件项
             dgGenerateApi.createDynamicEnv({ id }), // 生成-动态测试环境说明
-            dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
-            dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
-            dgGenerateApi.createTestData({ id }), // 生成-测评数据
+            dgGenerateApi.createDynamicSoft({ id, current_round: "0" }), // 生成-动态软件项
+            dgGenerateApi.createDynamicHard({ id, current_round: "0" }), // 生成-动态硬件和固件项
+            dgGenerateApi.createTestData({ id, current_round: "0" }), // 生成-测评数据
             dgGenerateApi.createEnvDiff({ id }), // 生成-环境差异性分析
             // ~~~
             smGenerateApi.createSMCaseList({ id }), // 生成用例全
@@ -124,12 +124,12 @@ const useGenerateSecond = function () {
             dgGenerateApi.createYiju({ id }), // 生成依据文件
             dgGenerateApi.createInterface({ id }), // 生成-被测软件接口 - 和大纲一样
             dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
-            dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
-            dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
+            hsmGenerateApi.createHsmStaticSoft({ id, current_round: "not0" }), // 生成-静态软件项
+            hsmGenerateApi.createHsmStaticHard({ id, current_round: "not0" }), // 生成-静态硬件和固件项
             dgGenerateApi.createDynamicEnv({ id }), // 生成-动态测试环境说明
-            dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
-            dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
-            dgGenerateApi.createTestData({ id }), // 生成-测评数据
+            hsmGenerateApi.createHsmDynamicSoft({ id, current_round: "not0" }), // 生成-动态软件项
+            hsmGenerateApi.createHsmDynamicHard({ id, current_round: "not0" }), // 生成-动态硬件和固件项
+            hsmGenerateApi.createHsmTestData({ id, current_round: "not0" }), // 生成-测评数据
             dgGenerateApi.createEnvDiff({ id }) // 生成-环境差异性分析
         ]).finally(() => {
             isGenerating.value = false
@@ -187,12 +187,12 @@ const useGenerateSecond = function () {
             dgGenerateApi.createInterface({ id }), // 生成-被测软件接口 - 大纲内容
             dgGenerateApi.createAbbreviation({ id }), // 生成缩略语 - 大纲内容
             dgGenerateApi.createStaticEnvironment({ id }), // 生成-静态测试环境说明
-            dgGenerateApi.createStaticSoft({ id }), // 生成-静态软件项
-            dgGenerateApi.createStaticHard({ id }), // 生成-静态硬件和固件项
+            dgGenerateApi.createStaticSoft({ id, current_round: "last" }), // 生成-静态软件项
+            dgGenerateApi.createStaticHard({ id, current_round: "last" }), // 生成-静态硬件和固件项
             dgGenerateApi.createDynamicEnv({ id }), // 生成-动态测试环境说明
-            dgGenerateApi.createDynamicSoft({ id }), // 生成-动态软件项
-            dgGenerateApi.createDynamicHard({ id }), // 生成-动态硬件和固件项
-            dgGenerateApi.createTestData({ id }), // 生成-测评数据
+            dgGenerateApi.createDynamicSoft({ id, current_round: "last" }), // 生成-动态软件项
+            dgGenerateApi.createDynamicHard({ id, current_round: "last" }), // 生成-动态硬件和固件项
+            dgGenerateApi.createTestData({ id, current_round: "last" }), // 生成-测评数据
             dgGenerateApi.createEnvDiff({ id }), // 生成-环境差异性分析
             // 2025年4月29日新增 - 顶层技术文件
             dgGenerateApi.createTopFile({ id }) // 生成顶层技术文件

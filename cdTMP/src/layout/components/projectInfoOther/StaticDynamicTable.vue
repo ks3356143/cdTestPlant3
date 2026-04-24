@@ -2,7 +2,7 @@
     <div class="static-dynamic-table-container">
         <a-modal
             v-model:visible="visible"
-            width="50%"
+            width="60%"
             draggable
             :on-before-ok="handleSyncOk"
             unmount-on-close
@@ -12,7 +12,7 @@
             @close="handleOnClose"
         >
             <template #title>{{ theTitle }}</template>
-            <WordLikeTable v-model="tableData" v-model:fontnote="fontnote" />
+            <WordLikeTable v-model="tableData" v-model:fontnote="fontnote" v-model:rowRounds="tableDataRound" />
         </a-modal>
     </div>
 </template>
@@ -41,8 +41,13 @@ const tableInitValue = [
     ["", "", ""],
     ["", "", ""]
 ]
+
 const tableData = ref(tableInitValue)
 const fontnote = ref("")
+
+// 新增：一个行属性，附带到tableData中
+const tableDataRoundInitValue = tableInitValue.map((_) => ["0"])
+const tableDataRound = ref(tableDataRoundInitValue)
 
 const handleSyncOk = async () => {
     // 验证题注是否为空
@@ -56,7 +61,8 @@ const handleSyncOk = async () => {
             id: route.query.id,
             category: theTitle.value,
             table: tableData.value,
-            fontnote: fontnote.value
+            fontnote: fontnote.value,
+            rounds: tableDataRound.value
         })
         Message.success("保存成功")
     } catch (e) {
@@ -81,6 +87,11 @@ const open = async (title: string) => {
             const data = res.data
             tableData.value = data.table
             fontnote.value = data.fontnote || ""
+            if (data.rounds && data.rounds.length === tableData.value.length) {
+                tableDataRound.value = data.rounds
+            } else {
+                tableDataRound.value = (data.table || tableInitValue).map(() => ["0"])
+            }
         }
         visible.value = true
     } catch (e) {
