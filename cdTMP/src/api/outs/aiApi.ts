@@ -4,19 +4,26 @@ const AI_API_BASE = import.meta.env.VUE_APP_AI_API_BASE || "http://192.168.0.63:
 
 interface DataRowType {
     question: string
-    stream: boolean
+    streaming: boolean
+    model_name: string
+    user_focus_points: string
+    project_type: "cpu" | "fpga" | "other"
+}
+
+interface DataType {
+    question: string
+    project_type: "cpu" | "fpga" | "other"
 }
 
 export default {
     /**
-     * 请求AI生成测试项
-     * @returns 可流式或一次性
+     * 改为请求测试平台后端然后请求大模型方式
      */
-    getAiTestItem(data: DataRowType) {
+    getAiTestItemBackend(data: DataType) {
         return request({
-            url: import.meta.env.DEV ? `/local_doc_qa/testing_item` : `${AI_API_BASE}/api/local_doc_qa/testing_item`,
-            timeout: 120000,
+            url: "/local_doc_qa/testing_item",
             method: "post",
+            timeout: 120000,
             data
         })
     }

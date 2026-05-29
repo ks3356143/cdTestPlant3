@@ -160,18 +160,20 @@ const fetchTestType = async () => {
 }
 fetchTestType()
 
+const designObj: any = ref()
+
 // 初始化设计需求
 const currentKey: string = route.query.key as string
 const getDesign = async () => {
     try {
-        const res = await designApi.getDesignDemandOne({ project_id: route.query.id, key: route.query.key })
-        designObj.value = res.data
+        const resResult = await designApi.getDesignDemandOne({ project_id: route.query.id, key: route.query.key })
+        designObj.value = resResult.data
     } catch (e) {
+        console.log("调试错误信息：", e)
         Message.error("初始化设计需求信息错误，请检查网络后重试!")
     }
 }
 getDesign()
-const designObj: any = ref()
 
 // 进度条和列表加载loading
 const percent = ref(0.0)
@@ -188,16 +190,8 @@ const generateClick = async () => {
         // 变量：给AI的问题
         const question = tool.htmlToTextWithDOM(designObj.value?.description || "")
         // 请求后处理结果
-        const res = await aiApi.getAiTestItem({ question: question, stream: false })
-        // 判断真实接口和开发环境接口
-        let tempSolve: any = null
-        if (res.data) {
-            // 说明是开发环境
-            tempSolve = res.data
-        } else {
-            tempSolve = res
-        }
-        const solveRes = JSON.parse(tempSolve.history[0].at(-1))
+        const res = await aiApi.getAiTestItemBackend({ question: question, project_type: isFPGA ? "fpga" : "cpu" })
+        const solveRes = JSON.parse(res.data.history[0].at(-1))
         console.log("AI生成测试项结果：", solveRes)
         // 给Vue渲染测试项
         dataList.value = solveRes

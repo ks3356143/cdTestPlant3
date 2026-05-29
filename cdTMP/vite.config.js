@@ -33,7 +33,19 @@ export default ({ mode }) => {
             __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
         },
         build: {
-            chunkSizeWarningLimit: 3000
+            chunkSizeWarningLimit: 3000,
+            rolldownOptions: {
+                output: {
+                    codeSplitting: {
+                        groups: [
+                            {
+                                name: "arco-design",
+                                test: /[\\/]node_modules[\\/]@arco-design[\\/]web-vue[\\/]/
+                            }
+                        ]
+                    }
+                }
+            }
             // assetsPublicPath: "./"
             // v8版本又报tinymce is not defined，只有遗憾业务js大的问题
             /** 
